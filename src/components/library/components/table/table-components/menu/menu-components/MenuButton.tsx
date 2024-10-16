@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuButton as CustomButton, IconButton } from '@chakra-ui/react';
-import { Icon, useIsMobile } from '../../../../../';
+import { Icon, useIsMobile } from '../../../../..';
 
 const MenuButton = () => {
 	const isMobile = useIsMobile();

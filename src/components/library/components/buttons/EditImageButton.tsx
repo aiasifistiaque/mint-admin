@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Flex, IconButton, useColorModeValue } from '@chakra-ui/react';
-import { Icon } from '../../';
+import { Icon } from '../..';
 
 const buttonStyle = {
 	position: 'absolute',

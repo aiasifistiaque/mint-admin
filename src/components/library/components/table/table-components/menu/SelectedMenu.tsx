@@ -8,7 +8,7 @@ import {
 	Icon,
 	ExportManyModal,
 	SendBulkSmsModal,
-} from '../../../../';
+} from '../../../..';
 
 type TableMenuProps = {
 	path: string;

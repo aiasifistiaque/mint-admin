@@ -1,7 +1,7 @@
 import { FlexPropsType } from '@/types';
 import { Flex } from '@chakra-ui/react';
 import React, { FC } from 'react';
-import { THEME } from '../';
+import { THEME } from '..';
 
 const CreateBody: FC<FlexPropsType> = ({ children, ...props }) => {
 	return (

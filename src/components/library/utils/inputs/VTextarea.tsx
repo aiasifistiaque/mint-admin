@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormControl, Stack, useColorModeValue, Textarea, TextareaProps } from '@chakra-ui/react';
 
-import { Label, HelperText } from '../../';
+import { Label, HelperText } from '../..';
 
 type InputContainerProps = TextareaProps & {
 	label: string;

@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
 import { Grid } from '@chakra-ui/react';
 
-import { Icon, FilterSelect, FilterInput } from '../../../';
+import { Icon, FilterSelect, FilterInput } from '../../..';
 
 const InTheLast = ({ setVal }: { setVal: (val: string) => void }) => {
 	const [value, setValue] = useState<number>(1);

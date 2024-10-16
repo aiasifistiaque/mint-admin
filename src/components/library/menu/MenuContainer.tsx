@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuList, MenuListProps } from '@chakra-ui/react';
-import { useIsMobile } from '../';
+import { useIsMobile } from '..';
 
 type MenuContainerProps = MenuListProps & {
 	children: React.ReactNode;

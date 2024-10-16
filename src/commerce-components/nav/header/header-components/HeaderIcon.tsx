@@ -1,4 +1,4 @@
-import { Icon, IconNameOptions } from '../../../';
+import { Icon, IconNameOptions } from '../../..';
 import { Link } from '@chakra-ui/react';
 import React from 'react';
 

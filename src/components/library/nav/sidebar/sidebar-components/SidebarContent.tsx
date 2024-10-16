@@ -1,4 +1,4 @@
-import { Column, sizes, THEME } from '../../../';
+import { Column, sizes, THEME } from '../../..';
 import { Stack, StackProps } from '@chakra-ui/react';
 import React from 'react';
 

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useIsMobile, ModalFooter } from '../../../../';
+import { useIsMobile, ModalFooter } from '../../../..';
 import { DrawerFooter } from '@chakra-ui/react';
 
 type MenuModalBodyProps = {

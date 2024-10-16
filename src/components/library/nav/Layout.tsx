@@ -3,7 +3,7 @@
 import React, { FC } from 'react';
 import { Flex, Heading, useMediaQuery, FlexProps } from '@chakra-ui/react';
 
-import { refresh, navigate } from '../';
+import { refresh, navigate } from '..';
 
 import {
 	useIsMobile,
@@ -21,7 +21,7 @@ import {
 	Column,
 	LayoutWrapper,
 	THEME,
-} from '../';
+} from '..';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 

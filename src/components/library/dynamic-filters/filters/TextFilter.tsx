@@ -13,7 +13,7 @@ import {
 	useAppSelector,
 	Filter,
 	applyFilters,
-} from '../../';
+} from '../..';
 
 type IsActiveFilterProps = {
 	title: string;

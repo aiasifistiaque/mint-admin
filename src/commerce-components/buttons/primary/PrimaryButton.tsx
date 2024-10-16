@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Button } from '@chakra-ui/react';
-import { ButtonChild } from '../../';
+import { ButtonChild } from '../..';
 
 const PrimaryButton: FC<ButtonChild> = ({ children, ...props }) => {
 	return (

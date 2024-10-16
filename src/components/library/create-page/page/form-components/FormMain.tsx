@@ -10,7 +10,7 @@ import {
 	handleImageArray,
 	handleNestedImage,
 	handleNestedString,
-} from '../../../';
+} from '../../..';
 import { Text } from '@chakra-ui/react';
 
 type FormMainType = {

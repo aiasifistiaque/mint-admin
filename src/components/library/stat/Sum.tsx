@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Skeleton } from '@chakra-ui/react';
-import { currency, useGetSumQuery } from '../';
+import { currency, useGetSumQuery } from '..';
 import { StatContainer, StatLabel, StatNumber } from './stat-components';
 
 type CountProps = {

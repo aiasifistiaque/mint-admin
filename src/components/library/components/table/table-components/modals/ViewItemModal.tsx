@@ -24,8 +24,8 @@ import {
 	MenuItem,
 	getValue,
 	DrawerContentContainer,
-} from '../../../../';
-import { ViewItem } from './';
+} from '../../../..';
+import { ViewItem } from '.';
 
 type DeleteItemModalProps = {
 	title?: string;

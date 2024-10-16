@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react';
 import { Flex, Box } from '@chakra-ui/react';
-import { BgImage, Column, FlexChild, PrimaryButton, SubHeading, Title } from '../../';
+import { BgImage, Column, FlexChild, PrimaryButton, SubHeading, Title } from '../..';
 
 type HeroProps = {
 	src: string;

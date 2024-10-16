@@ -1,7 +1,7 @@
 import React from 'react';
 import { Center } from '@chakra-ui/react';
 import { FC } from 'react';
-import { FlexChild, padding } from '../../../';
+import { FlexChild, padding } from '../../..';
 
 const FooterItemContainer: FC<FlexChild> = ({ children }) => (
 	<Center

@@ -22,7 +22,7 @@ import {
 	VCatCollectionList,
 	VCustom,
 	useGetByIdQuery,
-} from '../../../';
+} from '../../..';
 
 type Option = {
 	label: string;

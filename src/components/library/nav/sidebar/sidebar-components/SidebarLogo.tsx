@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react';
 import { Flex } from '@chakra-ui/react';
-import { sizes, THEME } from '../../../';
+import { sizes, THEME } from '../../..';
 
 type SidebarLogoProps = {
 	children: ReactNode;

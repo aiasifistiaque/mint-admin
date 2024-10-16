@@ -16,7 +16,7 @@ import Sidebar from './Sidebar';
 import { useGetSelfQuery } from '@/store/services/authApi';
 import { zIndex } from '@/lib/constants';
 
-import { Icon } from '../../';
+import { Icon } from '../..';
 
 const SideDrawer = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();

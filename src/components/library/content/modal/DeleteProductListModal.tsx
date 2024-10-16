@@ -16,7 +16,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogContent,
 	useDeleteByIdMutation,
-} from '../../';
+} from '../..';
 
 type DeleteItemModalProps = {
 	title?: string;

@@ -1,4 +1,4 @@
-import { createFormFields, SchemaProps } from '@/components/library';
+import { SchemaProps } from '@/components/library';
 import { formFields } from '@/models/role';
 
 const schema: SchemaProps = {
@@ -25,6 +25,12 @@ const schema: SchemaProps = {
 		label: 'Password',
 		type: 'password',
 		isRequired: true,
+	},
+	shop: {
+		label: 'Shop',
+		type: 'string',
+		tableKey: 'shop.name',
+		displayInTable: true,
 	},
 	role: {
 		label: 'Role',

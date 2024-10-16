@@ -1,4 +1,4 @@
-import { FlexChild, sizes, Column } from '../../';
+import { FlexChild, sizes, Column } from '../..';
 import React, { FC } from 'react';
 
 const Body: FC<FlexChild> = ({ children, ...props }) => {

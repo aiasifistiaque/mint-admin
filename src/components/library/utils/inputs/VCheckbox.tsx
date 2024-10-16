@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormControl, Stack, Checkbox, CheckboxProps } from '@chakra-ui/react';
 
-import { Label, HelperText } from '../../';
+import { Label, HelperText } from '../..';
 
 type InputContainerProps = CheckboxProps & {
 	label: string;

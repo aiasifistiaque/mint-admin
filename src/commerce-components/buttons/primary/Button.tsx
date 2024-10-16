@@ -1,6 +1,6 @@
-import { ButtonChild } from '../../';
+import { ButtonChild } from '../..';
 import React, { FC, ReactNode } from 'react';
-import { PrimaryButton, SecondaryButton } from '../';
+import { PrimaryButton, SecondaryButton } from '..';
 import Link from 'next/link';
 
 type ButtonProps = ButtonChild & {

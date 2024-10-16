@@ -23,7 +23,7 @@ import {
 	MenuContainer,
 	MenuItem,
 	ItemOfDataMenu,
-} from '../../';
+} from '../..';
 
 import { useGetAllQuery } from '../../store';
 

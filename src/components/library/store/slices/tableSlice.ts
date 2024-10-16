@@ -1,5 +1,5 @@
 // Import necessary constants and functions from libraries
-import { BASE_LIMIT } from '../../';
+import { BASE_LIMIT } from '../..';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define the type for the table properties

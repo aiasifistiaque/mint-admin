@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react';
 import { Stack, StackProps } from '@chakra-ui/react';
-import { sizes, theme } from '../../../';
+import { sizes, theme } from '../../..';
 
 type SidebarBodyProps = StackProps & {
 	children: ReactNode;

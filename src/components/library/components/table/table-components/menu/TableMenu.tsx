@@ -11,7 +11,7 @@ import {
 	DuplicateModal,
 	ModalMenuItem,
 	ModalMenuTrigger,
-} from '../../../../';
+} from '../../../..';
 import Link from 'next/link';
 
 type TableMenuProps = {

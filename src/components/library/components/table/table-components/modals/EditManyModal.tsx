@@ -10,7 +10,7 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react';
 import React, { useEffect, useRef, FC } from 'react';
-import { useCustomToast, MenuItem, AlertDialogHeader } from '../../../../';
+import { useCustomToast, MenuItem, AlertDialogHeader } from '../../../..';
 import { useUpdateManyMutation } from '../../../../store';
 
 type EditManyModalType = {

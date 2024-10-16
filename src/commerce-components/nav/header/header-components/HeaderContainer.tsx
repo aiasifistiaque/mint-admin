@@ -1,4 +1,4 @@
-import { GridChild, padding, sizes } from '../../../';
+import { GridChild, padding, sizes } from '../../..';
 import { Grid } from '@chakra-ui/react';
 import React, { FC } from 'react';
 

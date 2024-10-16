@@ -3,7 +3,7 @@ import { TableObjectProps } from '@/components/library';
 // import itemMenu from './data/itemMenu';
 import viewAllDataFields from './data/viewCustomerDataFields';
 import { dataFields as customerDataField } from './createCustomer.model';
-import { viewById, edit } from './';
+import { viewById, edit } from '.';
 
 const dataFields: TableObjectProps = {
 	title: 'Customers',

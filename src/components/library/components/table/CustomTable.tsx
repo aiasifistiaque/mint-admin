@@ -19,7 +19,7 @@ import {
 	SelectedMenu,
 	selectAll,
 	TableResultContainer,
-} from '../../';
+} from '../..';
 
 const CustomTable: React.FC<CustomTableProps> = ({
 	headers,

@@ -32,7 +32,7 @@ import {
 	ModalContent,
 	DrawerContentContainer,
 	Align,
-} from '../';
+} from '..';
 
 type CreateModalProps = {
 	data: InputData<any>[];

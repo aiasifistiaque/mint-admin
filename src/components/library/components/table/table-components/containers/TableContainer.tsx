@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { TableContainer as ChakraTableContainer, Flex } from '@chakra-ui/react';
-import { useIsMobile, theme } from '../../../../';
+import { useIsMobile, theme } from '../../../..';
 
 const { TABLE } = theme;
 

@@ -1,4 +1,4 @@
-import { Column, SubHeading, Title, Button, sizes } from '../../';
+import { Column, SubHeading, Title, Button, sizes } from '../..';
 import { Grid, Image, Box } from '@chakra-ui/react';
 import React from 'react';
 

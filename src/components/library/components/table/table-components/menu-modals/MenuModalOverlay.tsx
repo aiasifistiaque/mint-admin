@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIsMobile } from '../../../../';
+import { useIsMobile } from '../../../..';
 import { DrawerOverlay, ModalOverlay } from '@chakra-ui/react';
 
 const MenuModalOverlay = () => {

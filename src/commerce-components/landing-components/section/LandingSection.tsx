@@ -1,4 +1,4 @@
-import { FlexChild, padding } from '../../';
+import { FlexChild, padding } from '../..';
 import React, { FC } from 'react';
 import { Flex } from '@chakra-ui/react';
 

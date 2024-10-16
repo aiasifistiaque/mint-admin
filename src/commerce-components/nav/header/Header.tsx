@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { HeaderContainer, Logo, HeaderSection, HeaderText, HeaderIcon } from './';
-import { IconNameOptions } from '../../';
+import { HeaderContainer, Logo, HeaderSection, HeaderText, HeaderIcon } from '.';
+import { IconNameOptions } from '../..';
 
 type ItemProps = { name: string; href: string };
 const headerItems: ItemProps[] = [

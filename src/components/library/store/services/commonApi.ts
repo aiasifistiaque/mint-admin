@@ -1,4 +1,4 @@
-import { BASE_LIMIT } from '../../';
+import { BASE_LIMIT } from '../..';
 import mainApi from './mainApi';
 
 export const userApi = mainApi.injectEndpoints({

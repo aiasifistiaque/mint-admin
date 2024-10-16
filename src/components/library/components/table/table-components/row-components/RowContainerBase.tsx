@@ -1,6 +1,6 @@
 import { StackProps, Stack, Grid } from '@chakra-ui/react';
 import React, { FC } from 'react';
-import { shadow, sizes } from '../../../../';
+import { shadow, sizes } from '../../../..';
 
 type RowContainerMobileProps = StackProps & {
 	children: React.ReactNode;

@@ -10,7 +10,7 @@ import {
 	Button,
 	IconButton,
 } from '@chakra-ui/react';
-import { HelperText, Label, ImageContainer, Column, Icon } from '../../../';
+import { HelperText, Label, ImageContainer, Column, Icon } from '../../..';
 import AddSectionModal from './AddSectionModal';
 import DeleteSection from './DeleteSection';
 

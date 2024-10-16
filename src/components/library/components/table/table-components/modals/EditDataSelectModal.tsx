@@ -17,7 +17,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogContent,
 	EditDataSelect,
-} from '../../../../';
+} from '../../../..';
 import { useUpdateManyMutation } from '../../../../store';
 
 type EditManyModalType = {

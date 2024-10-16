@@ -2,8 +2,8 @@ import { Badge, TableCellProps, Text } from '@chakra-ui/react';
 import moment from 'moment';
 import React, { ReactNode } from 'react';
 
-import { CustomTd } from './';
-import { TableObjectDataProps } from '../../../../';
+import { CustomTd } from '.';
+import { TableObjectDataProps } from '../../../..';
 
 // Define the type for the props of the TableData component
 type TableDataPropsType = TableCellProps &

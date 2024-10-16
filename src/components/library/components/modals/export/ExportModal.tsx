@@ -12,7 +12,7 @@ import {
 	MenuModalCloseButton,
 	MenuModalFooter,
 	DiscardButton,
-} from '../../../';
+} from '../../..';
 import { useExportMutation } from '@/components/library/store/services/commonApi';
 
 const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {

@@ -14,7 +14,7 @@ import {
 	Filter,
 	FilterSelect,
 	applyFilters,
-} from '../../';
+} from '../..';
 
 type IsActiveFilterProps = {
 	title: string;

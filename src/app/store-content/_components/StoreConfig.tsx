@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Heading, Text, Image } from '@chakra-ui/react';
 import { ViewContentContainer, Column } from '@/components/library';
-import { HomeContentProps } from './';
+import { HomeContentProps } from '.';
 
 const StoreConfig: FC<HomeContentProps> = ({ dataModel, content }) => {
 	return (

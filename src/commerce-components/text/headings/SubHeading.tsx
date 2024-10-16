@@ -1,4 +1,4 @@
-import { TextChild } from '../../';
+import { TextChild } from '../..';
 import React, { FC } from 'react';
 import { Text } from '@chakra-ui/react';
 

@@ -13,7 +13,7 @@ import {
 	MenuItem,
 	VTextarea,
 	usePostMutation,
-} from '../../../';
+} from '../../..';
 
 const SendBulkSmsModal = ({ path, ids }: { path: string; ids: string[] }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();

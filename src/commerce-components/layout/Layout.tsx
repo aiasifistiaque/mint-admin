@@ -1,6 +1,6 @@
 import { Flex, FlexProps } from '@chakra-ui/react';
 import React, { FC } from 'react';
-import { Header, Body, Footer } from '../';
+import { Header, Body, Footer } from '..';
 import { ColorMode } from '@/components/library';
 
 type LayoutProps = FlexProps & {

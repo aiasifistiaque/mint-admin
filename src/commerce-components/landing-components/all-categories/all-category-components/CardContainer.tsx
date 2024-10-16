@@ -1,4 +1,4 @@
-import { FlexChild } from '../../../';
+import { FlexChild } from '../../..';
 import { Flex } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import CategoriesCard from './CategoryCard';

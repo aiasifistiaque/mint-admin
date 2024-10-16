@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import React, { FC } from 'react';
 
-import { useIsMobile } from '../../../../';
+import { useIsMobile } from '../../../..';
 
 type MenuModalProps = ModalProps &
 	DrawerProps & {

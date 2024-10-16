@@ -1,7 +1,7 @@
 'use client';
-import { ColRow, FlexChild, SubHeading, Title, PrimaryButton, Column } from '../../';
+import { ColRow, FlexChild, SubHeading, Title, PrimaryButton, Column } from '../..';
 import React, { FC } from 'react';
-import { CategoryCard, CategoryCardContainer } from './';
+import { CategoryCard, CategoryCardContainer } from '.';
 
 const SRC =
 	'https://nexa-clothing.myshopify.com/cdn/shop/files/main-banner-four.png?v=1722417191&width=3840';

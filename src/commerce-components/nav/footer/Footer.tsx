@@ -7,7 +7,7 @@ import {
 	FooterTag,
 	FooterContainer,
 	FooterIconContainer,
-} from './';
+} from '.';
 
 const footerItems = [
 	{

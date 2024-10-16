@@ -1,7 +1,7 @@
 'use client';
-import { ColRow, FlexChild, SubHeading, Title, Column, swiper, Button } from '../../';
+import { ColRow, FlexChild, SubHeading, Title, Column, swiper, Button } from '../..';
 import React, { FC } from 'react';
-import { ProductCard, ArrowButton } from './';
+import { ProductCard, ArrowButton } from '.';
 import { Flex } from '@chakra-ui/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 

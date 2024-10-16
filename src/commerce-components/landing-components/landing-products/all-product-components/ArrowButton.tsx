@@ -1,6 +1,6 @@
 import React from 'react';
 import { ButtonProps } from '@chakra-ui/react';
-import { IconButton } from '../../../';
+import { IconButton } from '../../..';
 
 const ArrowButton = ({ name, ...props }: any) => (
 	<IconButton

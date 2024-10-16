@@ -17,7 +17,7 @@ import {
 
 import { useGetSelectDataQuery } from '@/store/services/usersApi';
 
-import { Label, SelectContainer, HelperText, Icon } from '../../';
+import { Label, SelectContainer, HelperText, Icon } from '../..';
 
 type InputContainerProps = InputProps &
 	SelectProps & {

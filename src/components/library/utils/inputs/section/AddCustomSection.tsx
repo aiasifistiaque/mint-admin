@@ -17,7 +17,7 @@ import {
 	useFormData,
 	VInput,
 	VTextarea,
-} from '../../../';
+} from '../../..';
 
 type UploadModalProps = {
 	trigger?: React.ReactNode;

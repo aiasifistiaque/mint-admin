@@ -14,7 +14,7 @@ import {
 	DiscardButton,
 	useExportManyMutation,
 	MenuItem,
-} from '../../../';
+} from '../../..';
 
 const ExportManyModal = ({ path, ids }: { path: string; ids: string[] }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();

@@ -1,4 +1,4 @@
-import { FlexChild, Title } from '../../../';
+import { FlexChild, Title } from '../../..';
 import React, { FC } from 'react';
 import { Center } from '@chakra-ui/react';
 

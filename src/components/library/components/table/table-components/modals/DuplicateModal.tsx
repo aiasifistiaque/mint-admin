@@ -11,7 +11,7 @@ import {
 import React, { useEffect } from 'react';
 
 import { useCopyItemMutation } from '../../../../store';
-import { useCustomToast, MenuItem, AlertDialogContent, AlertDialogHeader } from '../../../../';
+import { useCustomToast, MenuItem, AlertDialogContent, AlertDialogHeader } from '../../../..';
 
 type DeleteItemModalProps = {
 	title?: string;

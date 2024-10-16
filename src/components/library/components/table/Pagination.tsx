@@ -11,7 +11,7 @@ import {
 	useAppSelector,
 	SquareButton,
 	TableHeading,
-} from '../../';
+} from '../..';
 
 type PaginationProps = {
 	data: any;

@@ -12,7 +12,7 @@ import {
 	SquareButton,
 	TableHeading,
 	updateTable,
-} from '../../';
+} from '../..';
 
 type PaginationProps = {
 	data: any;

@@ -11,7 +11,7 @@ import {
 	useAppSelector,
 	navigate,
 	IconNameOptions,
-} from '../../';
+} from '../..';
 
 type SidebarItemProps = {
 	children: string;

@@ -16,7 +16,7 @@ import {
 	MenuItem,
 	AlertDialogContent,
 	useDeleteByIdMutation,
-} from '../../../../';
+} from '../../../..';
 
 type DeleteItemModalProps = {
 	title?: string;

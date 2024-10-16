@@ -10,7 +10,7 @@ import {
 	EditableTableData,
 	TableData,
 	TableMenu,
-} from '../../../../';
+} from '../../../..';
 
 type TableProps = StackProps &
 	TableRowProps & {

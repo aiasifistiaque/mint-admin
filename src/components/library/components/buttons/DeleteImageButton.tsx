@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ButtonProps, IconButton } from '@chakra-ui/react';
-import { Icon } from '../../';
+import { Icon } from '../..';
 
 const buttonStyle = {
 	position: 'absolute',

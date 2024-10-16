@@ -13,7 +13,7 @@ import {
 import ModalContainer from '../../menu/ModalContainer';
 import { useUpdatePasswordMutation } from '@/store/services/authApi';
 
-import { useCustomToast, ModalFormSection, VInput } from '../../';
+import { useCustomToast, ModalFormSection, VInput } from '../..';
 
 const UpdatePasswordModal = ({ trigger, path }: { trigger?: any; path?: any }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();

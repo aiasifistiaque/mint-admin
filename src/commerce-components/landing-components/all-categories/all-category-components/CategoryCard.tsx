@@ -1,7 +1,7 @@
 'use client';
 
 import React, { FC } from 'react';
-import { Column, SubHeading, Title, sizes } from '../../../';
+import { Column, SubHeading, Title, sizes } from '../../..';
 import { Image } from '@chakra-ui/react';
 
 const IMAGE_SIZE = { base: '100%', md: '100%', lg: '100%' };

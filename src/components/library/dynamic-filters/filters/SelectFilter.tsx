@@ -21,7 +21,7 @@ import {
 	FilterButton,
 	applyFilters,
 	FilterSelect,
-} from '../../';
+} from '../..';
 
 type FilterProps = {
 	title: string;

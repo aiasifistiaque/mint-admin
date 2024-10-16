@@ -2,7 +2,7 @@
 import React from 'react';
 import { InputProps, FormControl, Stack, useColorModeValue, Text } from '@chakra-ui/react';
 
-import { Label, HelperText } from '../../';
+import { Label, HelperText } from '../..';
 
 type InputContainerProps = InputProps & {
 	label: string;

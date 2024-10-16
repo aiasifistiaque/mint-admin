@@ -10,7 +10,7 @@ import {
 	TableObjectDataProps,
 	Title,
 	selectAll,
-} from '../../../../';
+} from '../../../..';
 
 type HeadersProps = {
 	tableData: TableObjectDataProps[];
