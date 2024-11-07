@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormControl, Switch, SwitchProps } from '@chakra-ui/react';
 
-import { Label } from '../..';
+import { Label } from '../../';
 
 type InputContainerProps = SwitchProps & {
 	label: string;

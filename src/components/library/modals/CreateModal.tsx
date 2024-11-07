@@ -32,7 +32,7 @@ import {
 	ModalContent,
 	DrawerContentContainer,
 	Align,
-} from '..';
+} from '../';
 
 type CreateModalProps = {
 	data: InputData<any>[];
@@ -151,7 +151,7 @@ const CreateModal = ({
 			)}
 			<ModalSubmitButton
 				borderRadius={{ base: 'md', md: 'md' }}
-				size={{ base: 'sm', md: 'xs' }}
+				size={{ base: 'md', md: 'xs' }}
 				{...(isMobile && { w: '100%' })}
 				isLoading={isLoading}>
 				Confirm
@@ -191,7 +191,7 @@ const CreateModal = ({
 									isModal={true}
 								/>
 							</ModalFormSection>
-							{isMobile && <Align pt={2}>{footer}</Align>}
+							{isMobile && <Align py={5}>{footer}</Align>}
 						</Body>
 						{!isMobile && (
 							<Footer

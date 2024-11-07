@@ -1,6 +1,6 @@
 import React from 'react';
 import { Center, FlexProps, Heading } from '@chakra-ui/react';
-import { Icon } from '../..';
+import { Icon } from '../../';
 import { motion } from 'framer-motion';
 
 type AddImageButtonProps = FlexProps & {

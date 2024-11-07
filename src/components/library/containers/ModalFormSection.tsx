@@ -2,7 +2,7 @@
 import { ContainerProps, Heading, useColorModeValue } from '@chakra-ui/react';
 import React, { FC } from 'react';
 
-import { Column } from '..';
+import { Column } from '../';
 
 type FormContainerProps = ContainerProps & {
 	children: React.ReactNode;

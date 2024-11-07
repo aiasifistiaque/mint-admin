@@ -10,7 +10,7 @@ import {
 	EditableTableData,
 	TableData,
 	TableMenu,
-} from '../../../..';
+} from '../../../../';
 
 type TableProps = StackProps &
 	TableRowProps & {
@@ -36,18 +36,17 @@ const TableRowComponent: FC<TableProps> = ({
 	const isMobile = useIsMobile();
 
 	return (
-		// Create a TableRow for each item
-		<TableRow
+        // Create a TableRow for each item
+        (<TableRow
 			cursor={clickable ? 'pointer' : 'default'}
 			selectable={selectable}
 			id={item?._id}
 			key={item?._id}
 			actions={<div></div>}
 			{...props}>
-			{/* If the table is selectable, return a TableData cell with a checkbox */}
-
-			{/* Map over the data keys and create a TableData cell for each */}
-			{data.map(
+            {/* If the table is selectable, return a TableData cell with a checkbox */}
+            {/* Map over the data keys and create a TableData cell for each */}
+            {data.map(
 				({
 					dataKey,
 					type,
@@ -142,8 +141,8 @@ const TableRowComponent: FC<TableProps> = ({
 					);
 				}
 			)}
-		</TableRow>
-	);
+        </TableRow>)
+    );
 };
 
 export default TableRowComponent;

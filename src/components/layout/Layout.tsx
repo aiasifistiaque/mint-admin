@@ -95,6 +95,7 @@ const Layout: FC<LayoutProps> = ({
 						w='full'>
 						<Flex
 							p={PX}
+							pt={2}
 							pb={0}
 							w='full'>
 							<Column

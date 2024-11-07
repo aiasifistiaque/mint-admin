@@ -11,7 +11,7 @@ import {
 	useAppDispatch,
 	clearFilters,
 	TextFilter,
-} from '..';
+} from '../';
 import { FilterSectionContainer } from './filter-components';
 
 type FilterItemType = {

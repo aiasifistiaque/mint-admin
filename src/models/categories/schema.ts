@@ -27,7 +27,7 @@ const schema: SchemaProps = {
 		readOnlyOnUpdate: true,
 	},
 	shortDescription: {
-		label: 'Short Description',
+		label: 'Description',
 		type: 'textarea',
 	},
 	longDescription: {

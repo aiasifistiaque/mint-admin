@@ -11,7 +11,7 @@ import {
 	Skeleton,
 	Text,
 } from '@chakra-ui/react';
-import { Align, Column, ImageContainer, PLACEHOLDER_IMAGE, RenderTag } from '../../../../..';
+import { Align, Column, ImageContainer, PLACEHOLDER_IMAGE, RenderTag } from '../../../../../';
 
 type ViewItemProps = GridProps & {
 	title: string;

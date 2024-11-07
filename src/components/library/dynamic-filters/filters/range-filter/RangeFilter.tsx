@@ -16,7 +16,7 @@ import {
 	PopModalHeader,
 	PopModalBody,
 	applyFilters,
-} from '../../..';
+} from '../../../';
 
 type DateFilterProps = {
 	field: string;

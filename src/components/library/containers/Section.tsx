@@ -1,6 +1,6 @@
 import { FlexProps, Heading } from '@chakra-ui/react';
 import React, { FC } from 'react';
-import { SpaceBetween, Column, shadow, sizes } from '..';
+import { SpaceBetween, Column, shadow, sizes } from '../';
 
 type SectionProps = FlexProps & {
 	heading?: string;
@@ -12,7 +12,7 @@ const Section: FC<SectionProps> = ({ heading, children, rightComponent, ...props
 	return (
 		<Column
 			bg={{ base: 'menu.light', md: 'transparent' }}
-			_dark={{ base: 'menu.dark', md: 'transparent' }}
+			_dark={{ bg: { base: 'menu.dark', md: 'transparent' } }}
 			borderRadius={sizes.CARD_RADIUS}
 			boxShadow={{ base: shadow.CARD, md: 'none' }}
 			p={4}

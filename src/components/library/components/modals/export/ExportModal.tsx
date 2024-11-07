@@ -12,7 +12,7 @@ import {
 	MenuModalCloseButton,
 	MenuModalFooter,
 	DiscardButton,
-} from '../../..';
+} from '../../../';
 import { useExportMutation } from '@/components/library/store/services/commonApi';
 
 const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
@@ -45,7 +45,7 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 
 	useEffect(() => {
 		if (result?.isSuccess) {
-			close();
+			closeModal();
 		}
 	}, [result]);
 

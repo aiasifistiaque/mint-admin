@@ -1,6 +1,17 @@
+import { convertToFormFields } from '@/components/library';
 import { createBrandModel } from '../brand/brand.model';
 import productUnitOptions from '../util/productUnitOptions';
+import categorySchema from '@/models/categories/schema';
 
+const categoryScehma = convertToFormFields({
+	schema: categorySchema,
+	layout: [
+		{
+			sectionTitle: 'Category Details',
+			fields: ['name'],
+		},
+	],
+});
 const schema = {
 	image: {
 		label: 'Thumbnail',
@@ -25,11 +36,10 @@ const schema = {
 		displayInTable: true,
 		tableType: 'text',
 		tableKey: 'category.name',
-		//dataModel: editCategoriesModel,
+		dataModel: categorySchema,
 	},
 	brand: {
 		label: 'Brand',
-
 		type: 'data-menu',
 		model: 'brands',
 		displayInTable: true,
@@ -90,6 +100,13 @@ const schema = {
 		displayInTable: true,
 		required: true,
 		sort: true,
+	},
+	shop: {
+		label: 'Shop',
+		type: 'string',
+		displayInTable: true,
+		tableType: 'text',
+		tableKey: 'shop.name',
 	},
 	isActive: {
 		label: 'Is Active',

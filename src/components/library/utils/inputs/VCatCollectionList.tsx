@@ -12,8 +12,8 @@ import {
 	TagCloseButton,
 	Flex,
 } from '@chakra-ui/react';
-import { Label, Icon, HelperText, Align, useGetItemNameById } from '../..';
-import { VDataMenu, VInput, VSelect } from '.';
+import { Label, Icon, HelperText, Align, useGetItemNameById } from '../../';
+import { VDataMenu, VInput, VSelect } from './';
 
 type InputContainerProps = InputProps & {
 	label?: string;

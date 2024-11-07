@@ -14,9 +14,6 @@ const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, href, ...props }) =
 			{...(href && { href })}
 			borderBottomColor='border.light'
 			borderBottomWidth={1}
-			// _last={{
-			// 	borderBottomWidth: 0,
-			// }}
 			fontSize='sm'
 			px={4}
 			bg='menu.light'
@@ -32,6 +29,10 @@ const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, href, ...props }) =
 				_hover: {
 					bg: 'hover.dark',
 				},
+			}}
+			_last={{
+				borderBottomWidth: 0,
+				borderBottomColor: 'transparent',
 			}}
 			{...props}>
 			{children}

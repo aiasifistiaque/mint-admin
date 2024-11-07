@@ -16,8 +16,7 @@ import {
 } from '@chakra-ui/react';
 
 import { useGetSelectDataQuery } from '@/store/services/usersApi';
-
-import { Label, SelectContainer, HelperText, Icon } from '../..';
+import { Label, SelectContainer, HelperText, Icon } from '../../';
 
 type InputContainerProps = InputProps &
 	SelectProps & {
@@ -48,13 +47,13 @@ const VDataTags: React.FC<InputContainerProps> = ({
 	}, []);
 
 	const addTag = useCallback(() => {
-		if (tag && tag.length > 0 && !value.includes(tag)) {
+		if (tag && tag?.length > 0 && !value?.includes(tag)) {
 			const newArr = [...value, tag];
 
 			if (props.onChange) {
 				const event = {
 					target: {
-						name: props.name,
+						name: props?.name,
 						value: newArr,
 					},
 				} as any;
@@ -70,7 +69,7 @@ const VDataTags: React.FC<InputContainerProps> = ({
 			if (props.onChange) {
 				const event = {
 					target: {
-						name: props.name,
+						name: props?.name,
 						value: newArr,
 					},
 				} as any;

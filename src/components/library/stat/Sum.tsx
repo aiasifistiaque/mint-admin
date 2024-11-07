@@ -1,6 +1,7 @@
+'use client';
 import React, { FC } from 'react';
-import { Skeleton } from '@chakra-ui/react';
-import { currency, useGetSumQuery } from '..';
+import { Skeleton, Tooltip } from '@chakra-ui/react';
+import { Align, currency, Icon, useGetSumQuery } from '../';
 import { StatContainer, StatLabel, StatNumber } from './stat-components';
 
 type CountProps = {
@@ -9,13 +10,25 @@ type CountProps = {
 	field: string;
 	price?: boolean;
 	filters?: any;
+	tooltip?: string;
 };
 
-const Sum: FC<CountProps> = ({ title, path, field, price, filters = {} }) => {
+const Sum: FC<CountProps> = ({ title, path, field, price, tooltip, filters = {} }) => {
 	const { data, isFetching, isError } = useGetSumQuery({ path, field, filters }, { skip: !path });
 	return (
 		<StatContainer>
-			<StatLabel>{title}</StatLabel>
+			<Align>
+				<StatLabel>{title}</StatLabel>
+				{tooltip && (
+					<Tooltip
+						label={tooltip}
+						borderRadius='md'>
+						<span>
+							<Icon name='info' />
+						</span>
+					</Tooltip>
+				)}
+			</Align>
 
 			<Skeleton
 				isLoaded={!isFetching}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, Text } from '@chakra-ui/react';
 
-import { FilterInput } from '../../..';
+import { FilterInput } from '../../../';
 
 const BetweenDates = ({ setVal }: { setVal: (val: string) => void }) => {
 	const [start, setStart] = React.useState<any>();

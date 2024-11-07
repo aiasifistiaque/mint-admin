@@ -15,7 +15,7 @@ import {
 	handleImage,
 	handleSwitch,
 	getFieldValue,
-} from '../..';
+} from '../../';
 
 type FormPageType = {
 	formData: any;

@@ -1,4 +1,4 @@
-import { Handler } from '.';
+import { Handler } from './';
 
 const updateNestedState: any = (state: any, keys: string[], value: any) => {
 	if (keys.length === 1) {

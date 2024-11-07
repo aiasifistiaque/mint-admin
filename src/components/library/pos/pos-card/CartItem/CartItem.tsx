@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useGetCartTotalMutation } from '@/store/services/ordersApi';
 import { Flex, Heading, Text } from '@chakra-ui/react';
-import { CartItemContainer as Container, QtyButtons, CartItemDeleteButton } from '.';
+import { CartItemContainer as Container, QtyButtons, CartItemDeleteButton } from './';
 
 import {
 	useAppDispatch,

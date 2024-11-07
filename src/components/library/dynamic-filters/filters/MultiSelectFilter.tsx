@@ -2,7 +2,7 @@
 import React, { FC, useState } from 'react';
 
 import { Flex, PopoverTrigger, useColorModeValue, useDisclosure } from '@chakra-ui/react';
-import { applyFilters } from '../..';
+import { applyFilters } from '../../';
 
 import {
 	useIsMobile,
@@ -16,7 +16,7 @@ import {
 	PopModalBody,
 	PopModalCloseButton,
 	FilterCheckbox,
-} from '../..';
+} from '../../';
 
 type OptionType = {
 	value: string;

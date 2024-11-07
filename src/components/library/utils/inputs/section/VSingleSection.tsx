@@ -11,7 +11,7 @@ import {
 	Text,
 	Heading,
 } from '@chakra-ui/react';
-import { HelperText, Label, ImageContainer, Column } from '../../..';
+import { HelperText, Label, ImageContainer, Column } from '../../../';
 import AddSectionModal from './AddSectionModal';
 
 type FormDataType = {

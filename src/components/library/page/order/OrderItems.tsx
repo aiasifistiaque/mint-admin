@@ -10,7 +10,7 @@ import {
 	Grid,
 	Flex,
 	GridItem,
-} from '../..';
+} from '../../';
 
 const OrderItems = ({ data }: { data: any }) => {
 	return (

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Image } from '@chakra-ui/react';
-import { Column } from '../..';
+import { Column } from '../../';
 
 const VerticalImageView = ({ src, children }: { src: string; children: ReactNode }) => {
 	return (

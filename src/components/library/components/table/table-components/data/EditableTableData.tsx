@@ -1,13 +1,13 @@
 'use client';
 import React, { ChangeEvent, FC, useState } from 'react';
 
-import { CustomTd } from '.';
+import { CustomTd } from './';
 import { Switch, useColorModeValue } from '@chakra-ui/react';
 import { useUpdateByIdMutation } from '../../../../store';
-import { useCustomToast } from '../../../..';
+import { useCustomToast } from '../../../../';
 
-import RowInput from '../row-components/RowInput';
-import RowSelect from '../row-components/RowSelect';
+import RowInput from '../../table-components/row-components/RowInput';
+import RowSelect from '../../table-components/row-components/RowSelect';
 
 // Define the props type for better readability
 type EditableTableDataProps = {

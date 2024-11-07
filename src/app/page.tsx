@@ -18,13 +18,14 @@ export default function UserFeedback() {
 					title='Total Stores'
 					path='shops'
 				/>
-
-				{/* <Sum
-					title='Total Receivable'
-					path='orders'
-					field='dueAmount'
-					price
-				/> */}
+				<Count
+					title='Total Products'
+					path='products'
+				/>
+				<Count
+					title='Total Customers'
+					path='customers'
+				/>
 			</Grid>
 		</Layout>
 	);

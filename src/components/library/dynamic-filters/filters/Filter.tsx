@@ -1,7 +1,7 @@
 import { Flex, Tag, TagLabel, TagProps } from '@chakra-ui/react';
 import React from 'react';
 
-import { Icon } from '../..';
+import { Icon } from '../../';
 
 type FilterProps = TagProps & {
 	children: React.ReactNode;

@@ -1,6 +1,6 @@
 import { Text, FlexProps, Grid, GridProps } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
-import { Column } from '..';
+import { Column } from '../';
 
 type DetailItemProps = FlexProps & {
 	title: string;

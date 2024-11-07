@@ -12,7 +12,7 @@ import {
 	MenuModalBody,
 	MenuModalCloseButton,
 	MenuModalFooter,
-} from '../..';
+} from '../../';
 
 const Preferences = ({ path }: { path: string }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();

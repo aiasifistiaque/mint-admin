@@ -58,3 +58,4 @@ export * from './content';
 export * from './components/skeleton';
 export * from './page';
 export * from './pos';
+export * from './settings';

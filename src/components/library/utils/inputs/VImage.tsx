@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { Center, FormControl, Image, Stack, InputProps, GridProps } from '@chakra-ui/react';
-import { UploadModal, HelperText, Label, ImageContainer } from '../..';
+import { UploadModal, HelperText, Label, ImageContainer } from '../../';
 
 type FormDataType = InputProps &
 	GridProps & {

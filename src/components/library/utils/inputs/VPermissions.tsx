@@ -1,13 +1,7 @@
 'use client';
-
-import { FormControl, Stack, InputProps, Checkbox, Grid, Badge } from '@chakra-ui/react';
-
-import React, { useState } from 'react';
-
-import { Label, HelperText, Column } from '../..';
-
-const WIDTH = '300px';
-const MAX_H = '200px';
+import React from 'react';
+import { InputProps, Checkbox, Grid } from '@chakra-ui/react';
+import { Column, FormControl } from '../..';
 
 type VDataMenuProps = InputProps & {
 	label: string;
@@ -75,36 +69,15 @@ const VPermissions: React.FC<VDataMenuProps> = ({
 		<Column>
 			<FormControl
 				isRequired={isRequired}
-				gap={4}>
-				<Stack
-					spacing={2}
-					w='full'>
-					<Label>{label}</Label>
-					{/* <Grid
-						rowGap={2}
-						gridTemplateColumns='1fr 1fr 1fr 1fr'
-						w='100%'
-						overflowY='scroll'>
-						{value &&
-							value?.length > 0 &&
-							value?.map((item: any, i: number) => (
-								<Badge
-									key={i}
-									colorScheme='red'>
-									{item}
-								</Badge>
-							))}
-					</Grid> */}
-					<Grid
-						rowGap={2}
-						gridTemplateColumns='1fr 1fr 1fr 1fr'
-						w='100%'
-						overflowY='scroll'>
-						{renderMenuItems}
-					</Grid>
-
-					{helper && <HelperText>{helper}</HelperText>}
-				</Stack>
+				helper={helper}
+				label={label}>
+				<Grid
+					rowGap={2}
+					gridTemplateColumns='1fr 1fr 1fr 1fr'
+					w='100%'
+					overflowY='scroll'>
+					{renderMenuItems}
+				</Grid>
 			</FormControl>
 		</Column>
 	);

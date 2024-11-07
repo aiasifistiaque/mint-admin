@@ -22,9 +22,9 @@ import React, { FC, useState } from 'react';
 import InsertUrl from './InsertUrl';
 import MyPhotos from './MyPhotos';
 import UploadImage from './UploadImage';
-import { styles } from '.';
+import { styles } from './';
 
-import { AddImageButton, DeleteImageButton, EditImageButton } from '../..';
+import { AddImageButton, DeleteImageButton, EditImageButton } from '../../';
 
 type UploadModalProps = {
 	album?: string;

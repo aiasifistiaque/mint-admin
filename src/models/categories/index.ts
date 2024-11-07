@@ -17,11 +17,11 @@ import categoriesSelectMenu from './categoriesSelectMenu';
 const createLayout = [
 	{
 		sectionTitle: 'Category Details',
-		fields: ['image', 'name', 'slug'],
+		fields: ['image', 'name'],
 	},
 	{
 		sectionTitle: 'Description',
-		fields: ['shortDescription', 'longDescription'],
+		fields: ['shortDescription'],
 	},
 	{
 		sectionTitle: 'Display Settings',
@@ -31,7 +31,7 @@ const createLayout = [
 
 const tableFields = [
 	'name',
-	'slug',
+	// 'slug',
 	'priority',
 	'isActive',
 	'displayInHomePage',

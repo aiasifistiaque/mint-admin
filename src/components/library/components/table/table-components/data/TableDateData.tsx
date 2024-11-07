@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-import { CustomTd } from '.';
+import { CustomTd } from './';
 import { TableCellProps } from '@chakra-ui/react';
 
 type ComponentProps = TableCellProps & {

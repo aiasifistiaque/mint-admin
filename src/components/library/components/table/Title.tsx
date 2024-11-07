@@ -2,7 +2,7 @@ import { Flex, FlexProps, Th, Tooltip } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { TbArrowUp, TbArrowDown, TbArrowsDownUp } from 'react-icons/tb';
 import { BsInfoCircle } from 'react-icons/bs';
-import { useAppDispatch, useAppSelector, updateTable } from '../..';
+import { useAppDispatch, useAppSelector, updateTable } from '../../';
 
 export type TitleProps = FlexProps & {
 	children: React.ReactNode;

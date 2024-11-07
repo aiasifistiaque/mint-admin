@@ -2,7 +2,7 @@ import React from 'react';
 
 import { PopoverContent, PopoverContentProps } from '@chakra-ui/react';
 
-import { shadow, sizes } from '../../..';
+import { shadow, sizes } from '../../../';
 
 type PopoverBodyProps = PopoverContentProps & {
 	children: React.ReactNode;

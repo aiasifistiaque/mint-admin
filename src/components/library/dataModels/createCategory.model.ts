@@ -1,4 +1,4 @@
-import { InputData } from '..';
+import { InputData } from '../';
 
 export type DataType = {
 	name: string | undefined;

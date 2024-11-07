@@ -77,6 +77,19 @@ export const colors: any = {
 		// 600: 'darkslateblue',
 		600: '#111',
 	},
+
+	red: {
+		// 500: '#A5292f',
+		// 100: 'green',
+		// 200: 'blue',
+		// 300: 'teal',
+		// 400: 'slateblue',
+		600: '#EA001C',
+		// 700: 'yellow',
+		// 800: 'orange',
+		// 900: 'tomato',
+		//#EA001C
+	},
 	// black: test,
 	// white: test,
 	// blackAlpha: test,
@@ -89,7 +102,7 @@ export const colors: any = {
 		400: '#f8f6f3',
 		500: '#fff',
 		200: BLACK,
-		light: THEME == 'basic' ? '#fff' : '#f1f1f1',
+		light: THEME == 'basic' ? '#fafafa' : '#f1f1f1',
 		//dark: BLACK,
 		dark: THEME == 'basic' ? BLACK : '#121212',
 	},
@@ -127,7 +140,8 @@ export const colors: any = {
 	},
 	sidebar: {
 		//light: '#F3F3EF',
-		light: '#ebebeb',
+		light: '#fafafa',
+		selected: '#4a4a4a',
 		dark: DARK,
 		darker: '#121212',
 	},
@@ -137,7 +151,7 @@ export const colors: any = {
 	},
 	navbar: {
 		400: BLACK,
-		light: THEME == 'basic' ? '#fff' : BLACK,
+		light: THEME == 'basic' ? '#fafafa' : BLACK,
 		dark: BLACK,
 		800: BLACK,
 	},
@@ -165,7 +179,7 @@ export const colors: any = {
 	},
 
 	table: {
-		light: THEME == 'basic' ? 'transparent' : '#fff',
+		light: THEME == 'basic' ? '#fff' : '#fff',
 		dark: THEME == 'basic' ? 'transparent' : DARK,
 	},
 	selectBorder: {

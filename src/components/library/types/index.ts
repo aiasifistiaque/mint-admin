@@ -179,3 +179,12 @@ export type ButtonChild = ButtonProps & {
 export type TextChild = TextProps & {
 	children?: ReactNode;
 };
+
+export type PromptType = {
+	title: string;
+	body: string;
+	btnText?: string;
+	successMsg?: string;
+};
+
+export type { SchemaType } from './schema.types';

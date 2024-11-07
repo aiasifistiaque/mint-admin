@@ -31,7 +31,7 @@ import {
 	useIsMobile,
 	OrderItems,
 	OrderListGrid,
-} from '..';
+} from '../';
 import { OrderAddress, OrderButton, OrderCustomer } from './pos-card/odder';
 
 const ViewOrderModal = ({ id }: { id: string }) => {

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Grid, Image } from '@chakra-ui/react';
-import { Column, Align } from '../..';
+import { Column, Align } from '../../';
 
 const HorizontalImageView = ({ src, children }: { src: string; children: ReactNode }) => {
 	return (

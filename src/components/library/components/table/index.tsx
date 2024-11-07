@@ -13,6 +13,7 @@ export { default as Tr } from './TableRow';
 export { default as TableRefresh } from './table-components/tool-bar/table-toolbar/TableRefresh';
 export { default as Preferences } from './Preferences';
 export { default as PosResultContainer } from './PosResultContainer';
+export { default as SimplePageHeading } from './SImplePageHeading';
 
 export * from './table-components/pagination';
 

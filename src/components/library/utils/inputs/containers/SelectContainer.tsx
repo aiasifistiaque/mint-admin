@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { Select, SelectProps, useColorModeValue } from '@chakra-ui/react';
-import { Icon } from '../../..';
+import { Icon } from '../../../';
 
 type InputContainerProps = SelectProps & {
 	children: React.ReactNode;

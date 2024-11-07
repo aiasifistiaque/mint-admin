@@ -2,8 +2,8 @@
 
 import React, { FC } from 'react';
 import { Flex, FlexProps } from '@chakra-ui/react';
-import { refresh, navigate } from '..';
-import { AuthWrapper, padding, useAppDispatch, ColorMode, Body, Column, LayoutWrapper } from '..';
+import { refresh, navigate } from '../';
+import { AuthWrapper, padding, useAppDispatch, ColorMode, Body, Column, LayoutWrapper } from '../';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 

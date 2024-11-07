@@ -18,7 +18,7 @@ import {
 	setFields,
 	setPreferences,
 	useGetAllQuery,
-} from '../..';
+} from '../../';
 
 type TableProps = {
 	table: TableObjectProps;
@@ -28,8 +28,9 @@ type TableProps = {
 
 // Define the PageTable component
 const PageTable: FC<TableProps> = ({ table, inputFields }) => {
-	const { page, limit, search, sort, filters, fields, preferences, selectedItems }: any =
-		useAppSelector((state: any) => state.table);
+	const { page, limit, search, sort, filters, preferences, selectedItems }: any = useAppSelector(
+		(state: any) => state.table
+	);
 	const dispatch = useAppDispatch();
 	const [col, setCol] = useState<number>(table?.data?.length + 1);
 	const router = useRouter();

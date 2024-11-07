@@ -10,8 +10,8 @@ import {
 } from '@chakra-ui/react';
 
 import React, { FC } from 'react';
-import { Column, FilterButton } from '../../../..';
-import { DrawerContentContainer, PopoverContentContainer } from '.';
+import { Column, FilterButton } from '../../../../';
+import { DrawerContentContainer, PopoverContentContainer } from './';
 
 type MenuModalProps = {
 	children: React.ReactNode;

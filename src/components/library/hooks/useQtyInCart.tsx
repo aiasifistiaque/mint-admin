@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useAppSelector } from '..';
+import { useAppSelector } from '../';
 
 const useQtyInCart = (id: string) => {
 	const [qty, setQty] = React.useState<number>(0);

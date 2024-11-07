@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useGetSumQuery } from '..';
+import { useGetSumQuery } from '../';
 
 type CountProps = {
 	path: string;

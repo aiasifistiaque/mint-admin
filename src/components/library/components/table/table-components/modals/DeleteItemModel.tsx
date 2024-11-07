@@ -8,7 +8,7 @@ import {
 	Button,
 	useDisclosure,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
 	useCustomToast,
@@ -16,7 +16,7 @@ import {
 	MenuItem,
 	AlertDialogContent,
 	useDeleteByIdMutation,
-} from '../../../..';
+} from '../../../../';
 
 type DeleteItemModalProps = {
 	title?: string;
@@ -26,9 +26,10 @@ type DeleteItemModalProps = {
 
 const DeleteItemModal: React.FC<DeleteItemModalProps> = ({ title, path, id }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>();
+	const cancelRef = React.useRef<any>(undefined);
 
 	const [trigger, result] = useDeleteByIdMutation();
+	const { isSuccess, isError, isLoading, error } = result;
 
 	const closeItem = () => {
 		result?.reset();
@@ -40,12 +41,15 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({ title, path, id }) =>
 		trigger({ path: path, id: id });
 	};
 
+	useEffect(() => {
+		if (isSuccess && !isLoading) {
+			closeItem();
+		}
+	}, [result?.isSuccess]);
+
 	useCustomToast({
 		successText: `${title ? title : 'Item'} Deleted Successfully`,
-		isSuccess: result?.isSuccess,
-		isError: result?.isError,
-		isLoading: result?.isLoading,
-		error: result?.error,
+		...result,
 	});
 
 	return (
@@ -53,7 +57,7 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({ title, path, id }) =>
 			<MenuItem
 				color='red'
 				onClick={onOpen}>
-				Delete
+				{title || 'Delete'}
 			</MenuItem>
 
 			<AlertDialog
@@ -69,17 +73,17 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({ title, path, id }) =>
 						</AlertDialogBody>
 
 						<AlertDialogFooter>
-							{!result?.isLoading && (
-								<Button
-									ref={cancelRef}
-									onClick={closeItem}
-									size='sm'
-									colorScheme='gray'>
-									Discard
-								</Button>
-							)}
 							<Button
-								isLoading={result?.isLoading}
+								isDisabled={isLoading}
+								ref={cancelRef}
+								onClick={closeItem}
+								size='sm'
+								colorScheme='gray'>
+								Discard
+							</Button>
+
+							<Button
+								isLoading={isLoading}
 								colorScheme='red'
 								onClick={handleDelete}
 								ml={2}

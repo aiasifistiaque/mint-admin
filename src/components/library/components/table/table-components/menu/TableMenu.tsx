@@ -9,9 +9,9 @@ import {
 	DeleteItemModal,
 	ViewItemModal,
 	DuplicateModal,
-	ModalMenuItem,
-	ModalMenuTrigger,
-} from '../../../..';
+	DecisionModal,
+	UpdateDataMenuModal,
+} from '../../../../';
 import Link from 'next/link';
 
 type TableMenuProps = {
@@ -37,6 +37,9 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 						id: item?.id ? item?.id(doc) : id,
 						path: item?.path || path,
 					};
+
+					if (item?.renderCondition && !item?.renderCondition(doc)) return null;
+
 					switch (item.type) {
 						case 'custom-redirect':
 							return (
@@ -86,6 +89,28 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 								<DeleteItemModal
 									{...commonProps}
 									title={item?.title}
+								/>
+							);
+						case 'update-key':
+							switch (item?.keyType) {
+								case 'data-menu':
+									return (
+										<UpdateDataMenuModal
+											key={i}
+											item={item}
+											id={item?.id ? item?.id(doc) : id}
+											doc={doc}
+										/>
+									);
+								default:
+									return null;
+							}
+						case 'update-api':
+							return (
+								<DecisionModal
+									item={item}
+									key={i}
+									doc={doc}
 								/>
 							);
 						case 'duplicate':

@@ -7,3 +7,5 @@ export { default as EditDataSelectModal } from './EditDataSelectModal';
 export { default as DuplicateModal } from './DuplicateModal';
 
 export { default as EditFieldModal } from './EditFieldModal';
+export { default as DecisionModal } from './DecisionModal';
+export { default as UpdateDataMenuModal } from './UpdateDataMenuModal';

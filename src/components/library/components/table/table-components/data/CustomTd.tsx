@@ -1,7 +1,7 @@
 import React, { FC, Fragment } from 'react';
 import { Td, Image, Text, Flex, Heading, useColorModeValue } from '@chakra-ui/react';
 
-import { useIsMobile, Column, PLACEHOLDER_IMAGE, TableDataProps } from '../../../..';
+import { useIsMobile, Column, PLACEHOLDER_IMAGE, TableDataProps } from '../../../../';
 
 const PADDING_Y = 1;
 const PADDING_X = 4;

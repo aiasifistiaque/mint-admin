@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 
-import { AlertDialogHeader, AlertDialogContent, Icon } from '../../..';
+import { AlertDialogHeader, AlertDialogContent, Icon } from '../../../';
 
 type DeleteItemModalProps = {
 	idx: number;
@@ -22,7 +22,7 @@ type DeleteItemModalProps = {
 
 const DeleteSection: React.FC<DeleteItemModalProps> = ({ value, handleDataChange, name, idx }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>();
+	const cancelRef = React.useRef<any>(undefined);
 
 	const closeItem = () => {
 		onClose();

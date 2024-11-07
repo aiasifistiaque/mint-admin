@@ -23,13 +23,13 @@ const viewCustomerDataFields: TableObjectDataProps[] = [
 		sort: 'phone',
 		default: true,
 	},
+	{
+		title: 'Shop',
+		dataKey: 'shop.name',
+		sort: 'shop',
+		default: true,
+	},
 
-	// {
-	// 	title: 'Group',
-	// 	dataKey: 'collection',
-	// 	type: 'data-array-count',
-	// 	default: true,
-	// },
 	{
 		title: 'Subscribed to email',
 		dataKey: 'isSubscribedToEmail',

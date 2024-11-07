@@ -2,6 +2,7 @@ import { InputDataType, TableDataFieldType } from './data-types';
 
 type CommonProps = {
 	label: string;
+
 	type: InputDataType;
 	inputLabel?: string;
 	isRequired?: boolean;
@@ -29,6 +30,10 @@ type CommonProps = {
 
 type Schema = {
 	[key: string]: CommonProps;
+};
+
+export type SchemaType<T> = {
+	[K in keyof T]: CommonProps;
 };
 
 export default Schema;

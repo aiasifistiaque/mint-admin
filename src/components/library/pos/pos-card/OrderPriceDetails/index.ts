@@ -9,6 +9,4 @@ export type OPDProps = {
 	vat: number;
 };
 
-import OrderPriceDetails from './OrderPriceDetails';
-
-export default OrderPriceDetails;
+export { default } from './OrderPriceDetails';

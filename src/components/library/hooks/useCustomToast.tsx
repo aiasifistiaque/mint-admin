@@ -12,6 +12,11 @@ type ToastProps = {
 	isLoading: boolean;
 };
 
+const VARIANT = 'left-accent';
+const POSITION = 'bottom-right';
+const IS_CLOSABLE = true;
+const DURATION = 9000;
+
 const useCustomToast = ({
 	isError,
 	isSuccess,
@@ -29,9 +34,10 @@ const useCustomToast = ({
 				title: 'Error',
 				description: error?.data?.message,
 				status: 'error',
-				duration: 9000,
-				isClosable: true,
-				variant: 'left-accent',
+				duration: DURATION,
+				isClosable: IS_CLOSABLE,
+				variant: VARIANT,
+				position: POSITION,
 			});
 	}, [isLoading]);
 
@@ -42,9 +48,10 @@ const useCustomToast = ({
 				title: successTitle || 'Success',
 				description: successText || 'success',
 				status: 'success',
-				duration: 9000,
-				isClosable: true,
-				variant: 'left-accent',
+				duration: DURATION,
+				isClosable: IS_CLOSABLE,
+				variant: VARIANT,
+				position: POSITION,
 			});
 	}, [isLoading]);
 

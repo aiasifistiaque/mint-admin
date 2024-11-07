@@ -15,7 +15,7 @@ import {
 	InsertModalOverlay,
 	VInput,
 	VTextarea,
-} from '../../..';
+} from '../../../';
 
 type UploadModalProps = {
 	trigger?: React.ReactNode;

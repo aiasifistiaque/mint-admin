@@ -11,10 +11,41 @@ const schema: Schema = {
 	},
 	name: {
 		label: 'Name',
-		type: 'string',
+		inputLabel: 'Owner Name',
+		type: 'text',
 		isRequired: true,
 		sort: true,
 		default: true,
+		displayInTable: true,
+	},
+	shopName: {
+		label: 'Shop Name',
+		type: 'text',
+		isRequired: true,
+	},
+	password: {
+		label: 'Password',
+		type: 'password',
+		isRequired: true,
+	},
+	confirm: {
+		label: 'Confirm Password',
+		type: 'password',
+		isRequired: true,
+	},
+	package: {
+		label: 'Package',
+		tableKey: 'package.subscription.name',
+		isRequired: true,
+		sort: true,
+		default: true,
+		displayInTable: true,
+		type: 'data-menu',
+		model: 'packages',
+	},
+	expire: {
+		label: 'Expire',
+		type: 'date',
 		displayInTable: true,
 	},
 	owner: {
@@ -55,17 +86,12 @@ const schema: Schema = {
 		label: 'Address',
 	},
 	email: {
-		type: 'string',
+		type: 'text',
 		isRequired: true,
 		label: 'Email',
 		displayInTable: true,
 	},
-	expire: {
-		type: 'date',
-		isRequired: true,
-		label: 'Expire',
-		// displayInTable: true,
-	},
+
 	trial: {
 		type: 'tag',
 		label: 'Trial',
@@ -74,14 +100,11 @@ const schema: Schema = {
 		colorScheme: (data: any) => (data?.trial ? 'purple' : 'green'),
 	},
 	phone: {
-		type: 'string',
+		type: 'text',
 		label: 'Phone',
 		displayInTable: true,
 	},
-	package: {
-		type: 'string',
-		label: 'Package',
-	},
+
 	isDeleted: {
 		type: 'tag',
 		label: 'Deleted',
@@ -95,6 +118,13 @@ const schema: Schema = {
 		isRequired: true,
 		displayInTable: true,
 		colorScheme: (data: any) => (data?.isActive ? 'green' : 'red'),
+	},
+	isExpired: {
+		type: 'tag',
+		label: 'Expired',
+		sort: true,
+		displayInTable: true,
+		colorScheme: (data: any) => (data?.isExpired == true ? 'red' : 'green'),
 	},
 	createdAt: {
 		type: 'date',

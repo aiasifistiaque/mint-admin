@@ -14,7 +14,7 @@ import {
 	DiscardButton,
 	useExportManyMutation,
 	MenuItem,
-} from '../../..';
+} from '../../../';
 
 const ExportManyModal = ({ path, ids }: { path: string; ids: string[] }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -35,7 +35,7 @@ const ExportManyModal = ({ path, ids }: { path: string; ids: string[] }) => {
 		});
 	};
 
-	const close = () => {
+	const closeModal = () => {
 		setSelected(preferences);
 		onClose();
 	};
@@ -46,7 +46,7 @@ const ExportManyModal = ({ path, ids }: { path: string; ids: string[] }) => {
 
 	useEffect(() => {
 		if (result?.isSuccess) {
-			close();
+			closeModal();
 		}
 	}, [result]);
 
@@ -76,7 +76,7 @@ const ExportManyModal = ({ path, ids }: { path: string; ids: string[] }) => {
 
 			<MenuModal
 				isOpen={isOpen}
-				onClose={close}>
+				onClose={closeModal}>
 				<MenuModalHeader>Select Fields</MenuModalHeader>
 				<MenuModalCloseButton />
 				<MenuModalBody>
@@ -95,7 +95,7 @@ const ExportManyModal = ({ path, ids }: { path: string; ids: string[] }) => {
 						<>
 							<DiscardButton
 								mr={2}
-								onClick={close}>
+								onClick={closeModal}>
 								Discard
 							</DiscardButton>
 							<Button

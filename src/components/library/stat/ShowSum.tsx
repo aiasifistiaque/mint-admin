@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { Skeleton } from '@chakra-ui/react';
-import { currency } from '..';
+import { Skeleton, Tooltip } from '@chakra-ui/react';
+import { currency, Align, Icon } from '../';
 import { StatContainer, StatLabel, StatNumber } from './stat-components';
 
 type CountProps = {
@@ -9,18 +9,31 @@ type CountProps = {
 	price?: boolean;
 	isLoading?: boolean;
 	isError?: boolean;
+	tooltip?: string;
 };
 
 const ShowSum: FC<CountProps> = ({
 	title,
 	children,
 	price,
+	tooltip,
 	isLoading = false,
 	isError = false,
 }) => {
 	return (
 		<StatContainer>
-			<StatLabel>{title}</StatLabel>
+			<Align>
+				<StatLabel>{title}</StatLabel>
+				{tooltip && (
+					<Tooltip
+						label={tooltip}
+						borderRadius='md'>
+						<span>
+							<Icon name='info' />
+						</span>
+					</Tooltip>
+				)}
+			</Align>
 
 			<Skeleton
 				isLoaded={!isLoading}

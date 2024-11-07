@@ -7,3 +7,5 @@ export { default as OrderRightSectionContainer } from './pos-card/odder/OrderRig
 export * from './pos-card/odder';
 export { default as OrderPriceDetails } from './pos-card/OrderPriceDetails/OrderPriceDetails';
 export { default as PosInput } from './PosInput';
+export { default as AddressWidget } from './pos-card/AddressWidget';
+export { default as EditAddressWidget } from './pos-card/EditAddressWidget';

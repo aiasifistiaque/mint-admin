@@ -11,7 +11,7 @@ import {
 	Select,
 } from '@chakra-ui/react';
 import React, { useEffect, useRef, FC, useState } from 'react';
-import { useCustomToast, MenuItem, AlertDialogHeader, AlertDialogContent } from '../../../..';
+import { useCustomToast, MenuItem, AlertDialogHeader, AlertDialogContent } from '../../../../';
 import { useUpdateManyMutation } from '../../../../store';
 
 type EditManyModalType = {
@@ -40,7 +40,7 @@ const EditManySelectModal: FC<EditManyModalType> = ({
 	keyType = 'string',
 }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = useRef<any>();
+	const cancelRef = useRef<any>(undefined);
 	const [value, setValue] = useState<any>();
 
 	const [trigger, result] = useUpdateManyMutation();

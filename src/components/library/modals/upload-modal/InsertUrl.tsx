@@ -11,7 +11,7 @@ import {
 	useColorModeValue,
 } from '@chakra-ui/react';
 
-import { Column } from '../..';
+import { Column } from '../../';
 
 const bodyText = {
 	title: `If your Url is correct, you'll see an image preview here. Large images may take a few

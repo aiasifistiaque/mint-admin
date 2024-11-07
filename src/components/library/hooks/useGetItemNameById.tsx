@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGetByIdQuery } from '..';
+import { useGetByIdQuery } from '../';
 
 const useGetItemNameById = ({ path, id }: { path: string; id: string }) => {
 	const { data, isLoading, isFetching } = useGetByIdQuery(

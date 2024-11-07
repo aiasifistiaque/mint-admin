@@ -1,4 +1,4 @@
-import { sizes } from '../../../..';
+import { sizes } from '../../../../';
 import { PopoverContent, PopoverContentProps } from '@chakra-ui/react';
 import React, { FC } from 'react';
 

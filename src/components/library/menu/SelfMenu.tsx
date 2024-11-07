@@ -14,7 +14,7 @@ import CustomMenuItem from './CustomMenuItem';
 
 import { useGetSelfQuery } from '@/store/services/authApi';
 
-import { Icon, useAppDispatch, MenuContainer, THEME, logout } from '..';
+import { Icon, useAppDispatch, MenuContainer, THEME, logout } from '../';
 
 const SelfMenu = () => {
 	const { data, isFetching, isError, error, isSuccess } = useGetSelfQuery({});
@@ -53,6 +53,8 @@ const SelfMenu = () => {
 						<Tag>{data?.role?.name}</Tag>
 					</MenuItem>
 				</MenuGroup>
+				<MenuDivider />
+				<CustomMenuItem href='/settings'>Settings</CustomMenuItem>
 				<MenuDivider />
 				<MenuGroup>
 					<CustomMenuItem onClick={handleLogout}>Logout</CustomMenuItem>

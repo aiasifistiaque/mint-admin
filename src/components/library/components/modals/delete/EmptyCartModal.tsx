@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 
-import { AlertDialogHeader, AlertDialogContent } from '../../..';
+import { AlertDialogHeader, AlertDialogContent } from '../../../';
 
 type DeleteItemModalProps = {
 	title?: string;
@@ -27,7 +27,7 @@ const EmptyCartModal: React.FC<DeleteItemModalProps> = ({
 	onClick,
 }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>();
+	const cancelRef = React.useRef<any>(undefined);
 
 	const closeItem = () => {
 		onClose();

@@ -1,4 +1,4 @@
-import { URL } from '../..';
+import { URL } from '../../';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const tags = [
@@ -32,6 +32,10 @@ const tags = [
 	'adjustments/damages',
 	'damages',
 	'expenses',
+	'shops',
+	'adjustments',
+	'packages',
+	'subscriptions',
 ];
 
 export const mainApi = createApi({

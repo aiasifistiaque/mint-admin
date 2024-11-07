@@ -10,7 +10,7 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react';
 import React, { useEffect, useRef, FC } from 'react';
-import { useCustomToast, MenuItem, AlertDialogHeader } from '../../../..';
+import { useCustomToast, MenuItem, AlertDialogHeader } from '../../../../';
 import { useUpdateManyMutation } from '../../../../store';
 
 type EditManyModalType = {
@@ -37,7 +37,7 @@ const EditManyModal: FC<EditManyModalType> = ({
 	value,
 }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = useRef<any>();
+	const cancelRef = useRef<any>(undefined);
 
 	const [trigger, result] = useUpdateManyMutation();
 	const { isLoading, isSuccess, isError, error, reset } = result;

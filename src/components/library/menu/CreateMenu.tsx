@@ -10,7 +10,7 @@ import {
 import CustomMenuItem from './CustomMenuItem';
 import MenuContainer from './MenuContainer';
 
-import { Icon } from '..';
+import { Icon } from '../';
 
 const CreateMenu = () => {
 	const color = useColorModeValue('white', '#111');

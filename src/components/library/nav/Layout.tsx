@@ -3,8 +3,6 @@
 import React, { FC } from 'react';
 import { Flex, Heading, useMediaQuery, FlexProps } from '@chakra-ui/react';
 
-import { refresh, navigate } from '..';
-
 import {
 	useIsMobile,
 	AuthWrapper,
@@ -21,7 +19,10 @@ import {
 	Column,
 	LayoutWrapper,
 	THEME,
-} from '..';
+	refresh,
+	navigate,
+	Align,
+} from '../';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 
@@ -42,7 +43,6 @@ const Layout: FC<LayoutProps> = ({
 	title,
 	path = '/dashboard',
 	hideColorMode = false,
-
 	...props
 }) => {
 	const dispatch = useAppDispatch();
@@ -62,29 +62,28 @@ const Layout: FC<LayoutProps> = ({
 	return (
 		<AuthWrapper>
 			<LayoutWrapper>
-				{props?.type !== 'pos' && (
-					<Navbar
-						showMenu={showMenu}
-						px={PX}
-						w={showMenu ? 'full' : sizes.HOME_NAV_MAX_WIDTH}
-						left={showMenu ? 0 : sizes.HOME_NAV_LEFT}>
-						<SpaceBetween>
-							<Heading
-								color={THEME == 'basic' ? 'inherit' : 'white'}
-								size='md'
-								fontFamily='Bebas Neue'>
-								{title}
-							</Heading>
-						</SpaceBetween>
-						<Flex
-							align='center'
-							gap={4}>
-							<SelfMenu />
-							<CreateMenu />
-						</Flex>
-					</Navbar>
-				)}
-
+				<Navbar
+					showMenu={showMenu}
+					px={PX}
+					w={showMenu ? 'full' : sizes.HOME_NAV_MAX_WIDTH}
+					left={showMenu ? 0 : sizes.HOME_NAV_LEFT}>
+					<SpaceBetween>
+						<Heading
+							color={THEME == 'basic' ? 'inherit' : 'white'}
+							size='md'
+							fontFamily='Bebas Neue'>
+							{title}
+						</Heading>
+					</SpaceBetween>
+					<Align gap={4}>
+						<ColorMode
+							size='20px'
+							position='navbar'
+						/>
+						<SelfMenu />
+						<CreateMenu />
+					</Align>
+				</Navbar>
 				<Body>
 					{type == 'default' && <Sidebar />}
 					<Flex
@@ -96,22 +95,7 @@ const Layout: FC<LayoutProps> = ({
 							pt={props?.type == 'pos' ? 0 : type == 'pos' ? 12 : sizes.NAV_HEIGHT}
 							flex={1}
 							w='full'>
-							<Flex
-								overflowY='hidden'
-								h={`calc(100vh - ${sizes.NAV_HEIGHT})`}
-								borderTopRightRadius={{ base: `0`, md: THEME == 'basic' ? 0 : 'xl' }}
-								bg={{ base: 'background.400', md: 'background.light' }}
-								_dark={{ bg: 'background.dark', borderTopRightRadius: 0 }}
-								p={PX}
-								pb={0}
-								w='full'>
-								<Column
-									pl={{ base: 0, md: 2 }}
-									w='full'
-									gap={4}>
-									{children}
-								</Column>
-							</Flex>
+							<Main>{children}</Main>
 						</Flex>
 					</Flex>
 				</Body>
@@ -120,5 +104,25 @@ const Layout: FC<LayoutProps> = ({
 		</AuthWrapper>
 	);
 };
+
+const Main = ({ children }: { children: React.ReactNode }) => (
+	<Flex
+		overflowY='hidden'
+		h={`calc(100vh - ${sizes.NAV_HEIGHT})`}
+		borderTopRightRadius={{ base: `0`, md: THEME == 'basic' ? 0 : 'xl' }}
+		bg={{ base: 'background.400', md: 'background.light' }}
+		_dark={{ bg: 'background.dark', borderTopRightRadius: 0 }}
+		px={PX}
+		pt={{ base: 4, md: 1 }}
+		pb='32px'
+		w='full'>
+		<Column
+			pl={{ base: 0, md: 0 }}
+			w='full'
+			gap={4}>
+			{children}
+		</Column>
+	</Flex>
+);
 
 export default Layout;

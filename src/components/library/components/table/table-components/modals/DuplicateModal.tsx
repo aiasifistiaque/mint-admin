@@ -11,7 +11,7 @@ import {
 import React, { useEffect } from 'react';
 
 import { useCopyItemMutation } from '../../../../store';
-import { useCustomToast, MenuItem, AlertDialogContent, AlertDialogHeader } from '../../../..';
+import { useCustomToast, MenuItem, AlertDialogContent, AlertDialogHeader } from '../../../../';
 
 type DeleteItemModalProps = {
 	title?: string;
@@ -21,7 +21,7 @@ type DeleteItemModalProps = {
 
 const DuplicateModal: React.FC<DeleteItemModalProps> = ({ title, path, id }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>();
+	const cancelRef = React.useRef<any>(undefined);
 
 	const [trigger, result] = useCopyItemMutation();
 

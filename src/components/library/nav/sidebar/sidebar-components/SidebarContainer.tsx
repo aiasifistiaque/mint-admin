@@ -16,10 +16,9 @@ const styles = {
 		borderRightWidth: 0,
 		borderRightColor: 'stroke.light',
 		flexDir: 'column',
-		bg: 'navbar.light',
+
 		_dark: {
 			borderRightColor: 'stroke.dark',
-			bg: 'navbar.dark',
 		},
 	},
 };

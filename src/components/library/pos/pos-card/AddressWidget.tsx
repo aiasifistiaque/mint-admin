@@ -10,7 +10,6 @@ import {
 	Flex,
 	ModalFooter,
 	Text,
-	Tooltip,
 } from '@chakra-ui/react';
 
 import {
@@ -27,8 +26,7 @@ import {
 	Address,
 	removeAddress,
 	setAddress,
-	Icon,
-} from '@/components/library';
+} from '../../';
 
 const inputFields: InputData<Address>[] = [
 	{

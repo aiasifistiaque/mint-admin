@@ -2,7 +2,7 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { Flex, FlexProps, Grid, Heading, Text } from '@chakra-ui/react';
 
-import { sizes, currency, useAppSelector, Pagination, FlexChild, SpaceBetween } from '../..';
+import { sizes, currency, useAppSelector, Pagination, FlexChild, SpaceBetween } from '../../';
 import OrderModal from '@/components/library/pos/OrderModal';
 import CartDrawer from '@/components/library/pos/CartDrawer';
 

@@ -1,10 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
 
-import { useIsMobile, Tr, CustomTd as Td } from '../..';
-
+import { useIsMobile, Tr, CustomTd as Td } from '../../';
 import { useToast } from '@chakra-ui/react';
-
 import InputElement from '../../utils/inputs/input-components/InputElement';
 
 const ReturnProduct = ({ item, i, setItem }: { item: any; i: number; setItem: any }) => {
@@ -44,6 +42,7 @@ const ReturnProduct = ({ item, i, setItem }: { item: any; i: number; setItem: an
 				heading='Sell Qty'>
 				{item?.qty - item?.returnQty}
 			</Td>
+
 			<Td
 				isNumeric={!isMobile && true}
 				heading='Return Qty'>

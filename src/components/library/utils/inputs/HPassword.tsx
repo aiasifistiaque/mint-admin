@@ -5,7 +5,7 @@ import { Input, InputGroup, InputRightElement } from '@chakra-ui/react';
 import { styles, HInputProps } from './util';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 
-import { InputContainer } from '../..';
+import { InputContainer } from '../../';
 
 const ICON_WIDTH = '3rem';
 const EYE_COLOR = '#aaa';

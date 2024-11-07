@@ -10,11 +10,17 @@ const sidebar: SidebarItemType[] = [
 
 	{
 		startOfSection: true,
-		sectionTitle: 'Shops',
+		sectionTitle: 'Shop Management',
 		title: 'Shops',
 		href: '/shops',
 		icon: 'order',
 		path: 'shops',
+	},
+	{
+		title: 'Packages',
+		href: '/packages',
+		icon: 'order',
+		path: 'packages',
 	},
 	{
 		title: 'User',
@@ -22,6 +28,32 @@ const sidebar: SidebarItemType[] = [
 		icon: 'order',
 		path: 'sellers',
 	},
+	{
+		startOfSection: true,
+		sectionTitle: 'Data Management',
+		title: 'Products',
+		href: '/products',
+		icon: 'product',
+		path: 'products',
+	},
+	// {
+	// 	title: 'Categories',
+	// 	href: '/categories',
+	// 	icon: 'category',
+	// 	path: 'categories',
+	// },
+	{
+		title: 'Customers',
+		href: '/customers',
+		icon: 'customer',
+		path: 'customers',
+	},
+	// {
+	// 	title: 'Suppliers',
+	// 	href: '/suppliers',
+	// 	icon: 'customer',
+	// 	path: 'suppliers',
+	// },
 
 	{
 		title: 'Settings',

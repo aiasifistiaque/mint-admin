@@ -33,6 +33,7 @@ import {
 	useAppDispatch,
 	useAppSelector,
 	useIsMobile,
+	SpaceBetween,
 } from '@/components/library';
 import {
 	OrderAddress,
@@ -41,13 +42,16 @@ import {
 	OrderItemsContainer,
 	OrderItemText,
 	OrderRightSectionContainer,
+	OrderCustomer,
 } from './pos-card/odder';
+import { useRouter } from 'next/navigation';
 
 const OrderModal = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { cartItems, total, user, subTotal, discount, vat, shipping, address, isAddressSet } =
 		useAppSelector(state => state.cart);
 	const dispatch = useAppDispatch();
+	const router = useRouter();
 
 	const [trigger, result] = useGetCartTotalMutation();
 
@@ -57,7 +61,7 @@ const OrderModal = () => {
 	const [status, setStatus] = useState('pending');
 
 	const [createOrder, createOrderResult] = useAddOrderMutation();
-	const { isSuccess, isError, isLoading, error } = createOrderResult;
+	const { isSuccess, isError, isLoading, error, data } = createOrderResult;
 
 	useEffect(() => {
 		trigger({ items: cartItems, discount, shipping });
@@ -104,6 +108,7 @@ const OrderModal = () => {
 		if (!isLoading && isSuccess) {
 			dispatch(resetCart());
 			onModalClose();
+			router.push(`/orders/${data?._id}`);
 		}
 	}, [isLoading]);
 
@@ -153,20 +158,18 @@ const OrderModal = () => {
 
 	const renderRightSection = (
 		<>
-			<Flex
-				align='center'
+			<SpaceBetween
 				py={3}
 				borderBottom='1px dashed'
 				borderTop='1px dashed'
-				borderColor={borderColor}
-				justify='space-between'>
+				borderColor={borderColor}>
 				<Heading size='sm'>Billing Details</Heading>
 				<Button
 					size='xs'
 					onClick={handlePaid}>
 					Paid
 				</Button>
-			</Flex>
+			</SpaceBetween>
 
 			<PosInput
 				valueType='text'
@@ -238,6 +241,11 @@ const OrderModal = () => {
 				<ModalContainer isSmallScreen={isSmallScreen}>
 					<Header>
 						Order Details
+						{isAddressSet && (
+							<OrderCustomer
+								data={{ name: address?.name, email: address?.email, phone: address?.phone }}
+							/>
+						)}
 						{isAddressSet && <OrderAddress address={{ ...address }} />}
 					</Header>
 					<CloseButton />

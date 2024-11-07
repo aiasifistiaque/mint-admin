@@ -1,7 +1,7 @@
 import { Flex, FlexProps, Heading, Button } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
-import { CreateModal } from '../..';
+import { CreateModal } from '../../';
 import ExportModal from '../modals/export/ExportModal';
 
 type PageHeadingProps = FlexProps & {

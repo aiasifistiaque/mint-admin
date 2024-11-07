@@ -1,9 +1,9 @@
 'use client';
 
 import React, { FC } from 'react';
-import { InputProps, FormControl, Stack } from '@chakra-ui/react';
-import { Label, HelperText } from '../..';
-import { Input } from '.';
+import { InputProps } from '@chakra-ui/react';
+import { FormControl } from '../../';
+import { Input } from './';
 
 type InputContainerProps = InputProps & {
 	label: string;
@@ -35,25 +35,14 @@ const VSlug: FC<InputContainerProps> = ({
 	return (
 		<FormControl
 			isRequired={isRequired}
-			gap={4}>
-			<Stack
-				spacing={2}
-				w='full'>
-				<Label>{label}</Label>
-
-				<Stack
-					spacing={1}
-					w='full'>
-					<Input
-						placeholder={placeholder ? placeholder : label}
-						value={value}
-						onChange={handleChange}
-						{...props}
-					/>
-
-					{helper && <HelperText>{helper}</HelperText>}
-				</Stack>
-			</Stack>
+			label={label}
+			helper={helper}>
+			<Input
+				placeholder={placeholder ? placeholder : label}
+				value={value}
+				onChange={handleChange}
+				{...props}
+			/>
 		</FormControl>
 	);
 };

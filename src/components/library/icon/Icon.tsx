@@ -44,6 +44,9 @@ import { BiSolidBookContent } from 'react-icons/bi';
 import { BiSolidReport } from 'react-icons/bi';
 import { FaMoneyCheckAlt } from 'react-icons/fa';
 import { TbBrandPatreonFilled } from 'react-icons/tb';
+import { GiBuyCard } from 'react-icons/gi';
+import { FaTruck } from 'react-icons/fa';
+import { FaCircleInfo } from 'react-icons/fa6';
 
 export type IconNameOptions =
 	| 'add'
@@ -66,6 +69,7 @@ export type IconNameOptions =
 	| 'date'
 	| 'delete'
 	| 'delivery'
+	| 'delivery-fill'
 	| 'dots'
 	| 'edit'
 	| 'expense'
@@ -75,11 +79,13 @@ export type IconNameOptions =
 	| 'fields'
 	| 'home'
 	| 'items'
+	| 'info'
 	| 'leave'
 	| 'menu'
 	| 'order'
 	| 'pos'
 	| 'product'
+	| 'purchase'
 	| 'report'
 	| 'role'
 	| 'select'
@@ -139,6 +145,9 @@ const icons: any = {
 	report: BiSolidReport,
 	expense: FaMoneyCheckAlt,
 	'brand-alt': TbBrandPatreonFilled,
+	purchase: GiBuyCard,
+	'delivery-fill': FaTruck,
+	info: FaCircleInfo,
 };
 
 const Icon: FC<IconProps> = ({ name, ...props }) => {

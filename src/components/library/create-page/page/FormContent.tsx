@@ -2,7 +2,7 @@
 
 import React, { FC, useState } from 'react';
 
-import { FormInput, FormItem, FormDivision } from '../..';
+import { FormInput, FormItem, FormDivision } from '../../';
 
 type FormPageType = {
 	formData: any;

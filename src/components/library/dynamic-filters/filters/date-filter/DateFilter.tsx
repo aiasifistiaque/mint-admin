@@ -19,7 +19,7 @@ import {
 	PopModalHeader,
 	PopModalCloseButton,
 	PopModalBody,
-} from '../../..';
+} from '../../../';
 
 type DateFilterProps = {
 	field: string;

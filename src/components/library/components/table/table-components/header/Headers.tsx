@@ -10,7 +10,7 @@ import {
 	TableObjectDataProps,
 	Title,
 	selectAll,
-} from '../../../..';
+} from '../../../../';
 
 type HeadersProps = {
 	tableData: TableObjectDataProps[];
@@ -55,7 +55,7 @@ const Headers = ({ tableData, fields, selectable, isLoading, data, showMenu }: H
 				</Title>
 			)}
 
-			{tableData.map(({ title, sort, dataKey, type }) => {
+			{tableData?.map(({ title, sort, dataKey, type }) => {
 				if (!fields?.includes(dataKey) && type !== 'menu') return null;
 				if (!showMenu && type == 'menu') return null;
 				return (

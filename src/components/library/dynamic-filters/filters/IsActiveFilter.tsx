@@ -10,7 +10,7 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react';
 
-import { FilterButton, PopoverContainer, PopoverHeader, Column, FilterSelect } from '../..';
+import { FilterButton, PopoverContainer, PopoverHeader, Column, FilterSelect } from '../../';
 
 type IsActiveFilterProps = {
 	trigger: React.ReactNode;

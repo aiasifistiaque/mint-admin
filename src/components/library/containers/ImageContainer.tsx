@@ -1,6 +1,6 @@
 import React from 'react';
 import { Center, FlexProps, Image } from '@chakra-ui/react';
-import { PLACEHOLDER_IMAGE } from '..';
+import { PLACEHOLDER_IMAGE } from '../';
 
 type ImageContainerProps = FlexProps & {
 	size?: number;
