@@ -23,6 +23,7 @@ const tableFields = convertToTableFields({
 		'createdAt',
 		'package',
 		'expire',
+		'smsBalance',
 	],
 });
 
@@ -99,6 +100,19 @@ const table: TableObjectProps = {
 				body: 'Are you sure you want to mark this shop as inactive?',
 				btnText: 'Confirm',
 				successMsg: 'Shop deactivated successfully',
+			},
+		},
+
+		{
+			type: 'update-key',
+			title: 'Update SMS Balance',
+			keyType: 'number',
+			key: 'smsBalance',
+			prompt: {
+				title: 'Update Balance',
+				body: 'Enter the new SMS balance for this shop',
+				btnText: 'Confirm',
+				successMsg: 'Balance updated successfully',
 			},
 		},
 	],

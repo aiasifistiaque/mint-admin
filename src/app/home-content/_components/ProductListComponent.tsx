@@ -34,6 +34,7 @@ const ProductListComponent: FC<HomeContentProps> = ({ dataModel, content }) => {
 	return (
 		<ViewProductContainer
 			title='Product List'
+			path='nexa'
 			edit={false}
 			data={content?.productList}
 			dataModel={dataModel}>

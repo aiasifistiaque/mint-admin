@@ -19,6 +19,7 @@ const CategoryComponent: FC<HeroDataProps> = ({ content, dataModel }) => {
 		<ViewContentContainer
 			title='Category Section'
 			data={content}
+			path='nexa'
 			dataModel={dataModel}>
 			<Align
 				justify='space-between'

@@ -19,6 +19,7 @@ export { default as NoDataFound } from '../no-data-found/NoDataFound';
 export { default as VCustomAttributes } from './VCustomAttributes';
 export { default as VCustom } from './section/VCustom';
 export { default as VSlug } from './VSlug';
+export { default as VArrayString } from './section/VArrayStrint';
 
 export { default as AddCustomSection } from './section/AddCustomSection';
 

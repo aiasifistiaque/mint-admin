@@ -13,13 +13,13 @@ import {
 	MenuItem,
 	VTextarea,
 	usePostMutation,
+	useCustomToast,
 } from '../../../';
 
 const SendBulkSmsModal = ({ path, ids }: { path: string; ids: string[] }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const [text, setText] = useState<string>('');
-
 	const [trigger, result] = usePostMutation();
 
 	const handleSubmit = (e: any) => {
@@ -33,14 +33,18 @@ const SendBulkSmsModal = ({ path, ids }: { path: string; ids: string[] }) => {
 		});
 	};
 
-	const close = () => {
+	useCustomToast({
+		...result,
+		successText: 'SMS sent successfully',
+	});
+
+	const closeModal = () => {
+		setText('');
 		onClose();
 	};
 
 	useEffect(() => {
-		if (!result?.isLoading && result?.isSuccess) {
-			onClose();
-		}
+		if (!result?.isLoading && result?.isSuccess) closeModal();
 	}, [result]);
 
 	return (
@@ -49,7 +53,7 @@ const SendBulkSmsModal = ({ path, ids }: { path: string; ids: string[] }) => {
 
 			<MenuModal
 				isOpen={isOpen}
-				onClose={close}>
+				onClose={closeModal}>
 				<MenuModalHeader>Write your custom Message</MenuModalHeader>
 				<MenuModalCloseButton />
 				<MenuModalBody>
@@ -65,7 +69,7 @@ const SendBulkSmsModal = ({ path, ids }: { path: string; ids: string[] }) => {
 					<>
 						<DiscardButton
 							mr={2}
-							onClick={close}>
+							onClick={closeModal}>
 							Discard
 						</DiscardButton>
 						<Button

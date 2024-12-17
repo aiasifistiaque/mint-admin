@@ -3,8 +3,8 @@ import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { Flex, FlexProps, Grid, Heading, Text } from '@chakra-ui/react';
 
 import { sizes, currency, useAppSelector, Pagination, FlexChild, SpaceBetween } from '../../';
-import OrderModal from '@/components/library/pos/OrderModal';
-import CartDrawer from '@/components/library/pos/CartDrawer';
+import OrderModal from '../../pos/OrderModal';
+import CartDrawer from '../../pos/CartDrawer';
 
 type ResultContainerProps = FlexProps & {
 	data: any;
@@ -14,10 +14,11 @@ type ResultContainerProps = FlexProps & {
 const PosResultContainer: FC<ResultContainerProps> = ({ data, cart, ...props }) => {
 	const { cartItems, total } = useAppSelector(state => state.cart);
 	const [count, setCount] = useState<number>(0);
+
 	useEffect(() => {
 		setCount(count + 1);
-		console.log(JSON.stringify(cartItems));
 	}, [cartItems]);
+
 	return (
 		<Container {...props}>
 			<Grid

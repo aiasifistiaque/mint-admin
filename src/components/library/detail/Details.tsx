@@ -9,31 +9,84 @@ import {
 	Textarea,
 	TextareaProps,
 	useColorModeValue,
+	Image,
 } from '@chakra-ui/react';
 import UpdatePasswordModal from '../modals/update-password/UpdatePasswordModal';
+import { VImage } from '../utils/inputs';
+import { PLACEHOLDER_IMAGE } from '../config';
+import { CreateModal } from '../modals';
 
 type DetailProps = InputProps &
-	TextareaProps & {
+	TextareaProps &
+	any & {
 		title: string;
 		children: any;
 		editing: boolean;
 		isPassword?: boolean;
-		type?: 'input' | 'textarea';
+		type?: 'input' | 'textarea' | 'image';
+		body?: string;
+		path?: string;
+		dataModel?: any;
+		prompt?: {
+			title?: string;
+			body?: string;
+			btnText?: string;
+			successMsg?: string;
+		};
+		id?: string;
+		invalidate?: string[];
 	};
 
-const Details: FC<DetailProps> = ({ title, children, editing, type, isPassword, ...props }) => {
-	const textBox = (
-		<Text
-			px={3}
-			py={1}
-			fontSize='.9rem'>
-			{children}
-		</Text>
-	);
+const Details: FC<DetailProps> = ({
+	title,
+	children,
+	editing,
+	type,
+	isPassword,
+	body,
+	path,
+	dataModel,
+	prompt,
+	id,
+	invalidate,
+	populate,
+	...props
+}) => {
+	const textBox =
+		type == 'image' ? (
+			<Image
+				src={children || PLACEHOLDER_IMAGE}
+				h='100px'
+				w='100px'
+				objectFit='contain'
+			/>
+		) : (
+			<Text
+				px={3}
+				py={1}
+				fontSize='.9rem'>
+				{children}
+			</Text>
+		);
 
 	const passwordBox = (
 		<Box>
 			<UpdatePasswordModal trigger={<Button size='sm'>Change Password</Button>} />
+		</Box>
+	);
+
+	const modalBox = (
+		<Box>
+			<CreateModal
+				type='update'
+				data={dataModel}
+				prompt={prompt}
+				id={id}
+				populate={populate}
+				invalidate={invalidate}
+				path={path}>
+				<Button size='sm'>{body}</Button>
+			</CreateModal>
 		</Box>
 	);
 
@@ -53,6 +106,11 @@ const Details: FC<DetailProps> = ({ title, children, editing, type, isPassword, 
 				value={children}
 				{...props}
 			/>
+		) : type == 'image' ? (
+			<VImage
+				value={children}
+				{...props}
+			/>
 		) : (
 			<Input
 				{...styleProps}
@@ -65,14 +123,16 @@ const Details: FC<DetailProps> = ({ title, children, editing, type, isPassword, 
 		<Grid
 			gridTemplateColumns={{ base: '1fr 2fr', md: '1fr 3fr' }}
 			w='100%'
-			h='50px'>
+			pb={3}
+			// h='50px'
+		>
 			<Text
 				py={1}
 				fontWeight='600'
 				fontSize='.9rem'>
 				{title}
 			</Text>
-			{isPassword ? passwordBox : editing ? inputBox : textBox}
+			{isPassword ? passwordBox : type == 'modal' ? modalBox : editing ? inputBox : textBox}
 		</Grid>
 	);
 };

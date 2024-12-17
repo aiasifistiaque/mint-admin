@@ -3,3 +3,5 @@ export { default as convertToTableFields } from './functions/convertToTableField
 export { default as convertToViewFields } from './functions/convertToViewFields';
 
 export { default as convertToFormFields } from './functions/createFormFields';
+
+export { default as extendSchema } from './functions/extendSchema';

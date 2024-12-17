@@ -12,6 +12,7 @@ const HeroData: FC<HeroDataProps> = ({ content, dataModel }) => {
 		<ViewContentContainer
 			title='Hero Section'
 			data={content}
+			path='nexa'
 			dataModel={dataModel}>
 			<ImageView src={content?.hero?.image}>
 				<Heading size='md'>{content?.hero?.title}</Heading>

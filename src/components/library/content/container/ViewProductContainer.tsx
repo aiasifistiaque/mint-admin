@@ -8,6 +8,7 @@ type ViewContentContainerType = {
 	dataModel: any;
 	data: any;
 	edit?: boolean;
+	path: string;
 };
 
 const ViewProductContainer: FC<ViewContentContainerType> = ({
@@ -16,6 +17,7 @@ const ViewProductContainer: FC<ViewContentContainerType> = ({
 	dataModel,
 	data,
 	edit = true,
+	path,
 }) => {
 	return (
 		<Column gap={4}>
@@ -26,6 +28,7 @@ const ViewProductContainer: FC<ViewContentContainerType> = ({
 				<Heading size='lg'>{title || '--'}</Heading>
 				{edit && (
 					<EditContentModal
+						path={path}
 						data={data}
 						dataModel={dataModel}>
 						<Button

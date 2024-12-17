@@ -9,6 +9,7 @@ const AboutComponent: FC<HomeContentProps> = ({ dataModel, content }) => {
 		<ViewContentContainer
 			title='About Us'
 			data={content}
+			path='nexa'
 			dataModel={dataModel}>
 			<ImageView
 				src={image}

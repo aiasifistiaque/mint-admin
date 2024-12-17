@@ -2,7 +2,6 @@ import { InputDataType, TableDataFieldType } from './data-types';
 
 type CommonProps = {
 	label: string;
-
 	type: InputDataType;
 	inputLabel?: string;
 	isRequired?: boolean;
@@ -20,6 +19,7 @@ type CommonProps = {
 	tableKey?: string;
 	menuField?: string;
 	value?: any;
+	getValue?: (doc: any) => any;
 	fetch?: (data: any) => {
 		path: string;
 		fields: { key: string; as: string }[];

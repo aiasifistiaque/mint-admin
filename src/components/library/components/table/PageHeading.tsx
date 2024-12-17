@@ -35,6 +35,7 @@ const PageHeading: React.FC<PageHeadingProps> = ({
 			path={path}
 			data={data}
 			invalidate={table?.invalidate}
+			prompt={table?.button?.prompt}
 		/>
 	) : href ? (
 		<Link href={href}>{btn}</Link>

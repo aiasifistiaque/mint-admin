@@ -10,6 +10,11 @@ type TableRowProps = {
 	id?: string;
 };
 
+// type SelectableTableRowProps = {
+// 	selectable: true;
+// 	id: string;
+// };
+
 const TableRow: FC<TableRowProps> = ({ children, actions, selectable, id, ...props }) => {
 	const isMobile = useIsMobile();
 	const Container = isMobile ? RowContainerBase : RowContainerMd;

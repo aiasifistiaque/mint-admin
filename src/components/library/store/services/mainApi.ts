@@ -32,10 +32,6 @@ const tags = [
 	'adjustments/damages',
 	'damages',
 	'expenses',
-	'shops',
-	'adjustments',
-	'packages',
-	'subscriptions',
 ];
 
 export const mainApi = createApi({

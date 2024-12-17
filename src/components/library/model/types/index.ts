@@ -37,6 +37,7 @@ type Types =
 type TableTypes = 'checkbox' | 'date' | 'image-text' | 'string' | 'tag' | 'text';
 
 type SchemaField = {
+	type: Types;
 	colorScheme?: (data: any) => string;
 	dataModel?: any;
 	default?: boolean;
@@ -54,8 +55,8 @@ type SchemaField = {
 	tableKey?: string;
 	tableType?: TableTypes;
 	title?: string;
-	type: Types;
 	viewType?: SchemaFieldTypes | 'array-tag';
+	helperText?: string;
 };
 
 export type SchemaProps = {

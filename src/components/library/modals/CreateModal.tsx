@@ -43,6 +43,14 @@ type CreateModalProps = {
 	title?: string;
 	invalidate?: any;
 	children?: any;
+	doc?: any;
+	populate?: any;
+	prompt?: {
+		title?: string;
+		body?: string;
+		btnText?: string;
+		successMsg?: string;
+	};
 };
 
 const CreateModal = ({
@@ -54,11 +62,14 @@ const CreateModal = ({
 	id,
 	invalidate,
 	children,
+	doc,
+	prompt,
+	populate,
 }: CreateModalProps) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const [fetch, { data: prevData, isFetching, isUninitialized }] = useLazyGetByIdToEditQuery();
-	const [formData, setFormData] = useFormData<any>(data, prevData);
+	const [formData, setFormData] = useFormData<any>(data, populate || prevData);
 	const isMobile = useIsMobile();
 
 	const borderColor = useColorModeValue('border.light', 'border.dark');
@@ -77,11 +88,18 @@ const CreateModal = ({
 	const onModalOpen = () => {
 		onOpen();
 		let newFieldData = {};
+
 		data?.map(field => {
-			if (field?.value) newFieldData = { ...newFieldData, [field.name]: field.value };
+			if (field?.getValue) newFieldData = { ...newFieldData, [field.name]: field?.getValue(doc) };
+			if (field?.value) newFieldData = { ...newFieldData, [field.name]: field?.value };
 		});
+
 		setFormData({ ...formData, ...newFieldData });
 		if (type == 'update') {
+			if (populate) {
+				setFormData(populate);
+				return;
+			}
 			fetch({ path, id });
 		}
 	};
@@ -90,8 +108,11 @@ const CreateModal = ({
 
 	const [changedData, setChangedData] = useState({});
 
-	const successText =
-		type == 'update' ? 'Information Updated Successfully' : 'Item added successfully';
+	const successText = prompt?.successMsg
+		? prompt?.successMsg
+		: type == 'update'
+		? 'Information Updated Successfully'
+		: 'Item added successfully';
 
 	useCustomToast({
 		successText,
@@ -129,15 +150,12 @@ const CreateModal = ({
 	};
 
 	useEffect(() => {
-		if (isSuccess && !isLoading) {
-			onModalClose();
-		}
+		if (isSuccess && !isLoading) onModalClose();
 	}, [isLoading]);
 
 	useEffect(() => {
-		if (prevData) {
-			setFormData(prevData);
-		}
+		if (populate) return;
+		if (prevData) setFormData(prevData);
 	}, [prevData, isFetching]);
 
 	const footer = (
@@ -154,7 +172,7 @@ const CreateModal = ({
 				size={{ base: 'md', md: 'xs' }}
 				{...(isMobile && { w: '100%' })}
 				isLoading={isLoading}>
-				Confirm
+				{prompt?.btnText || 'Confirm'}
 			</ModalSubmitButton>
 		</>
 	);
@@ -168,7 +186,7 @@ const CreateModal = ({
 				{...(isMobile && { placement: 'bottom' })}
 				{...(isMobile && { isFullHeight: false })}
 				isOpen={isOpen}
-				size='xl'
+				size='2xl'
 				onClose={onModalClose}
 				closeOnOverlayClick={false}>
 				<Overlay />
@@ -176,7 +194,9 @@ const CreateModal = ({
 					<Content
 						// overflowY='scroll'
 						onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-						<Header>{title || `${type === 'update' ? 'Update' : 'Create'} ${path}`}</Header>
+						<Header>
+							{prompt?.title || title || `${type === 'update' ? 'Update' : 'Create'} ${path}`}
+						</Header>
 						<CloseButton />
 
 						<Body

@@ -33,7 +33,7 @@ const ResultContainer: FC<ResultContainerProps> = ({ data, ...props }) => {
 				justify='space-between'
 				gap={4}
 				w='100%'
-				bg='bg.light'
+				bg='container.light'
 				borderTop='1px solid'
 				borderTopColor='stroke.deepL'
 				_dark={{ bg: 'container.dark', borderTopColor: 'stroke.deepD' }}>

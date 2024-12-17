@@ -24,7 +24,6 @@ import {
 	addToCart,
 	Label,
 	Price,
-	useAppSelector,
 	useQtyInCart,
 } from '../../../';
 import CardContainer from '@/components/library/pos/pos-card/CardContainer';

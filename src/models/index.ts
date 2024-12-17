@@ -31,3 +31,5 @@ export const schema: any = {
 	customers: CustomerSchema,
 	suppliers: SupplierSchema,
 };
+
+export { default as themeSchema } from './theme/theme.schema';

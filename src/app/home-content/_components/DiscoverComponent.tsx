@@ -10,6 +10,7 @@ const DiscoverComponent: FC<HomeContentProps> = ({ dataModel, content }) => {
 		<ViewContentContainer
 			title='Discover'
 			data={content}
+			path='nexa'
 			dataModel={dataModel}>
 			<Center
 				flexDir='column'

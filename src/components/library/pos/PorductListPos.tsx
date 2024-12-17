@@ -6,7 +6,6 @@ import { Flex } from '@chakra-ui/react';
 import {
 	PosResultContainer,
 	NoDataFound,
-	useAppDispatch,
 	useAppSelector,
 	useGetAllQuery,
 } from '@/components/library';
@@ -16,11 +15,9 @@ import PosCart from './PosCart';
 import PosCartDrawer from './PosDrawerCart';
 
 const PorductListPos = () => {
-	const { page, limit, search, sort, filters, fields, preferences } = useAppSelector(
-		(state: any) => state.table
-	);
+	const { page, limit, search, sort, filters } = useAppSelector((state: any) => state.table);
 
-	const { data, isLoading, isError, error, isSuccess } = useGetAllQuery({
+	const { data } = useGetAllQuery({
 		page,
 		limit,
 		search,

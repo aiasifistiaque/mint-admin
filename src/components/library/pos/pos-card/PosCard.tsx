@@ -8,17 +8,11 @@ import {
 	currency,
 	ViewItemModal,
 	AddToCartModal,
-} from '@/components/library';
+} from '../../';
 
 import { viewPreviewFields as viewAllDataFields } from '@/models/products/products.model';
 
 const PosCard = ({ item }: { item: any }) => {
-	// const dispatch = useAppDispatch();
-
-	// const handleAddToCart = (item: any) => {
-	// 	dispatch(addToCart(item));
-	// };
-
 	const title = `${item?.name} ${
 		item?.unit !== undefined ? `(${item?.unitValue} ${item?.unit})` : ''
 	}`;

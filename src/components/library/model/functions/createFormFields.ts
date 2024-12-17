@@ -1,3 +1,5 @@
+import { HelperText } from '../../form';
+
 type CreateType = {
 	schema: any;
 	layout: { sectionTitle: string; fields: any[] }[];
@@ -38,6 +40,7 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 							isRequired: fieldConfig.isRequired || fieldConfig.required || false,
 							type: typeDetail,
 							...(fieldConfig.placeholder && { placeholder: fieldConfig.placeholder }),
+							...(fieldConfig?.helperText && { helper: fieldConfig.helperText }),
 							...(fieldConfig.options && { options: fieldConfig.options }),
 							...(fieldConfig.model && { model: fieldConfig.model }),
 							...(fieldConfig.dataModel && { dataModel: fieldConfig.model }),
@@ -48,6 +51,7 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 							...(fieldConfig?.value && { value: fieldConfig.value }),
 							...(fieldConfig?.fetch && { fetch: fieldConfig.fetch }),
 							...(fieldConfig?.isExcluded && { isExcluded: fieldConfig.isExcluded }),
+							...(fieldConfig?.getValue && { getValue: fieldConfig.getValue }),
 						});
 					}
 				});
@@ -70,11 +74,12 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 						...(fieldConfig.model && { model: fieldConfig.model }),
 						...(fieldConfig.dataModel && { dataModel: fieldConfig.dataModel }),
 						...(fieldConfig.options && { dataModel: fieldConfig.options }),
+						...(fieldConfig?.helperText && { helper: fieldConfig.helperText }),
 						...(fieldConfig?.renderCondition && { renderCondition: fieldConfig.renderCondition }),
 						...(fieldConfig?.value && { value: fieldConfig.value }),
 						...(fieldConfig?.fetch && { fetch: fieldConfig.fetch }),
 						...(fieldConfig?.isExcluded && { isExcluded: fieldConfig.isExcluded }),
-
+						...(fieldConfig?.getValue && { getValue: fieldConfig.getValue }),
 						endOfSection: lastElement,
 					});
 				}

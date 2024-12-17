@@ -24,7 +24,6 @@ type SidebarItemProps = {
 const SidebarItem: React.FC<SidebarItemProps> = ({ href, children, path, icon, sx }) => {
 	const { selected } = useAppSelector((state: any) => state.route);
 	const dispatch = useAppDispatch();
-
 	const color = useColorModeValue('#4a4a4a', '#fff');
 	const bg = useColorModeValue('white', '#222');
 	const hover = useColorModeValue('#fafafa', '#141414');
@@ -51,7 +50,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ href, children, path, icon, s
 		);
 	};
 
-	const isSelected: boolean = selected === path;
+	// return <Link href='/'>home</Link>;
 
 	return (
 		<Link href={href}>
@@ -60,7 +59,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ href, children, path, icon, s
 				_hover={selected !== path ? { bg: hover } : {}}
 				onClick={changeRoute}
 				h={{ base: 10, md: 7 }}
-				bg={isSelected ? bg : 'transparent'}
+				bg={selected == path ? bg : 'transparent'}
 				sx={{ ...styles.container, ...sx }}>
 				<Icon
 					color={color}
@@ -69,7 +68,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ href, children, path, icon, s
 				/>
 				<Text
 					fontSize={{ base: '16px', md: '14px' }}
-					fontWeight={isSelected ? '700' : '600'}>
+					fontWeight='600'>
 					{children}
 				</Text>
 			</Flex>

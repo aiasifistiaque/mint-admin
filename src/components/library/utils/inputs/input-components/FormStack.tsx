@@ -19,7 +19,7 @@ const FormStack: FC<FormStackProps> = ({ children, label, helper, ...props }) =>
 				w='full'>
 				<Label>{label}</Label>
 				<Stack
-					spacing={1}
+					spacing={0}
 					w='full'>
 					{children}
 					{helper && <HelperText>{helper}</HelperText>}

@@ -4,6 +4,7 @@ type Item =
 	| 'view'
 	| 'view-modal'
 	| 'edit-modal'
+	| 'post'
 	| 'update-api'
 	| 'redirect'
 	| 'custom'
@@ -47,8 +48,8 @@ type CustomRedirectItem = BaseMenuItem & {
 
 type UpdateApiItem = BaseMenuItem & {
 	type: 'update-api';
-	path: string;
-	id: (data: any) => string;
+	path?: string;
+	id?: (data: any) => string;
 	body: object;
 };
 

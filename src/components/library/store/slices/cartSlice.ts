@@ -121,7 +121,6 @@ export const cartSlice = createSlice({
 				state.cartItems = [...state.cartItems, newItem];
 			}
 
-			// Calculate total amount
 			calculateTotals(state);
 
 			saveStateToLocalStorage(state);

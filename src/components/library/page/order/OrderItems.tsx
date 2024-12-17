@@ -46,7 +46,7 @@ const OrderItems = ({ data }: { data: any }) => {
 					total={data?.total}
 					subTotal={data?.subTotal}
 					discount={data?.discount}
-					shipping={data?.shipping}
+					shipping={data?.shippingCharge}
 					vat={data?.vat}
 				/>
 			</Flex>

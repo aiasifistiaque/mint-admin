@@ -16,6 +16,44 @@ const CreateNav: React.FC<CreateNavProps> = ({ title, path, isLoading }) => {
 	const handleBackClick = () => {
 		router.replace(`/${path}`);
 	};
+
+	const headings = (
+		<>
+			<CloseButton
+				colorScheme='brand'
+				color='white'
+				onClick={handleBackClick}
+			/>
+			<Divider
+				h={6}
+				orientation='vertical'
+			/>
+			<Heading
+				color='white'
+				size='xs'>
+				{title}
+			</Heading>
+		</>
+	);
+
+	const buttons = (
+		<>
+			<Button
+				onClick={handleBackClick}
+				size='sm'
+				isLoading={isLoading}
+				colorScheme='gray'>
+				Discard
+			</Button>
+			<Button
+				type='submit'
+				size='sm'
+				isLoading={isLoading}>
+				Save
+			</Button>
+		</>
+	);
+
 	return (
 		<Navbar
 			bg={THEME == 'basic' ? 'navbar.400' : 'navbar.light'}
@@ -25,38 +63,13 @@ const CreateNav: React.FC<CreateNavProps> = ({ title, path, isLoading }) => {
 				gap={3}
 				align='center'
 				flex={1}>
-				<CloseButton
-					colorScheme='brand'
-					color='white'
-					onClick={handleBackClick}
-				/>
-				<Divider
-					h={6}
-					orientation='vertical'
-				/>
-				<Heading
-					color='white'
-					size='xs'>
-					{title}
-				</Heading>
+				{headings}
 			</Flex>
 			<Center
 				flex={1}
 				justifyContent='flex-end'
 				gap={2}>
-				<Button
-					onClick={handleBackClick}
-					size='sm'
-					isLoading={isLoading}
-					colorScheme='gray'>
-					Discard
-				</Button>
-				<Button
-					type='submit'
-					size='sm'
-					isLoading={isLoading}>
-					Save
-				</Button>
+				{buttons}
 			</Center>
 		</Navbar>
 	);

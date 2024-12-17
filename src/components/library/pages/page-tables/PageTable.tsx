@@ -22,12 +22,11 @@ import {
 
 type TableProps = {
 	table: TableObjectProps;
-	isModal?: boolean;
-	inputFields?: any;
+	layoutPath?: string;
 };
 
 // Define the PageTable component
-const PageTable: FC<TableProps> = ({ table, inputFields }) => {
+const PageTable: FC<TableProps> = ({ table, layoutPath }) => {
 	const { page, limit, search, sort, filters, preferences, selectedItems }: any = useAppSelector(
 		(state: any) => state.table
 	);
@@ -105,15 +104,15 @@ const PageTable: FC<TableProps> = ({ table, inputFields }) => {
 		<>
 			<Layout
 				title={table?.title}
-				path={table?.path}>
+				path={layoutPath || table?.path}>
 				<PageHeading
 					table={table}
 					title={table?.title} //Heading of the page
 					button={table?.button?.title} //Button Title
 					href={table?.button?.path} //Page where button would redirect to
-					isModal={table?.isModal} //If create page should be modal
+					isModal={table?.button?.isModal || table?.isModal} //If create page should be modal
 					path={table?.path} //Path of the table
-					data={table?.createModel} //Input fields for the create page
+					data={table?.button?.dataModel || table?.createModel} //Input fields for the create page
 					export={table?.export} //If export button should be displayed
 				/>
 

@@ -94,6 +94,7 @@ const TableCustom: FC<TableProps> = ({ table, inputFields }) => {
 	return (
 		<>
 			<CustomTable
+				search={table?.search}
 				showFilters={table?.filters} //Hide filters
 				filters={table?.path} //Name of the filters
 				col={col} //No of columns for skeleton
@@ -106,7 +107,6 @@ const TableCustom: FC<TableProps> = ({ table, inputFields }) => {
 				selectedItems={selectedItems} //Selected items
 				isError={isError} //If error while fetching data
 				select={table?.select} //Select menu
-				search={table?.search}
 				pagination={table?.pagination}
 				error={error}
 				table={table}>

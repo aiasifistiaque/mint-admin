@@ -48,6 +48,14 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'customers',
 	},
+	{
+		startOfSection: true,
+		sectionTitle: 'Theme',
+		title: 'Themes',
+		href: '/themes',
+		icon: 'product',
+		path: 'themes',
+	},
 	// {
 	// 	title: 'Suppliers',
 	// 	href: '/suppliers',

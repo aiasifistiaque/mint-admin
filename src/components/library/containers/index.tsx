@@ -13,3 +13,5 @@ export { default as Flex } from './Flex';
 export { default as GridItem } from './GridItem';
 export { default as Section } from './Section';
 export { default as ShadowContainer } from './ShadowContainer';
+export { default as MintTableContainer } from './MintTableContainer';
+export { default as InputRow } from './InputRow';

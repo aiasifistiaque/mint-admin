@@ -2,9 +2,9 @@ import { FormHelperText, FormHelperTextProps } from '@chakra-ui/react';
 import React, { FC } from 'react';
 
 const FONT_SIZE = '.8rem';
-const PX = 3;
-const COLOR = 'gray.400';
-const COLOR_DARK = 'gray.400';
+const PX = 1;
+const COLOR = '#444';
+const COLOR_DARK = '#f5f5f5';
 
 type HelperTextProps = FormHelperTextProps & {
 	children: string;
@@ -15,6 +15,7 @@ const HelperText: FC<HelperTextProps> = ({ children, ...props }) => {
 		<FormHelperText
 			color={COLOR}
 			px={PX}
+			fontStyle='italic'
 			fontSize={FONT_SIZE}
 			_dark={{ color: COLOR_DARK }}
 			{...props}>

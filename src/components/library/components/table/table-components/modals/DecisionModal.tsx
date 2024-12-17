@@ -19,9 +19,11 @@ import {
 } from '../../../../';
 
 type DecisionModalProps = {
+	itemId: string;
+	path: string;
 	item: {
 		title?: string;
-		id: (doc: any) => string;
+		id?: (doc: any) => string;
 		path: string;
 		invalidate?: string[];
 		body?: object;
@@ -35,9 +37,9 @@ type DecisionModalProps = {
 	doc: any;
 };
 
-const DecisionModal: React.FC<DecisionModalProps> = ({ item, doc }) => {
-	const { title, id, path, prompt, invalidate, body } = item;
-	const getId = id(doc);
+const DecisionModal: React.FC<DecisionModalProps> = ({ item, doc, path, itemId }) => {
+	const { title, id, prompt, invalidate, body } = item;
+	const getId = id ? id(doc) : itemId;
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = React.useRef<any>(undefined);

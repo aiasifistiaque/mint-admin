@@ -13,6 +13,7 @@ const FeaturedCollection: FC<HomeContentProps> = ({ dataModel, content }) => {
 	const data = content.featuredCollection;
 	return (
 		<ViewContentContainer
+			path='nexa'
 			title='Featured Collection'
 			data={content}
 			dataModel={dataModel}>

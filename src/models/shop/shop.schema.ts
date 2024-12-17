@@ -18,6 +18,33 @@ const schema: Schema = {
 		default: true,
 		displayInTable: true,
 	},
+	smsBalance: {
+		label: 'SMS Balance',
+		type: 'number',
+		displayInTable: true,
+	},
+	smsExpense: {
+		label: 'SMS Expense',
+		type: 'number',
+		displayInTable: true,
+	},
+	website: {
+		label: 'Website',
+		type: 'text',
+	},
+	facebook: {
+		label: 'Facebook',
+		type: 'text',
+	},
+	instagram: {
+		label: 'Instagram',
+		type: 'text',
+	},
+	websiteViews: {
+		label: 'Website Views',
+		type: 'number',
+		displayInTable: true,
+	},
 	shopName: {
 		label: 'Shop Name',
 		type: 'text',
