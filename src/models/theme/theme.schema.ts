@@ -6,6 +6,7 @@ type ModelType = {
 	price: number; // Price of the theme
 	isFree: boolean; // Whether the theme is free or not
 	developer: string; // Name of the developer
+	gitRepo: string; // URL to the GitHub repository of the theme
 	demoUrl: string; // URL to the demo of the theme
 	framework: string; // Framework of the theme
 	shortDescription: string; // Short description of the theme
@@ -49,6 +50,13 @@ const schema: SchemaType<ModelType> = {
 	slug: {
 		type: 'text',
 		label: 'Slug',
+		displayInTable: true,
+		isRequired: true,
+	},
+	gitRepo: {
+		type: 'text',
+		label: 'GitHub Repository',
+		isRequired: true,
 		displayInTable: true,
 	},
 	title: {

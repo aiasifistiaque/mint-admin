@@ -15,6 +15,7 @@ const tableFields = convertToTableFields({
 	fields: [
 		'name',
 		'slug',
+		'gitRepo',
 		'price',
 		'isDiscounted',
 		'discountedPrice',
@@ -31,7 +32,13 @@ const formFields = convertToFormFields({
 	layout: [
 		{
 			sectionTitle: 'Basic Information',
-			fields: ['image', 'name', ['developer', 'framework'], ['useCase', 'css']],
+			fields: [
+				'image',
+				'name',
+				['slug', 'gitRepo'],
+				['developer', 'framework'],
+				['useCase', 'css'],
+			],
 		},
 		{
 			sectionTitle: 'Description',
