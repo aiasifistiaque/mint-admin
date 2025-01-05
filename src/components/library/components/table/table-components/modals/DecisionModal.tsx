@@ -27,6 +27,7 @@ type DecisionModalProps = {
 		path: string;
 		invalidate?: string[];
 		body?: object;
+		bodyFn?: any;
 		prompt?: {
 			title: string;
 			body: string;
@@ -38,8 +39,9 @@ type DecisionModalProps = {
 };
 
 const DecisionModal: React.FC<DecisionModalProps> = ({ item, doc, path, itemId }) => {
-	const { title, id, prompt, invalidate, body } = item;
+	const { title, id, prompt, invalidate, body, bodyFn } = item;
 	const getId = id ? id(doc) : itemId;
+	const getBody = bodyFn ? bodyFn(doc) : body;
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = React.useRef<any>(undefined);
@@ -54,7 +56,7 @@ const DecisionModal: React.FC<DecisionModalProps> = ({ item, doc, path, itemId }
 
 	const handleSubmit = (e: any) => {
 		e.preventDefault();
-		trigger({ path: path, id: getId, body, invalidate });
+		trigger({ path: path, id: getId, body: getBody, invalidate });
 	};
 
 	useEffect(() => {
@@ -95,6 +97,8 @@ const DecisionModal: React.FC<DecisionModalProps> = ({ item, doc, path, itemId }
 							</Button>
 
 							<Button
+								spinnerPlacement='start'
+								loadingText='Processing'
 								isLoading={isLoading}
 								colorScheme='brand'
 								onClick={handleSubmit}

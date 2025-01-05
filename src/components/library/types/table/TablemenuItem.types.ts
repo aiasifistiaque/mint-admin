@@ -51,6 +51,7 @@ type UpdateApiItem = BaseMenuItem & {
 	path?: string;
 	id?: (data: any) => string;
 	body: object;
+	bodyFn?: (data: any) => object;
 };
 
 type UpdateKeyItem = BaseMenuItem & {

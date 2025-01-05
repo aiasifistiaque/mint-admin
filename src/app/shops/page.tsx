@@ -18,6 +18,7 @@ const tableFields = convertToTableFields({
 		'owner',
 		'email',
 		'phone',
+		'activeTheme',
 		'isActive',
 		'isExpired',
 		'createdAt',

@@ -18,6 +18,12 @@ const schema: Schema = {
 		default: true,
 		displayInTable: true,
 	},
+	activeTheme: {
+		label: 'Active Theme',
+		type: 'string',
+		tableKey: 'activeTheme.name',
+		displayInTable: true,
+	},
 	smsBalance: {
 		label: 'SMS Balance',
 		type: 'number',
