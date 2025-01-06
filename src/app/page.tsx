@@ -2,10 +2,22 @@
 
 import { Grid } from '@chakra-ui/react';
 
-import { Layout, Count, useAppSelector, useSum } from '@/components/library';
+import {
+	Layout,
+	Count,
+	useAppSelector,
+	useSum,
+	useGetByIdQuery,
+	ShowSum,
+} from '@/components/library';
 
 export default function UserFeedback() {
 	const { filters } = useAppSelector((state: any) => state.table);
+
+	const { data, isFetching, isError, error, isSuccess }: any = useGetByIdQuery({
+		path: 'sms/check',
+		id: 'balance',
+	});
 
 	return (
 		<Layout
@@ -14,6 +26,12 @@ export default function UserFeedback() {
 			<Grid
 				gridTemplateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }}
 				gap={2}>
+				<ShowSum
+					title='SMS Balance'
+					isLoading={isFetching}
+					isError={isError}>
+					{data?.balance || '--'}
+				</ShowSum>
 				<Count
 					title='Total Stores'
 					path='shops'
