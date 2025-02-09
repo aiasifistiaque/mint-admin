@@ -1,7 +1,6 @@
 import mainApi from './mainApi';
-
 import { User, ListType, TableProps } from '../store.types';
-import { BASE_LIMIT } from '../../';
+import { BASE_LIMIT } from '@/lib/constants';
 
 export const ordersApi = mainApi.injectEndpoints({
 	endpoints: builder => ({
@@ -25,7 +24,7 @@ export const ordersApi = mainApi.injectEndpoints({
 				method: 'POST',
 				body,
 			}),
-			invalidatesTags: ['orders', 'products'],
+			invalidatesTags: ['orders'],
 		}),
 		getCartTotal: builder.mutation<any, any>({
 			query: body => ({

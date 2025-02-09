@@ -1,38 +1,26 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import {
-	Flex,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalOverlay,
-	useDisclosure,
-	Drawer,
-	DrawerOverlay,
-	DrawerCloseButton,
-	DrawerBody,
-	DrawerFooter,
-	useColorModeValue,
-} from '@chakra-ui/react';
+import { Flex, useDisclosure } from '@chakra-ui/react';
+
+import { useCustomToast, useIsMobile, useFormData } from '../hooks';
 
 import {
-	DrawerHeader,
 	ModalFormSection,
-	useCustomToast,
-	useFormData,
 	InputData,
-	ModalHeader,
-	ModalFooter,
 	usePostMutation,
 	useUpdateByIdMutation,
 	FormMain,
 	useLazyGetByIdToEditQuery,
 	DiscardButton,
 	ModalSubmitButton,
-	useIsMobile,
-	ModalContent,
-	DrawerContentContainer,
 	Align,
-} from '../';
+	DialogCloseButton,
+	DialogHeader,
+	DialogFooter,
+	Dialog,
+	DialogOverlay,
+	DialogContent,
+	DialogBody,
+} from '..';
 
 type CreateModalProps = {
 	data: InputData<any>[];
@@ -53,34 +41,15 @@ type CreateModalProps = {
 	};
 };
 
-const CreateModal = ({
-	data,
-	trigger,
-	path,
-	title,
-	type,
-	id,
-	invalidate,
-	children,
-	doc,
-	prompt,
-	populate,
-}: CreateModalProps) => {
+const CreateModal = (props: CreateModalProps) => {
+	const { data, trigger, path, title, type, id, invalidate, children, doc, prompt, populate } =
+		props;
+
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const [fetch, { data: prevData, isFetching, isUninitialized }] = useLazyGetByIdToEditQuery();
 	const [formData, setFormData] = useFormData<any>(data, populate || prevData);
 	const isMobile = useIsMobile();
-
-	const borderColor = useColorModeValue('border.light', 'border.dark');
-
-	const Container = isMobile ? Drawer : Modal;
-	const Overlay = isMobile ? DrawerOverlay : ModalOverlay;
-	const Content = isMobile ? DrawerContentContainer : ModalContent;
-	const Header = isMobile ? DrawerHeader : ModalHeader;
-	const CloseButton = isMobile ? DrawerCloseButton : ModalCloseButton;
-	const Body = isMobile ? DrawerBody : ModalBody;
-	const Footer = isMobile ? DrawerFooter : ModalFooter;
 
 	const [callApi, result] = usePostMutation();
 	const [updateApi, updateResult] = useUpdateByIdMutation();
@@ -104,7 +73,7 @@ const CreateModal = ({
 		}
 	};
 
-	const { isSuccess, isLoading, isError, error } = type === 'update' ? updateResult : result;
+	const { isSuccess, isLoading } = type === 'update' ? updateResult : result;
 
 	const [changedData, setChangedData] = useState({});
 
@@ -116,10 +85,7 @@ const CreateModal = ({
 
 	useCustomToast({
 		successText,
-		isSuccess,
-		isError,
-		isLoading,
-		error,
+		...result,
 	});
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -131,16 +97,11 @@ const CreateModal = ({
 
 		// Remove excluded fields from toPostData
 		findExcludedFields.forEach((field: any) => {
-			if (field.name in toPostData) {
-				delete toPostData[field.name];
-			}
+			if (field.name in toPostData) delete toPostData[field.name];
 		});
 
-		if (type === 'update') {
-			updateApi({ path, id: id || 'id', body: changedData, invalidate });
-		} else {
-			callApi({ path, body: toPostData, invalidate: invalidate && invalidate });
-		}
+		if (type === 'update') updateApi({ path, id: id || 'id', body: changedData, invalidate });
+		else callApi({ path, body: toPostData, invalidate });
 	};
 
 	const onModalClose = () => {
@@ -160,17 +121,9 @@ const CreateModal = ({
 
 	const footer = (
 		<>
-			{!isMobile && (
-				<DiscardButton
-					mr={2}
-					onClick={onModalClose}>
-					Discard
-				</DiscardButton>
-			)}
+			{!isMobile && <DiscardButton onClick={onModalClose}>Discard</DiscardButton>}
 			<ModalSubmitButton
-				borderRadius={{ base: 'md', md: 'md' }}
-				size={{ base: 'md', md: 'xs' }}
-				{...(isMobile && { w: '100%' })}
+				{...(isMobile && { w: 'full' })}
 				isLoading={isLoading}>
 				{prompt?.btnText || 'Confirm'}
 			</ModalSubmitButton>
@@ -181,27 +134,18 @@ const CreateModal = ({
 		<>
 			<Flex onClick={onModalOpen}>{children || trigger || title || path}</Flex>
 
-			<Container
-				isCentered
-				{...(isMobile && { placement: 'bottom' })}
-				{...(isMobile && { isFullHeight: false })}
+			<Dialog
 				isOpen={isOpen}
-				size='2xl'
-				onClose={onModalClose}
-				closeOnOverlayClick={false}>
-				<Overlay />
+				onClose={onModalClose}>
+				<DialogOverlay />
 				<form onSubmit={handleSubmit}>
-					<Content
-						// overflowY='scroll'
-						onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-						<Header>
+					<DialogContent onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+						<DialogHeader>
 							{prompt?.title || title || `${type === 'update' ? 'Update' : 'Create'} ${path}`}
-						</Header>
-						<CloseButton />
+						</DialogHeader>
+						<DialogCloseButton />
 
-						<Body
-							px={{ base: 4, md: 6 }}
-							{...(isMobile && { overflowY: 'scroll' })}>
+						<DialogBody>
 							<ModalFormSection>
 								<FormMain
 									fields={data}
@@ -212,17 +156,11 @@ const CreateModal = ({
 								/>
 							</ModalFormSection>
 							{isMobile && <Align py={5}>{footer}</Align>}
-						</Body>
-						{!isMobile && (
-							<Footer
-								borderTopWidth={1}
-								borderColor={borderColor}>
-								{footer}
-							</Footer>
-						)}
-					</Content>
+						</DialogBody>
+						{!isMobile && <DialogFooter>{footer}</DialogFooter>}
+					</DialogContent>
 				</form>
-			</Container>
+			</Dialog>
 		</>
 	);
 };

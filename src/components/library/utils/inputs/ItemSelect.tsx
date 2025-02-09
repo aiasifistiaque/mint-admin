@@ -1,6 +1,6 @@
 import React from 'react';
 import { SelectProps } from '@chakra-ui/react';
-import { FormControl, SelectContainer } from '../../';
+import { FormControl, SelectContainer } from '../..';
 
 type Option = {
 	label: string;

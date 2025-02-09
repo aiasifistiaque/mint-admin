@@ -6,9 +6,16 @@ type DataMenuButtonProps = MenuButtonProps & {
 	value: string;
 	isActive: boolean;
 	children: any;
+	isFont?: boolean;
 };
 
-const DataMenuButton: FC<DataMenuButtonProps> = ({ children, value, isActive, ...props }) => {
+const DataMenuButton: FC<DataMenuButtonProps> = ({
+	children,
+	value,
+	isActive,
+	isFont,
+	...props
+}) => {
 	return (
 		<MenuButton
 			isActive={isActive}
@@ -17,7 +24,7 @@ const DataMenuButton: FC<DataMenuButtonProps> = ({ children, value, isActive, ..
 			colorScheme='gray'
 			sx={styles.btn}
 			color={value ? 'text.500' : 'gray.300'}
-			fontWeight={value ? '400' : '500'}
+			{...(!isFont && { fontWeight: value ? '400' : '500' })}
 			rightIcon={<Icon name='select' />}
 			{...props}>
 			{children}
@@ -27,7 +34,7 @@ const DataMenuButton: FC<DataMenuButtonProps> = ({ children, value, isActive, ..
 
 const styles = {
 	btn: {
-		boxShadow: shadow.MENU,
+		boxShadow: shadow.DASH,
 		borderRadius: sizes.RADIUS_MENU,
 		cursor: 'default',
 		_active: {},

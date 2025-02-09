@@ -18,15 +18,17 @@ import {
 	setFields,
 	setPreferences,
 	useGetAllQuery,
-} from '../../';
+} from '../..';
+import { Flex } from '@chakra-ui/react';
 
 type TableProps = {
 	table: TableObjectProps;
 	layoutPath?: string;
+	children?: React.ReactNode;
 };
 
 // Define the PageTable component
-const PageTable: FC<TableProps> = ({ table, layoutPath }) => {
+const PageTable: FC<TableProps> = ({ table, layoutPath, children }) => {
 	const { page, limit, search, sort, filters, preferences, selectedItems }: any = useAppSelector(
 		(state: any) => state.table
 	);
@@ -103,6 +105,7 @@ const PageTable: FC<TableProps> = ({ table, layoutPath }) => {
 	return (
 		<>
 			<Layout
+				pb='32px'
 				title={table?.title}
 				path={layoutPath || table?.path}>
 				<PageHeading
@@ -115,6 +118,7 @@ const PageTable: FC<TableProps> = ({ table, layoutPath }) => {
 					data={table?.button?.dataModel || table?.createModel} //Input fields for the create page
 					export={table?.export} //If export button should be displayed
 				/>
+				<Flex>{children}</Flex>
 
 				<CustomTable
 					search={table?.search} //Hide search bar

@@ -62,12 +62,6 @@ const sidebar: SidebarItemType[] = [
 		icon: 'product',
 		path: 'purchased-themes',
 	},
-	// {
-	// 	title: 'Suppliers',
-	// 	href: '/suppliers',
-	// 	icon: 'customer',
-	// 	path: 'suppliers',
-	// },
 
 	{
 		title: 'Settings',

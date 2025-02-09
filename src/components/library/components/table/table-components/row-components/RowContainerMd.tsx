@@ -15,7 +15,14 @@ const RowContainerMd: FC<RowContainerMdProps> = ({ children, ...props }) => {
 	// };
 	return (
 		<Tr
-			h='2.5rem'
+			h='3rem'
+			_notLast={{
+				borderBottom: '1px solid',
+				borderBottomColor: 'container.borderLight',
+				_dark: {
+					borderBottomColor: 'container.borderDarker',
+				},
+			}}
 			// border='1px solid red'
 			// onMouseEnter={handleMouseEnter}
 			// onMouseLeave={handleMouseLeave}

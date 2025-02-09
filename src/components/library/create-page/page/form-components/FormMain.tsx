@@ -10,8 +10,7 @@ import {
 	handleImageArray,
 	handleNestedImage,
 	handleNestedString,
-} from '../../../';
-import { Text } from '@chakra-ui/react';
+} from '../../..';
 
 type FormMainType = {
 	fields: any;
@@ -61,11 +60,17 @@ const FormMain: FC<FormMainType> = ({
 				return (e: any) => handleNestedImage({ e, dataKey: key || 'image', ...params });
 			case 'nested-string':
 				return (e: any) => handleNestedString({ e, ...params });
+			case 'nested-select':
+				return (e: any) => handleNestedString({ e, ...params });
+			case 'nested-data-menu':
+				return (e: any) => handleNestedString({ e, ...params });
 
 			default:
 				return (e: any) => handleChange({ e, ...params });
 		}
 	};
+
+	// return <Text>{JSON.stringify(fields)}</Text>;
 
 	return sections.map((section: any, i: number) => (
 		<FormDivision
@@ -76,7 +81,6 @@ const FormMain: FC<FormMainType> = ({
 					isHidden={item?.renderCondition && !item?.renderCondition(formData)}
 					item={item}
 					key={i}>
-					{/* {(!item?.renderCondition || item?.renderCondition(formData)) && ( */}
 					<>
 						<FormInput
 							formData={formData}

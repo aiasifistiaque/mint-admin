@@ -1,11 +1,11 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import {
 	Flex,
+	FlexProps,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
 	ModalOverlay,
-	Text,
 	useDisclosure,
 } from '@chakra-ui/react';
 
@@ -23,34 +23,36 @@ import {
 } from '../..';
 import { useUpdateContentMutation } from '../../store/services/contentApi';
 
-type CreateModalProps = {
+type CreateModalProps = FlexProps & {
 	dataModel: InputData<any>[];
 	children?: React.ReactNode;
 	path?: string;
-	type?: 'post' | 'update';
-	id?: string;
 	title?: string;
 	data: any;
+	contentType?: 'basic' | 'content';
+	setIsOpen?: any;
+	setHover?: any;
 };
 
 const EditContentModal = ({
 	data,
 	dataModel,
 	children,
-	path = 'content',
+	path = 'nexa',
 	title,
-	type,
-	id,
+	contentType = 'content',
+	setIsOpen,
+	setHover,
+	...props
 }: CreateModalProps) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-
 	const [formData, setFormData] = useFormData<any>(dataModel, data);
-
 	const [trigger, result] = useUpdateContentMutation();
 
 	const onModalOpen = () => {
 		setFormData(data);
 		onOpen();
+		setIsOpen && setIsOpen(true);
 	};
 
 	const { isSuccess, isLoading, isError, error } = result;
@@ -58,7 +60,7 @@ const EditContentModal = ({
 	const [changedData, setChangedData] = useState({});
 
 	useCustomToast({
-		successText: 'Contnt Updated',
+		successText: 'Content Updated',
 		isSuccess,
 		isError,
 		isLoading,
@@ -71,11 +73,14 @@ const EditContentModal = ({
 		trigger({
 			body: formData,
 			path,
+			type: contentType,
 		});
 	};
 
 	const onModalClose = () => {
 		setFormData({});
+		setHover && setHover(false);
+		setIsOpen && setIsOpen(false);
 		result.reset();
 		onClose();
 	};
@@ -88,7 +93,11 @@ const EditContentModal = ({
 
 	return (
 		<>
-			<Flex onClick={onModalOpen}>{children || title || path}</Flex>
+			<Flex
+				onClick={onModalOpen}
+				{...props}>
+				{children || title || path}
+			</Flex>
 
 			<Modal
 				size='2xl'
@@ -97,7 +106,7 @@ const EditContentModal = ({
 				closeOnOverlayClick={false}>
 				<ModalOverlay />
 				<ModalContainer onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-					<ModalHeader>{`Update ${title}`}</ModalHeader>
+					<ModalHeader>{`Update Content`}</ModalHeader>
 					<ModalCloseButton />
 					<form onSubmit={handleSubmit}>
 						<ModalBody px={6}>

@@ -2,7 +2,7 @@
 import { ContainerProps, Heading, useColorModeValue } from '@chakra-ui/react';
 import React, { FC } from 'react';
 
-import { Column } from '../';
+import { Column } from '..';
 
 type FormContainerProps = ContainerProps & {
 	children: React.ReactNode;
@@ -16,7 +16,7 @@ const W_LG = '100%';
 const PADDING = 2;
 
 const ModalFormSection: FC<FormContainerProps> = ({ title, children, ...props }) => {
-	const border = useColorModeValue('gray.200', 'gray.700');
+	const border = useColorModeValue('container.borderLight', 'gray.700');
 	return (
 		<Column
 			_notLast={{

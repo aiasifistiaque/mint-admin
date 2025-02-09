@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-import {
-	ViewModalDataModelProps,
-	ViewItem,
-	Column,
-	convertToViewFields,
-	useGetByIdQuery,
-} from '../..';
+import { ViewModalDataModelProps, ViewItem } from '../..';
+import { getValue, convertToViewFields, useGetByIdQuery, shadow, radius } from '../..';
+import { Flex, FlexProps, Heading } from '@chakra-ui/react';
 
-const ViewById = ({ path, id, schema }: { path: string; id: string; schema: any }) => {
+type ViewByIdProps = FlexProps & {
+	path: string;
+	id: string;
+	schema: any;
+	heading?: string;
+};
+
+const ViewById: FC<ViewByIdProps> = ({ path, id, schema, heading, ...props }) => {
 	const viewFields = convertToViewFields({ schema: schema });
-
 	const { data, isFetching, isError } = useGetByIdQuery(
 		{
 			path: path,
@@ -19,29 +21,18 @@ const ViewById = ({ path, id, schema }: { path: string; id: string; schema: any 
 		{ skip: !id || !path }
 	);
 
-	const getValue = (dataKey: string, type: any): any => {
-		if (!data) return;
-		// Split the dataKey by '.' to determine if it's nested
-		const keys = dataKey?.split('.');
-		// Determine the appropriate value based on whether the key is nested
-		let value = 'n/a';
-		if (keys?.length === 1) {
-			// Single level key, directly access the value
-			value = type === 'date' ? new Date(data[dataKey]) : data[dataKey];
-		} else if (keys?.length === 2) {
-			// Nested key, access the nested value
-			const [parentKey, childKey] = keys;
-			value = type === 'date' ? new Date(data[parentKey]?.[childKey]) : data[parentKey]?.[childKey];
-		}
-		return value;
-	};
 	return (
-		<Column
-			gap={4}
-			pt={2}>
+		<Flex
+			{...containerCss}
+			pt={heading ? 0 : 4}
+			{...props}>
+			{heading && (
+				<Flex {...headingCss}>
+					<Heading size='sm'>{heading}</Heading>
+				</Flex>
+			)}
 			{viewFields.map((item: ViewModalDataModelProps, i: number) => {
 				const { title, dataKey, type, colorScheme, path } = item;
-
 				return (
 					<ViewItem
 						isLoading={isFetching}
@@ -50,12 +41,42 @@ const ViewById = ({ path, id, schema }: { path: string; id: string; schema: any 
 						colorScheme={colorScheme}
 						path={path}
 						key={i}>
-						{data && getValue(dataKey, type)}
+						{data && getValue({ dataKey, type, data })}
 					</ViewItem>
 				);
 			})}
-		</Column>
+		</Flex>
 	);
+};
+
+const headingCss: FlexProps = {
+	px: 6,
+	py: 3,
+	bg: 'background.light',
+	borderTopRadius: radius.CONTAINER,
+	borderColor: 'container.borderLight',
+	borderBottomWidth: 1,
+	_dark: {
+		bg: 'menu.dark',
+		borderColor: 'border.dark',
+	},
+};
+
+const containerCss: FlexProps = {
+	w: 'full',
+	flexDirection: 'column',
+	bg: 'container.newLight',
+	borderColor: 'container.borderLight',
+	gap: 4,
+	// pt: 4,
+	pb: 2,
+	shadow: shadow.DASH,
+	_dark: {
+		bg: 'menu.dark',
+		borderColor: 'container.borderDark',
+	},
+	borderRadius: radius.CONTAINER,
+	borderWidth: 1,
 };
 
 export default ViewById;

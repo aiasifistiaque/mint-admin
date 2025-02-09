@@ -1,5 +1,6 @@
 import { ModalContentProps, ModalContent } from '@chakra-ui/react';
 import React, { FC } from 'react';
+import { radius } from '../../../..';
 
 type InsertModalContentProps = ModalContentProps & {
 	children: React.ReactNode;
@@ -8,7 +9,7 @@ type InsertModalContentProps = ModalContentProps & {
 const InsertModalContent: FC<InsertModalContentProps> = ({ children, ...props }) => {
 	return (
 		<ModalContent
-			borderRadius='md'
+			borderRadius={radius.MODAL}
 			bg='menu.light'
 			_dark={{
 				bg: 'menu.dark',

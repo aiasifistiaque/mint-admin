@@ -11,7 +11,7 @@ import {
 import React, { useEffect } from 'react';
 
 import { useCopyItemMutation } from '../../../../store';
-import { useCustomToast, MenuItem, AlertDialogContent, AlertDialogHeader } from '../../../../';
+import { useCustomToast, MenuItem, AlertDialogContent, AlertDialogHeader } from '../../../..';
 
 type DeleteItemModalProps = {
 	title?: string;
@@ -69,7 +69,7 @@ const DuplicateModal: React.FC<DeleteItemModalProps> = ({ title, path, id }) => 
 									ref={cancelRef}
 									onClick={closeItem}
 									size='sm'
-									colorScheme='gray'>
+									variant='white'>
 									Discard
 								</Button>
 							)}

@@ -1,4 +1,4 @@
-import { IconNameOptions } from '../../../';
+import { IconNameOptions } from '../../..';
 
 export type SidebarItemType = {
 	title: string;

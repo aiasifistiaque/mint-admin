@@ -1,26 +1,27 @@
 import React, { FC, ReactNode } from 'react';
-import { Flex } from '@chakra-ui/react';
-import { sizes, THEME } from '../../../';
+import { Flex, FlexProps } from '@chakra-ui/react';
+import { sizes, THEME, styles } from '../../..';
 
-type SidebarLogoProps = {
+type SidebarLogoProps = FlexProps & {
 	children: ReactNode;
 };
 
-const style = {
-	h: sizes.NAV_HEIGHT || 12,
-	px: 5,
-	width: '100%',
-	bg: THEME == 'basic' ? 'sidebar.light' : 'navbar.light',
-	borderBottomColor: 'navbar.light',
-	alignItems: 'center',
-	_dark: {
-		bg: THEME == 'basic' ? 'sidebar.dark' : 'navbar.light',
-		borderBottomColor: 'sidebar.dark',
-	},
-};
-
-const SidebarLogo: FC<SidebarLogoProps> = ({ children }) => {
-	return <Flex sx={style}>{children}</Flex>;
+const SidebarLogo: FC<SidebarLogoProps> = ({ children, ...props }) => {
+	return (
+		<Flex
+			position='fixed'
+			top={0}
+			left={0}
+			px={5}
+			{...styles.NAVBAR}
+			_dark={{
+				bg: 'sidebar.dark',
+				borderBottom: 'none',
+			}}
+			w={{ base: '320px', md: sizes.SIDEBAR_WIDTH }}>
+			{children}
+		</Flex>
+	);
 };
 
 export default SidebarLogo;

@@ -16,7 +16,7 @@ import {
 	TagCloseButton,
 } from '@chakra-ui/react';
 
-import { Label, Icon, HelperText } from '../../';
+import { Label, Icon, HelperText } from '../..';
 
 type InputContainerProps = InputProps & {
 	label: string;

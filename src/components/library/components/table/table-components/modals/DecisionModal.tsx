@@ -16,7 +16,7 @@ import {
 	MenuItem,
 	AlertDialogContent,
 	useUpdateByIdMutation,
-} from '../../../../';
+} from '../../../..';
 
 type DecisionModalProps = {
 	itemId: string;
@@ -92,7 +92,7 @@ const DecisionModal: React.FC<DecisionModalProps> = ({ item, doc, path, itemId }
 								ref={cancelRef}
 								onClick={closeItem}
 								size='sm'
-								colorScheme='gray'>
+								variant='white'>
 								Discard
 							</Button>
 

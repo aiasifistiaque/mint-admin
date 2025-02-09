@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Button, Flex, Heading } from '@chakra-ui/react';
-import { Column, Icon } from '../../';
+import { Column, Icon } from '../..';
 
 type HeadingMenuProps = {
 	editing: boolean;

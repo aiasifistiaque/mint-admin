@@ -1,22 +1,11 @@
 import React, { FC, ReactNode } from 'react';
-import {
-	Badge,
-	Box,
-	Center,
-	Flex,
-	Grid,
-	GridProps,
-	Heading,
-	Image,
-	Skeleton,
-	Text,
-} from '@chakra-ui/react';
-import { Align, Column, ImageContainer, PLACEHOLDER_IMAGE, RenderTag } from '../../../../../';
+import { Badge, Box, Flex, Grid, GridProps, Heading, Skeleton, Text } from '@chakra-ui/react';
+import { Align, Column, ImageContainer, PLACEHOLDER_IMAGE, RenderTag } from '../../../../..';
 
 type ViewItemProps = GridProps & {
 	title: string;
 	type?: string;
-	children: string | boolean | number | Date;
+	children?: ReactNode;
 	colorScheme?: any;
 	path?: string;
 	isLoading?: boolean;
@@ -86,13 +75,25 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 
 		case 'tag':
 			return (
-				<Box alignItems='center'>
-					{children && (
-						<Badge colorScheme={colorScheme ? colorScheme(children) : 'gray'}>
-							{children?.toString()}
-						</Badge>
-					)}
-				</Box>
+				<Flex
+					alignItems='center'
+					flexWrap='wrap'
+					gap={2}>
+					{Array.isArray(children)
+						? children.map((item: any, i: number) => (
+								<Badge
+									colorScheme='purple'
+									variant='subtle'
+									key={i}>
+									{item?.toString()}
+								</Badge>
+						  ))
+						: children && (
+								<Badge colorScheme={colorScheme ? colorScheme(children) : 'gray'}>
+									{children?.toString()}
+								</Badge>
+						  )}
+				</Flex>
 			);
 		case 'checkbox':
 			return (
@@ -157,14 +158,26 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 	}
 };
 
-const SkeletonContent = ({ isLoading, children }: { isLoading: boolean; children: ReactNode }) => (
-	<Skeleton
-		isLoaded={!isLoading}
-		height={isLoading ? '20px' : 'auto'}
-		width={isLoading ? '100px' : 'full'}>
-		{children}
-	</Skeleton>
-);
+const ViewItem: FC<ViewItemProps> = ({
+	title,
+	type,
+	children,
+	colorScheme,
+	path,
+	isLoading = false,
+	...props
+}) => {
+	return (
+		<GridContainer {...props}>
+			<SkeletonContent isLoading={isLoading}>
+				<Heading size='xs'>{title}:</Heading>
+			</SkeletonContent>
+			<SkeletonContent isLoading={isLoading}>
+				{!isLoading && children && renderContent({ type, children, colorScheme, path, isLoading })}
+			</SkeletonContent>
+		</GridContainer>
+	);
+};
 
 const GridContainer = ({ children }: GridProps & { children: ReactNode }) => (
 	<Grid
@@ -181,25 +194,13 @@ const GridContainer = ({ children }: GridProps & { children: ReactNode }) => (
 	</Grid>
 );
 
-const ViewItem: FC<ViewItemProps> = ({
-	title,
-	type,
-	children,
-	colorScheme,
-	path,
-	isLoading = false,
-	...props
-}) => {
-	return (
-		<GridContainer {...props}>
-			<SkeletonContent isLoading={isLoading}>
-				<Heading size='xs'>{title}:</Heading>
-			</SkeletonContent>
-			<SkeletonContent isLoading={isLoading}>
-				{!isLoading && renderContent({ type, children, colorScheme, path, isLoading })}
-			</SkeletonContent>
-		</GridContainer>
-	);
-};
+const SkeletonContent = ({ isLoading, children }: { isLoading: boolean; children: ReactNode }) => (
+	<Skeleton
+		isLoaded={!isLoading}
+		height={isLoading ? '20px' : 'auto'}
+		width={isLoading ? '100px' : 'full'}>
+		{children}
+	</Skeleton>
+);
 
 export default ViewItem;

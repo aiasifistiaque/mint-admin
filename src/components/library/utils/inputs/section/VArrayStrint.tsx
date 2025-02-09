@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { FormControl, Stack, Flex, Text } from '@chakra-ui/react';
-import { HelperText, Label, Column } from '../../../';
+import { HelperText, Label, Column } from '../../..';
 import DeleteSection from './DeleteSection';
 import ArrayStringModal from './ArrayStringModal';
 

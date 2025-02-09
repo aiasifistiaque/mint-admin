@@ -41,5 +41,16 @@ export { default as Input } from './input-components/InputElement';
 export { default as VPermissions } from './VPermissions';
 
 export { default as VReadOnly } from './VReadOnly';
+export { default as VColor } from './VColor';
+
+export { default as VEditor } from './VEditor';
 
 export * from './input-components';
+
+export { default as VFont } from './Vfont';
+export { default as VSectionDataArray } from './section/VSectionDataArray';
+export { default as VFontSize } from './VFontSize';
+export * from './sliders';
+
+export { default as VAlignment } from './VAlign';
+export * from './arc';

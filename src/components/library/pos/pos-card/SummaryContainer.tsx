@@ -12,6 +12,10 @@ const SummaryContainer = ({ children, ...props }: FlexProps & { children: ReactN
 			bg='white'
 			w='350px'
 			_dark={{ bg: 'background.dark' }}
+			_light={{
+				borderLeft: '1px solid',
+				borderLeftColor: 'container.borderLight',
+			}}
 			{...props}>
 			{children}
 		</Column>

@@ -1,9 +1,10 @@
 'use client';
-import { Button, Flex, IconButton, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
 import React, { FC, useEffect, useState } from 'react';
 
 import {
 	Column,
+	createFormFields,
 	DeleteImageButton,
 	Icon,
 	InsertModal,
@@ -13,9 +14,10 @@ import {
 	InsertModalFooter,
 	InsertModalHeader,
 	InsertModalOverlay,
+	VImage,
 	VInput,
 	VTextarea,
-} from '../../../';
+} from '../../..';
 
 type UploadModalProps = {
 	trigger?: React.ReactNode;
@@ -23,10 +25,13 @@ type UploadModalProps = {
 	type?: 'add' | 'edit' | 'delete';
 	multiple?: boolean;
 	handleDelete?: any;
-	value: { title: string; description: string }[];
+	value: { image?: string; title: string; description: string }[];
 	name: string;
-	prevVal?: { title: string; description: string };
+	prevVal?: { image?: string; title: string; description: string };
 	index?: number;
+	dataModel?: any;
+	hasImage?: boolean;
+	section?: any;
 };
 
 const AddSectionModal: FC<UploadModalProps> = ({
@@ -39,32 +44,52 @@ const AddSectionModal: FC<UploadModalProps> = ({
 	name,
 	prevVal,
 	index = 0,
+	dataModel,
+	hasImage,
+	section,
 }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const closeModal = () => {
-		setVal({ title: '', description: '' });
-		onClose();
-	};
-
 	const [val, setVal] = useState<{
+		image?: string;
 		title: string;
 		description: string;
 	}>(
 		prevVal || {
+			image: '',
 			title: '',
 			description: '',
 		}
 	);
 
+	const closeModal = () => {
+		hasImage
+			? setVal({
+					image: '',
+					title: '',
+					description: '',
+			  })
+			: setVal({
+					title: '',
+					description: '',
+			  });
+
+		onClose();
+	};
+
 	const openModal = () => {
-		setVal(prevVal || { title: '', description: '' });
+		if (hasImage) setVal(prevVal || { image: '', title: '', description: '' });
+		else setVal(prevVal || { title: '', description: '' });
 		onOpen();
 	};
 
 	const handleChange = (e: any) => {
 		const { name, value } = e.target;
 		setVal(prevVal => ({ ...prevVal, [name]: value }));
+	};
+
+	const handleImage = (e: any) => {
+		setVal(prevVal => ({ ...prevVal, image: e }));
 	};
 
 	const handleAddSection = () => {
@@ -111,7 +136,7 @@ const AddSectionModal: FC<UploadModalProps> = ({
 			<Button
 				size='sm'
 				colorScheme='brand'>
-				Add Section
+				{section?.addBtnText || 'Add Item'}
 			</Button>
 		),
 		edit: (
@@ -128,6 +153,15 @@ const AddSectionModal: FC<UploadModalProps> = ({
 
 	let triggerButton = (buttonTypes[type] as any) || trigger;
 
+	const getDataModel = () => {
+		if (!section?.dataModel) return null;
+		const model = createFormFields({
+			schema: section?.dataModel,
+			layout: section?.layout,
+		});
+		return model;
+	};
+
 	return (
 		<>
 			{type == 'delete' ? (
@@ -140,10 +174,22 @@ const AddSectionModal: FC<UploadModalProps> = ({
 				onClose={closeModal}>
 				<InsertModalOverlay />
 				<InsertModalContent>
-					<InsertModalHeader>{type == 'edit' ? 'Update' : 'Add'} Section</InsertModalHeader>
+					<InsertModalHeader>
+						{section?.title ? section?.title : type == 'edit' ? 'Update Section' : 'Add Section'}
+					</InsertModalHeader>
 					<InsertModalCloseButton />
 					<InsertModalBody flex={1}>
 						<Column gap={4}>
+							{/* <Text>{JSON.stringify(section)}</Text> */}
+							{section?.dataModel && <></>}
+							{hasImage && (
+								<VImage
+									name='image'
+									label='Image'
+									value={val?.image}
+									onChange={handleImage}
+								/>
+							)}
 							<VInput
 								name='title'
 								label='Title'
@@ -155,7 +201,7 @@ const AddSectionModal: FC<UploadModalProps> = ({
 								label='Description'
 								value={val?.description}
 								h='full'
-								minH='400px'
+								minH='300px'
 								onChange={handleChange}
 							/>
 						</Column>
@@ -169,7 +215,7 @@ const AddSectionModal: FC<UploadModalProps> = ({
 								size='sm'
 								isDisabled={!val.title || !val.description}
 								onClick={handleSubmit}>
-								{type == 'add' ? 'Insert' : 'Update'} Section
+								{type == 'add' ? 'Add' : 'Update'}
 							</Button>
 							<Button
 								colorScheme='gray'

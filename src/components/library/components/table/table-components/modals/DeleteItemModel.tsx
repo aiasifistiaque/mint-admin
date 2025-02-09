@@ -16,19 +16,27 @@ import {
 	MenuItem,
 	AlertDialogContent,
 	useDeleteByIdMutation,
-} from '../../../../';
+	useAppSelector,
+	useLazyGetAllQuery,
+} from '../../../..';
 
 type DeleteItemModalProps = {
 	title?: string;
 	id: string;
 	path: string;
+	item: any;
 };
 
-const DeleteItemModal: React.FC<DeleteItemModalProps> = ({ title, path, id }) => {
+const DeleteItemModal: React.FC<DeleteItemModalProps> = ({ title, path, id, item }) => {
+	const { page, limit, search, sort, filters, preferences, selectedItems }: any = useAppSelector(
+		(state: any) => state.table
+	);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = React.useRef<any>(undefined);
 
 	const [trigger, result] = useDeleteByIdMutation();
+	const [getAllTrigger, getAllResults] = useLazyGetAllQuery();
+
 	const { isSuccess, isError, isLoading, error } = result;
 
 	const closeItem = () => {
@@ -38,19 +46,32 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({ title, path, id }) =>
 
 	const handleDelete = (e: any) => {
 		e.preventDefault();
-		trigger({ path: path, id: id });
+		trigger({ path: path, id: id, invalidate: [path, item?.invalidate] });
 	};
 
 	useEffect(() => {
 		if (isSuccess && !isLoading) {
+			getAllTrigger({
+				page,
+				limit,
+				search,
+				sort,
+				filters,
+				path,
+			});
 			closeItem();
 		}
 	}, [result?.isSuccess]);
 
 	useCustomToast({
-		successText: `${title ? title : 'Item'} Deleted Successfully`,
+		successText: item?.prompt?.successMsg || `${title ? title : 'Item'} Deleted Successfully`,
 		...result,
 	});
+
+	const titleText = item?.prompt?.title || 'Delete Item';
+	const bodyText =
+		item?.prompt?.body ||
+		"Are you sure you want to delete this item? You can't undo this action afterwards.";
 
 	return (
 		<>
@@ -66,23 +87,21 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({ title, path, id }) =>
 				onClose={closeItem}>
 				<AlertDialogOverlay>
 					<AlertDialogContent>
-						<AlertDialogHeader>Delete {title}</AlertDialogHeader>
-
-						<AlertDialogBody>
-							Are you sure? You {`can't`} undo this action afterwards.
-						</AlertDialogBody>
+						<AlertDialogHeader>{titleText}</AlertDialogHeader>
+						<AlertDialogBody>{bodyText}</AlertDialogBody>
 
 						<AlertDialogFooter>
 							<Button
+								variant='white'
 								isDisabled={isLoading}
 								ref={cancelRef}
 								onClick={closeItem}
-								size='sm'
-								colorScheme='gray'>
+								size='sm'>
 								Discard
 							</Button>
-
 							<Button
+								loadingText='Deleting'
+								spinnerPlacement='start'
 								isLoading={isLoading}
 								colorScheme='red'
 								onClick={handleDelete}

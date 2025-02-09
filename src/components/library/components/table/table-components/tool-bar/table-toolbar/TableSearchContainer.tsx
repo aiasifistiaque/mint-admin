@@ -10,7 +10,7 @@ const TableSearchContainer: FC<TableSearchContainerProps> = ({ children, ...prop
 		<Flex
 			w={{ base: '100%', md: 'auto' }}
 			align='center'
-			gap={2}
+			gap={1.4}
 			{...props}>
 			{children}
 		</Flex>

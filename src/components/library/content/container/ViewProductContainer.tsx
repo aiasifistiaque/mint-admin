@@ -1,8 +1,8 @@
 import React, { FC, ReactNode } from 'react';
-import { Button, Flex, Heading } from '@chakra-ui/react';
+import { Button, Flex, FlexProps, Heading } from '@chakra-ui/react';
 import { Align, Column, EditContentModal } from '../..';
 
-type ViewContentContainerType = {
+type ViewContentContainerType = FlexProps & {
 	children: ReactNode;
 	title?: string;
 	dataModel: any;
@@ -16,11 +16,14 @@ const ViewProductContainer: FC<ViewContentContainerType> = ({
 	children,
 	dataModel,
 	data,
-	edit = true,
 	path,
+	edit = true,
+	...props
 }) => {
 	return (
-		<Column gap={4}>
+		<Column
+			gap={4}
+			{...props}>
 			<Align
 				py={4}
 				flex={1}
@@ -28,8 +31,8 @@ const ViewProductContainer: FC<ViewContentContainerType> = ({
 				<Heading size='lg'>{title || '--'}</Heading>
 				{edit && (
 					<EditContentModal
-						path={path}
 						data={data}
+						path={path}
 						dataModel={dataModel}>
 						<Button
 							colorScheme='gray'

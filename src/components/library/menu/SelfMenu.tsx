@@ -14,7 +14,7 @@ import CustomMenuItem from './CustomMenuItem';
 
 import { useGetSelfQuery } from '@/store/services/authApi';
 
-import { Icon, useAppDispatch, MenuContainer, THEME, logout } from '../';
+import { Icon, useAppDispatch, MenuContainer, THEME, logout } from '..';
 
 const SelfMenu = () => {
 	const { data, isFetching, isError, error, isSuccess } = useGetSelfQuery({});

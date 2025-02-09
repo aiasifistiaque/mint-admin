@@ -1,6 +1,6 @@
 import { FlexProps, Heading } from '@chakra-ui/react';
 import React, { FC } from 'react';
-import { SpaceBetween, Column, shadow, sizes } from '../';
+import { SpaceBetween, Column, shadow, sizes } from '..';
 
 type SectionProps = FlexProps & {
 	heading?: string;

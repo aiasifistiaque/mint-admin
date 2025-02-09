@@ -8,7 +8,7 @@ import {
 	currency,
 	ViewItemModal,
 	AddToCartModal,
-} from '../../';
+} from '../..';
 
 import { viewPreviewFields as viewAllDataFields } from '@/models/products/products.model';
 

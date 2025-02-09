@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextProps, Text } from '@chakra-ui/react';
-import { FormControl } from '../../';
+import { FormControl } from '../..';
 
 type InputContainerProps = TextProps & {
 	label: string;

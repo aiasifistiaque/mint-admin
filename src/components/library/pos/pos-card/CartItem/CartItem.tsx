@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useGetCartTotalMutation } from '@/store/services/ordersApi';
 import { Flex, Heading, Text } from '@chakra-ui/react';
-import { CartItemContainer as Container, QtyButtons, CartItemDeleteButton } from './';
+import { CartItemContainer as Container, QtyButtons, CartItemDeleteButton } from '.';
 
 import {
 	useAppDispatch,
@@ -24,11 +24,12 @@ type CartItem = {
 		price: number;
 		qty: number;
 		image: string;
+		vat?: number;
 	};
 };
 
 const CartItem = ({ item }: CartItem) => {
-	const { id, name, price, qty, image } = item;
+	const { id, name, price, qty, image, vat } = item;
 	const dispatch = useAppDispatch();
 
 	const [trigger, { isSuccess, isLoading, data }] = useGetCartTotalMutation();
@@ -103,6 +104,14 @@ const CartItem = ({ item }: CartItem) => {
 				<Heading size='xs'>
 					<Price>{price * qty}</Price>
 				</Heading>
+
+				{vat && vat > 0 ? (
+					<Text
+						fontSize='.8rem'
+						textAlign='right'>
+						+<Price>{price * qty * (Number(vat) / 100)}</Price>
+					</Text>
+				) : null}
 			</Column>
 		</Container>
 	);

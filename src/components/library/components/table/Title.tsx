@@ -2,7 +2,7 @@ import { Flex, FlexProps, Th, Tooltip } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { TbArrowUp, TbArrowDown, TbArrowsDownUp } from 'react-icons/tb';
 import { BsInfoCircle } from 'react-icons/bs';
-import { useAppDispatch, useAppSelector, updateTable } from '../../';
+import { useAppDispatch, useAppSelector, updateTable } from '../..';
 
 export type TitleProps = FlexProps & {
 	children: React.ReactNode;
@@ -59,15 +59,18 @@ export const Title: React.FC<TitleProps> = ({
 	return (
 		<Th
 			isNumeric={isNumeric}
-			_dark={{ borderBottomColor: 'stroke.deepD' }}
+			_light={{ borderBottomColor: 'container.borderLight' }}
 			cursor={Boolean(sort) ? 'pointer' : 'default'}
 			onClick={handleSort}
 			userSelect='none'>
 			<Flex
-				py={1}
+				py={3}
 				align='center'
 				gap={2}
 				fontWeight='700'
+				_light={{
+					color: 'text.light',
+				}}
 				{...props}>
 				{body}
 				{tooltip}

@@ -12,7 +12,7 @@ import {
 	DecisionModal,
 	UpdateDataMenuModal,
 	UpdateStringModal,
-} from '../../../../';
+} from '../../../..';
 import Link from 'next/link';
 
 type TableMenuProps = {
@@ -108,6 +108,7 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 						case 'view':
 							return (
 								<Link
+									style={{ backgroundColor: 'inherit' }}
 									key={i}
 									href={`/${path}/${id}`}>
 									<MenuItem>{item?.title}</MenuItem>
@@ -119,6 +120,7 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 								<DeleteItemModal
 									{...commonProps}
 									title={item?.title}
+									item={item}
 								/>
 							);
 						case 'update-key':
@@ -188,6 +190,7 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 								<item.modal
 									{...commonProps}
 									data={dataItem}
+									doc={doc}
 								/>
 							);
 						case 'custom-modal':

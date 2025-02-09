@@ -19,7 +19,7 @@ import {
 	DiscardButton,
 	Address,
 	useLazyGetByIdToEditQuery,
-} from '../../';
+} from '../..';
 
 const inputFields: InputData<Address>[] = [
 	{

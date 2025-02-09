@@ -16,7 +16,7 @@ import {
 	setFields,
 	setPreferences,
 	useGetAllQuery,
-} from '../../';
+} from '../..';
 
 type TableProps = {
 	table: TableObjectProps;

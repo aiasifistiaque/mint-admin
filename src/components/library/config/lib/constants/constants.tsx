@@ -1,3 +1,5 @@
+import { BsBorderWidth } from 'react-icons/bs';
+
 export const TOKEN_NAME: string = process.env.NEXT_PUBLIC_TOKEN_NAME || 'MINT_CAFE_TOKEN_TWO';
 
 export const REFRESH_TOKEN: string =
@@ -25,6 +27,8 @@ export const currency = {
 const BASE_SIDEBAR_WIDTH = '240px';
 const BASE_SIDEBAR_WIDTH_SMALL = '20PX';
 
+export const BODY_PT = '72px';
+
 export const sizes = {
 	SIDEBAR_WIDTH: BASE_SIDEBAR_WIDTH,
 	HOME_NAV_MAX_WIDTH: `calc(100vw - ${BASE_SIDEBAR_WIDTH})`,
@@ -41,23 +45,146 @@ export const sizes = {
 	NAV_HEIGHT: 14,
 	CARD_RADIUS: '8px',
 	SIDEBAR_PX: 3,
+	SEARCH_BAR_HEIGHT: '38px',
 };
 
 export const shadow = {
 	MENU: 'lg',
 	CARD: '2px 2px 10px rgba(0,0,0,.1)',
+	DASH: '0px 0px 1px rgba(0,0,0,.08), 0px 2px 2px 0px rgba(0, 0, 0, 0.04)',
+	MODAL: '2xl',
 };
 
 export const padding = {
 	BASE: sizes.PADDING_X_BASE,
 	MD: sizes.PADDING_X_MD,
 	LG: sizes.PADDING_X_LG,
+	BODY_TOP: '72px',
+	CONTAINER: {
+		BASE: 4,
+		MD: 8,
+		LG: 8,
+	},
 };
 
 export const zIndex = {
 	NAV: 999,
-	SIDEBAR: 999,
+	SIDEBAR: 998,
 };
+
+export const radius = {
+	CONTAINER: '8px',
+	MODAL: '16px',
+	BUTTON: '6px',
+	INPUT: '6px',
+	SELECT_CONTAINER: '6px',
+};
+
+export const styles = {
+	backdropFilter: 'blur(5px)',
+	BACKDROP_FILTER: 'blur(5px)',
+	BLUR_CONTAINER: {
+		bg: 'navbar.blurLight',
+		backdropFilter: 'blur(5px)',
+	},
+	MODAL_BLUR: {
+		bg: 'rgba(255, 255, 255, .6)',
+		backdropFilter: 'blur(10px)',
+	},
+	NAVBAR: {
+		h: sizes.NAV_HEIGHT || 12,
+		alignItems: 'center',
+		bg: 'navbar.blurLight',
+		backdropFilter: 'blur(5px)',
+		borderBottomWidth: 1,
+		zIndex: zIndex.NAV || 999,
+		borderBottomColor: 'navbar.borderBottomLight',
+		_dark: {
+			bg: 'navbar.dark',
+			borderBottomColor: 'navbar.borderBottomDark',
+		},
+	},
+	bigInput: {
+		borderRadius: '6px',
+		_light: {
+			borderColor: 'container.borderLight',
+		},
+	},
+	color: {
+		MODAL_OVERLAY: {
+			LIGHT: 'rgba(250, 250, 250, .8)',
+		},
+	},
+	BORDER: {
+		_light: {
+			borderColor: 'container.borderLight',
+			borderWidth: 1,
+		},
+		borderRadius: '6px',
+	},
+	MODAL: {
+		bg: 'menu.light',
+		_light: {
+			borderWidth: 1,
+			borderColor: 'container.borderLight',
+		},
+		_dark: {
+			bg: 'menu.dark',
+		},
+		borderRadius: '16px',
+		shadow: '2xl',
+	},
+	DRAWER: {
+		bg: 'menu.light',
+		_dark: {
+			bg: 'menu.dark',
+		},
+		maxH: '85vh',
+		userSelect: 'none',
+		borderTopRadius: '20px',
+	},
+	CONTAINER: {
+		RADIUS: {
+			borderRadius: '8px',
+		},
+		SHADOW: {
+			boxShadow: shadow.DASH,
+		},
+		BG: {
+			bg: 'container.newLight',
+			_dark: {
+				bg: 'menu.dark',
+			},
+		},
+		BORDER: {
+			borderWidth: 1,
+			borderColor: 'container.borderLight',
+			_dark: {
+				borderColor: '#eee',
+			},
+		},
+	},
+	STAT_CONTAINER: {
+		borderRadius: radius.CONTAINER,
+		alignItems: 'center',
+		w: 'full',
+		p: 4,
+		bg: 'container.newLight',
+		borderColor: 'container.borderLight',
+		borderWidth: 1,
+		boxShadow: shadow.DASH,
+		_dark: {
+			bg: 'menu.dark',
+			borderColor: 'container.borderDark',
+		} as any,
+	},
+};
+
+// export const color = {
+// 	MODDAL_OVERLAY: {
+// 		LIGHT: 'rgba(250, 250, 250, .8)',
+// 	},
+// };
 
 export const BASE_LIMIT = 16;
 

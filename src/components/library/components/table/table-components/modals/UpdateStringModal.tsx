@@ -21,7 +21,7 @@ import {
 	PromptType,
 	Column,
 	Input,
-} from '../../../../';
+} from '../../../..';
 
 type UpdateKeyProps = {
 	id: string;

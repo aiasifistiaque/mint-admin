@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Heading } from '@chakra-ui/react';
 import { Price } from '@/components/library';
-import { OPDContainer, OPDBottomContainer, OPDProps } from './';
+import { OPDContainer, OPDBottomContainer, OPDProps } from '.';
 import PriceItem from '../PriceItem';
 
 const OrderPriceDetails: FC<OPDProps> = ({ total, subTotal, discount, shipping, vat }) => {

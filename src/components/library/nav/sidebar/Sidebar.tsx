@@ -3,7 +3,7 @@ import { FlexProps, Heading, Stack } from '@chakra-ui/react';
 import React, { ReactNode } from 'react';
 import SidebarItem from './SidebarItem';
 
-import { sidebarData as sidebar, THEME } from '../../';
+import { sidebarData as sidebar, THEME } from '../..';
 
 import { useGetSelfQuery } from '@/store/services/authApi';
 
@@ -25,7 +25,7 @@ const Sidebar: React.FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...
 	const main = (
 		<>
 			<SidebarBody>
-				{sidebar.slice(0, -1).map((item, i) => (
+				{sidebar.map((item, i) => (
 					<Stack key={i}>
 						<SidebarHeading show={item?.startOfSection}>{item?.sectionTitle}</SidebarHeading>
 						<Link href={item?.href}>
@@ -39,7 +39,7 @@ const Sidebar: React.FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...
 					</Stack>
 				))}
 			</SidebarBody>
-			<SidebarFooter>
+			{/* <SidebarFooter>
 				{sidebar?.length > 0 && (
 					<SidebarItem
 						href={sidebar[sidebar.length - 1]?.href}
@@ -48,11 +48,11 @@ const Sidebar: React.FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...
 						{sidebar[sidebar.length - 1]?.title}
 					</SidebarItem>
 				)}
-			</SidebarFooter>
+			</SidebarFooter> */}
 		</>
 	);
 	return (
-		<SidebarContainer {...props}>
+		<>
 			<SidebarLogo>
 				<Heading
 					color={THEME == 'basic' ? 'inherit' : 'text.dark'}
@@ -62,8 +62,10 @@ const Sidebar: React.FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...
 				</Heading>
 				{closeBtn && closeBtn}
 			</SidebarLogo>
-			<SidebarContent>{main}</SidebarContent>
-		</SidebarContainer>
+			<SidebarContainer {...props}>
+				<SidebarContent>{main}</SidebarContent>
+			</SidebarContainer>
+		</>
 	);
 };
 

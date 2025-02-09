@@ -22,7 +22,7 @@ import {
 	refresh,
 	navigate,
 	Align,
-} from '../';
+} from '..';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 
@@ -36,6 +36,7 @@ type LayoutProps = FlexPropsType & {
 	path?: string;
 	type?: 'default' | 'pos';
 	hideColorMode?: boolean;
+	isLoading?: boolean;
 };
 
 const Layout: FC<LayoutProps> = ({
@@ -43,6 +44,7 @@ const Layout: FC<LayoutProps> = ({
 	title,
 	path = '/dashboard',
 	hideColorMode = false,
+	isLoading,
 	...props
 }) => {
 	const dispatch = useAppDispatch();
@@ -95,7 +97,7 @@ const Layout: FC<LayoutProps> = ({
 							pt={props?.type == 'pos' ? 0 : type == 'pos' ? 12 : sizes.NAV_HEIGHT}
 							flex={1}
 							w='full'>
-							<Main>{children}</Main>
+							<Main>{!isLoading && children}</Main>
 						</Flex>
 					</Flex>
 				</Body>
@@ -110,7 +112,7 @@ const Main = ({ children }: { children: React.ReactNode }) => (
 		overflowY='hidden'
 		h={`calc(100vh - ${sizes.NAV_HEIGHT})`}
 		borderTopRightRadius={{ base: `0`, md: THEME == 'basic' ? 0 : 'xl' }}
-		bg={{ base: 'background.400', md: 'background.light' }}
+		bg={{ base: 'background.light', md: 'background.light' }}
 		_dark={{ bg: 'background.dark', borderTopRightRadius: 0 }}
 		px={PX}
 		pt={{ base: 4, md: 1 }}

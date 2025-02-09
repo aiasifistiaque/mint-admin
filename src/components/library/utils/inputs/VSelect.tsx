@@ -1,13 +1,13 @@
 'use client';
 import React from 'react';
 import { SelectProps } from '@chakra-ui/react';
-import { FormControl, SelectContainer } from '../../';
+import { FormControl, SelectContainer } from '../..';
 
 type InputContainerProps = SelectProps & {
 	label: string;
 	isRequired?: boolean;
 	helper?: string;
-	value: string | boolean;
+	value: string | boolean | number;
 	children: React.ReactNode;
 	placeholder?: any;
 };

@@ -2,8 +2,8 @@
 
 import React, { FC } from 'react';
 import { InputProps } from '@chakra-ui/react';
-import { FormControl } from '../../';
-import { Input } from './';
+import { FormControl } from '../..';
+import { Input } from '.';
 
 type InputContainerProps = InputProps & {
 	label: string;

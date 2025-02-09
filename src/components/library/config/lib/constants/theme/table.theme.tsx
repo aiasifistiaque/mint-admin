@@ -22,22 +22,22 @@ type TableObjectProps = {
 
 const TABLE: TableObjectProps = {
 	padding: {
-		bottom: 6,
+		bottom: 0,
 	},
 	border: {
 		color: {
-			light: 'stroke.light',
+			light: 'container.borderLight',
 			dark: 'stroke.dark',
 		},
-		width: 2,
-		radius: 8,
+		width: 1,
+		radius: 6,
 	},
 	bg: {
-		light: 'table.light',
+		light: 'container.newLight',
 		dark: 'table.dark',
 	},
 	stroke: {
-		light: 'transparent',
+		light: 'container.borderLight',
 		dark: 'transparent',
 	},
 };

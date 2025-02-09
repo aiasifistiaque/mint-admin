@@ -9,7 +9,9 @@ type ModalSubmitButtonProps = ButtonProps & {
 const ModalSubmitButton: FC<ModalSubmitButtonProps> = ({ children, ...props }) => {
 	return (
 		<Button
-			size='xs'
+			loadingText='Processing'
+			spinnerPlacement='start'
+			size='sm'
 			type='submit'
 			{...props}>
 			{children || 'Confirm'}

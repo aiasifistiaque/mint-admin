@@ -34,15 +34,7 @@ export {
 } from './table-components/data';
 
 export * from './table-components/menu';
-export {
-	MenuModalHeader,
-	MenuModalBody,
-	MenuModalCloseButton,
-	MenuModalFooter,
-	MenuModalOverlay,
-	MenuModalContent,
-	MenuModal,
-} from './table-components/menu-modals';
+export * from './table-components/menu-modals';
 
 export * from './table-components/pop-modals';
 

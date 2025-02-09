@@ -1,7 +1,7 @@
-import { Flex, FlexProps, Heading, Button } from '@chakra-ui/react';
+import { Flex, FlexProps, Heading, Button, useColorModeValue, TextProps } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
-import { CreateModal } from '../../';
+import { CreateModal, Icon } from '../..';
 import ExportModal from '../modals/export/ExportModal';
 
 type PageHeadingProps = FlexProps & {
@@ -26,35 +26,67 @@ const PageHeading: React.FC<PageHeadingProps> = ({
 	export: exportData,
 	...props
 }) => {
-	const btn = <Button size='sm'>{button}</Button>;
-	const exportButton = <ExportModal path={path} />;
-	const toButton = isModal ? (
-		<CreateModal
-			trigger={btn}
-			type='post'
-			path={path}
-			data={data}
-			invalidate={table?.invalidate}
-			prompt={table?.button?.prompt}
-		/>
-	) : href ? (
-		<Link href={href}>{btn}</Link>
-	) : (
-		btn
+	const iconColor = useColorModeValue('#fafafa', '#171717');
+	const btn = (
+		<Button
+			size='sm'
+			pl={3}
+			leftIcon={
+				<Icon
+					size={18}
+					name='add'
+					color={iconColor}
+				/>
+			}>
+			{button}
+		</Button>
 	);
+	const exportButton = <ExportModal path={path} />;
+	const renderButton = () => {
+		if (isModal)
+			return (
+				<CreateModal
+					trigger={btn}
+					type='post'
+					path={path}
+					data={data}
+					invalidate={table?.invalidate}
+					prompt={table?.button?.prompt}
+				/>
+			);
+		else if (href) return <Link href={href}>{btn}</Link>;
+		else return btn;
+	};
 
 	return (
 		<Flex
-			justify='space-between'
-			{...props}
-			align='center'>
-			<Heading fontSize='1.75rem'>{title}</Heading>
-			<Flex gap={2}>
+			{...containerCss}
+			{...props}>
+			<Heading {...headingCss}>{title}</Heading>
+			<Flex {...buttonGroupCss}>
 				<>{Boolean(exportData) && exportButton}</>
-				<>{(Boolean(button) || isModal) && toButton}</>
+				<>{(Boolean(button) || isModal) && renderButton()}</>
 			</Flex>
 		</Flex>
 	);
+};
+
+const containerCss: FlexProps = {
+	flexDir: { base: 'column', md: 'row' },
+	gap: 2,
+	justify: 'space-between',
+	align: { base: 'flex-start', md: 'center' },
+	pt: 4,
+};
+
+const headingCss: TextProps = {
+	fontSize: { base: '1.5rem', md: '1.75rem' },
+};
+
+const buttonGroupCss: FlexProps = {
+	gap: 2,
+	w: 'full',
+	justify: 'flex-end',
 };
 
 export default PageHeading;

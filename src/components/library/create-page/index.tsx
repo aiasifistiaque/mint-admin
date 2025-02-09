@@ -8,3 +8,4 @@ export { default as FormPage } from './page/FormPage';
 export { default as AddItemPage } from './page/AddItemPage';
 export { default as EditItemPage } from './page/EditItemPage';
 export { default as FormMain } from './page/form-components/FormMain';
+export { default as FullForm } from './page/form-components/FullForm';

@@ -1,4 +1,6 @@
-import { THEME } from '../components/library';
+// import { THEME } from '../components/library';
+
+const THEME: 'basic' | 'fancy' = 'basic';
 
 type ColorMode = {
 	light?: string;
@@ -73,9 +75,9 @@ export const colors: any = {
 		// 300: 'blue',
 		// 400: 'teal',
 		//500: '#635BFF',
-		500: '#4a4a4a',
+		500: '#171717',
 		// 600: 'darkslateblue',
-		600: '#111',
+		600: '#333',
 	},
 
 	red: {
@@ -84,6 +86,7 @@ export const colors: any = {
 		// 200: 'blue',
 		// 300: 'teal',
 		// 400: 'slateblue',
+		500: '#EA001C',
 		600: '#EA001C',
 		// 700: 'yellow',
 		// 800: 'orange',
@@ -102,16 +105,22 @@ export const colors: any = {
 		400: '#f8f6f3',
 		500: '#fff',
 		200: BLACK,
-		light: THEME == 'basic' ? '#fafafa' : '#f1f1f1',
+		blurLight: 'rgba(250, 250, 250, .4)',
+		// light: THEME == 'basic' ? '#fafafa' : '#f1f1f1',
+		// //dark: BLACK,
+		// dark: THEME == 'basic' ? BLACK : '#121212',
+
+		light: '#fafafa',
 		//dark: BLACK,
-		dark: THEME == 'basic' ? BLACK : '#121212',
+		dark: BLACK,
 	},
 	text: {
-		light: '#30313D',
-		dark: '#f1f1f1',
+		light: '#171717',
+		dark: '#fafafa',
+		shade: '#666',
 		200: '#fff',
 		400: '#4a4a4a',
-		500: '#30313D',
+		500: '#171717',
 		selected: '#4a4a4a',
 		selectedDark: SAGE,
 	},
@@ -119,7 +128,7 @@ export const colors: any = {
 		light: 'transparent',
 		//light: '#fff',
 		dark: 'transparent',
-		deepL: '#ECECE8',
+		deepL: '#e7e7e7',
 		deepD: '#2D2D2D',
 	},
 	pos: {
@@ -141,28 +150,43 @@ export const colors: any = {
 	sidebar: {
 		//light: '#F3F3EF',
 		light: '#fafafa',
-		selected: '#4a4a4a',
 		dark: DARK,
 		darker: '#121212',
+		hoverLight: '#ECECEC',
+		hoverDark: '#141414',
 	},
 	menu: {
 		light: '#fff',
 		dark: DARK,
+		blurLight: 'rgba(255, 255, 255, 0.5)',
+		blurDark: 'rgba(14,14,14,.8)',
 	},
 	navbar: {
 		400: BLACK,
-		light: THEME == 'basic' ? '#fafafa' : BLACK,
+		light: THEME == 'basic' ? '#fff' : BLACK,
+		blurLight: 'rgba(255, 255, 255, 0.4)',
 		dark: BLACK,
 		800: BLACK,
+		borderBottomLight: '#ECECEc',
+		borderBottomDark: 'transparent',
 	},
 	border: {
 		//light: '#F3F3EF',
-		light: '#e3e3e3',
+		light: '#ececec',
 		dark: '#2D2D2D',
 	},
 	container: {
 		light: '#fff',
 		dark: BLACK,
+		newLight: '#fff',
+		newDark: BLACK,
+		borderLight: '#e7e7e7',
+		borderDark: 'transparent',
+		borderDarker: '#111',
+	},
+	green: {
+		500: '#000',
+		600: '#000',
 	},
 	//black: { 500: BLACK, 600: BLACK, 700: BLACK, 800: BLACK, 900: BLACK, 200: BLACK },
 	gray: {
@@ -171,15 +195,15 @@ export const colors: any = {
 		//200: 'red',
 		// 300: 'green',
 		// 400: 'blue',
-		// 500: 'yellow',
-		// 600: 'orange',
+		// 500: '#000',
+		// 600: '#000',
 		// 700: 'tomato',
 		800: BLACK, //initial bg color of the load of colormode
 		// 900: 'green',
 	},
 
 	table: {
-		light: THEME == 'basic' ? '#fff' : '#fff',
+		light: THEME == 'basic' ? 'transparent' : '#fff',
 		dark: THEME == 'basic' ? 'transparent' : DARK,
 	},
 	selectBorder: {

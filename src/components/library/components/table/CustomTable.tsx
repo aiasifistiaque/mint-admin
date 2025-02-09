@@ -19,13 +19,12 @@ import {
 	SelectedMenu,
 	selectAll,
 	TableResultContainer,
-} from '../../';
+} from '../..';
 
 const CustomTable: React.FC<CustomTableProps> = ({
 	headers,
 	children,
 	filters,
-
 	header,
 	data,
 	isLoading,
@@ -69,7 +68,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
 							borderRadius='full'
 							onClick={onUnselect}
 						/>
-						<Text>{selectedItems?.length} selected</Text>
+						<Text>{selectedItems?.length} Items Selected</Text>
 					</Flex>
 
 					<SelectedMenu
@@ -101,24 +100,24 @@ const CustomTable: React.FC<CustomTableProps> = ({
 			{table?.topPagination && <TableResultContainer data={data} />}
 			<TableContainer>
 				<Table size='sm'>
-					<Thead>
+					<Thead _light={{ bg: 'background.light' }}>
 						<Tr>{header}</Tr>
 					</Thead>
 					<Tbody>{tbody}</Tbody>
 				</Table>
+				{data?.docsInPage == 0 && (
+					<TableErrorMessage title='No results found.'>
+						There {`aren't`} any results for that query. Try using different filters.
+					</TableErrorMessage>
+				)}
+				{isError && (
+					<TableErrorMessage title='Error Fetching Data.'>
+						{error?.data?.message ||
+							`There has been an error while fetching data. Please try refreshing the page.`}
+					</TableErrorMessage>
+				)}
 			</TableContainer>
 
-			{data?.docsInPage == 0 && (
-				<TableErrorMessage title='No results found.'>
-					There {`aren't`} any results for that query. Try using different filters.
-				</TableErrorMessage>
-			)}
-			{isError && (
-				<TableErrorMessage title='Error Fetching Data.'>
-					{error?.data?.message ||
-						`There has been an error while fetching data. Please try refreshing the page.`}
-				</TableErrorMessage>
-			)}
 			{pagination && <ResultContainer data={data} />}
 		</>
 	);

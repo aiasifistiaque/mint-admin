@@ -24,8 +24,8 @@ import {
 	MenuItem,
 	getValue,
 	DrawerContentContainer,
-} from '../../../../';
-import { ViewItem } from './';
+} from '../../../..';
+import { ViewItem } from '.';
 
 type DeleteItemModalProps = {
 	title?: string;
@@ -100,7 +100,6 @@ const ViewItemModal: FC<DeleteItemModalProps> = ({ title, path, dataModel, trigg
 						</Column>
 					</Body>
 				</Content>
-				{/* </AlertDialogOverlay> */}
 			</Container>
 		</>
 	);

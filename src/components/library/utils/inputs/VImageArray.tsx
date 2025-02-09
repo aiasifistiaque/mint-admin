@@ -7,11 +7,12 @@ import {
 	Stack,
 	InputProps,
 	GridProps,
-	Flex,
-	Text,
+	FlexProps,
+	ImageProps,
+	Wrap,
 } from '@chakra-ui/react';
 
-import { UploadModal, HelperText, Label, ImageContainer } from '../../';
+import { UploadModal, HelperText, Label, ImageContainer } from '../..';
 
 type FormDataType = InputProps &
 	GridProps & {
@@ -31,7 +32,7 @@ const VImageArray: FC<FormDataType> = ({
 	label,
 	helper,
 	isDisabled = false,
-	limit,
+	limit = 999,
 }) => {
 	const type = value ? 'edit' : 'add';
 	const length = value?.length || 0;
@@ -40,13 +41,11 @@ const VImageArray: FC<FormDataType> = ({
 		<FormControl isRequired={isRequired}>
 			<Stack w='full'>
 				<Label>{label}</Label>
-				<Flex
-					gap={2}
-					flexWrap='wrap'>
+				<Wrap gap={2}>
 					{value?.map((image: string, i: number) => (
 						<Center
 							key={i}
-							sx={styles.container}>
+							{...containerCSS}>
 							<UploadModal
 								type='delete'
 								handleImage={onChange}
@@ -55,22 +54,22 @@ const VImageArray: FC<FormDataType> = ({
 							/>
 							<ImageContainer>
 								<Image
-									h='100%'
-									w='100%'
-									objectFit='contain'
+									{...imageCss}
 									src={image}
 								/>
 							</ImageContainer>
 						</Center>
 					))}
-					<Center sx={styles.container}>
-						<UploadModal
-							type='add'
-							handleImage={onChange}
-							multiple={true}
-						/>
-					</Center>
-				</Flex>
+					{value && value?.length >= limit ? null : (
+						<Center {...containerCSS}>
+							<UploadModal
+								type='add'
+								handleImage={onChange}
+								multiple={true}
+							/>
+						</Center>
+					)}
+				</Wrap>
 
 				{helper && <HelperText>{helper}</HelperText>}
 			</Stack>
@@ -78,13 +77,17 @@ const VImageArray: FC<FormDataType> = ({
 	);
 };
 
-const styles = {
-	container: {
-		h: '200px',
-		w: '200px',
-		bg: 'transparent',
-		position: 'relative',
-	},
+const containerCSS: FlexProps = {
+	h: '200px',
+	w: '200px',
+	bg: 'transparent',
+	position: 'relative',
+};
+
+const imageCss: ImageProps = {
+	h: '100%',
+	w: '100%',
+	objectFit: 'contain',
 };
 
 export default VImageArray;

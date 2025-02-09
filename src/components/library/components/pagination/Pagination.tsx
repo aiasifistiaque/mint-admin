@@ -1,18 +1,13 @@
-import { Center, Flex, Select } from '@chakra-ui/react';
+import { Center, Flex } from '@chakra-ui/react';
 import React from 'react';
 
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { HiArrowUturnLeft, HiArrowUturnRight } from 'react-icons/hi2';
 
-import {
-	useIsMobile,
-	BASE_LIMIT,
-	useAppDispatch,
-	useAppSelector,
-	SquareButton,
-	TableHeading,
-	updateTable,
-} from '../../';
+import { useIsMobile, useAppDispatch, useAppSelector } from '../../hooks';
+import { SquareButton, TableHeading, updateTable } from '../..';
+import { SHOW_PER_PAGE_OPTIONS } from '../..';
+import { SelectInput, CurrentPage } from './_components';
 
 type PaginationProps = {
 	data: any;
@@ -22,47 +17,36 @@ type PaginationProps = {
 const Pagination: React.FC<PaginationProps> = ({ data, showPerPage = true }) => {
 	const { page, limit } = useAppSelector(state => state.table);
 	const dispatch = useAppDispatch();
+	const isMobile = useIsMobile();
 
 	const update = ({ setPage, setLimit }: { setPage?: number; setLimit?: number }) => {
 		dispatch(updateTable({ page: setPage, limit: setLimit }));
 	};
 
-	const toStart = () => {
-		update({ setPage: 1 });
-	};
+	const toStart = () => update({ setPage: 1 });
 
-	const toLast = () => {
-		update({ setPage: data?.totalPages });
-	};
+	const toLast = () => update({ setPage: data?.totalPages });
 
 	const next = () => {
 		if (page < data?.totalPages) update({ setPage: page + 1 });
 	};
 
-	const back = () => {
-		update({ setPage: page - 1 });
-	};
-
-	const isMobile = useIsMobile();
+	const back = () => update({ setPage: page - 1 });
 
 	const perpage = (
 		<>
 			{!isMobile && <TableHeading>SHOWING RESULTS</TableHeading>}
-			<Select
-				cursor='pointer'
-				size='sm'
-				fontWeight='600'
-				fontSize={12}
-				borderRadius={4}
+			<SelectInput
 				value={limit}
 				onChange={(e: any) => update({ setLimit: e.target.value })}>
-				<option value={BASE_LIMIT}>{BASE_LIMIT}</option>
-				<option value={BASE_LIMIT * 2}>{BASE_LIMIT * 2}</option>
-				<option value={50}>50</option>
-				<option value={100}>100</option>
-				<option value={250}>250</option>
-				<option value={999}>999</option>
-			</Select>
+				{SHOW_PER_PAGE_OPTIONS.map(({ value, label }) => (
+					<option
+						key={value}
+						value={value}>
+						{label}
+					</option>
+				))}
+			</SelectInput>
 		</>
 	);
 
@@ -73,7 +57,6 @@ const Pagination: React.FC<PaginationProps> = ({ data, showPerPage = true }) => 
 			{showPerPage && <Center gap={2}>{perpage}</Center>}
 
 			<Flex
-				borderRadius={4}
 				p={2}
 				alignSelf='flex-end'>
 				<SquareButton
@@ -88,15 +71,11 @@ const Pagination: React.FC<PaginationProps> = ({ data, showPerPage = true }) => 
 					<IoIosArrowBack size={20} />
 				</SquareButton>
 
-				<Center
-					h={8}
-					px={2}
-					fontSize='.9rem'
-					userSelect='none'>
+				<CurrentPage>
 					{!isMobile
 						? `Page ${page} of ${data?.totalPages || '--'}`
 						: `${page}/${data?.totalPages || '--'}`}
-				</Center>
+				</CurrentPage>
 				<SquareButton
 					label='Next Page'
 					onClick={next}>

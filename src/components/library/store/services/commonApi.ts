@@ -1,4 +1,4 @@
-import { BASE_LIMIT } from '../../';
+import { BASE_LIMIT } from '../..';
 import mainApi from './mainApi';
 
 export const userApi = mainApi.injectEndpoints({
@@ -38,6 +38,7 @@ export const userApi = mainApi.injectEndpoints({
 			}),
 			providesTags: (result, error, { path }) => [path],
 		}),
+
 		getSelectData: builder.query<any, string>({
 			query: (id: any) => `${id}?limit=1000&fields=name&sort=name`,
 			providesTags: ['filters', 'products', 'brands', 'categories', 'coupons', 'collections'],
@@ -46,6 +47,17 @@ export const userApi = mainApi.injectEndpoints({
 			query: ({ path, id, invalidate = [] }): any => `${path}/${id}`,
 			providesTags: (result, error, { path, invalidate = [] }: any) => [path, ...invalidate],
 		}),
+
+		get: builder.query<any, { path: string; invalidate?: string[] }>({
+			query: ({ path, invalidate = [] }): any => `${path}`,
+			providesTags: (result, error, { path, invalidate = [] }: any) => [path, ...invalidate],
+		}),
+
+		getOne: builder.query<any, { path: string; invalidate?: string[] }>({
+			query: ({ path, invalidate = [] }): any => `${path}/get/one`,
+			providesTags: (result, error, { path, invalidate = [] }: any) => [path, ...invalidate],
+		}),
+
 		getByIdToEdit: builder.query<any, { path: string; id: any; invalidate?: string[] }>({
 			query: ({ path, id, invalidate }): any => `${path}/edit/${id}`,
 			providesTags: (result, error, { path, invalidate = [] }: any) => [path, ...invalidate],
@@ -132,6 +144,13 @@ export const userApi = mainApi.injectEndpoints({
 			}),
 			invalidatesTags: (result, error, { path, id, invalidate = [] }: any) => [path, ...invalidate],
 		}),
+		deleteById: builder.mutation<any, { path: string; id: string; invalidate?: string[] }>({
+			query: ({ path, id, invalidate }): any => ({
+				url: `${path}/${id}`,
+				method: 'DELETE',
+			}),
+			invalidatesTags: (result, error, { path, id, invalidate = [] }: any) => [path, ...invalidate],
+		}),
 		updateMany: builder.mutation<any, { path: string; body: any; invalidate?: any }>({
 			query: ({ path, body }): any => ({
 				url: `${path}/update/many`,
@@ -148,9 +167,12 @@ export const userApi = mainApi.injectEndpoints({
 			}),
 			invalidatesTags: (result, error, { path, invalidate = [] }) => [path, ...invalidate],
 		}),
-		deleteById: builder.mutation<any, { path: string; id: string; invalidate?: string[] }>({
-			query: ({ path, id, invalidate }): any => ({
-				url: `${path}/${id}`,
+		deleteProductlistByKeyId: builder.mutation<
+			any,
+			{ path: string; id: string; key: string; invalidate?: string[] }
+		>({
+			query: ({ path, id, key, invalidate }): any => ({
+				url: `${path}/${id}?key=${key}`,
 				method: 'DELETE',
 			}),
 			invalidatesTags: (result, error, { path, id, invalidate }: any) => [path, ...invalidate],
@@ -174,4 +196,8 @@ export const {
 	useLazyGetByIdToEditQuery,
 	useExportManyMutation,
 	useGetSumQuery,
+	useGetOneQuery,
+	useLazyGetAllQuery,
+	useGetQuery,
+	useDeleteProductlistByKeyIdMutation,
 } = userApi;

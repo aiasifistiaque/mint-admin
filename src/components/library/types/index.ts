@@ -1,4 +1,11 @@
-import { ButtonProps, FlexProps, GridProps, TableCellProps, TextProps } from '@chakra-ui/react';
+import {
+	ButtonProps,
+	FlexProps,
+	GridProps,
+	SelectProps as SProps,
+	TableCellProps,
+	TextProps,
+} from '@chakra-ui/react';
 export type { CustomTableProps } from './components.types';
 import { MenuItem, SelectmenuItem } from './table';
 
@@ -8,6 +15,7 @@ export type { default as Schema } from './schema.types';
 
 import { InputDataType } from './data-types';
 export type { InputDataType } from './data-types';
+// export { default as inputDataOptions } from './data-types/inputDataOptions';
 
 import { ViewDataType, TableDataFieldType } from './data-types';
 import { ReactNode } from 'react';
@@ -169,6 +177,7 @@ type BaseInputData<T> = {
 	options?: { label: string; value: string }[];
 	startOfSection?: boolean;
 	sectionTitle?: string;
+	description?: string;
 	endOfSection?: boolean;
 	object?: boolean;
 	dataModel?: any;
@@ -200,6 +209,10 @@ export type ButtonChild = ButtonProps & {
 };
 
 export type TextChild = TextProps & {
+	children?: ReactNode;
+};
+
+export type SelectChild = SProps & {
 	children?: ReactNode;
 };
 

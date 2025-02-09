@@ -7,6 +7,7 @@ import {
 	ModalContent,
 	ModalContentProps,
 } from '@chakra-ui/react';
+import { radius } from '../config';
 
 type MenuContainerProps = ModalContentProps &
 	DrawerContentProps &
@@ -33,8 +34,8 @@ const ModalContainer: React.FC<MenuContainerProps> = ({ children, isSmallScreen,
 		return (
 			<ModalContent
 				boxShadow='lg'
-				borderRadius='2xl'
-				bg='menu.light'
+				borderRadius={radius.MODAL}
+				bg='background.light'
 				_dark={{
 					bg: 'menu.dark',
 				}}

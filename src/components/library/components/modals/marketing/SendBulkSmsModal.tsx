@@ -14,7 +14,7 @@ import {
 	VTextarea,
 	usePostMutation,
 	useCustomToast,
-} from '../../../';
+} from '../../..';
 
 const SendBulkSmsModal = ({ path, ids }: { path: string; ids: string[] }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -73,7 +73,7 @@ const SendBulkSmsModal = ({ path, ids }: { path: string; ids: string[] }) => {
 							Discard
 						</DiscardButton>
 						<Button
-							size='xs'
+							size='sm'
 							onClick={handleSubmit}
 							isLoading={result?.isLoading}>
 							Send

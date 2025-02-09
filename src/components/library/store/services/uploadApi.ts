@@ -1,6 +1,6 @@
 import mainApi from './mainApi';
 import { User, ListType, TableProps } from '../store.types';
-import { BASE_LIMIT } from '../../';
+import { BASE_LIMIT } from '../..';
 
 export const uploadApi = mainApi.injectEndpoints({
 	endpoints: builder => ({

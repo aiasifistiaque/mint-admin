@@ -8,3 +8,5 @@ export { default as ViewProductContainer } from './container/ViewProductContaine
 export { default as AddProductListModal } from './modal/AddProductListModal';
 export { default as DeleteProductListModal } from './modal/DeleteProductListModal';
 export { default as EditProductListModal } from './modal/EditProductListModal';
+
+export { default as HoverContentContainer } from './container/HoverContentContainer';

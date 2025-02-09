@@ -1,8 +1,7 @@
-import { FlexPropsType } from '@/types';
-import { Flex } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { Flex, FlexProps } from '@chakra-ui/react';
+import React, { FC, ReactNode } from 'react';
 
-const Column: FC<FlexPropsType> = ({ children, ...props }) => {
+const Column: FC<FlexProps & { children: ReactNode }> = ({ children, ...props }) => {
 	return (
 		<Flex
 			flexDir='column'

@@ -16,7 +16,7 @@ const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, href, ...props }) =
 			borderBottomWidth={1}
 			fontSize='sm'
 			px={4}
-			bg='menu.light'
+			bg='inherit'
 			color='text.selected'
 			fontWeight='600'
 			_hover={{
@@ -25,7 +25,7 @@ const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, href, ...props }) =
 			_dark={{
 				color: 'text.selectedDark',
 				borderBottomColor: 'border.dark',
-				bg: 'menu.dark',
+				bg: 'inherit',
 				_hover: {
 					bg: 'hover.dark',
 				},

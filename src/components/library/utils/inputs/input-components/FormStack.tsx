@@ -1,6 +1,6 @@
 import { FormControlProps, Stack, StackProps, FormControl } from '@chakra-ui/react';
 import React, { ReactNode, FC } from 'react';
-import { Label, HelperText } from '../../../';
+import { Label, HelperText } from '../../..';
 
 type FormStackProps = StackProps &
 	FormControlProps & {

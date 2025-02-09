@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIsMobile } from '../../../../';
+import { styles, useIsMobile } from '../../../..';
 import { DrawerOverlay, ModalOverlay } from '@chakra-ui/react';
 
 const MenuModalOverlay = () => {
@@ -8,7 +8,13 @@ const MenuModalOverlay = () => {
 		return <DrawerOverlay />;
 	}
 
-	return <ModalOverlay />;
+	return (
+		<ModalOverlay
+			_light={{
+				bg: styles.color.MODAL_OVERLAY.LIGHT,
+			}}
+		/>
+	);
 };
 
 export default MenuModalOverlay;

@@ -1,16 +1,7 @@
 import React, { FC, useState } from 'react';
 
-import {
-	FormControl,
-	Image,
-	Stack,
-	Flex,
-	Text,
-	Heading,
-	Button,
-	IconButton,
-} from '@chakra-ui/react';
-import { HelperText, Label, ImageContainer, Column, Icon } from '../../../';
+import { FormControl, Image, Stack, Flex, Text, Heading } from '@chakra-ui/react';
+import { HelperText, Label, ImageContainer, Column } from '../../..';
 import AddSectionModal from './AddSectionModal';
 import DeleteSection from './DeleteSection';
 
@@ -22,6 +13,9 @@ type FormDataType = {
 	helper?: string;
 	isDisabled?: boolean;
 	name: any;
+	hasImage?: boolean;
+	limit?: number;
+	section?: any;
 };
 
 const VSection: FC<FormDataType> = ({
@@ -32,6 +26,9 @@ const VSection: FC<FormDataType> = ({
 	helper,
 	isDisabled = false,
 	name,
+	hasImage,
+	limit = 999,
+	section,
 	...props
 }) => {
 	const type = value ? 'edit' : 'add';
@@ -56,44 +53,66 @@ const VSection: FC<FormDataType> = ({
 					gap={4}
 					my={4}>
 					{value?.map((item: any, i: number) => (
-						<Column
+						<Flex
 							key={i}
-							gap={4}>
-							<Flex
-								justify='space-between'
-								align='center'>
-								<Heading size='md'>{item?.title} </Heading>
-								<Flex gap={1}>
-									<AddSectionModal
-										value={value}
-										type='edit'
-										handleDataChange={onChange}
-										name={name}
-										index={i}
-										prevVal={item}
-									/>
-									<DeleteSection
-										idx={i}
-										handleDataChange={onChange}
-										name={name}
-										value={value}
-									/>
+							w='full'
+							align='center'
+							gap={6}>
+							{hasImage && (
+								<Image
+									objectFit='contain'
+									src={item?.image}
+									h='64px'
+									w='64px'
+								/>
+							)}
+							<Column
+								gap={4}
+								w='full'>
+								<Flex
+									justify='space-between'
+									align='center'>
+									<Heading size='md'>
+										{item?.title} {item?.section?.addBtnText}
+									</Heading>
+									<Flex gap={1}>
+										<AddSectionModal
+											value={value}
+											type='edit'
+											handleDataChange={onChange}
+											name={name}
+											index={i}
+											prevVal={item}
+											hasImage={hasImage}
+											section={section}
+										/>
+										<DeleteSection
+											idx={i}
+											handleDataChange={onChange}
+											name={name}
+											value={value}
+										/>
+									</Flex>
 								</Flex>
-							</Flex>
 
-							<Text>{item?.description} </Text>
-						</Column>
+								<Text>{item?.description} </Text>
+							</Column>
+						</Flex>
 					))}
 				</Column>
-				<Flex>
-					<AddSectionModal
-						value={value}
-						type='add'
-						handleDataChange={onChange}
-						multiple={true}
-						name={name}
-					/>
-				</Flex>
+				{value && value?.length >= limit ? null : (
+					<Flex>
+						<AddSectionModal
+							value={value}
+							type='add'
+							handleDataChange={onChange}
+							multiple={true}
+							name={name}
+							hasImage={hasImage}
+							section={section}
+						/>
+					</Flex>
+				)}
 				{helper && <HelperText>{helper}</HelperText>}
 			</Stack>
 		</FormControl>

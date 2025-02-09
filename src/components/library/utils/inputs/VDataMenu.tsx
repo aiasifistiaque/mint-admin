@@ -21,7 +21,7 @@ import {
 	ItemOfDataMenu,
 	useGetAllQuery,
 	FormControl,
-} from '../../';
+} from '../..';
 
 const WIDTH = '300px';
 const MAX_H = '200px';
@@ -36,7 +36,7 @@ type VDataMenuProps = InputProps & {
 	dataModel?: any;
 	hideNew?: boolean;
 	field?: string;
-	type?: 'object' | 'value';
+	type?: 'object' | 'value' | string;
 	dataKey?: 'string';
 	unselect?: boolean;
 };

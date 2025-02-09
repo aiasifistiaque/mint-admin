@@ -4,6 +4,7 @@ export * from './slices/cartSlice';
 // export * from './slices/cartSlice';
 export * from './slices/routeSlice';
 export * from './slices/tableSlice';
+export * from './slices/builderSlice';
 // export * from './slices/tableSlice';
 //export * from './slices/authSlice';
 

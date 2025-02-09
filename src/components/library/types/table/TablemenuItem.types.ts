@@ -32,7 +32,7 @@ type BaseMenuItem = {
 };
 
 type CustomModalMenuItem = BaseMenuItem & {
-	type: 'custom-modal';
+	type: 'custom-modal' | 'custom';
 	modal: any;
 };
 

@@ -1,6 +1,14 @@
 'use client';
 
-import { Button, useDisclosure, Text, Checkbox, Grid, Select } from '@chakra-ui/react';
+import {
+	Button,
+	useDisclosure,
+	Text,
+	Checkbox,
+	Grid,
+	Select,
+	useColorModeValue,
+} from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 
 import {
@@ -12,7 +20,8 @@ import {
 	MenuModalCloseButton,
 	MenuModalFooter,
 	DiscardButton,
-} from '../../../';
+	Icon,
+} from '../../..';
 import { useExportMutation } from '@/components/library/store/services/commonApi';
 
 const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
@@ -69,19 +78,23 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 		</Checkbox>
 	));
 
+	const iconColor = useColorModeValue('#fafafa', '#171717');
+
 	return (
 		<>
 			<Button
 				onClick={onOpen}
 				size='sm'
-				colorScheme='gray'>
+				pl={3}
+				variant='white'
+				leftIcon={<Icon name='export-doc' />}>
 				Export
 			</Button>
 
 			<MenuModal
 				isOpen={isOpen}
-				onClose={close}>
-				<MenuModalHeader>Select Fields</MenuModalHeader>
+				onClose={closeModal}>
+				<MenuModalHeader>Select Export Fields</MenuModalHeader>
 				<MenuModalCloseButton />
 				<MenuModalBody>
 					<Grid
@@ -97,8 +110,12 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 						gridTemplateColumns={{ base: '1fr 1fr', md: '1fr 1fr' }}
 						gap={4}
 						rowGap={4}>
-						<Text>Select Export Type</Text>
+						<Text fontWeight='600'>Export As:</Text>
 						<Select
+							_light={{
+								borderColor: 'container.borderLight',
+								bg: 'container.newLight',
+							}}
 							size='sm'
 							value={type}
 							onChange={(e: any) => setType(e.target.value)}>
@@ -114,13 +131,20 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 						<Text color='red'>You can only export up to 5 fields to PDF</Text>
 					) : (
 						<>
-							<DiscardButton
-								mr={2}
+							<Button
+								variant='white'
 								onClick={closeModal}>
 								Discard
-							</DiscardButton>
+							</Button>
 							<Button
-								size='xs'
+								leftIcon={
+									<Icon
+										name='export-doc'
+										size={14}
+										color={iconColor}
+									/>
+								}
+								size='sm'
 								onClick={handleSubmit}
 								isLoading={result?.isLoading}>
 								Export

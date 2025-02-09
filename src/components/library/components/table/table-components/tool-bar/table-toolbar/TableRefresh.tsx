@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Tooltip } from '@chakra-ui/react';
+import { Button, IconButton, Tooltip } from '@chakra-ui/react';
 import { TbRefresh } from 'react-icons/tb';
-import { useAppDispatch, refresh } from '../../../../..';
+import { useAppDispatch, refresh, radius, sizes } from '../../../../..';
 
 const TableRefresh = () => {
 	const dispatch = useAppDispatch();
@@ -14,13 +14,21 @@ const TableRefresh = () => {
 		<Tooltip
 			label='Refresh'
 			placement='top'>
-			<Button
-				size='sm'
-				borderRadius={4}
+			<IconButton
+				aria-label='Refresh'
+				h={sizes.SEARCH_BAR_HEIGHT}
+				w={sizes.SEARCH_BAR_HEIGHT}
+				size='md'
+				borderRadius={radius?.BUTTON}
 				onClick={onReset}
-				colorScheme='gray'>
-				<TbRefresh />
-			</Button>
+				colorScheme='gray'
+				borderWidth={1}
+				_light={{
+					borderColor: 'container.borderLight',
+					bg: 'container.newLight',
+				}}
+				icon={<TbRefresh />}
+			/>
 		</Tooltip>
 	);
 };

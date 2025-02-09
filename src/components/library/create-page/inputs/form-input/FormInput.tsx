@@ -23,7 +23,18 @@ import {
 	VCustom,
 	useGetByIdQuery,
 	VArrayString,
-} from '../../../';
+	VColor,
+	VEditor,
+	VFont,
+	fontWeightOptions,
+	BLineHeight,
+	BOpacity,
+	VSlider,
+	VSectionDataArray,
+	VFontSize,
+	VAlignment,
+} from '../../..';
+import { flexAlignOptions, flexJustifyOptions, textAlignOptions } from './options';
 
 type Option = {
 	label: string;
@@ -103,6 +114,7 @@ const FormInput: FC<FormInputProps> = ({
 		case 'image-array':
 			return (
 				<VImageArray
+					limit={item?.limit}
 					isRequired={isRequired}
 					onChange={props.onChange}
 					helper={item?.helper}
@@ -123,6 +135,101 @@ const FormInput: FC<FormInputProps> = ({
 						Select option
 					</option>
 					{options?.map((option: any, i: number) => (
+						<option
+							key={i}
+							value={option?.value}>
+							{option?.label}
+						</option>
+					))}
+				</VSelect>
+			);
+		case 'alignment':
+			return (
+				<VAlignment
+					type={type}
+					isRequired={isRequired}
+					helper={item?.helper}
+					{...props}
+				/>
+			);
+
+		case 'flex-justify':
+			return (
+				<VAlignment
+					type={type}
+					isRequired={isRequired}
+					helper={item?.helper}
+					options={flexJustifyOptions}
+					{...props}
+				/>
+			);
+
+		case 'flex-align':
+			return (
+				<VAlignment
+					type={type}
+					isRequired={isRequired}
+					helper={item?.helper}
+					options={flexAlignOptions}
+					{...props}
+				/>
+			);
+
+		case 'text-align':
+			return (
+				<VAlignment
+					type={type}
+					isRequired={isRequired}
+					helper={item?.helper}
+					options={textAlignOptions}
+					{...props}
+				/>
+			);
+
+		case 'nested-select':
+			return (
+				<VSelect
+					isRequired={isRequired}
+					helper={item?.helper}
+					{...props}>
+					<option
+						value=''
+						disabled
+						selected>
+						Select option
+					</option>
+					{options?.map((option: any, i: number) => (
+						<option
+							key={i}
+							value={option?.value}>
+							{option?.label}
+						</option>
+					))}
+				</VSelect>
+			);
+		case 'font-size':
+			return (
+				<VFontSize
+					options={[10, 11, 12, 13, 14, 15, 16, 18, 20, 24, 32, 36, 40, 48, 64, 96, 128]}
+					type={type}
+					isRequired={isRequired}
+					helper={item?.helper}
+					{...props}
+				/>
+			);
+		case 'font-weight':
+			return (
+				<VSelect
+					isRequired={isRequired}
+					helper={item?.helper}
+					{...props}>
+					<option
+						value=''
+						disabled
+						selected>
+						Select option
+					</option>
+					{fontWeightOptions?.map((option: any, i: number) => (
 						<option
 							key={i}
 							value={option?.value}>
@@ -183,6 +290,72 @@ const FormInput: FC<FormInputProps> = ({
 					{...props}
 				/>
 			);
+		case 'nested-data-menu':
+			return (
+				<VDataMenu
+					dataModel={dataModel}
+					isRequired={isRequired}
+					model={props?.model || ''}
+					field={item?.menuField || 'name'}
+					helper={item?.helper}
+					{...props}
+				/>
+			);
+
+		case 'font':
+			return (
+				<VFont
+					isRequired={isRequired}
+					helper={item?.helper}
+					onChange={props.onChange}
+					{...props}
+				/>
+			);
+
+		case 'line-height':
+			return (
+				<BLineHeight
+					isRequired={isRequired}
+					helper={item?.helper}
+					{...props}
+				/>
+			);
+
+		case 'opacity':
+			return (
+				<BOpacity
+					isRequired={isRequired}
+					helper={item?.helper}
+					{...props}
+				/>
+			);
+		case 'slider':
+			return (
+				<VSlider
+					isRequired={isRequired}
+					helper={item?.helper}
+					values={item?.values}
+					threshold={item?.threshold}
+					min={item?.min}
+					max={item?.max}
+					step={item?.step}
+					{...props}
+				/>
+			);
+
+		case 'letterspacing':
+			return (
+				<VSlider
+					isRequired={isRequired}
+					helper={item?.helper}
+					values={[-3, -2, -1, 0, 1, 2, 3]}
+					threshold={100}
+					min={-400}
+					max={400}
+					step={10}
+					{...props}
+				/>
+			);
 
 		case 'category-collection-array':
 			return (
@@ -234,6 +407,22 @@ const FormInput: FC<FormInputProps> = ({
 					isRequired={isRequired}
 					name={props.name}
 					helper={item?.helper}
+					hasImage={item?.hasImage}
+					limit={item?.limit}
+					section={item?.section}
+					{...props}
+				/>
+			);
+		case 'section-data-array':
+			return (
+				<VSectionDataArray
+					onChange={props.onChange}
+					isRequired={isRequired}
+					name={props.name}
+					helper={item?.helper}
+					hasImage={item?.hasImage}
+					limit={item?.limit}
+					section={item?.section}
 					{...props}
 				/>
 			);
@@ -310,12 +499,33 @@ const FormInput: FC<FormInputProps> = ({
 					/>
 				</>
 			);
+		case 'color':
+			return (
+				<>
+					<VColor
+						type={type}
+						isRequired={isRequired}
+						helper={item?.helper}
+						{...props}
+					/>
+				</>
+			);
 		case 'nested-string':
 			return (
 				<VInput
 					type={type}
 					isRequired={isRequired}
 					helper={item?.helper}
+					{...props}
+				/>
+			);
+		case 'editor':
+			return (
+				<VEditor
+					onChange={props.onChange}
+					name={props.name}
+					helper={item?.helper}
+					isRequired={item?.isRequired}
 					{...props}
 				/>
 			);

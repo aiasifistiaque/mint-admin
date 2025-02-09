@@ -26,7 +26,7 @@ import {
 	Address,
 	removeAddress,
 	setAddress,
-} from '../../';
+} from '../..';
 
 const inputFields: InputData<Address>[] = [
 	{
@@ -187,6 +187,12 @@ const AddressWidget = ({ id }: { id?: string }) => {
 						</ModalBody>
 						<ModalFooter>
 							<DiscardButton
+								size='sm'
+								_light={{
+									borderWidth: 1,
+									borderColor: 'container.borderLight',
+									bg: 'container.newLight',
+								}}
 								mr={2}
 								onClick={onModalClose}>
 								Discard

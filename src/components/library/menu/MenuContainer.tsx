@@ -10,9 +10,10 @@ const MenuContainer: React.FC<MenuContainerProps> = ({ children, ...props }) => 
 		<MenuList
 			boxShadow='lg'
 			borderRadius='xl'
-			bg='menu.light'
+			bg='menu.blurLight'
+			backdropFilter='blur(5px)'
 			_dark={{
-				bg: 'menu.dark',
+				bg: 'menu.blurDark',
 			}}
 			{...props}>
 			{children}

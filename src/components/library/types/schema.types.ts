@@ -18,6 +18,18 @@ type CommonProps = {
 	renderCondition?: any;
 	tableKey?: string;
 	menuField?: string;
+	limit?: number;
+	section?: {
+		title?: string;
+		addBtnText?: string;
+		btnText?: string;
+		dataModel?: any;
+		display?: {
+			image?: string;
+			title: string;
+			description?: string;
+		};
+	};
 	value?: any;
 	getValue?: (doc: any) => any;
 	fetch?: (data: any) => {

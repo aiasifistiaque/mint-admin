@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 
-import { AlertDialogHeader, AlertDialogContent } from '../../../';
+import { AlertDialogHeader, AlertDialogContent } from '../../..';
 
 type DeleteItemModalProps = {
 	title?: string;

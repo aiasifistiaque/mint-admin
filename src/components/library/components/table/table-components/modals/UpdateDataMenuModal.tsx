@@ -20,7 +20,7 @@ import {
 	AlertSubmitButton,
 	useUpdateByIdMutation,
 	PromptType,
-} from '../../../../';
+} from '../../../..';
 
 type UpdateKeyProps = {
 	id: string;

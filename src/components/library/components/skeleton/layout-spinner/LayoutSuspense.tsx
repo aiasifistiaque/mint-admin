@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { Center, Spinner } from '@chakra-ui/react';
+import { Center, Spinner, FlexProps, Flex } from '@chakra-ui/react';
 import { Layout } from '../../..';
 
-type LayoutSpinnerProps = {
+type LayoutSpinnerProps = FlexProps & {
 	isLoading: boolean;
 	children: React.ReactNode;
 	path: string;
@@ -20,6 +20,7 @@ const LayoutSuspense: FC<LayoutSpinnerProps> = ({
 	isError,
 	errorMessage,
 	data,
+	...props
 }) => {
 	if (isLoading)
 		return (
@@ -38,7 +39,11 @@ const LayoutSuspense: FC<LayoutSpinnerProps> = ({
 			<Layout
 				path={path}
 				title={title}>
-				{children}
+				<Flex
+					flexDir='column'
+					{...props}>
+					{children}
+				</Flex>
 			</Layout>
 		);
 };

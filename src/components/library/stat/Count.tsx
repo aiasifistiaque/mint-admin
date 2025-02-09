@@ -1,7 +1,7 @@
 'use client';
 import React, { FC } from 'react';
 import { Skeleton, Tooltip } from '@chakra-ui/react';
-import { useGetCountQuery, Align, Icon } from '../';
+import { useGetCountQuery, Align, Icon } from '..';
 import { StatContainer, StatLabel, StatNumber } from './stat-components';
 
 type CountProps = {

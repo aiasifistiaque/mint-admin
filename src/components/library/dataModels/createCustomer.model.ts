@@ -1,4 +1,4 @@
-import { InputData } from '../';
+import { InputData } from '..';
 
 type FormDataType = {
 	name: string | undefined;

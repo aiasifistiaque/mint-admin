@@ -5,3 +5,9 @@ export { default as formatFieldName } from './formatFieldName';
 export { default as sortDataByPriority } from './sortDataByPriority';
 
 export { default as getValue } from './getValue';
+
+export { default as generateTextContent } from './generateTextContent';
+export { default as generateText } from './generateTextContent';
+export { default as getFontSize } from './getFontSize';
+
+export { default as getOnChangeHandler } from './getOnChangeHandler';

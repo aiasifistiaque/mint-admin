@@ -8,13 +8,14 @@ type FormItemProps = {
 		startOfSection?: boolean;
 		sectionTitle?: string;
 		span?: number;
+		description?: string;
 	};
 	children: React.ReactNode;
 	isHidden?: boolean;
 };
 
 const FormItem: FC<FormItemProps> = ({
-	item: { startOfSection, sectionTitle, span },
+	item: { startOfSection, sectionTitle, span, description },
 	children,
 	isHidden = false,
 }) => {
@@ -31,14 +32,26 @@ const FormItem: FC<FormItemProps> = ({
 				/>
 			)}
 			{sectionTitle && (
-				<GridItem
-					colSpan={2}
-					fontSize='18px'
-					fontWeight='700'
-					mb={-2}>
-					{sectionTitle}
-				</GridItem>
+				<>
+					<GridItem
+						colSpan={2}
+						fontSize='18px'
+						fontWeight='700'
+						mb={description ? -4 : -2}>
+						{sectionTitle}
+					</GridItem>
+
+					{description && (
+						<GridItem
+							colSpan={2}
+							fontSize='14px'
+							my={-2}>
+							{description}
+						</GridItem>
+					)}
+				</>
 			)}
+
 			<GridItem colSpan={span || 2}>{children}</GridItem>
 		</>
 	);

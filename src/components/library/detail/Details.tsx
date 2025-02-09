@@ -65,7 +65,7 @@ const Details: FC<DetailProps> = ({
 				px={3}
 				py={1}
 				fontSize='.9rem'>
-				{children}
+				{children || <i>N/A</i>}
 			</Text>
 		);
 
