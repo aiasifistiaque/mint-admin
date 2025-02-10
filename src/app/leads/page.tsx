@@ -39,6 +39,7 @@ const page: NextPage = () => {
 			'phone',
 			'status',
 			'source',
+			'requirements',
 			'leadType',
 			'priority',
 			'category',
@@ -80,8 +81,8 @@ const page: NextPage = () => {
 				fields: [['facebook', 'instagram'], 'websiteUrl'],
 			},
 			{
-				sectionTitle: 'More Detai;s',
-				fields: ['estimatedBudget', 'interestedIn', 'tags'],
+				sectionTitle: 'More Details',
+				fields: ['estimatedBudget', 'requirements', 'interestedIn', 'tags'],
 			},
 		],
 	});

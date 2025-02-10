@@ -71,7 +71,7 @@ const ViewItemModal: FC<DeleteItemModalProps> = ({ title, path, dataModel, trigg
 				{...(isMobile && { placement: 'bottom' })}
 				{...(isMobile && { isFullHeight: false })}
 				isOpen={isOpen}
-				size='xl'
+				size='2xl'
 				onClose={onClose}>
 				<Overlay />
 				<Content>

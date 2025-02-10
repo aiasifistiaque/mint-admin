@@ -154,6 +154,10 @@ const schema: SchemaType<any> = {
 		viewType: 'external-link',
 		displayInTable: true,
 	},
+	requirements: {
+		label: 'Requirements',
+		type: 'textarea',
+	},
 	source: {
 		label: 'Source',
 		type: 'select',
