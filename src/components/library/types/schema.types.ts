@@ -12,6 +12,7 @@ type CommonProps = {
 	displayInTable?: boolean;
 	model?: string;
 	dataModel?: any;
+	viewType?: string;
 	options?: { label: string; value: string }[];
 	placeholder?: string;
 	colorScheme?: any;

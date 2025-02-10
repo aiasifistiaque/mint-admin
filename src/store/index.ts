@@ -2,7 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { TOKEN_NAME } from '@/components/library';
 
-import { routeSlice, tableSlice, cartSlice, authSlice } from '@/components/library/store';
+import {
+	routeSlice,
+	tableSlice,
+	cartSlice,
+	authSlice,
+	builderSlice,
+} from '@/components/library/store';
 
 import mainApi from '@/components/library/store/services/mainApi';
 
@@ -12,6 +18,7 @@ export const store = configureStore({
 		route: routeSlice.reducer,
 		table: tableSlice.reducer,
 		cart: cartSlice.reducer,
+		builder: builderSlice.reducer,
 		[mainApi.reducerPath]: mainApi.reducer,
 	},
 	middleware: getDefaultMiddleware => getDefaultMiddleware().concat(mainApi.middleware),

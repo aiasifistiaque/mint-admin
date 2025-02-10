@@ -43,6 +43,12 @@ const sidebar: SidebarItemType[] = [
 	// 	path: 'categories',
 	// },
 	{
+		title: 'Leads',
+		href: '/leads',
+		icon: 'customer',
+		path: 'leads',
+	},
+	{
 		title: 'Customers',
 		href: '/customers',
 		icon: 'customer',

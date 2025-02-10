@@ -66,3 +66,11 @@
 // };
 
 // export default ASelect;
+
+import React from 'react';
+
+const ASelect = () => {
+	return <div>ASelect</div>;
+};
+
+export default ASelect;

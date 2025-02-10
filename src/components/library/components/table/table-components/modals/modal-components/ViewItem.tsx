@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from 'react';
-import { Badge, Box, Flex, Grid, GridProps, Heading, Skeleton, Text } from '@chakra-ui/react';
+import { Badge, Box, Flex, Grid, GridProps, Heading, Link, Skeleton, Text } from '@chakra-ui/react';
 import { Align, Column, ImageContainer, PLACEHOLDER_IMAGE, RenderTag } from '../../../../..';
 
 type ViewItemProps = GridProps & {
@@ -58,18 +58,33 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 					))}
 				</Align>
 			);
+		case 'external-link':
+			return (
+				<Link
+					cursor='pointer'
+					href={children || '#'}
+					isExternal={children ? true : false}>
+					<Text
+						wordBreak='break-all'
+						color='dodgerblue'
+						fontSize='.95rem'>
+						{children}
+					</Text>
+				</Link>
+			);
 		case 'data-array-tag':
 			return (
 				<Align
 					flexWrap='wrap'
 					gap={2}>
-					{children?.map((item: any, i: number) => (
-						<RenderTag
-							key={i}
-							path={path || ''}
-							item={item}
-						/>
-					))}
+					{Array.isArray(children) &&
+						children?.map((item: any, i: number) => (
+							<RenderTag
+								key={i}
+								path={path || ''}
+								item={item}
+							/>
+						))}
 				</Align>
 			);
 
