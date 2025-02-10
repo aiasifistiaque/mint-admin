@@ -13,6 +13,27 @@ const schema: SchemaType<any> = {
 		displayInTable: true,
 		sort: true,
 	},
+	leadType: {
+		label: 'Lead Type',
+		type: 'select',
+		displayInTable: true,
+		default: true,
+
+		options: [
+			{
+				label: 'Cold',
+				value: 'cold',
+			},
+			{
+				label: 'Warm',
+				value: 'warm',
+			},
+			{
+				label: 'Hot',
+				value: 'hot',
+			},
+		],
+	},
 	email: {
 		label: 'Email',
 		type: 'string',

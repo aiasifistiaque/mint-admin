@@ -35,6 +35,7 @@ const page: NextPage = () => {
 			'phone',
 			'status',
 			'source',
+			'leadType',
 			'priority',
 			'category',
 			'interestedIn',
@@ -65,7 +66,8 @@ const page: NextPage = () => {
 			{
 				sectionTitle: 'Status Description',
 				fields: [
-					['status', 'priority'],
+					['status', 'leadType'],
+					['priority', 'group'],
 					['source', 'hasWebsite'],
 				],
 			},
