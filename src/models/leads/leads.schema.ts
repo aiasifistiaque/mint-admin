@@ -164,6 +164,22 @@ const schema: SchemaType<any> = {
 				value: 'facebook',
 			},
 			{
+				label: 'Facebook Ads',
+				value: 'facebook-ad',
+			},
+			{
+				label: 'Facebook Group',
+				value: 'facebook-group',
+			},
+			{
+				label: 'Outbound Call',
+				value: 'outbound-call',
+			},
+			{
+				label: 'Outbound Email',
+				value: 'outbound-email',
+			},
+			{
 				label: 'Instagram',
 				value: 'instagram',
 			},
