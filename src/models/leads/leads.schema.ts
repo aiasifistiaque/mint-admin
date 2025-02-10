@@ -111,10 +111,12 @@ const schema: SchemaType<any> = {
 	hasWebsite: {
 		label: 'Has Website',
 		type: 'checkbox',
+		displayInTable: true,
 	},
 	priority: {
 		label: 'Priority',
 		type: 'select',
+		displayInTable: true,
 		options: [
 			{
 				label: 'High',
@@ -138,20 +140,24 @@ const schema: SchemaType<any> = {
 		label: 'Facebook',
 		type: 'string',
 		viewType: 'external-link',
+		displayInTable: true,
 	},
 	instagram: {
 		label: 'Instagram',
 		type: 'string',
 		viewType: 'external-link',
+		displayInTable: true,
 	},
 	website: {
 		label: 'Website',
 		type: 'string',
 		viewType: 'external-link',
+		displayInTable: true,
 	},
 	source: {
 		label: 'Source',
 		type: 'select',
+		displayInTable: true,
 		options: [
 			{
 				label: 'Facebook',
@@ -182,6 +188,7 @@ const schema: SchemaType<any> = {
 	status: {
 		label: 'Status',
 		type: 'select',
+		displayInTable: true,
 		options: [
 			{
 				label: 'New',
