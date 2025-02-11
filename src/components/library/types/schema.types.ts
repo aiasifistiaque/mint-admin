@@ -20,6 +20,7 @@ type CommonProps = {
 	tableKey?: string;
 	menuField?: string;
 	limit?: number;
+	copy?: boolean;
 	section?: {
 		title?: string;
 		addBtnText?: string;

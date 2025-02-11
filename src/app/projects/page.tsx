@@ -9,27 +9,38 @@ import {
 	convertToTableFields,
 	createFormFields,
 } from '@/components/library';
-import { adminSchema as schema } from '@/models';
+import { projectSchema as schema } from '@/models';
 
-const fields = ['name', 'email', 'phone', 'role', 'isActive', 'github'];
+const fields = ['name', 'githubUrl', 'phone', 'role', 'isActive', 'github'];
 
 const tableSchema = [
 	{
 		sectionTitle: 'Basic Details',
-		fields: ['name', ['email', 'phone'], ['password', 'role']],
+		fields: [
+			['name', 'clientName'],
+			['category', 'status'],
+		],
 	},
 	{
-		sectionTitle: 'Advanced Details',
-		fields: ['github'],
+		sectionTitle: 'Links',
+		fields: [
+			['githubUrl', 'devUrl'],
+			['liveUrl', 'testUrl'],
+			['prodUrl', 'domain'],
+		],
+	},
+	{
+		sectionTitle: 'Technologies',
+		fields: ['libraries', 'frameworks', 'technologies'],
 	},
 ];
 
 const table: TableObjectProps = {
-	title: 'Admin',
-	path: 'admins',
+	title: 'Project',
+	path: 'projects',
 	export: true,
 	button: {
-		title: 'New Admin',
+		title: 'New Project',
 		isModal: true,
 		dataModel: createFormFields({ schema, layout: tableSchema }),
 	},
@@ -37,7 +48,7 @@ const table: TableObjectProps = {
 		{
 			title: 'View',
 			type: 'view-modal',
-			dataModel: convertToViewFields({ schema, fields }),
+			dataModel: convertToViewFields({ schema }),
 		},
 	],
 	data: convertToTableFields({ schema, fields }),

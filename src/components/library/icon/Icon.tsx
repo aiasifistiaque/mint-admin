@@ -32,6 +32,7 @@ import { RiSettings3Fill } from 'react-icons/ri';
 import { FaTable } from 'react-icons/fa6';
 import { TiPrinter } from 'react-icons/ti';
 import { IoMdBarcode } from 'react-icons/io';
+
 import {
 	CiMenuBurger,
 	CiStar,

@@ -24,7 +24,7 @@ const sidebar: SidebarItemType[] = [
 	},
 	{
 		title: 'User',
-		href: '/users',
+		href: '/sellers',
 		icon: 'order',
 		path: 'sellers',
 	},
@@ -67,6 +67,26 @@ const sidebar: SidebarItemType[] = [
 		href: '/purchased-themes',
 		icon: 'product',
 		path: 'purchased-themes',
+	},
+	{
+		startOfSection: true,
+		sectionTitle: 'Admin Management',
+		title: 'Admin List',
+		href: '/admins',
+		icon: 'customer',
+		path: 'admins',
+	},
+	{
+		title: 'Roles',
+		href: '/adminroles',
+		icon: 'customer',
+		path: 'adminroles',
+	},
+	{
+		title: 'Projects',
+		href: '/projects',
+		icon: 'customer',
+		path: 'projects',
 	},
 
 	{

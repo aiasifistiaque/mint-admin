@@ -7,32 +7,16 @@ import {
 	TableObjectProps,
 	convertToViewFields,
 	convertToTableFields,
-	createFormFields,
 } from '@/components/library';
-import { adminSchema as schema } from '@/models';
+import schema from '@/models/admin/schema';
 
-const fields = ['name', 'email', 'phone', 'role', 'isActive', 'github'];
-
-const tableSchema = [
-	{
-		sectionTitle: 'Basic Details',
-		fields: ['name', ['email', 'phone'], ['password', 'role']],
-	},
-	{
-		sectionTitle: 'Advanced Details',
-		fields: ['github'],
-	},
-];
+const fields = ['name', 'email', 'phone', 'role', 'shop'];
 
 const table: TableObjectProps = {
-	title: 'Admin',
-	path: 'admins',
+	title: 'Sellers',
+	path: 'sellers',
 	export: true,
-	button: {
-		title: 'New Admin',
-		isModal: true,
-		dataModel: createFormFields({ schema, layout: tableSchema }),
-	},
+
 	menu: [
 		{
 			title: 'View',

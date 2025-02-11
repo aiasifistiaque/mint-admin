@@ -24,6 +24,7 @@ export default function UserFeedback() {
 			title='Dashboard'
 			path='dashboard'>
 			<Grid
+				pt={3}
 				gridTemplateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }}
 				gap={2}>
 				<ShowSum

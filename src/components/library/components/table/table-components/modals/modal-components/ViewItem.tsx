@@ -1,6 +1,20 @@
-import React, { FC, ReactNode } from 'react';
-import { Badge, Box, Flex, Grid, GridProps, Heading, Link, Skeleton, Text } from '@chakra-ui/react';
-import { Align, Column, ImageContainer, PLACEHOLDER_IMAGE, RenderTag } from '../../../../..';
+import React, { FC, ReactNode, useEffect } from 'react';
+import {
+	Badge,
+	Box,
+	Flex,
+	Grid,
+	GridProps,
+	Heading,
+	Link,
+	LinkProps,
+	Skeleton,
+	Text,
+	TextProps,
+	Tooltip,
+	useClipboard,
+} from '@chakra-ui/react';
+import { Align, Column, Icon, ImageContainer, PLACEHOLDER_IMAGE, RenderTag } from '../../../../..';
 
 type ViewItemProps = GridProps & {
 	title: string;
@@ -9,6 +23,7 @@ type ViewItemProps = GridProps & {
 	colorScheme?: any;
 	path?: string;
 	isLoading?: boolean;
+	copy?: boolean;
 };
 
 const renderContent = ({ type, children, colorScheme, path }: any) => {
@@ -59,18 +74,18 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 				</Align>
 			);
 		case 'external-link':
+			if (!children) return null;
 			return (
-				<Link
-					cursor='pointer'
-					href={children || '#'}
-					isExternal={children ? true : false}>
-					<Text
-						wordBreak='break-all'
+				<Flex gap={2}>
+					<Link
+						{...textCss}
 						color='dodgerblue'
-						fontSize='.95rem'>
+						cursor='pointer'
+						href={children || '#'}
+						isExternal={children ? true : false}>
 						{children}
-					</Text>
-				</Link>
+					</Link>
+				</Flex>
 			);
 		case 'data-array-tag':
 			return (
@@ -155,22 +170,15 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 				</Align>
 			);
 		case 'date':
-			return (
-				<Text
-					wordBreak='break-all'
-					fontSize='.95rem'>
-					{children?.toLocaleString()}
-				</Text>
-			);
+			return <Text {...textCss}>{children?.toLocaleString()}</Text>;
 		default:
-			return (
-				<Text
-					wordBreak='break-all'
-					fontSize='.95rem'>
-					{children}
-				</Text>
-			);
+			return <Text {...textCss}>{children}</Text>;
 	}
+};
+
+const textCss: TextProps & LinkProps = {
+	fontSize: '.95rem',
+	wordBreak: 'break-all',
 };
 
 const ViewItem: FC<ViewItemProps> = ({
@@ -179,16 +187,42 @@ const ViewItem: FC<ViewItemProps> = ({
 	children,
 	colorScheme,
 	path,
+	copy,
 	isLoading = false,
 	...props
 }) => {
+	const { onCopy, value, setValue, hasCopied } = useClipboard('');
+
+	useEffect(() => {
+		if (children && copy) {
+			setValue(children.toString());
+		}
+	}, [children]);
+
 	return (
 		<GridContainer {...props}>
 			<SkeletonContent isLoading={isLoading}>
 				<Heading size='xs'>{title}:</Heading>
 			</SkeletonContent>
 			<SkeletonContent isLoading={isLoading}>
-				{!isLoading && children && renderContent({ type, children, colorScheme, path, isLoading })}
+				<Flex
+					gap={2}
+					align='center'>
+					{!isLoading &&
+						children &&
+						renderContent({ type, children, colorScheme, path, isLoading })}
+					{copy && (
+						<Tooltip
+							label={hasCopied ? 'Copied!' : 'Copy'}
+							aria-label='Copy'>
+							<Flex
+								onClick={onCopy}
+								cursor='pointer'>
+								<Icon name='copy' />
+							</Flex>
+						</Tooltip>
+					)}
+				</Flex>
 			</SkeletonContent>
 		</GridContainer>
 	);

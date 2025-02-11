@@ -124,6 +124,7 @@ export type ViewModalDataModelProps = {
 	type?: ViewDataType;
 	colorScheme?: any;
 	path?: string;
+	copy?: boolean;
 };
 
 export type SelectDataType = {

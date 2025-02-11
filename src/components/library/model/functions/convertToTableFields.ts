@@ -17,6 +17,7 @@ const createTableField = ({ key, field }: { key: string; field: any }): any => {
 		...(field?.colorScheme && { colorScheme: field.colorScheme }),
 		...(field?.helperText && { helperText: field.helperText }),
 		...(field?.editable && { editable: field.editable }),
+		...(field?.copy && { copy: field.copy }),
 	};
 };
 

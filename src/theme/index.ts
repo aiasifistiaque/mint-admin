@@ -19,7 +19,8 @@ export const headingTheme = defineStyleConfig({
 
 export const textTheme = defineStyleConfig({
 	baseStyle: {
-		color: '#4a4a4a',
+		color: '#171717',
+		fontSize: '15px',
 		_dark: {
 			color: 'text.dark',
 		},
@@ -36,15 +37,41 @@ export const buttonTheme = defineStyleConfig({
 	baseStyle: {
 		fontWeight: '500', // change the font weight to normal
 		borderRadius: '6px', // <-- border radius is same for all variants and sizes
-		fontSize: '.9rem',
+		fontSize: '14px',
+		letterSpacing: '-0.4px',
+		px: 4,
+	},
+
+	variants: {
+		white: {
+			h: '36px',
+			color: '#171717',
+			border: '1px solid',
+			borderColor: '#e7e7e7',
+			bg: 'white',
+			_hover: {
+				bg: 'inherit',
+			},
+			_dark: {
+				color: '#fafafa',
+				borderColor: '#333',
+				bg: '#171717',
+				_hover: {
+					bg: 'gray.800',
+				},
+			},
+		},
 	},
 	sizes: {
 		xs: buttonXs,
+		md: {
+			fontSize: '14px',
+		},
 		sm: {
-			h: '30px',
+			h: '34px',
 			fontSize: '14px',
 			lineHeight: '1.5',
-			px: 3,
+			px: 4,
 		},
 	},
 	defaultProps: {
@@ -55,6 +82,8 @@ export const buttonTheme = defineStyleConfig({
 export const tooltipTheme = defineStyleConfig({
 	baseStyle: {
 		borderRadius: 'lg',
+		bg: 'brand.500',
+		_dark: { bg: 'whitesmoke' },
 	},
 });
 

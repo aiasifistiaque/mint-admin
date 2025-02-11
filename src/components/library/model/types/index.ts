@@ -57,6 +57,7 @@ type SchemaField = {
 	title?: string;
 	viewType?: SchemaFieldTypes | 'array-tag';
 	helperText?: string;
+	copy?: boolean;
 };
 
 export type SchemaProps = {

@@ -19,6 +19,7 @@ const createViewField = ({ key, field }: { key: string; field: any }): any => {
 		title: title,
 		dataKey: dataKey,
 		type: type,
+		...(field?.copy && { copy: field.copy }),
 		...(field?.colorScheme && { colorScheme: field.colorScheme }),
 	};
 };

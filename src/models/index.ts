@@ -35,3 +35,7 @@ export const schema: any = {
 export { default as themeSchema } from './theme/theme.schema';
 export { default as purchasedThemeSchema } from './theme/purchasedTheme.schema';
 export { default as leadSchema } from './leads/leads.schema';
+export { default as adminSchema } from './admin/adminSchema';
+export { default as adminRoleSchema } from './admin/adminRoleSchema';
+
+export { default as projectSchema } from './projects/schema';

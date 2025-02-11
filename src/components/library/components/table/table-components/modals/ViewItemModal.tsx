@@ -27,7 +27,7 @@ import {
 } from '../../../..';
 import { ViewItem } from '.';
 
-type DeleteItemModalProps = {
+type Props = {
 	title?: string;
 	id: string;
 	path: string;
@@ -35,7 +35,7 @@ type DeleteItemModalProps = {
 	trigger?: any;
 };
 
-const ViewItemModal: FC<DeleteItemModalProps> = ({ title, path, dataModel, trigger, id }) => {
+const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { data, isFetching, isError } = useGetByIdQuery(
@@ -83,10 +83,11 @@ const ViewItemModal: FC<DeleteItemModalProps> = ({ title, path, dataModel, trigg
 							gap={4}
 							pt={2}>
 							{dataModel.map((item: ViewModalDataModelProps, i: number) => {
-								const { title, dataKey, type, colorScheme, path } = item;
+								const { title, dataKey, type, colorScheme, path, copy } = item;
 
 								return (
 									<ViewItem
+										copy={copy}
 										isLoading={isFetching}
 										title={title}
 										type={type}

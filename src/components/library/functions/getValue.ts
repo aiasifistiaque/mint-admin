@@ -32,7 +32,9 @@ type GetValue = {
  */
 
 const getValue = ({ dataKey, type, data }: GetValue): any => {
-	if (!data || !dataKey) return 'n/a';
+	if (!data || !dataKey) {
+		return type == 'external-link' ? null : 'n/a';
+	}
 
 	// Split the dataKey by '.' to get all nested levels
 	const keys = dataKey.split('.');
@@ -44,7 +46,7 @@ const getValue = ({ dataKey, type, data }: GetValue): any => {
 	for (const key of keys) {
 		// If at any point the current value is undefined/null, return 'n/a'
 		if (currentValue === undefined || currentValue === null) {
-			return 'n/a';
+			return type == 'external-link' ? null : 'n/a';
 		}
 
 		// Access the next level
@@ -53,7 +55,7 @@ const getValue = ({ dataKey, type, data }: GetValue): any => {
 
 	// If we've reached here but the final value is undefined/null, return 'n/a'
 	if (currentValue === undefined || currentValue === null) {
-		return 'n/a';
+		return type == 'external-link' ? null : 'n/a';
 	}
 
 	// Convert to Date if type is 'date', otherwise return the value as is

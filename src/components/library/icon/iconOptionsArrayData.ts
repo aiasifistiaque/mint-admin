@@ -1,6 +1,7 @@
 const iconOptionsArrayData: string[] = [
 	'text',
 	'number',
+	'copy',
 	'switch',
 	'image',
 	'image-array',

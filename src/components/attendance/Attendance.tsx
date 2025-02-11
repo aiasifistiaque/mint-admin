@@ -54,11 +54,11 @@ const Attendance: FC<AttendanceProps> = ({
 					</Center>
 					{children}
 					<Button
-						mt={6}
+						mt={4}
 						w='full'
-						borderRadius='full'
+						borderRadius='lg'
 						isLoading={isLoading}
-						size='sm'
+						size='md'
 						type='submit'>
 						Submit
 					</Button>

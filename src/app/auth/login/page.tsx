@@ -50,6 +50,7 @@ const LoginPage: FC<{}> = () => {
 			<VInput
 				label='Email'
 				isRequired
+				size='md'
 				value={formData.email}
 				onChange={handleChange}
 				name='email'
@@ -57,6 +58,7 @@ const LoginPage: FC<{}> = () => {
 			<VInput
 				label='Password'
 				isRequired
+				size='md'
 				value={formData.password}
 				onChange={handleChange}
 				name='password'

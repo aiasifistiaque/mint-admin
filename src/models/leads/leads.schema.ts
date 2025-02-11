@@ -4,6 +4,49 @@ export type Type<T> = {
 	[K in keyof T]: Schema;
 };
 
+const sourceOptions = [
+	{
+		label: 'Facebook',
+		value: 'facebook',
+	},
+	{
+		label: 'Facebook Ads',
+		value: 'facebook-ad',
+	},
+	{
+		label: 'Facebook Group',
+		value: 'facebook-group',
+	},
+	{
+		label: 'Outbound Call',
+		value: 'outbound-call',
+	},
+	{
+		label: 'Outbound Email',
+		value: 'outbound-email',
+	},
+	{
+		label: 'Instagram',
+		value: 'instagram',
+	},
+	{
+		label: 'Google',
+		value: 'google',
+	},
+	{
+		label: 'Referral',
+		value: 'referral',
+	},
+	{
+		label: 'Website',
+		value: 'website',
+	},
+	{
+		label: 'Other',
+		value: 'other',
+	},
+];
+
 const schema: SchemaType<any> = {
 	name: {
 		label: 'Name',
@@ -98,6 +141,8 @@ const schema: SchemaType<any> = {
 	websiteUrl: {
 		label: 'Website',
 		type: 'string',
+		viewType: 'external-link',
+		copy: true,
 		inputLabel: 'Enter Website Url',
 	},
 	tags: {
@@ -141,6 +186,7 @@ const schema: SchemaType<any> = {
 		type: 'string',
 		viewType: 'external-link',
 		displayInTable: true,
+		copy: true,
 	},
 	instagram: {
 		label: 'Instagram',
@@ -152,6 +198,7 @@ const schema: SchemaType<any> = {
 		label: 'Website',
 		type: 'string',
 		viewType: 'external-link',
+		copy: true,
 		displayInTable: true,
 	},
 	requirements: {
@@ -162,48 +209,7 @@ const schema: SchemaType<any> = {
 		label: 'Source',
 		type: 'select',
 		displayInTable: true,
-		options: [
-			{
-				label: 'Facebook',
-				value: 'facebook',
-			},
-			{
-				label: 'Facebook Ads',
-				value: 'facebook-ad',
-			},
-			{
-				label: 'Facebook Group',
-				value: 'facebook-group',
-			},
-			{
-				label: 'Outbound Call',
-				value: 'outbound-call',
-			},
-			{
-				label: 'Outbound Email',
-				value: 'outbound-email',
-			},
-			{
-				label: 'Instagram',
-				value: 'instagram',
-			},
-			{
-				label: 'Google',
-				value: 'google',
-			},
-			{
-				label: 'Referral',
-				value: 'referral',
-			},
-			{
-				label: 'Website',
-				value: 'website',
-			},
-			{
-				label: 'Other',
-				value: 'other',
-			},
-		],
+		options: sourceOptions,
 	},
 	status: {
 		label: 'Status',
