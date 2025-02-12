@@ -30,4 +30,5 @@ export type TableDataFieldType =
 	| 'number'
 	| 'tag'
 	| 'text'
-	| 'data-array-count';
+	| 'data-array-count'
+	| 'external-link';

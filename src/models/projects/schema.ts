@@ -35,12 +35,14 @@ const schema = {
 		displayInTable: true,
 		viewType: 'external-link',
 		copy: true,
+		tableType: 'external-link',
 	},
 	liveUrl: {
 		label: 'Live Url',
 		type: 'string',
 		displayInTable: true,
 		viewType: 'external-link',
+		tableType: 'external-link',
 		copy: true,
 	},
 	testUrl: {
@@ -48,6 +50,7 @@ const schema = {
 		type: 'string',
 		displayInTable: true,
 		viewType: 'external-link',
+		tableType: 'external-link',
 		copy: true,
 	},
 	prodUrl: {
@@ -55,6 +58,7 @@ const schema = {
 		type: 'string',
 		displayInTable: true,
 		viewType: 'external-link',
+		tableType: 'external-link',
 		copy: true,
 	},
 	projectType: {
@@ -144,10 +148,11 @@ const schema = {
 		type: 'tag',
 	},
 	githubUrl: {
-		label: 'Github Url',
+		label: 'Git Repo',
 		type: 'string',
 		displayInTable: true,
 		viewType: 'external-link',
+		tableType: 'external-link',
 		copy: true,
 	},
 	createdAt: {

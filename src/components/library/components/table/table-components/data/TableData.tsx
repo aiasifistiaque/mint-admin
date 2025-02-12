@@ -97,6 +97,15 @@ const TableData: React.FC<TableDataPropsType> = ({
 			);
 		case 'boolean':
 			return <CustomTd {...props}>{children ? 'Yes' : 'No'}</CustomTd>;
+		case 'external-link':
+			return (
+				<CustomTd
+					type={type}
+					{...props}>
+					{children}
+				</CustomTd>
+			);
+
 		default:
 			return <CustomTd {...props}>{children}</CustomTd>;
 	}

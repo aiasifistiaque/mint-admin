@@ -1,21 +1,29 @@
 import React, { FC, Fragment } from 'react';
-import { Td, Image, Text, Heading, ImageProps, FlexProps, Center } from '@chakra-ui/react';
+import { Td, Image, Text, Heading, ImageProps, FlexProps, Center, Link } from '@chakra-ui/react';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 import { useIsMobile, Column, PLACEHOLDER_IMAGE, TableDataProps } from '../../../..';
 
 const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, ...props }) => {
 	const isMobile = useIsMobile();
 
-	//const letters = src ? 15 : 20;
-	// const text =
-	// 	typeof children === 'string' && !isMobile
-	// 		? children.slice(0, letters) + (children.length > letters ? '...' : '')
-	// 		: children;
-
 	const text = children;
 
 	const Container = isMobile ? Column : Td;
 	const TextContainer = isMobile ? (editable ? Fragment : Text) : Fragment;
+
+	const External = ({ children }: any) => {
+		if (text && type == 'external-link') {
+			return (
+				<Link
+					isExternal
+					href={text}>
+					{children} <ExternalLinkIcon mx='4px' />
+				</Link>
+			);
+		}
+		return <>{children}</>;
+	};
 
 	return (
 		<>
@@ -30,8 +38,11 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 						/>
 					</Center>
 				)}
+
 				{isMobile && heading && <Heading size='xs'>{heading}</Heading>}
-				<TextContainer>{text || <i>--</i>}</TextContainer>
+				<External>
+					<TextContainer>{text || <i>--</i>}</TextContainer>
+				</External>
 			</Container>
 		</>
 	);
