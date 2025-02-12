@@ -39,3 +39,4 @@ export { default as adminSchema } from './admin/adminSchema';
 export { default as adminRoleSchema } from './admin/adminRoleSchema';
 
 export { default as projectSchema } from './projects/schema';
+export { default as clientSchema } from './client/client.schema';

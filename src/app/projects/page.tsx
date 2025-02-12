@@ -13,7 +13,7 @@ import { projectSchema as schema } from '@/models';
 
 const fields = [
 	'name',
-	'clientName',
+	'client',
 	'category',
 	'status',
 	'githubUrl',
@@ -27,7 +27,7 @@ const fields = [
 const tableSchema = [
 	{
 		sectionTitle: 'Basic Details',
-		fields: [['name', 'clientName'], ['category', 'status'], 'projectType'],
+		fields: [['name', 'client'], ['category', 'status'], 'projectType'],
 	},
 	{
 		sectionTitle: 'Links',

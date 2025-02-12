@@ -16,8 +16,18 @@ const schema = {
 	clientName: {
 		label: 'Client Name',
 		type: 'string',
+		// displayInTable: true,
+		// default: true,
+	},
+	client: {
+		label: 'Client',
+		type: 'data-menu',
+		tableType: 'string',
 		displayInTable: true,
 		default: true,
+		sort: true,
+		tableKey: 'client.name',
+		model: 'clients',
 	},
 	devUrl: {
 		label: 'Dev Url',

@@ -83,6 +83,12 @@ const sidebar: SidebarItemType[] = [
 		path: 'adminroles',
 	},
 	{
+		title: 'Clients',
+		href: '/clients',
+		icon: 'customer',
+		path: 'clients',
+	},
+	{
 		title: 'Projects',
 		href: '/projects',
 		icon: 'customer',
