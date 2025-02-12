@@ -23,21 +23,29 @@ const schema = {
 		label: 'Dev Url',
 		type: 'string',
 		displayInTable: true,
+		viewType: 'external-link',
+		copy: true,
 	},
 	liveUrl: {
 		label: 'Live Url',
 		type: 'string',
 		displayInTable: true,
+		viewType: 'external-link',
+		copy: true,
 	},
 	testUrl: {
 		label: 'Test Url',
 		type: 'string',
 		displayInTable: true,
+		viewType: 'external-link',
+		copy: true,
 	},
 	prodUrl: {
 		label: 'Prod Url',
 		type: 'string',
 		displayInTable: true,
+		viewType: 'external-link',
+		copy: true,
 	},
 	projectType: {
 		label: 'Project Type',
@@ -129,6 +137,8 @@ const schema = {
 		label: 'Github Url',
 		type: 'string',
 		displayInTable: true,
+		viewType: 'external-link',
+		copy: true,
 	},
 	createdAt: {
 		label: 'Created At',
