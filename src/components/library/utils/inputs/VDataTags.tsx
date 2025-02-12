@@ -26,6 +26,7 @@ type InputContainerProps = InputProps &
 		value: string[];
 		model: string;
 		placeholder?: any;
+		item?: any;
 	};
 
 const VDataTags: React.FC<InputContainerProps> = ({
@@ -35,9 +36,9 @@ const VDataTags: React.FC<InputContainerProps> = ({
 	value,
 	helper,
 	model,
+	item,
 	...props
 }) => {
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
 	const [tag, setTag] = useState<string>('');
 	const { data } = useGetSelectDataQuery(model);
 
@@ -80,8 +81,9 @@ const VDataTags: React.FC<InputContainerProps> = ({
 	); // Add value and props.onChange to the dependency array
 
 	const getNameById = (id: string) => {
-		const item = data?.doc?.find((item: any) => item._id === id);
-		return item?.name || id;
+		const ite = data?.doc?.find((item: any) => item._id === id);
+
+		return `${ite?.name} ${item?.modelAddOn && `(${ite[item?.modelAddOn]})`}` || id;
 	};
 
 	return (
@@ -104,11 +106,11 @@ const VDataTags: React.FC<InputContainerProps> = ({
 							onChange={handleChange}>
 							<option value=''>Select {model}</option>
 							{data &&
-								data?.doc?.map((item: any, i: number) => (
+								data?.doc?.map((ite: any, i: number) => (
 									<option
 										key={i}
-										value={item?._id}>
-										{item?.name}
+										value={ite?._id}>
+										{ite?.name} {item?.modelAddOn && `(${ite[item?.modelAddOn]})`}
 									</option>
 								))}
 						</SelectContainer>
@@ -131,9 +133,8 @@ const VDataTags: React.FC<InputContainerProps> = ({
 						<WrapItem key={i}>
 							<Tag
 								size='sm'
-								variant='solid'
-								colorScheme='brand'
-								borderRadius='full'>
+								variant='subtle'
+								colorScheme='gray'>
 								<TagLabel>{getNameById(item)}</TagLabel>
 								<TagCloseButton onClick={() => deleteTag(item)} />
 							</Tag>

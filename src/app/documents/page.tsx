@@ -44,6 +44,11 @@ const formFields = [
 		sectionTitle: 'URLs',
 		fields: ['fileUrl', 'docUrl'],
 	},
+	{
+		sectionTitle: 'Manage Access',
+		description: 'Who can access this document?',
+		fields: ['access'],
+	},
 ];
 
 const table: TableObjectProps = {

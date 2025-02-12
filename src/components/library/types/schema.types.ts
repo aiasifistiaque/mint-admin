@@ -22,6 +22,7 @@ type CommonProps = {
 	limit?: number;
 	copy?: boolean;
 	helperText?: string;
+	modelAddOn?: string;
 
 	section?: {
 		title?: string;

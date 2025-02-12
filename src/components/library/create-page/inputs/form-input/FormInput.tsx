@@ -451,6 +451,7 @@ const FormInput: FC<FormInputProps> = ({
 		case 'data-tag':
 			return (
 				<VDataTags
+					item={item}
 					type={type}
 					model={props?.model || ''}
 					isRequired={isRequired}

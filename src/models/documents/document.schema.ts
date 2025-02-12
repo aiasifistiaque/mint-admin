@@ -15,6 +15,7 @@ type Type = DocumentBaseType & {
 	tags?: string[];
 	project: string;
 	addedBy: string;
+	access: any;
 };
 
 const documentSchema: SchemaType<Type> = {
@@ -82,6 +83,12 @@ const documentSchema: SchemaType<Type> = {
 		tableKey: 'project.name',
 		sort: true,
 		model: 'projects',
+	},
+	access: {
+		label: 'Access',
+		type: 'data-tag',
+		model: 'admins',
+		modelAddOn: 'email',
 	},
 	addedBy: {
 		label: 'Added By',

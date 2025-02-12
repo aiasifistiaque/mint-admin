@@ -53,6 +53,8 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 							...(fieldConfig?.fetch && { fetch: fieldConfig.fetch }),
 							...(fieldConfig?.isExcluded && { isExcluded: fieldConfig.isExcluded }),
 							...(fieldConfig?.getValue && { getValue: fieldConfig.getValue }),
+							...(fieldConfig?.modelAddOn && { modelAddOn: fieldConfig.modelAddOn }),
+							...(fieldConfig?.limit && { limit: fieldConfig.limit }),
 						});
 					}
 				});
@@ -83,6 +85,7 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 						...(fieldConfig?.getValue && { getValue: fieldConfig.getValue }),
 						...(fieldConfig.limit && { limit: fieldConfig.limit }),
 						...(fieldConfig.section && { section: fieldConfig.section }),
+						...(fieldConfig?.modelAddOn && { modelAddOn: fieldConfig.modelAddOn }),
 						endOfSection: lastElement,
 					});
 				}

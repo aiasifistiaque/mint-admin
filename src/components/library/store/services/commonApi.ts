@@ -40,7 +40,7 @@ export const userApi = mainApi.injectEndpoints({
 		}),
 
 		getSelectData: builder.query<any, string>({
-			query: (id: any) => `${id}?limit=1000&fields=name&sort=name`,
+			query: (id: any) => `${id}?limit=1000&sort=name`,
 			providesTags: ['filters', 'products', 'brands', 'categories', 'coupons', 'collections'],
 		}),
 		getById: builder.query<any, { path: string; id: any; invalidate?: string[] }>({
