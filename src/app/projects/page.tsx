@@ -11,15 +11,23 @@ import {
 } from '@/components/library';
 import { projectSchema as schema } from '@/models';
 
-const fields = ['name', 'githubUrl', 'phone', 'role', 'isActive', 'github'];
+const fields = [
+	'name',
+	'clientName',
+	'category',
+	'status',
+	'githubUrl',
+	'devUrl',
+	'liveUrl',
+	'testUrl',
+	'prodUrl',
+	'domain',
+];
 
 const tableSchema = [
 	{
 		sectionTitle: 'Basic Details',
-		fields: [
-			['name', 'clientName'],
-			['category', 'status'],
-		],
+		fields: [['name', 'clientName'], ['category', 'status'], 'projectType'],
 	},
 	{
 		sectionTitle: 'Links',

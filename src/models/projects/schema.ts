@@ -17,26 +17,32 @@ const schema = {
 		label: 'Client Name',
 		type: 'string',
 		displayInTable: true,
+		default: true,
 	},
 	devUrl: {
 		label: 'Dev Url',
 		type: 'string',
+		displayInTable: true,
 	},
 	liveUrl: {
 		label: 'Live Url',
 		type: 'string',
+		displayInTable: true,
 	},
 	testUrl: {
 		label: 'Test Url',
 		type: 'string',
+		displayInTable: true,
 	},
 	prodUrl: {
 		label: 'Prod Url',
 		type: 'string',
+		displayInTable: true,
 	},
 	projectType: {
 		label: 'Project Type',
 		type: 'select',
+		displayInTable: true,
 		options: [
 			{
 				label: 'Frontend',
@@ -71,6 +77,7 @@ const schema = {
 	status: {
 		label: 'Status',
 		type: 'select',
+		displayInTable: true,
 		options: [
 			{
 				label: 'New',
@@ -121,6 +128,7 @@ const schema = {
 	githubUrl: {
 		label: 'Github Url',
 		type: 'string',
+		displayInTable: true,
 	},
 	createdAt: {
 		label: 'Created At',
