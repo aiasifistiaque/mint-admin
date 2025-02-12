@@ -63,6 +63,10 @@ const table: TableObjectProps = {
 			type: 'edit-modal',
 			dataModel: createFormFields({ schema, layout: tableSchema }),
 		},
+		{
+			title: 'Delete',
+			type: 'delete',
+		},
 	],
 	data: convertToTableFields({ schema, fields }),
 };
