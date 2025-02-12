@@ -49,7 +49,9 @@ const VDataTags: React.FC<InputContainerProps> = ({
 
 	const addTag = useCallback(() => {
 		if (tag && tag?.length > 0 && !value?.includes(tag)) {
-			const newArr = [...value, tag];
+			let newArr = [];
+			if (Array.isArray(value)) newArr = [...value, tag];
+			else newArr = [tag];
 
 			if (props.onChange) {
 				const event = {
@@ -120,7 +122,12 @@ const VDataTags: React.FC<InputContainerProps> = ({
 							size='sm'
 							colorScheme='gray'
 							aria-label='add tag'
-							icon={<Icon name='add' />}
+							icon={
+								<Icon
+									name='add'
+									size={20}
+								/>
+							}
 						/>
 					</Flex>
 
@@ -132,7 +139,7 @@ const VDataTags: React.FC<InputContainerProps> = ({
 					{value?.map((item: string, i: number) => (
 						<WrapItem key={i}>
 							<Tag
-								size='sm'
+								size='md'
 								variant='subtle'
 								colorScheme='gray'>
 								<TagLabel>{getNameById(item)}</TagLabel>

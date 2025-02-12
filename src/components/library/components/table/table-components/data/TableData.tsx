@@ -105,6 +105,14 @@ const TableData: React.FC<TableDataPropsType> = ({
 					{children}
 				</CustomTd>
 			);
+		case 'file':
+			return (
+				<CustomTd
+					type={type}
+					{...props}>
+					{children}
+				</CustomTd>
+			);
 
 		default:
 			return <CustomTd {...props}>{children}</CustomTd>;

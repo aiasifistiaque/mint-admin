@@ -21,25 +21,12 @@ import {
 	ItemOfDataMenu,
 	useGetAllQuery,
 	FormControl,
-} from '../..';
+} from '../../..';
+
+import { VDataMenuProps } from './types';
 
 const WIDTH = '300px';
-const MAX_H = '200px';
-
-type VDataMenuProps = InputProps & {
-	label: string;
-	isRequired?: boolean;
-	placeholder?: string;
-	value: any;
-	helper?: string;
-	model: string;
-	dataModel?: any;
-	hideNew?: boolean;
-	field?: string;
-	type?: 'object' | 'value' | string;
-	dataKey?: 'string';
-	unselect?: boolean;
-};
+const MAX_H = '260px';
 
 const VDataMenu: React.FC<VDataMenuProps> = ({
 	label,
@@ -142,10 +129,7 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 								ref={inputRef}
 								isRequired={isRequired}
 								value={value}
-								h='1px'
-								color='transparent'
-								focusBorderColor='transparent'
-								border='none'
+								{...hiddenInputCss}
 								{...props}
 							/>
 						</FormControl>
@@ -156,9 +140,7 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 									p={2}
 									py={0.5}>
 									<Input
-										borderRadius={6}
-										size='sm'
-										placeholder='Search'
+										{...searchInputCss}
 										value={search}
 										onChange={handleSearch}
 									/>
@@ -166,18 +148,21 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 							</MenuGroup>
 							<MenuDivider mb={1} />
 							{dataModel && (
-								<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
+								<>
+									<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
+									<MenuDivider
+										mt={1}
+										mb={0}
+									/>
+								</>
 							)}
-							<MenuDivider
-								mt={1}
-								mb={0}
-							/>
+
 							<MenuItemScrollContainer>
 								{unselect && (
 									<MenuItem
-										w={WIDTH}
+										{...unselectTextCss}
 										onClick={() => handleChange({ name: ``, _id: undefined })}>
-										Unselect
+										<i>Unselect</i>
 									</MenuItem>
 								)}
 								{renderMenuItems}
@@ -199,5 +184,25 @@ const MenuItemScrollContainer = ({ children }: { children: ReactNode }) => (
 		{children}
 	</Flex>
 );
+
+const hiddenInputCss: InputProps = {
+	h: '1px',
+	color: 'transparent',
+	focusBorderColor: 'transparent',
+	border: 'none',
+};
+
+const searchInputCss: InputProps = {
+	borderRadius: 6,
+	size: 'sm',
+	placeholder: 'Search',
+};
+
+const unselectTextCss: any = {
+	fontWeight: '400',
+	fontSize: '12px',
+	textStyle: 'italic',
+	w: WIDTH,
+};
 
 export default VDataMenu;

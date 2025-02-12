@@ -16,6 +16,7 @@ const fields = [
 	'client',
 	'docUrl',
 	'fileUrl',
+	'access',
 	'direction',
 	'category',
 	'project',

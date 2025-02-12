@@ -11,6 +11,7 @@ export type ViewDataType =
 	| 'string'
 	| 'text'
 	| 'image'
+	| 'file'
 	| 'image-array'
 	| 'data-array-tag'
 	| 'data-array-count'
@@ -29,6 +30,7 @@ export type TableDataFieldType =
 	| 'checkbox'
 	| 'number'
 	| 'tag'
+	| 'file'
 	| 'text'
 	| 'data-array-count'
 	| 'external-link';

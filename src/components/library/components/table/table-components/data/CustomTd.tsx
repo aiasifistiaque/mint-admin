@@ -13,12 +13,12 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 	const TextContainer = isMobile ? (editable ? Fragment : Text) : Fragment;
 
 	const External = ({ children }: any) => {
-		if (text && type == 'external-link') {
+		if (text && (type == 'external-link' || type == 'file')) {
 			return (
 				<Link
 					isExternal
 					href={text}>
-					{children} <ExternalLinkIcon mx='4px' />
+					{type == 'file' ? <b>Go to file</b> : children} <ExternalLinkIcon mx='4px' />
 				</Link>
 			);
 		}

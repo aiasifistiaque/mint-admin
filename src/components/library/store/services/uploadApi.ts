@@ -20,7 +20,16 @@ export const uploadApi = mainApi.injectEndpoints({
 		}),
 		addUpload: builder.mutation<any, any>({
 			query: body => ({
-				url: 'upload',
+				url: `upload`,
+				method: 'POST',
+				body,
+				formData: true,
+			}),
+			invalidatesTags: ['uploads'],
+		}),
+		addFile: builder.mutation<any, any>({
+			query: body => ({
+				url: `upload/file`,
 				method: 'POST',
 				body,
 				formData: true,
@@ -30,4 +39,4 @@ export const uploadApi = mainApi.injectEndpoints({
 	}),
 });
 
-export const { useGetAllUploadsQuery, useAddUploadMutation } = uploadApi;
+export const { useGetAllUploadsQuery, useAddUploadMutation, useAddFileMutation } = uploadApi;

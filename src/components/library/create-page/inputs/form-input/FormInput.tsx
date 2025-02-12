@@ -33,6 +33,7 @@ import {
 	VSectionDataArray,
 	VFontSize,
 	VAlignment,
+	VFile,
 } from '../../..';
 import { flexAlignOptions, flexJustifyOptions, textAlignOptions } from './options';
 
@@ -527,6 +528,15 @@ const FormInput: FC<FormInputProps> = ({
 					name={props.name}
 					helper={item?.helper}
 					isRequired={item?.isRequired}
+					{...props}
+				/>
+			);
+		case 'file':
+			return (
+				<VFile
+					type={type}
+					isRequired={isRequired}
+					helper={item?.helper}
 					{...props}
 				/>
 			);

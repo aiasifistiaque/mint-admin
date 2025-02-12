@@ -8,6 +8,7 @@ export const inputDataOptions = [
 	'nested-select',
 	'date',
 	'tag',
+	'file',
 	'category-collection-array',
 	'textarea',
 	'read-only',

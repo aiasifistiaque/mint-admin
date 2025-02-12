@@ -14,7 +14,7 @@ const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, href, ...props }) =
 			{...(href && { href })}
 			borderBottomColor='border.light'
 			borderBottomWidth={1}
-			fontSize='sm'
+			fontSize='14px'
 			px={4}
 			bg='inherit'
 			color='text.selected'

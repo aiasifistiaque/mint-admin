@@ -1,13 +1,11 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/library/providers/Providers';
 import 'swiper/css';
-
-const inter = Inter({ subsets: ['latin'] });
+import { GeistSans } from 'geist/font/sans';
 
 export const metadata: Metadata = {
-	title: 'MINT',
+	title: 'ADMIN | MINT | TC',
 	description: 'MINT',
 };
 
@@ -21,7 +19,7 @@ export const viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang='en'>
-			<body className={inter.className}>
+			<body className={GeistSans.className}>
 				<Providers>{children}</Providers>
 			</body>
 		</html>

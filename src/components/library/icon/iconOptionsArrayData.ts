@@ -11,6 +11,7 @@ const iconOptionsArrayData: string[] = [
 	'tag',
 	'category-collection-array',
 	'textarea',
+	'download',
 	'read-only',
 	'editor',
 	'select',

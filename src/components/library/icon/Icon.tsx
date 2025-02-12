@@ -7,6 +7,8 @@ import { BsBuildingsFill, BsCalendar2Date, BsJustifyLeft, BsJustifyRight } from 
 import colors from '@/theme/colors.theme';
 import { useColorModeValue } from '@chakra-ui/react';
 import { TbArrowForward } from 'react-icons/tb';
+import { TbDownload } from 'react-icons/tb';
+
 import { TbSettings } from 'react-icons/tb';
 import {
 	LuAlignEndVertical,
@@ -139,6 +141,7 @@ const icons: any = {
 	desktop: FaDesktop,
 	discount: RiDiscountPercentFill,
 	dots: BsThreeDots,
+	download: TbDownload,
 	edit: MdOutlineEdit,
 	'edit-builder': GrEdit,
 	envelope: FaRegEnvelope,

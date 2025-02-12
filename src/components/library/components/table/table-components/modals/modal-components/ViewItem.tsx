@@ -9,6 +9,8 @@ import {
 	Link,
 	LinkProps,
 	Skeleton,
+	Tag,
+	TagLabel,
 	Text,
 	TextProps,
 	Tooltip,
@@ -84,6 +86,26 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 						href={children || '#'}
 						isExternal={children ? true : false}>
 						{children}
+					</Link>
+				</Flex>
+			);
+		case 'file':
+			if (!children) return null;
+			return (
+				<Flex gap={2}>
+					<Link
+						cursor='pointer'
+						href={children || '#'}
+						isExternal={children ? true : false}>
+						<Tag
+							size='md'
+							colorScheme='gray'>
+							<TagLabel mr={1}>Download File</TagLabel>
+							<Icon
+								name='download'
+								size={16}
+							/>
+						</Tag>
 					</Link>
 				</Flex>
 			);

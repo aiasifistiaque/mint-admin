@@ -46,12 +46,10 @@ const documentSchema: SchemaType<Type> = {
 		tableType: 'external-link',
 	},
 	fileUrl: {
-		label: 'File Url',
-		type: 'string',
+		label: 'File',
+		type: 'file',
 		default: true,
 		displayInTable: true,
-		viewType: 'external-link',
-		tableType: 'external-link',
 	},
 	category: {
 		label: 'Category',
