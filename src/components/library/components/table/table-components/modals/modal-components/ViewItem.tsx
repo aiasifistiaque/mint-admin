@@ -211,7 +211,7 @@ const ViewItem: FC<ViewItemProps> = ({
 					{!isLoading &&
 						children &&
 						renderContent({ type, children, colorScheme, path, isLoading })}
-					{copy && (
+					{copy && children && children != 'n/a' && (
 						<Tooltip
 							label={hasCopied ? 'Copied!' : 'Copy'}
 							aria-label='Copy'>
