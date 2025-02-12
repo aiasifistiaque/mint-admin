@@ -110,7 +110,7 @@ const VDataTags: React.FC<InputContainerProps> = ({
 									<option
 										key={i}
 										value={ite?._id}>
-										{ite?.name} {item?.modelAddOn && `(${ite[item?.modelAddOn]})`}
+										{ite?.name} {item?.modelAddOn && `(${ite?.[item?.modelAddOn]})`}
 									</option>
 								))}
 						</SelectContainer>
