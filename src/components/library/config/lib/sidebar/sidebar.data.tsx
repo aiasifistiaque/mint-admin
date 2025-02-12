@@ -94,6 +94,12 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'projects',
 	},
+	{
+		title: 'Documents',
+		href: '/documents',
+		icon: 'customer',
+		path: 'documents',
+	},
 
 	{
 		title: 'Settings',

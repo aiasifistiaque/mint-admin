@@ -21,6 +21,8 @@ type CommonProps = {
 	menuField?: string;
 	limit?: number;
 	copy?: boolean;
+	helperText?: string;
+
 	section?: {
 		title?: string;
 		addBtnText?: string;
