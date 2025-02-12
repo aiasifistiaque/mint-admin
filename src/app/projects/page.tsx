@@ -58,6 +58,11 @@ const table: TableObjectProps = {
 			type: 'view-modal',
 			dataModel: convertToViewFields({ schema }),
 		},
+		{
+			title: 'Edit',
+			type: 'edit-modal',
+			dataModel: createFormFields({ schema, layout: tableSchema }),
+		},
 	],
 	data: convertToTableFields({ schema, fields }),
 };
