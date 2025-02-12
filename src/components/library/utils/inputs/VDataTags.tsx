@@ -43,8 +43,8 @@ const VDataTags: React.FC<InputContainerProps> = ({
 	const { data } = useGetSelectDataQuery(model);
 
 	const handleChange = useCallback((e: any) => {
-		const lowerCaseValue = e.target.value.toLowerCase().replace(/\s/g, '-');
-		setTag(lowerCaseValue);
+		// const lowerCaseValue = e.target.value.toLowerCase().replace(/\s/g, '-');
+		setTag(e.target.value);
 	}, []);
 
 	const addTag = useCallback(() => {
@@ -83,7 +83,7 @@ const VDataTags: React.FC<InputContainerProps> = ({
 	const getNameById = (id: string) => {
 		const ite = data?.doc?.find((item: any) => item._id === id);
 
-		return `${ite?.name} ${item?.modelAddOn && `(${ite[item?.modelAddOn]})`}` || id;
+		return `${ite?.name} ${item?.modelAddOn && `(${ite?.[item?.modelAddOn]})`}` || id;
 	};
 
 	return (
