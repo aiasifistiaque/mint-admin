@@ -100,6 +100,20 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'documents',
 	},
+	{
+		startOfSection: true,
+		sectionTitle: 'Career',
+		title: 'Job Posts',
+		href: '/jobposts',
+		icon: 'customer',
+		path: 'jobposts',
+	},
+	{
+		title: 'Applications',
+		href: '/jobapplications',
+		icon: 'customer',
+		path: 'jobapplications',
+	},
 
 	{
 		title: 'Settings',
