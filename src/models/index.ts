@@ -43,3 +43,4 @@ export { default as clientSchema } from './client/client.schema';
 
 export { default as documentSchema } from './documents/document.schema';
 export { default as jobPostSchema } from './job-post/jobposts.schema';
+export { default as jobApplicationSchema } from './job-post/jobapplications.schema';
