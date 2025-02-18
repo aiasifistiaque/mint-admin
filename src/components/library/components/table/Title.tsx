@@ -1,4 +1,4 @@
-import { Flex, FlexProps, Th, Tooltip } from '@chakra-ui/react';
+import { Flex, FlexProps, Skeleton, Th, Tooltip } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { TbArrowUp, TbArrowDown, TbArrowsDownUp } from 'react-icons/tb';
 import { BsInfoCircle } from 'react-icons/bs';
@@ -10,6 +10,7 @@ export type TitleProps = FlexProps & {
 	sort?: string;
 	ifItemsSelected?: boolean;
 	isNumeric?: boolean;
+	isLoading?: boolean;
 };
 
 export const Title: React.FC<TitleProps> = ({
@@ -18,6 +19,7 @@ export const Title: React.FC<TitleProps> = ({
 	info,
 	ifItemsSelected,
 	isNumeric,
+	isLoading = false,
 	...props
 }) => {
 	const { sort: val } = useAppSelector(state => state.table);
@@ -72,7 +74,11 @@ export const Title: React.FC<TitleProps> = ({
 					color: 'text.light',
 				}}
 				{...props}>
-				{body}
+				<Skeleton
+					isLoaded={!isLoading}
+					w='100%'>
+					{body}
+				</Skeleton>
 				{tooltip}
 			</Flex>
 		</Th>

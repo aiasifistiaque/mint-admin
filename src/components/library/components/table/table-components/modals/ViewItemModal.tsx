@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
 	useDisclosure,
 	Modal,
@@ -24,6 +24,8 @@ import {
 	MenuItem,
 	getValue,
 	DrawerContentContainer,
+	useGetSchemaQuery,
+	convertToViewFields,
 } from '../../../..';
 import { ViewItem } from '.';
 
@@ -33,10 +35,30 @@ type Props = {
 	path: string;
 	dataModel: ViewModalDataModelProps[];
 	trigger?: any;
+	item?: any;
 };
 
-const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id }) => {
+const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+
+	const [schema, setSchema] = useState<any>([]);
+
+	const { data: schemaData, isFetching: schemaLoading } = useGetSchemaQuery(path, {
+		skip: !isOpen || !path || !item?.fields,
+	});
+
+	useEffect(() => {
+		if (schemaData) {
+			if (item?.dataModel) {
+				setSchema(dataModel);
+			} else if (item?.fields) {
+				const viewFields = convertToViewFields({ schema: schemaData, fields: item?.fields });
+				setSchema(viewFields);
+			} else {
+				setSchema([]);
+			}
+		}
+	}, [schemaData, schemaLoading]);
 
 	const { data, isFetching, isError } = useGetByIdQuery(
 		{
@@ -82,22 +104,24 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id }) => {
 						<Column
 							gap={4}
 							pt={2}>
-							{dataModel.map((item: ViewModalDataModelProps, i: number) => {
-								const { title, dataKey, type, colorScheme, path, copy } = item;
+							{!schemaLoading &&
+								schema &&
+								schema.map((item: ViewModalDataModelProps, i: number) => {
+									const { title, dataKey, type, colorScheme, path, copy } = item;
 
-								return (
-									<ViewItem
-										copy={copy}
-										isLoading={isFetching}
-										title={title}
-										type={type}
-										colorScheme={colorScheme}
-										path={path}
-										key={i}>
-										{data && getValue({ dataKey, type, data })}
-									</ViewItem>
-								);
-							})}
+									return (
+										<ViewItem
+											copy={copy}
+											isLoading={isFetching}
+											title={title}
+											type={type}
+											colorScheme={colorScheme}
+											path={path}
+											key={i}>
+											{data && getValue({ dataKey, type, data })}
+										</ViewItem>
+									);
+								})}
 						</Column>
 					</Body>
 				</Content>

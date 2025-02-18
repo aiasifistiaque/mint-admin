@@ -6,11 +6,10 @@ import { useRouter } from 'next/navigation';
 import { useGetSelfQuery } from '@/store/services/authApi';
 
 import {
-	TableObjectProps,
 	useAppDispatch,
 	useAppSelector,
 	CustomTable,
-	PageHeading,
+	BackendPageHeading,
 	Layout,
 	Toast,
 	Headers,
@@ -18,24 +17,41 @@ import {
 	setFields,
 	setPreferences,
 	useGetAllQuery,
+	BackendTableObjectProps,
+	useGetSchemaQuery,
+	convertToTableFields,
 } from '../..';
 import { Flex } from '@chakra-ui/react';
 
 type TableProps = {
-	table: TableObjectProps;
+	table: BackendTableObjectProps;
 	layoutPath?: string;
 	children?: React.ReactNode;
-	schemaLoading?: boolean;
 };
 
 // Define the PageTable component
-const PageTable: FC<TableProps> = ({ table, layoutPath, children, schemaLoading = false }) => {
+const BackendPageTable: FC<TableProps> = ({ table, layoutPath, children }) => {
 	const { page, limit, search, sort, filters, preferences, selectedItems }: any = useAppSelector(
 		(state: any) => state.table
 	);
+
+	const [schema, setSchema] = useState<any>(null);
+	const { data: schemaData, isFetching: schemaLoading } = useGetSchemaQuery(table?.path);
+
 	const dispatch = useAppDispatch();
-	const [col, setCol] = useState<number>(table?.data?.length + 1);
+	const [col, setCol] = useState<number>(table?.fields?.length + 1);
 	const router = useRouter();
+
+	useEffect(() => {
+		if (schemaData) {
+			const tableFields = convertToTableFields({ schema: schemaData, fields: table?.fields });
+			setSchema(tableFields);
+			const defaultFields = tableFields
+				? tableFields?.filter((item: any) => item.type !== 'menu').map((item: any) => item?.dataKey)
+				: [];
+			dispatch(setFields(defaultFields));
+		}
+	}, [schemaData, schemaLoading]);
 
 	const selectable = table?.select?.show ? true : false;
 	const tableFilters = table?.filters !== undefined ? table?.filters : true;
@@ -50,12 +66,6 @@ const PageTable: FC<TableProps> = ({ table, layoutPath, children, schemaLoading 
 	});
 
 	const { data: userData } = useGetSelfQuery({});
-	useEffect(() => {
-		const defaultFields = table?.data
-			? table?.data?.filter(item => item.type !== 'menu').map(item => item.dataKey)
-			: [];
-		dispatch(setFields(defaultFields));
-	}, []);
 
 	useEffect(() => {
 		if (table?.preferences) {
@@ -65,8 +75,8 @@ const PageTable: FC<TableProps> = ({ table, layoutPath, children, schemaLoading 
 				return;
 			}
 		}
-		const defaultPreferences = table?.data
-			? table?.data?.filter(item => item.default).map(item => item.dataKey)
+		const defaultPreferences = schema
+			? schema?.filter((item: any) => item.default).map((item: any) => item?.dataKey)
 			: [];
 		if (userData && userData?.preferences) {
 			const preference = userData?.preferences[table?.path];
@@ -74,14 +84,14 @@ const PageTable: FC<TableProps> = ({ table, layoutPath, children, schemaLoading 
 			dispatch(setPreferences(value));
 			setCol(value.length + 1);
 		}
-	}, [userData, table]);
+	}, [userData, table, schema]);
 
 	// Create the table headers
 	const header = (
 		<Headers
 			selectable={selectable}
 			fields={preferences}
-			tableData={table?.data}
+			tableData={schema}
 			isLoading={schemaLoading || isLoading}
 			data={data?.doc}
 			showMenu={table?.menu ? true : false}
@@ -94,7 +104,7 @@ const PageTable: FC<TableProps> = ({ table, layoutPath, children, schemaLoading 
 			selectable={selectable}
 			fields={preferences}
 			item={item}
-			data={table?.data}
+			data={schema}
 			menu={table?.menu}
 			path={table?.path}
 			key={item?._id}
@@ -109,14 +119,15 @@ const PageTable: FC<TableProps> = ({ table, layoutPath, children, schemaLoading 
 				pb='32px'
 				title={table?.title}
 				path={layoutPath || table?.path}>
-				<PageHeading
+				<BackendPageHeading
 					table={table}
+					schema={schemaData}
 					title={table?.title} //Heading of the page
 					button={table?.button?.title} //Button Title
 					href={table?.button?.path} //Page where button would redirect to
 					isModal={table?.button?.isModal || table?.isModal} //If create page should be modal
 					path={table?.path} //Path of the table
-					data={table?.button?.dataModel || table?.createModel} //Input fields for the create page
+					layout={table?.button?.layout} //Input fields for the create page
 					export={table?.export} //If export button should be displayed
 				/>
 				<Flex>{children}</Flex>
@@ -149,4 +160,4 @@ const PageTable: FC<TableProps> = ({ table, layoutPath, children, schemaLoading 
 	);
 };
 
-export default PageTable;
+export default BackendPageTable;

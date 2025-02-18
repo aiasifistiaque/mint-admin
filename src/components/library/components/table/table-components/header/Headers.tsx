@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { Checkbox } from '@chakra-ui/react';
+import { Checkbox, Skeleton } from '@chakra-ui/react';
 import {
 	useAppDispatch,
 	useAppSelector,
@@ -60,6 +60,7 @@ const Headers = ({ tableData, fields, selectable, isLoading, data, showMenu }: H
 				if (!showMenu && type == 'menu') return null;
 				return (
 					<Title
+						isLoading={isLoading}
 						key={title}
 						ifItemsSelected={selectedItems?.length > 0 ? true : false}
 						sort={sort}>

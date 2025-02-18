@@ -88,6 +88,7 @@ type CommonButton = {
 	path?: never;
 	isModal?: true;
 	dataModel?: any;
+	layout?: any;
 };
 
 type RedirectButton = {
@@ -97,6 +98,7 @@ type RedirectButton = {
 	isModal?: never;
 	dataModel?: never;
 	prompt?: never;
+	layout?: any;
 };
 
 type ModalButton = {
@@ -106,6 +108,7 @@ type ModalButton = {
 	isModal: true;
 	dataModel: any;
 	prompt?: PromptType;
+	layout?: any;
 };
 
 type ButtonType = CommonButton | RedirectButton | ModalButton;
@@ -134,10 +137,9 @@ export type SelectDataType = {
 
 export type FormLayout = { sectionTitle: string; fields: any[] }[];
 
-export type TableObjectProps = {
+type CommonTableProps = {
 	title: string;
 	path: string;
-	data: TableObjectDataProps[];
 	filters?: boolean;
 	button?: ButtonType;
 	pagination?: boolean;
@@ -157,6 +159,12 @@ export type TableObjectProps = {
 	limit?: number;
 	preFilters?: any;
 };
+
+export type TableObjectProps = CommonTableProps & {
+	data: TableObjectDataProps[];
+};
+
+export type BackendTableObjectProps = CommonTableProps & { fields: string[] };
 
 export type ModelType =
 	| 'products'

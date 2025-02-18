@@ -1,5 +1,6 @@
 export { default as UploadModal } from './upload-modal/UploadModal';
 export { default as CreateModal } from './CreateModal/CreateModal';
+export { default as BackendCreateModal } from './CreateModal/BackendCreateModal';
 export { default as UpdatePasswordModal } from './update-password/UpdatePasswordModal';
 export { default as ModalContent } from './modal-components/ModalContentContainer';
 export { default as ModalHeader } from './modal-components/CustomModalHeader';

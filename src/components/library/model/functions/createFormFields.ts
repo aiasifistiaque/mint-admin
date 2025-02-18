@@ -23,7 +23,7 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 
 			if (Array.isArray(field)) {
 				field.forEach((subField: any, subIndex: number) => {
-					const fieldConfig = schema[subField];
+					const fieldConfig = schema?.[subField];
 					const lastSubIndex = subIndex === field.length - 1;
 					const firstSubIndex = subIndex === 0;
 					const typeDetail = createType({
@@ -59,7 +59,7 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 					}
 				});
 			} else {
-				const fieldConfig = schema[field];
+				const fieldConfig = schema?.[field];
 				const typeDetail = createType({
 					type: type,
 					isReadOnly: fieldConfig?.readOnlyOnUpdate || false,

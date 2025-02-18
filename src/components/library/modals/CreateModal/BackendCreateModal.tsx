@@ -1,5 +1,5 @@
 import React, { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
-import { Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, useDisclosure } from '@chakra-ui/react';
 
 import { useCustomToast, useIsMobile, useFormData } from '../../hooks';
 
@@ -16,9 +16,6 @@ import {
 	DialogFooter,
 	Dialog,
 	DialogBody,
-	useGetSchemaQuery,
-	convertToFormFields,
-	createFormFields,
 } from '../..';
 
 import CreateModalProps from './types';
@@ -48,12 +45,6 @@ const CreateModal = (props: CreateModalProps) => {
 	const [callApi, result] = usePostMutation();
 	const [updateApi, updateResult] = useUpdateByIdMutation();
 
-	const [schema, setSchema] = useState<any>([]);
-
-	const { data: schemaData, isFetching: schemaLoading } = useGetSchemaQuery(path, {
-		skip: !layout,
-	});
-
 	const onModalOpen = () => {
 		onOpen();
 		let newFieldData = {};
@@ -77,25 +68,6 @@ const CreateModal = (props: CreateModalProps) => {
 
 	const [changedData, setChangedData] = useState({});
 
-	useEffect(() => {
-		if (schemaData) {
-			if (layout) {
-				let newFieldData = {};
-				const fields = convertToFormFields({ schema: schemaData, layout: layout });
-				setSchema(fields);
-				fields?.map(field => {
-					if (field?.getValue)
-						newFieldData = { ...newFieldData, [field.name]: field?.getValue(doc) };
-					if (field?.value) newFieldData = { ...newFieldData, [field.name]: field?.value };
-				});
-
-				setFormData({ ...formData, ...newFieldData });
-			} else {
-				setSchema(data);
-			}
-		}
-	}, [schemaLoading]);
-
 	const successText = prompt?.successMsg
 		? prompt?.successMsg
 		: type == 'update'
@@ -115,15 +87,7 @@ const CreateModal = (props: CreateModalProps) => {
 		e.preventDefault();
 		e.stopPropagation();
 
-		let findExcludedFields: any = [];
-
-		if (layout) {
-			const fields: any = convertToFormFields({ schema: schemaData, layout: layout });
-			findExcludedFields = fields.filter((field: any) => field?.isExcluded);
-		} else {
-			findExcludedFields = data.filter((field: any) => field?.isExcluded);
-		}
-
+		const findExcludedFields = data.filter((field: any) => field?.isExcluded);
 		const toPostData = { ...formData };
 
 		// Remove excluded fields from toPostData
@@ -188,27 +152,13 @@ const CreateModal = (props: CreateModalProps) => {
 
 					<DialogBody>
 						<ModalFormSection>
-							{layout ? (
-								!schemaLoading && (
-									<>
-										<FormMain
-											fields={createFormFields({ schema: schemaData, layout })}
-											formData={formData}
-											setFormData={setFormData}
-											setChangedData={setChangedData}
-											isModal={true}
-										/>
-									</>
-								)
-							) : (
-								<FormMain
-									fields={data}
-									formData={formData}
-									setFormData={setFormData}
-									setChangedData={setChangedData}
-									isModal={true}
-								/>
-							)}
+							<FormMain
+								fields={data}
+								formData={formData}
+								setFormData={setFormData}
+								setChangedData={setChangedData}
+								isModal={true}
+							/>
 						</ModalFormSection>
 						{isMobile && <Align py={5}>{footer}</Align>}
 					</DialogBody>

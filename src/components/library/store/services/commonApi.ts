@@ -9,6 +9,11 @@ export const userApi = mainApi.injectEndpoints({
 			providesTags: ['filters'],
 		}),
 
+		getSchema: builder.query<any, string>({
+			query: (path: string) => `${path}/get/schema`,
+			providesTags: ['schema'],
+		}),
+
 		getCount: builder.query<any, any>({
 			query: ({ path, filters = {} }: { path: string; filters?: any }) => ({
 				url: `${path}/get/count`,
@@ -198,6 +203,9 @@ export const {
 	useGetSumQuery,
 	useGetOneQuery,
 	useLazyGetAllQuery,
+	useLazyGetByIdQuery,
+	useLazyGetQuery,
 	useGetQuery,
 	useDeleteProductlistByKeyIdMutation,
+	useGetSchemaQuery,
 } = userApi;

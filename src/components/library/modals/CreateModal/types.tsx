@@ -11,6 +11,8 @@ type CreateModalProps = {
 	children?: any;
 	doc?: any;
 	populate?: any;
+	item?: any;
+	layout?: any;
 	prompt?: {
 		title?: string;
 		body?: string;

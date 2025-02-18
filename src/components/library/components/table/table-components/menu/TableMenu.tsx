@@ -39,8 +39,6 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 						path: item?.path || path,
 					};
 
-					let data = {};
-
 					if (item?.renderCondition && !item?.renderCondition(doc)) return null;
 
 					if (item?.getValue) {
@@ -102,6 +100,8 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 									title='Edit'
 									type='update'
 									trigger={<MenuItem>{item?.title}</MenuItem>}
+									layout={item?.layout}
+									item={item}
 								/>
 							);
 
@@ -182,6 +182,7 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 									{...commonProps}
 									title={item?.title}
 									dataModel={item?.dataModel}
+									item={item}
 								/>
 							);
 

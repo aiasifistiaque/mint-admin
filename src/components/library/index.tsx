@@ -36,7 +36,7 @@ export * from './stat';
 export * from './detail';
 export { default as HeadingMenu } from './settings/heading-menu/HeadingMenu';
 
-export { default as PageTable } from './pages/page-tables/PageTable';
+export * from './pages/page-tables';
 
 export type * from './types';
 export * from './utils/functions/handlers';

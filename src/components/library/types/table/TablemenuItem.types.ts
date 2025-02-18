@@ -1,3 +1,5 @@
+import { FormLayout } from '..';
+
 type Item =
 	| 'edit'
 	| 'delete'
@@ -23,6 +25,8 @@ type BaseMenuItem = {
 	path?: string;
 	renderCondition?: (data: any) => boolean;
 	invalidate?: string[];
+	fields?: string[];
+	layout?: FormLayout;
 	prompt?: {
 		title: string;
 		body: string;
