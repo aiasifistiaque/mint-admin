@@ -224,7 +224,7 @@ const ViewItem: FC<ViewItemProps> = ({
 	return (
 		<GridContainer
 			{...props}
-			gridTemplateColumns={type == 'textarea' ? '1fr' : '2fr 3fr'}
+			gridTemplateColumns={{ base: '1fr', md: type == 'textarea' ? '1fr' : '2fr 3fr' }}
 			gap={type == 'textarea' ? '16px' : '32px'}>
 			<SkeletonContent isLoading={isLoading}>
 				<Heading size='xs'>{title}:</Heading>
