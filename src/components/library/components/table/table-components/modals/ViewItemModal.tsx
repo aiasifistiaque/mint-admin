@@ -48,10 +48,10 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 	});
 
 	useEffect(() => {
-		if (schemaData) {
-			if (item?.dataModel) {
-				setSchema(dataModel);
-			} else if (item?.fields) {
+		if (dataModel) {
+			setSchema(dataModel);
+		} else if (schemaData) {
+			if (item?.fields) {
 				const viewFields = convertToViewFields({ schema: schemaData, fields: item?.fields });
 				setSchema(viewFields);
 			} else {
@@ -104,24 +104,22 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 						<Column
 							gap={4}
 							pt={2}>
-							{!schemaLoading &&
-								schema &&
-								schema.map((item: ViewModalDataModelProps, i: number) => {
-									const { title, dataKey, type, colorScheme, path, copy } = item;
+							{schema?.map((item: ViewModalDataModelProps, i: number) => {
+								const { title, dataKey, type, colorScheme, path, copy } = item;
 
-									return (
-										<ViewItem
-											copy={copy}
-											isLoading={isFetching}
-											title={title}
-											type={type}
-											colorScheme={colorScheme}
-											path={path}
-											key={i}>
-											{data && getValue({ dataKey, type, data })}
-										</ViewItem>
-									);
-								})}
+								return (
+									<ViewItem
+										copy={copy}
+										isLoading={isFetching}
+										title={title}
+										type={type}
+										colorScheme={colorScheme}
+										path={path}
+										key={i}>
+										{data && getValue({ dataKey, type, data })}
+									</ViewItem>
+								);
+							})}
 						</Column>
 					</Body>
 				</Content>

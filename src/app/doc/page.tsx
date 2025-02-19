@@ -16,10 +16,10 @@ const DocPage = () => {
 	};
 	return (
 		<Layout
-			pt='32px'
 			title='Doc Page'
 			path='doc'>
 			<VInput
+				pt='32px'
 				value={path || ''}
 				onChange={(e: any) => setPath(e.target.value)}
 				label='Database Model Name'
