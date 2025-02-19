@@ -49,7 +49,7 @@ const ViewInfo = ({ slug, id, schema }: { slug: string; id: string; schema: any 
 			gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }}
 			gap={{ base: 4, md: 8 }}
 			pt={4}>
-			{viewFields.map((item: ViewModalDataModelProps, i: number) => {
+			{viewFields.map((item: any, i: number) => {
 				const { title, dataKey, type, colorScheme, path } = item;
 
 				const defineSpan = () => {
@@ -58,6 +58,8 @@ const ViewInfo = ({ slug, id, schema }: { slug: string; id: string; schema: any 
 					else if (viewFields[i + 1].type == 'textarea') return 2;
 					else return 1;
 				};
+
+				if (item[dataKey] == undefined || item[dataKey] == '') return null;
 
 				return (
 					<GridItem
