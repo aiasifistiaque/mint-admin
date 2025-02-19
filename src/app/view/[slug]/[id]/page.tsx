@@ -54,6 +54,7 @@ const ViewInfo = ({ slug, id, schema }: { slug: string; id: string; schema: any 
 
 				const defineSpan = () => {
 					if (type == 'textarea') return 2;
+					if (type == 'external-link') return 2;
 					else if (i == viewFields.length - 1) return 2;
 					else if (viewFields[i + 1].type == 'textarea') return 2;
 					else return 1;
