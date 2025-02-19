@@ -46,7 +46,7 @@ const TableRowComponent: FC<TableProps> = ({
 			{...props}>
 			{/* If the table is selectable, return a TableData cell with a checkbox */}
 			{/* Map over the data keys and create a TableData cell for each */}
-			{data.map(
+			{data?.map(
 				({
 					dataKey,
 					type,
