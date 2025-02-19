@@ -155,7 +155,6 @@ const schema = {
 		label: 'Discount',
 		isRequired: false,
 		type: 'number',
-
 		displayInTable: true,
 		renderCondition: (data: any) => data.isDiscount,
 	},

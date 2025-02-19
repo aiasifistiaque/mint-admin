@@ -135,7 +135,7 @@ export type SelectDataType = {
 	menu: SelectmenuItem[];
 };
 
-export type FormLayout = { sectionTitle: string; fields: any[] }[];
+export type FormLayout = { sectionTitle: string; fields: any[]; description?: string }[];
 
 type CommonTableProps = {
 	title: string;
