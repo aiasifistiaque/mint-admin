@@ -59,7 +59,7 @@ const ViewInfo = ({ slug, id, schema }: { slug: string; id: string; schema: any 
 					else return 1;
 				};
 
-				if (item[dataKey] == undefined || item[dataKey] == '') return null;
+				// if (item[dataKey] == undefined || item[dataKey] == '') return null;
 
 				return (
 					<GridItem
