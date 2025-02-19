@@ -13,7 +13,7 @@ const createViewField = ({ key, field }: { key: string; field: any }): any => {
 	}
 
 	const title = field?.label || field?.title;
-	const dataKey = field?.tableKey || key;
+	const dataKey = field?.viewKey || field?.tableKey || key;
 
 	return {
 		title: title,

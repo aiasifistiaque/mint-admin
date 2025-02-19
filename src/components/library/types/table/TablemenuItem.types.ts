@@ -5,6 +5,7 @@ type Item =
 	| 'delete'
 	| 'view'
 	| 'view-modal'
+	| 'view-item'
 	| 'edit-modal'
 	| 'post'
 	| 'update-api'

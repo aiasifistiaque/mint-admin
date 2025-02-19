@@ -114,6 +114,15 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 									<MenuItem>{item?.title}</MenuItem>
 								</Link>
 							);
+						case 'view-item':
+							return (
+								<Link
+									style={{ backgroundColor: 'inherit' }}
+									key={i}
+									href={`/view/${path}/${id}`}>
+									<MenuItem>{item?.title}</MenuItem>
+								</Link>
+							);
 
 						case 'delete':
 							return (

@@ -13,11 +13,13 @@ type CommonProps = {
 	model?: string;
 	dataModel?: any;
 	viewType?: string;
+	objectKey?: string;
 	options?: { label: string; value: string }[];
 	placeholder?: string;
 	colorScheme?: any;
 	renderCondition?: any;
 	tableKey?: string;
+	viewKey?: string;
 	menuField?: string;
 	limit?: number;
 	copy?: boolean;

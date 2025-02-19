@@ -1,19 +1,28 @@
 'use client';
 import React from 'react';
 import { useParams } from 'next/navigation';
-import { Column, convertToViewFields, useGetByIdQuery } from '@/components/library';
-import { schema } from '@/models';
+import {
+	Column,
+	convertToViewFields,
+	useGetByIdQuery,
+	useGetSchemaQuery,
+	getValue,
+} from '@/components/library';
+
 import { ViewModalDataModelProps, Layout, ViewItem } from '@/components/library';
+import { Grid, GridItem } from '@chakra-ui/react';
 
 const ViewPage = () => {
 	const { id, slug }: { id: string; slug: string } = useParams();
+	const { data, isFetching, isError } = useGetSchemaQuery(slug, { skip: !slug });
 
 	return (
 		<Layout
 			title={slug?.toUpperCase()}
 			path={slug}>
-			{slug && id && (
+			{slug && id && data && (
 				<ViewInfo
+					schema={data}
 					slug={slug}
 					id={id}
 				/>
@@ -22,8 +31,8 @@ const ViewPage = () => {
 	);
 };
 
-const ViewInfo = ({ slug, id }: { slug: string; id: string }) => {
-	const viewFields = convertToViewFields({ schema: schema[slug] });
+const ViewInfo = ({ slug, id, schema }: { slug: string; id: string; schema: any }) => {
+	const viewFields = convertToViewFields({ schema });
 
 	const [fields, setFields] = React.useState<any[]>([]);
 
@@ -35,42 +44,37 @@ const ViewInfo = ({ slug, id }: { slug: string; id: string }) => {
 		{ skip: !id || !slug }
 	);
 
-	const getValue = (dataKey: string, type: any): any => {
-		if (!data) return;
-		// Split the dataKey by '.' to determine if it's nested
-		const keys = dataKey?.split('.');
-		// Determine the appropriate value based on whether the key is nested
-		let value = 'n/a';
-		if (keys?.length === 1) {
-			// Single level key, directly access the value
-			value = type === 'date' ? new Date(data[dataKey]) : data[dataKey];
-		} else if (keys?.length === 2) {
-			// Nested key, access the nested value
-			const [parentKey, childKey] = keys;
-			value = type === 'date' ? new Date(data[parentKey]?.[childKey]) : data[parentKey]?.[childKey];
-		}
-		return value;
-	};
 	return (
-		<Column
-			gap={4}
-			pt={2}>
+		<Grid
+			gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }}
+			gap={{ base: 4, md: 8 }}
+			pt={4}>
 			{viewFields.map((item: ViewModalDataModelProps, i: number) => {
 				const { title, dataKey, type, colorScheme, path } = item;
 
+				const defineSpan = () => {
+					if (type == 'textarea') return 2;
+					else if (i == viewFields.length - 1) return 2;
+					else if (viewFields[i + 1].type == 'textarea') return 2;
+					else return 1;
+				};
+
 				return (
-					<ViewItem
-						isLoading={isFetching}
-						title={title}
-						type={type}
-						colorScheme={colorScheme}
-						path={path}
-						key={i}>
-						{data && getValue(dataKey, type)}
-					</ViewItem>
+					<GridItem
+						key={i}
+						colSpan={defineSpan()}>
+						<ViewItem
+							isLoading={isFetching}
+							title={title}
+							type={type}
+							colorScheme={colorScheme}
+							path={path}>
+							{data && getValue({ dataKey, type, data })}
+						</ViewItem>
+					</GridItem>
 				);
 			})}
-		</Column>
+		</Grid>
 	);
 };
 

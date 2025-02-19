@@ -222,7 +222,10 @@ const ViewItem: FC<ViewItemProps> = ({
 	}, [children]);
 
 	return (
-		<GridContainer {...props}>
+		<GridContainer
+			{...props}
+			gridTemplateColumns={type == 'textarea' ? '1fr' : '2fr 3fr'}
+			gap={type == 'textarea' ? '16px' : '32px'}>
 			<SkeletonContent isLoading={isLoading}>
 				<Heading size='xs'>{title}:</Heading>
 			</SkeletonContent>
@@ -250,7 +253,7 @@ const ViewItem: FC<ViewItemProps> = ({
 	);
 };
 
-const GridContainer = ({ children }: GridProps & { children: ReactNode }) => (
+const GridContainer = ({ children, ...props }: GridProps & { children: ReactNode }) => (
 	<Grid
 		justifyContent='center'
 		px={6}
@@ -260,7 +263,8 @@ const GridContainer = ({ children }: GridProps & { children: ReactNode }) => (
 		borderBottomWidth={1}
 		borderColor='border.light'
 		_dark={{ borderColor: 'border.dark' }}
-		_last={{ borderBottomWidth: 0 }}>
+		_last={{ borderBottomWidth: 0 }}
+		{...props}>
 		{children}
 	</Grid>
 );
