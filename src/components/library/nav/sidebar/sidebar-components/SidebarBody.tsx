@@ -10,7 +10,7 @@ const SidebarBody: FC<SidebarBodyProps> = ({ children, ...props }) => {
 	return (
 		<Stack
 			pr={sizes.SIDEBAR_PX}
-			pb={16}
+			pb={{ base: 24, md: 8 }}
 			pt={padding.BODY_TOP}
 			h='100vh'
 			overflowY='scroll'
