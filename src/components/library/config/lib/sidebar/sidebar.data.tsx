@@ -70,6 +70,21 @@ const sidebar: SidebarItemType[] = [
 	},
 	{
 		startOfSection: true,
+		sectionTitle: 'Project Management',
+		title: 'Projects',
+		href: '/projects',
+		icon: 'customer',
+		path: 'projects',
+	},
+	{
+		title: 'Repos',
+		href: '/repos',
+		icon: 'customer',
+		path: 'repos',
+	},
+
+	{
+		startOfSection: true,
 		sectionTitle: 'Admin Management',
 		title: 'Admin List',
 		href: '/admins',
@@ -88,12 +103,7 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'clients',
 	},
-	{
-		title: 'Projects',
-		href: '/projects',
-		icon: 'customer',
-		path: 'projects',
-	},
+
 	{
 		title: 'Meetings',
 		href: '/meetings',

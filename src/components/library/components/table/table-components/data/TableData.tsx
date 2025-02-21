@@ -74,7 +74,7 @@ const TableData: React.FC<TableDataPropsType> = ({
 		case 'time':
 			return (
 				<CustomTd
-					fontSize={{ base: '1rem', md: '.7rem' }}
+					fontSize={{ base: '1rem', md: '.8rem' }}
 					{...props}>
 					{children ? moment(children).format('hh:mm A') : '--'}
 				</CustomTd>

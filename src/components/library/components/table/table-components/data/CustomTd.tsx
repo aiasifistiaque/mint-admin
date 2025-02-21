@@ -49,7 +49,7 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 };
 
 //CSS STARTS HERE
-const PADDING_Y = 2;
+const PADDING_Y = 1.5;
 const PADDING_X = 4;
 
 const IMG_SIZE = { base: '50px', md: '40px' };

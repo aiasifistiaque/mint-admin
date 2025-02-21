@@ -115,7 +115,7 @@ export const colors: any = {
 		dark: BLACK,
 	},
 	text: {
-		light: '#171717',
+		light: '#111',
 		dark: '#fafafa',
 		shade: '#666',
 		200: '#fff',

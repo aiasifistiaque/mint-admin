@@ -1,3 +1,5 @@
+import { table } from 'console';
+
 const schema = {
 	name: {
 		label: 'Name',
@@ -10,6 +12,15 @@ const schema = {
 	category: {
 		label: 'Category',
 		type: 'string',
+		displayInTable: true,
+		default: true,
+	},
+	project: {
+		label: 'Project',
+		type: 'data-menu',
+		model: 'projects',
+		tableType: 'text',
+		tableKey: 'project.name',
 		displayInTable: true,
 		default: true,
 	},

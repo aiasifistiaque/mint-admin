@@ -15,7 +15,6 @@ const RowContainerMd: FC<RowContainerMdProps> = ({ children, ...props }) => {
 	// };
 	return (
 		<Tr
-			h='3rem'
 			_notLast={{
 				borderBottom: '1px solid',
 				borderBottomColor: 'container.borderLight',

@@ -3,54 +3,74 @@
 import React from 'react';
 import { NextPage } from 'next';
 import {
-	PageTable,
-	TableObjectProps,
 	convertToViewFields,
-	convertToTableFields,
 	createFormFields,
+	BackendTableObjectProps,
+	BackendPageTable,
 } from '@/components/library';
 import { projectSchema as schema } from '@/models';
 
 const fields = [
 	'name',
-	'client',
 	'category',
 	'status',
-	'githubUrl',
-	'devUrl',
-	'liveUrl',
-	'testUrl',
-	'prodUrl',
-	'domain',
+	'description',
+	'client',
+	'startDate',
+	'endDate',
+	'deadline',
+	'requirements',
+	'file',
+	'fileUrl',
+	'tags',
+	'addedBy',
+	'access',
+	'createdAt',
 ];
 
 const tableSchema = [
 	{
 		sectionTitle: 'Basic Details',
-		fields: [['name', 'client'], ['category', 'status'], 'projectType'],
+		fields: [['name', 'client'], ['category', 'status'], 'tags'],
 	},
 	{
-		sectionTitle: 'Links',
-		fields: [
-			['githubUrl', 'devUrl'],
-			['liveUrl', 'testUrl'],
-			['prodUrl', 'domain'],
-		],
+		sectionTitle: 'Description',
+		fields: ['description'],
 	},
 	{
-		sectionTitle: 'Technologies',
-		fields: ['libraries', 'frameworks', 'technologies'],
+		sectionTitle: 'Timeline',
+		fields: [['startDate', 'endDate'], 'deadline'],
+	},
+	{
+		sectionTitle: 'Requirements & Details',
+		fields: ['requirements', 'file', 'fileUrl'],
+	},
+	{
+		sectionTitle: 'Note & Tags',
+		fields: ['note', 'access'],
 	},
 ];
 
-const table: TableObjectProps = {
-	title: 'Project',
+const table: BackendTableObjectProps = {
+	title: 'Projects',
 	path: 'projects',
-	export: true,
+
+	fields: [
+		'name',
+		'category',
+		'status',
+		'client',
+		'startDate',
+		'endDate',
+		'deadline',
+		'file',
+		'filerl',
+		'addedBy',
+	],
 	button: {
 		title: 'New Project',
 		isModal: true,
-		dataModel: createFormFields({ schema, layout: tableSchema }),
+		layout: tableSchema,
 	},
 	menu: [
 		{
@@ -61,18 +81,17 @@ const table: TableObjectProps = {
 		{
 			title: 'Edit',
 			type: 'edit-modal',
-			dataModel: createFormFields({ schema, layout: tableSchema }),
+			layout: tableSchema,
 		},
 		{
 			title: 'Delete',
 			type: 'delete',
 		},
 	],
-	data: convertToTableFields({ schema, fields }),
 };
 
 const page: NextPage = () => {
-	return <PageTable table={table} />;
+	return <BackendPageTable table={table} />;
 };
 
 export default page;
