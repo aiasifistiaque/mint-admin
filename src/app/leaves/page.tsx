@@ -47,7 +47,7 @@ const formLayout: FormLayout = [
 const table: BackendTableObjectProps = {
 	title: 'Leaves',
 	path: 'leaves',
-	export: true,
+	export: false,
 
 	button: {
 		title: 'New Leave',

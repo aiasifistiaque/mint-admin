@@ -94,7 +94,7 @@ const formLayout: FormLayout = [
 const table: BackendTableObjectProps = {
 	title: 'Meeting',
 	path: 'meetings',
-	export: true,
+	export: false,
 
 	button: {
 		title: 'New Meeting',

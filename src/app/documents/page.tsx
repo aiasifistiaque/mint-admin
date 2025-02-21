@@ -55,7 +55,7 @@ const formFields = [
 const table: TableObjectProps = {
 	title: 'Documents',
 	path: 'documents',
-	export: true,
+	export: false,
 	button: {
 		title: 'Add Document',
 		isModal: true,
