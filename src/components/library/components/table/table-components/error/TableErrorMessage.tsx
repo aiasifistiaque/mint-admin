@@ -11,7 +11,7 @@ const TableErrorMessage = ({
 			flexDir='column'
 			textAlign='center'
 			h={{
-				base: '50px',
+				base: '300px',
 				md: '200px',
 			}}
 			{...props}>

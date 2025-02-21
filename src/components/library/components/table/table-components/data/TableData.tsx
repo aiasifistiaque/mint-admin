@@ -53,7 +53,7 @@ const TableData: React.FC<TableDataPropsType> = ({
 		case 'number':
 			return (
 				<CustomTd
-					isNumeric={true}
+					// isNumeric={true}
 					{...props}>
 					{children?.toLocaleString()}
 				</CustomTd>

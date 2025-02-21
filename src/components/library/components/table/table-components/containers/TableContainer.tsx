@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { TableContainer as ChakraTableContainer, Flex } from '@chakra-ui/react';
-import { useIsMobile, theme, shadow } from '../../../..';
+import { useIsMobile, theme, shadow, Column } from '../../../..';
 
 const { TABLE } = theme;
 
@@ -8,6 +8,7 @@ const style = {
 	w: '100%',
 	borderRadius: TABLE.border.radius,
 	pb: TABLE.padding.bottom,
+
 	borderColor: TABLE.border.color.light,
 	_dark: {
 		bg: TABLE.bg.dark,
@@ -18,7 +19,7 @@ const style = {
 const TableContainer = ({ children }: { children: ReactNode }) => {
 	const isMobile = useIsMobile();
 
-	const Container = isMobile ? Flex : ChakraTableContainer;
+	const Container = isMobile ? Column : ChakraTableContainer;
 
 	return (
 		<Container

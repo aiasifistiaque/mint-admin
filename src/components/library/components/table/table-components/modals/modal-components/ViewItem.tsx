@@ -30,6 +30,22 @@ type ViewItemProps = GridProps & {
 
 const renderContent = ({ type, children, colorScheme, path }: any) => {
 	switch (type) {
+		case 'section-data-array':
+			return (
+				<Flex
+					flexWrap='wrap'
+					gap={4}
+					alignItems='center'>
+					{children?.map((item: any, i: number) => (
+						<Column
+							gap={2}
+							key={i}>
+							<Heading size='xs'>{item?.title}</Heading>
+							<Text fontSize='.9rem'>{JSON.stringify(item)}</Text>
+						</Column>
+					))}
+				</Flex>
+			);
 		case 'custom-section-array':
 			return (
 				<Flex

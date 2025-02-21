@@ -1,6 +1,8 @@
+import { FormLayout } from '../../types';
+
 type CreateType = {
 	schema: any;
-	layout: { sectionTitle: string; fields: any[]; description?: string }[];
+	layout: FormLayout;
 	type?: 'post' | 'update';
 };
 
@@ -15,7 +17,7 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 	const dataFields: any[] = [];
 
 	layout.forEach((section: any) => {
-		const { sectionTitle, fields, description } = section;
+		const { sectionTitle, fields, description, collapsible } = section;
 
 		fields.forEach((field: any, index: number) => {
 			const lastElement = index === fields.length - 1;
@@ -33,7 +35,8 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 					});
 					if (fieldConfig) {
 						dataFields.push({
-							...(firstIndex && firstSubIndex && { sectionTitle, description }),
+							...(firstIndex && firstSubIndex && { sectionTitle, description, collapsible }),
+
 							name: subField,
 							label: fieldConfig.label || fieldConfig.title,
 							isRequired: fieldConfig.isRequired || fieldConfig.required || false,
@@ -67,7 +70,7 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 				});
 				if (fieldConfig) {
 					dataFields.push({
-						...(firstIndex && { sectionTitle, description }),
+						...(firstIndex && { sectionTitle, description, collapsible }),
 						name: field,
 						label: fieldConfig.label || fieldConfig.title,
 						isRequired: fieldConfig.isRequired || fieldConfig.required || false,

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { Checkbox, Skeleton } from '@chakra-ui/react';
+import { Checkbox, Skeleton, Tooltip } from '@chakra-ui/react';
 import {
 	useAppDispatch,
 	useAppSelector,
@@ -13,7 +13,7 @@ import {
 } from '../../../..';
 
 type HeadersProps = {
-	tableData: TableObjectDataProps[];
+	tableData: any; // Schema of the table
 	fields?: any[];
 	selectable: boolean;
 	isLoading: boolean;
@@ -55,13 +55,15 @@ const Headers = ({ tableData, fields, selectable, isLoading, data, showMenu }: H
 				</Title>
 			)}
 
-			{tableData?.map(({ title, sort, dataKey, type }) => {
+			{tableData?.map((item: any, i: number) => {
+				const { title, sort, dataKey, type, tooltip } = item;
 				if (!fields?.includes(dataKey) && type !== 'menu') return null;
 				if (!showMenu && type == 'menu') return null;
 				return (
 					<Title
 						isLoading={isLoading}
-						key={title}
+						key={i}
+						item={item}
 						ifItemsSelected={selectedItems?.length > 0 ? true : false}
 						sort={sort}>
 						{title}

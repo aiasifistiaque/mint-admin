@@ -120,8 +120,26 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'jobapplications',
 	},
+	{
+		startOfSection: true,
+		sectionTitle: 'Accounts',
+		title: 'Invoices',
+		href: '/invoices',
+		icon: 'customer',
+		path: 'invoices',
+	},
+	{
+		startOfSection: true,
+		sectionTitle: 'HR',
+		title: 'Leave Management',
+		href: '/leaves',
+		icon: 'customer',
+		path: 'leaves',
+	},
 
 	{
+		startOfSection: true,
+		sectionTitle: 'Account Settings',
 		title: 'Settings',
 		href: '/settings',
 		icon: 'settings-fill',

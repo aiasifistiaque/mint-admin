@@ -11,6 +11,7 @@ export type TitleProps = FlexProps & {
 	ifItemsSelected?: boolean;
 	isNumeric?: boolean;
 	isLoading?: boolean;
+	item?: any;
 };
 
 export const Title: React.FC<TitleProps> = ({
@@ -19,6 +20,7 @@ export const Title: React.FC<TitleProps> = ({
 	info,
 	ifItemsSelected,
 	isNumeric,
+	item,
 	isLoading = false,
 	...props
 }) => {
@@ -47,9 +49,9 @@ export const Title: React.FC<TitleProps> = ({
 			children
 		);
 
-	const tooltip = info && (
+	const tooltip = item?.tooltip && (
 		<Tooltip
-			label={info}
+			label={item?.tooltip}
 			hasArrow
 			placement='bottom-end'>
 			<span>

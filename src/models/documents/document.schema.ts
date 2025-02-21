@@ -81,12 +81,15 @@ const documentSchema: SchemaType<Type> = {
 		tableKey: 'project.name',
 		sort: true,
 		model: 'projects',
+		tooltip: 'The project this document is related to',
 	},
 	access: {
 		label: 'Access',
 		type: 'data-tag',
+		viewType: 'data-tag-array',
 		model: 'admins',
 		modelAddOn: 'email',
+		tooltip: 'Users who can access this document',
 	},
 	addedBy: {
 		label: 'Added By',

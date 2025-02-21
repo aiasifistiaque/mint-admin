@@ -11,7 +11,7 @@ const FilterCheckbox: FC<FilterCheckboxProps> = ({ children, ...props }) => {
 			borderRadius='md'
 			size={{ base: 'lg', md: 'sm' }}
 			iconSize={20}
-			fontSize='10px'
+			fontSize={{ base: '16px', md: '10px' }}
 			colorScheme='brand'
 			{...props}>
 			{children}

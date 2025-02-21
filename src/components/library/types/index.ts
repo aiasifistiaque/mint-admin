@@ -7,7 +7,7 @@ import {
 	TextProps,
 } from '@chakra-ui/react';
 export type { CustomTableProps } from './components.types';
-import { MenuItem, SelectmenuItem } from './table';
+import { SelectmenuItem } from './table';
 
 export type { MenuItem as MenuItemProps, SelectmenuItem as SelectmenuItemProps } from './table';
 
@@ -82,37 +82,6 @@ type NonSelectProps = CommonProps & {
 
 export type TableObjectDataProps = SelectProps | NonSelectProps;
 
-type CommonButton = {
-	title: string;
-	icon?: string;
-	path?: never;
-	isModal?: true;
-	dataModel?: any;
-	layout?: any;
-};
-
-type RedirectButton = {
-	title: string;
-	icon?: string;
-	path: string;
-	isModal?: never;
-	dataModel?: never;
-	prompt?: never;
-	layout?: any;
-};
-
-type ModalButton = {
-	title: string;
-	icon?: string;
-	path?: never;
-	isModal: true;
-	dataModel: any;
-	prompt?: PromptType;
-	layout?: any;
-};
-
-type ButtonType = CommonButton | RedirectButton | ModalButton;
-
 /**
  * Data Modal for the
  * View Modal
@@ -135,36 +104,12 @@ export type SelectDataType = {
 	menu: SelectmenuItem[];
 };
 
-export type FormLayout = { sectionTitle: string; fields: any[]; description?: string }[];
-
-type CommonTableProps = {
-	title: string;
-	path: string;
-	filters?: boolean;
-	button?: ButtonType;
-	pagination?: boolean;
-	clickable?: boolean;
-	toPath?: string;
-	isModal?: boolean;
-	invalidate?: any;
-	createModel?: any;
-	export?: boolean;
-	menu?: MenuItem[];
-	select?: SelectDataType;
-	preferences?: any;
-	hidePreferences?: boolean;
-	search?: boolean;
-	showMenu?: boolean;
-	topPagination?: boolean;
-	limit?: number;
-	preFilters?: any;
-};
-
-export type TableObjectProps = CommonTableProps & {
-	data: TableObjectDataProps[];
-};
-
-export type BackendTableObjectProps = CommonTableProps & { fields: string[] };
+export type FormLayout = {
+	sectionTitle: string;
+	fields: any[];
+	description?: string;
+	collapsible?: boolean;
+}[];
 
 export type ModelType =
 	| 'products'
@@ -233,3 +178,4 @@ export type PromptType = {
 };
 
 export type { SchemaType } from './schema.types';
+export * from './TableObjectProps.types';

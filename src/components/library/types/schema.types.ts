@@ -9,7 +9,7 @@ type CommonProps = {
 	tableType?: TableDataFieldType;
 	imageKey?: string;
 	default?: boolean;
-	displayInTable?: boolean;
+	displayInTable?: boolean; // Display in table
 	model?: string;
 	dataModel?: any;
 	viewType?: string;
@@ -17,13 +17,14 @@ type CommonProps = {
 	options?: { label: string; value: string }[];
 	placeholder?: string;
 	colorScheme?: any;
-	renderCondition?: any;
-	tableKey?: string;
-	viewKey?: string;
+	renderCondition?: any; // Condition to render the field
+	tableKey?: string; // Key for table if different from model key specially for nested objects
+	viewKey?: string; // Key for view if different from model key specially for nested objects
 	menuField?: string;
-	limit?: number;
+	limit?: number; // Limit for number of items in array
 	copy?: boolean;
-	helperText?: string;
+	helperText?: string; // Helper text for the input
+	tooltip?: string; // Tooltip for the table
 	modelAddOn?: string;
 
 	section?: {

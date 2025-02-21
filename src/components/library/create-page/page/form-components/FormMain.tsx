@@ -10,7 +10,10 @@ import {
 	handleImageArray,
 	handleNestedImage,
 	handleNestedString,
+	FormDivisionAccordion,
+	FormItemAccordion,
 } from '../../..';
+import { Accordion, Text } from '@chakra-ui/react';
 
 type FormMainType = {
 	fields: any;
@@ -72,38 +75,99 @@ const FormMain: FC<FormMainType> = ({
 
 	// return <Text>{JSON.stringify(fields)}</Text>;
 
-	return sections.map((section: any, i: number) => (
-		<FormDivision
-			key={i}
-			isModal={isModal}>
-			{section?.map((item: any, i: number) => (
-				<FormItem
-					isHidden={item?.renderCondition && !item?.renderCondition(formData)}
-					item={item}
-					key={i}>
-					<>
-						<FormInput
-							formData={formData}
-							setFormData={setFormData}
-							setChangedData={setChangedData}
-							isRequired={item?.isRequired || false}
-							name={item?.name}
-							label={item?.label}
-							type={item?.type}
-							value={getFieldValue({ name: item?.name, formData })}
-							onChange={getOnChangeHandler(item?.type, item?.name)}
-							model={item?.model}
-							placeholder={item?.placeholder}
-							options={item?.options}
-							dataModel={item?.dataModel}
+	// return sections.map((section: any, i: number) => (
+	// 	<FormDivision
+	// 		key={i}
+	// 		isModal={isModal}>
+	// 		{section?.map((item: any, i: number) => (
+	// 			<FormItem
+	// 				isHidden={item?.renderCondition && !item?.renderCondition(formData)}
+	// 				item={item}
+	// 				key={i}>
+	// 				<>
+	// 					<FormInput
+	// 						formData={formData}
+	// 						setFormData={setFormData}
+	// 						setChangedData={setChangedData}
+	// 						isRequired={item?.isRequired || false}
+	// 						name={item?.name}
+	// 						label={item?.label}
+	// 						type={item?.type}
+	// 						value={getFieldValue({ name: item?.name, formData })}
+	// 						onChange={getOnChangeHandler(item?.type, item?.name)}
+	// 						model={item?.model}
+	// 						placeholder={item?.placeholder}
+	// 						options={item?.options}
+	// 						dataModel={item?.dataModel}
+	// 						item={item}
+	// 					/>
+	// 				</>
+	// 				{/* // )} */}
+	// 			</FormItem>
+	// 		))}
+	// 	</FormDivision>
+	// ));
+
+	const FormContainer = ({ children, collapsible, section }: any) => {
+		if (collapsible) {
+			return (
+				<FormDivisionAccordion
+					title={section?.[0]?.sectionTitle || 'Section Title'}
+					isModal={isModal}>
+					{children}
+				</FormDivisionAccordion>
+			);
+		}
+		return (
+			<FormDivision
+				mb={4}
+				isModal={isModal}>
+				{children}
+			</FormDivision>
+		);
+	};
+
+	return (
+		<Accordion
+			gap={4}
+			allowToggle
+			defaultIndex={[0, ...Array.from({ length: sections.length - 1 }, (_, i) => i + 1)]}
+			allowMultiple>
+			{sections.map((section: any, i: number) => (
+				<FormDivisionAccordion
+					title={section?.[0]?.sectionTitle || 'Section Title'}
+					key={i}
+					isModal={isModal}>
+					{section?.map((item: any, i: number) => (
+						<FormItemAccordion
+							collapsible={true}
+							isHidden={item?.renderCondition && !item?.renderCondition(formData)}
 							item={item}
-						/>
-					</>
-					{/* // )} */}
-				</FormItem>
+							key={i}>
+							<>
+								<FormInput
+									formData={formData}
+									setFormData={setFormData}
+									setChangedData={setChangedData}
+									isRequired={item?.isRequired || false}
+									name={item?.name}
+									label={item?.label}
+									type={item?.type}
+									value={getFieldValue({ name: item?.name, formData })}
+									onChange={getOnChangeHandler(item?.type, item?.name)}
+									model={item?.model}
+									placeholder={item?.placeholder}
+									options={item?.options}
+									dataModel={item?.dataModel}
+									item={item}
+								/>
+							</>
+						</FormItemAccordion>
+					))}
+				</FormDivisionAccordion>
 			))}
-		</FormDivision>
-	));
+		</Accordion>
+	);
 };
 
 export default FormMain;
