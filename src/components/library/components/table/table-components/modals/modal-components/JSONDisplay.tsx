@@ -1,6 +1,6 @@
 import React from 'react';
 import { Column } from '../../../../..';
-import { Heading, Text } from '@chakra-ui/react';
+import { Flex, Heading, Text } from '@chakra-ui/react';
 
 // Recursive function to convert JSON to nested JSX components
 const renderJsonToElements = (data: any, keyPrefix: any = '') => {
@@ -14,35 +14,49 @@ const renderJsonToElements = (data: any, keyPrefix: any = '') => {
 			if (Array.isArray(value)) {
 				return (
 					<Column
-						gap={2}
+						flexDir='row'
+						gap={3}
 						key={uniqueKey}>
-						<Heading size='xs'>{key}</Heading>
-						{value.map((item, idx) =>
-							// If array item is an object, recurse further, otherwise render the primitive value
-							typeof item === 'object' && item !== null ? (
-								renderJsonToElements(item, `${uniqueKey}-${idx}`)
-							) : (
-								<Text
-									key={`${uniqueKey}-${idx}`}
-									fontSize='.8rem'
-									wordBreak='break-all'>
-									{item.toString()}
-								</Text>
-							)
-						)}
+						<Heading size='xs'>{key}: </Heading>
+						<Flex
+							gap={2}
+							flexWrap='wrap'>
+							{value.map((item, idx) =>
+								// If array item is an object, recurse further, otherwise render the primitive value
+								typeof item === 'object' && item !== null ? (
+									<Flex
+										key={idx}
+										p={3}
+										borderWidth={1}
+										borderRadius={8}
+										gap={2}
+										flexWrap='wrap'>
+										{renderJsonToElements(item, `${uniqueKey}-${idx}`)}
+									</Flex>
+								) : (
+									<Text
+										key={`${uniqueKey}-${idx}`}
+										fontSize='.8rem'
+										wordBreak='break-all'>
+										{item.toString()}
+									</Text>
+								)
+							)}
+						</Flex>
 					</Column>
 				);
 			} else {
 				// If value is a plain object, recurse into it
 				return (
 					<Column
+						flexDir='row'
 						p={2}
 						borderWidth={1}
 						borderColor='#eee'
 						borderRadius={4}
 						gap={2}
 						key={uniqueKey}>
-						<Heading size='xs'>{key}</Heading>
+						<Heading size='xs'>{key}:</Heading>
 						{renderJsonToElements(value, uniqueKey)}
 					</Column>
 				);
@@ -51,9 +65,10 @@ const renderJsonToElements = (data: any, keyPrefix: any = '') => {
 			// For primitive values, directly render them in a <Text> component
 			return (
 				<Column
+					flexDir='row'
 					gap={2}
 					key={uniqueKey}>
-					<Heading size='xs'>{key}</Heading>
+					<Heading size='xs'>{key}:</Heading>
 					<Text
 						fontSize='.8rem'
 						wordBreak='break-all'>
