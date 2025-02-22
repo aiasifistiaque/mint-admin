@@ -17,6 +17,7 @@ import {
 	useClipboard,
 } from '@chakra-ui/react';
 import { Align, Column, Icon, ImageContainer, PLACEHOLDER_IMAGE, RenderTag } from '../../../../..';
+import JSONDisplay from './JSONDisplay';
 
 type ViewItemProps = GridProps & {
 	title: string;
@@ -37,12 +38,15 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 					gap={4}
 					alignItems='center'>
 					{children?.map((item: any, i: number) => (
-						<Column
-							gap={2}
+						<Flex
+							p={3}
+							flexWrap='wrap'
+							borderWidth={1}
+							borderRadius={8}
+							gap={4}
 							key={i}>
-							<Heading size='xs'>{item?.title}</Heading>
-							<Text fontSize='.9rem'>{JSON.stringify(item)}</Text>
-						</Column>
+							<JSONDisplay jsonData={item} />
+						</Flex>
 					))}
 				</Flex>
 			);
@@ -240,8 +244,14 @@ const ViewItem: FC<ViewItemProps> = ({
 	return (
 		<GridContainer
 			{...props}
-			gridTemplateColumns={{ base: '1fr', md: type == 'textarea' ? '1fr' : '2fr 3fr' }}
-			gap={{ base: '8px', md: type == 'textarea' ? '12px' : '32px' }}>
+			gridTemplateColumns={{
+				base: '1fr',
+				md: type == 'textarea' || type == 'section-data-array' ? '1fr' : '2fr 3fr',
+			}}
+			gap={{
+				base: '8px',
+				md: type == 'textarea' || type == 'section-data-array' ? '12px' : '32px',
+			}}>
 			<SkeletonContent isLoading={isLoading}>
 				<Heading size='xs'>{title}:</Heading>
 			</SkeletonContent>
