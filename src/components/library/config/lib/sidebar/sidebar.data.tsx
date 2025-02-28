@@ -146,6 +146,14 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'leaves',
 	},
+	{
+		startOfSection: true,
+		sectionTitle: 'Website Settings',
+		title: 'Team Members',
+		href: '/teams',
+		icon: 'customer',
+		path: 'teams',
+	},
 
 	{
 		startOfSection: true,
