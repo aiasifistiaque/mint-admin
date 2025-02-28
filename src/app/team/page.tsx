@@ -8,6 +8,7 @@ const viewFields = [
 	'name',
 	'position',
 	'email',
+	'priority',
 	'phone',
 	'status',
 	'bio',
@@ -20,7 +21,7 @@ const viewFields = [
 const formLayout: FormLayout = [
 	{
 		sectionTitle: 'Member Details',
-		fields: ['profilePicture', ['name', 'position'], 'status'],
+		fields: ['profilePicture', ['name', 'position'], ['priority', 'status']],
 	},
 	{
 		sectionTitle: 'More Details',
@@ -38,7 +39,7 @@ const table: BackendTableObjectProps = {
 		isModal: true,
 		layout: formLayout,
 	},
-	fields: ['name', 'position', 'email', 'phone', 'status', 'isActive', 'createdAt'],
+	fields: ['name', 'position', 'email', 'phone', 'priority', 'status', 'isActive', 'createdAt'],
 
 	menu: [
 		{ type: 'view-modal', title: 'View', fields: viewFields },
