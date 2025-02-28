@@ -17,7 +17,7 @@ const viewFields = [
 const formLayout: FormLayout = [
 	{
 		sectionTitle: 'Project Details',
-		fields: ['image', 'name', 'liveUrl', ['category', 'status'], 'priority', 'isFeatured'],
+		fields: ['image', 'name', ['category', 'status'], 'liveUrl', 'priority', 'isFeatured'],
 	},
 ];
 
