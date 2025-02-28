@@ -39,6 +39,7 @@ const table: BackendTableObjectProps = {
 			{
 				title: 'Change Project Status',
 				type: 'edit-select',
+				key: 'status',
 				options: [
 					{
 						label: 'Draft',
@@ -61,6 +62,7 @@ const table: BackendTableObjectProps = {
 			{
 				title: 'Change Featured Status',
 				type: 'edit-select',
+				key: 'isFeatured',
 				options: [
 					{
 						label: 'Yes',
