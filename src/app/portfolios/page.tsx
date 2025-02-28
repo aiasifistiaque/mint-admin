@@ -110,7 +110,7 @@ const table: BackendTableObjectProps = {
 				title: 'Unfeature Item',
 				body: 'Are you sure you want to hide this project from home?',
 			},
-			renderCondition: doc => !doc.isFeatured,
+			renderCondition: doc => doc.isFeatured,
 		},
 
 		{ type: 'delete', title: 'Delete' },
