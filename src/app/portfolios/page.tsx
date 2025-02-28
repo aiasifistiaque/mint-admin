@@ -3,12 +3,21 @@ import React from 'react';
 import { NextPage } from 'next';
 import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
 
-const viewFields = ['image', 'name', 'category', 'status', 'priority', 'isFeatured', 'createdAt'];
+const viewFields = [
+	'image',
+	'name',
+	'category',
+	'status',
+	'liveUrl',
+	'priority',
+	'isFeatured',
+	'createdAt',
+];
 
 const formLayout: FormLayout = [
 	{
 		sectionTitle: 'Project Details',
-		fields: ['image', 'name', ['category', 'status'], 'priority', 'isFeatured'],
+		fields: ['image', 'name', 'liveUrl', ['category', 'status'], 'priority', 'isFeatured'],
 	},
 ];
 
@@ -22,7 +31,7 @@ const table: BackendTableObjectProps = {
 		isModal: true,
 		layout: formLayout,
 	},
-	fields: ['name', 'category', 'status', 'priority', 'isFeatured'],
+	fields: ['name', 'category', 'liveUrl', 'status', 'priority', 'isFeatured'],
 
 	select: {
 		show: true,
