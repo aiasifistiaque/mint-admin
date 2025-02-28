@@ -540,6 +540,17 @@ const FormInput: FC<FormInputProps> = ({
 					{...props}
 				/>
 			);
+		case 'date':
+			const formattedValue = props.value ? new Date(props.value).toISOString().split('T')[0] : '';
+			return (
+				<VInput
+					type={type}
+					isRequired={isRequired}
+					helper={item?.helper}
+					{...props}
+					value={formattedValue}
+				/>
+			);
 		default:
 			return (
 				<VInput

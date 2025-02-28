@@ -82,6 +82,12 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'repos',
 	},
+	{
+		title: 'Issues',
+		href: '/issues',
+		icon: 'customer',
+		path: 'issues',
+	},
 
 	{
 		startOfSection: true,
