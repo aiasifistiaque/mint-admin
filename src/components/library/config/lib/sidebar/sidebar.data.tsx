@@ -149,6 +149,12 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Website Settings',
+		title: 'Featured Projects',
+		href: '/portfolios',
+		icon: 'customer',
+		path: 'portfolios',
+	},
+	{
 		title: 'Team Members',
 		href: '/teams',
 		icon: 'customer',
