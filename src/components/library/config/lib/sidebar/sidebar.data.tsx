@@ -160,6 +160,12 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'teams',
 	},
+	{
+		title: 'Services',
+		href: '/services',
+		icon: 'customer',
+		path: 'services',
+	},
 
 	{
 		startOfSection: true,
