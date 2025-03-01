@@ -27,7 +27,7 @@ const formLayout: FormLayout = [
 		fields: ['name', ['category', 'type'], 'url', 'description'],
 	},
 	{
-		sectionTitle: 'Icon,Focus & Priority',
+		sectionTitle: 'Focus & Priority',
 		fields: [['focus', 'priority'], 'status'],
 	},
 	{
