@@ -16,10 +16,11 @@ const fields = [
 	'client',
 	'docUrl',
 	'fileUrl',
-	'access',
 	'direction',
 	'category',
 	'project',
+	'privacy',
+	'access',
 	'addedBy',
 	'createdAt',
 ];
@@ -32,6 +33,7 @@ const tableFields = [
 	'direction',
 	'category',
 	'project',
+	'privacy',
 	'addedBy',
 	'createdAt',
 ];
@@ -48,7 +50,7 @@ const formFields = [
 	{
 		sectionTitle: 'Manage Access',
 		description: 'Who can access this document?',
-		fields: ['access'],
+		fields: ['privacy', 'access'],
 	},
 ];
 

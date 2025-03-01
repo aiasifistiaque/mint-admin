@@ -16,6 +16,7 @@ type Type = DocumentBaseType & {
 	project: string;
 	addedBy: string;
 	access: any;
+	privacy: 'public' | 'private' | 'only-me';
 };
 
 const documentSchema: SchemaType<Type> = {
@@ -90,6 +91,27 @@ const documentSchema: SchemaType<Type> = {
 		model: 'admins',
 		modelAddOn: 'email',
 		tooltip: 'Users who can access this document',
+	},
+	privacy: {
+		label: 'Privacy',
+		type: 'select',
+		displayInTable: true,
+		default: true,
+		sort: true,
+		options: [
+			{
+				label: 'Public',
+				value: 'public',
+			},
+			{
+				label: 'Private',
+				value: 'private',
+			},
+			{
+				label: 'Only Me',
+				value: 'only-me',
+			},
+		],
 	},
 	addedBy: {
 		label: 'Added By',
