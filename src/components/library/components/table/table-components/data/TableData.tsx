@@ -84,7 +84,7 @@ const TableData: React.FC<TableDataPropsType> = ({
 				<CustomTd
 					fontSize={{ base: '1rem', md: '.7rem' }}
 					{...props}>
-					{children ? moment(children).format('YYYY-MM-DD') : '--'}
+					{children ? moment(children).format('DD-MM-YYYY') : '--'}
 				</CustomTd>
 			);
 		case 'date':

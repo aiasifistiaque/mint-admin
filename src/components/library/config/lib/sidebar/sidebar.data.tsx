@@ -123,6 +123,12 @@ const sidebar: SidebarItemType[] = [
 		path: 'documents',
 	},
 	{
+		title: 'Maintenance Contracts',
+		href: '/maintenances',
+		icon: 'customer',
+		path: 'maintenances',
+	},
+	{
 		startOfSection: true,
 		sectionTitle: 'Career',
 		title: 'Job Posts',

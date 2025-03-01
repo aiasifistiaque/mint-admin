@@ -12,6 +12,7 @@ import {
 import { documentSchema as schema } from '@/models';
 
 const fields = [
+	'code',
 	'name',
 	'client',
 	'docUrl',
@@ -26,6 +27,7 @@ const fields = [
 ];
 
 const tableFields = [
+	'code',
 	'name',
 	'client',
 	'docUrl',
