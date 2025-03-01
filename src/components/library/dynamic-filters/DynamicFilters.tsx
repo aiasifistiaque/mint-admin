@@ -11,6 +11,7 @@ import {
 	useAppDispatch,
 	clearFilters,
 	TextFilter,
+	SelectFilter,
 } from '..';
 import { FilterSectionContainer } from './filter-components';
 
@@ -18,7 +19,7 @@ type FilterItemType = {
 	field: any;
 	label: any;
 	title: any;
-	type: 'boolean' | 'multi-select' | 'date' | 'range' | 'text';
+	type: 'boolean' | 'multi-select' | 'date' | 'range' | 'text' | 'select';
 	options?: any;
 };
 
@@ -77,6 +78,15 @@ const DynamicFilters = ({ path }: { path: any }) => {
 						<RangeFilter
 							key={i}
 							{...commonProps}
+						/>
+					);
+				}
+				if (item.type === 'select') {
+					return (
+						<SelectFilter
+							key={i}
+							{...commonProps}
+							options={item?.options}
 						/>
 					);
 				}
