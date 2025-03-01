@@ -14,6 +14,9 @@ const viewFields = [
 	'status',
 	'attachment',
 	'priority',
+	'privacy',
+	'access',
+	'addedBy',
 	'createdAt',
 ];
 
@@ -30,6 +33,10 @@ const formLayout: FormLayout = [
 		sectionTitle: 'Status',
 		fields: [['status', 'priority'], 'attachment'],
 	},
+	{
+		sectionTitle: 'Access',
+		fields: ['privacy', 'access'],
+	},
 ];
 
 const table: BackendTableObjectProps = {
@@ -42,7 +49,17 @@ const table: BackendTableObjectProps = {
 		isModal: true,
 		layout: formLayout,
 	},
-	fields: ['code', 'name', 'project', 'client', 'startDate', 'endDate', 'status', 'priority'],
+	fields: [
+		'code',
+		'name',
+		'project',
+		'client',
+		'startDate',
+		'endDate',
+		'status',
+		'priority',
+		'privacy',
+	],
 
 	menu: [
 		{ type: 'view-modal', title: 'View', fields: viewFields },
