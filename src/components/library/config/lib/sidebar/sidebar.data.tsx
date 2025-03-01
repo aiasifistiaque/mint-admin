@@ -184,6 +184,14 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'services',
 	},
+	{
+		startOfSection: true,
+		sectionTitle: 'Resources',
+		title: 'Dev Resources',
+		href: '/resources',
+		icon: 'settings-fill',
+		path: 'resources',
+	},
 
 	{
 		startOfSection: true,
