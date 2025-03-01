@@ -159,6 +159,12 @@ const sidebar: SidebarItemType[] = [
 		path: 'leaves',
 	},
 	{
+		title: 'Expenses',
+		href: '/expenses',
+		icon: 'customer',
+		path: 'expenses',
+	},
+	{
 		startOfSection: true,
 		sectionTitle: 'Website Settings',
 		title: 'Featured Projects',
