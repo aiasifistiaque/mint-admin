@@ -34,7 +34,7 @@ const formFields = [
 	},
 	{
 		sectionTitle: 'Prop Fields',
-		fields: [['type', 'isRequired'], 'default'],
+		fields: ['type', ['isRequired', 'default']],
 	},
 	{
 		sectionTitle: 'Type Value',
