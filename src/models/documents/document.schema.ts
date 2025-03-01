@@ -97,6 +97,7 @@ const documentSchema: SchemaType<Type> = {
 		type: 'select',
 		displayInTable: true,
 		default: true,
+		isRequired: true,
 		sort: true,
 		options: [
 			{
