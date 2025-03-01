@@ -33,6 +33,7 @@ const viewFields = [
 	'fileUrl',
 	'recordingUrl',
 	'addedBy',
+	'privacy',
 	'access',
 	'createdAt',
 ];
@@ -60,7 +61,7 @@ const formLayout: FormLayout = [
 	{
 		sectionTitle: 'Access',
 		description: 'Access is the permission to view or edit the meeting. ',
-		fields: ['access'],
+		fields: ['privacy', 'access'],
 	},
 	{
 		sectionTitle: 'Host & Invitees',
@@ -110,6 +111,7 @@ const table: BackendTableObjectProps = {
 		'status',
 		'meetingUrl',
 		'meetingId',
+		'privacy',
 		'addedBy',
 	],
 

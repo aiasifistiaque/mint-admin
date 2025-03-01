@@ -24,6 +24,7 @@ const fields = [
 	'fileUrl',
 	'tags',
 	'addedBy',
+	'privacy',
 	'access',
 	'createdAt',
 ];
@@ -46,8 +47,12 @@ const tableSchema = [
 		fields: ['requirements', 'file', 'fileUrl'],
 	},
 	{
+		sectionTitle: 'Access Control',
+		fields: ['privacy', 'access'],
+	},
+	{
 		sectionTitle: 'Note & Tags',
-		fields: ['note', 'access'],
+		fields: ['note'],
 	},
 ];
 
@@ -65,6 +70,7 @@ const table: BackendTableObjectProps = {
 		'deadline',
 		'file',
 		'filerl',
+		'privacy',
 		'addedBy',
 	],
 	button: {
