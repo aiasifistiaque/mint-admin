@@ -164,6 +164,20 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'leaves',
 	},
+	{
+		startOfSection: true,
+		sectionTitle: 'Framework Doc',
+		title: 'Components',
+		href: '/components',
+		icon: 'customer',
+		path: 'components',
+	},
+	{
+		title: 'Props',
+		href: '/props',
+		icon: 'customer',
+		path: 'props',
+	},
 
 	{
 		startOfSection: true,
