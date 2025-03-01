@@ -151,6 +151,12 @@ const sidebar: SidebarItemType[] = [
 		path: 'invoices',
 	},
 	{
+		title: 'Expenses',
+		href: '/expenses',
+		icon: 'customer',
+		path: 'expenses',
+	},
+	{
 		startOfSection: true,
 		sectionTitle: 'HR',
 		title: 'Leave Management',
@@ -158,12 +164,7 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'leaves',
 	},
-	{
-		title: 'Expenses',
-		href: '/expenses',
-		icon: 'customer',
-		path: 'expenses',
-	},
+
 	{
 		startOfSection: true,
 		sectionTitle: 'Website Settings',
