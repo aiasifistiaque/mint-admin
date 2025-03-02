@@ -4,22 +4,69 @@ import React from 'react';
 import { NextPage } from 'next';
 import { BackendPageTable, BackendTableObjectProps } from '@/components/library';
 
-const fields = ['name', 'description', 'status', 'stack', 'createdAt'];
-const tableFields = ['name', 'status', 'stack', 'createdAt'];
+const fields = [
+	'name',
+	'model',
+	'project',
+	'description',
+	'type',
+	'required',
+	'default',
+	'ref',
+	'enum',
+	'trim',
+	'lowercase',
+	'unique',
+	'match',
+	'isImmutable',
+	'note',
+	'createdAt',
+];
+const tableFields = [
+	'name',
+	'model',
+	'project',
+	'description',
+	'type',
+	'required',
+	'default',
+	'ref',
+	'enum',
+	'trim',
+	'lowercase',
+	'unique',
+	'match',
+	'isImmutable',
+];
 
 const formFields = [
 	{
-		sectionTitle: 'Project Plan',
-		fields: ['name', ['platform', 'status', 'stack']],
+		sectionTitle: 'Field Overview',
+		fields: ['name', ['project', 'model'], 'description'],
+	},
+	{
+		sectionTitle: 'Field Attributes',
+		fields: [
+			['type', 'ref'],
+			'enum',
+			['required', 'default'],
+			['trim', 'lowercase'],
+			['unique', 'match'],
+			'isImmutable',
+		],
+	},
+	{
+		sectionTitle: 'Note',
+		fields: ['note'],
 	},
 ];
 
 const table: BackendTableObjectProps = {
-	title: 'Plan Project',
-	path: 'plannedprojects',
+	title: 'Plan Schema',
+	path: 'modelattributes',
 	export: false,
 	button: {
-		title: 'New Project',
+		title: 'New Attribute',
 		isModal: true,
 		layout: formFields,
 	},
@@ -34,6 +81,10 @@ const table: BackendTableObjectProps = {
 			title: 'Edit',
 			type: 'edit-modal',
 			layout: formFields,
+		},
+		{
+			title: 'Duplicate',
+			type: 'duplicate',
 		},
 		{
 			title: 'Delete',
