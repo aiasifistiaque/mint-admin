@@ -198,18 +198,18 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'modelattributes',
 	},
-	{
-		title: 'Plan Feature',
-		href: '/plannedfeatures',
-		icon: 'customer',
-		path: 'plannedfeatures',
-	},
-	{
-		title: 'Plan Page',
-		href: '/plannedpages',
-		icon: 'customer',
-		path: 'plannedpages',
-	},
+	// {
+	// 	title: 'Plan Feature',
+	// 	href: '/plannedfeatures',
+	// 	icon: 'customer',
+	// 	path: 'plannedfeatures',
+	// },
+	// {
+	// 	title: 'Plan Page',
+	// 	href: '/plannedpages',
+	// 	icon: 'customer',
+	// 	path: 'plannedpages',
+	// },
 
 	{
 		startOfSection: true,
