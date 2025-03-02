@@ -28,6 +28,11 @@ const VTextarea: React.FC<InputContainerProps> = ({
 			label={label}
 			helper={helper}>
 			<Textarea
+				onKeyDown={e => {
+					if (e.key === 'Enter' && !e.shiftKey) {
+						e.stopPropagation();
+					}
+				}}
 				minH={MIN_H}
 				size='sm'
 				px={3}

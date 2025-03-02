@@ -123,7 +123,7 @@ const sidebar: SidebarItemType[] = [
 		path: 'documents',
 	},
 	{
-		title: 'Maintenance Contracts',
+		title: 'Maintenance',
 		href: '/maintenances',
 		icon: 'customer',
 		path: 'maintenances',
@@ -193,7 +193,7 @@ const sidebar: SidebarItemType[] = [
 		path: 'plannedmodels',
 	},
 	{
-		title: 'Model Attributes',
+		title: 'Model Fields',
 		href: '/modelattributes',
 		icon: 'customer',
 		path: 'modelattributes',
