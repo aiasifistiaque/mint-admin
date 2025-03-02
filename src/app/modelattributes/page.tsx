@@ -42,7 +42,7 @@ const tableFields = [
 const formFields = [
 	{
 		sectionTitle: 'Field Overview',
-		fields: ['name', ['project', 'model'], 'description'],
+		fields: [['project', 'model'], 'name', 'description'],
 	},
 	{
 		sectionTitle: 'Field Attributes',
