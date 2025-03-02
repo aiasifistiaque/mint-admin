@@ -31,7 +31,8 @@ const TableData: React.FC<TableDataPropsType> = ({
 			return (
 				<CustomTd>
 					<Badge
-						colorScheme={colorScheme ? colorScheme(children) : 'gray'}
+						colorScheme={children?.toString() === 'true' ? 'green' : 'red'}
+						//colorScheme={colorScheme ? colorScheme(children) : 'gray'}
 						size='2xs'
 						fontSize='12px'>
 						{JSON.stringify(children)}
@@ -42,12 +43,23 @@ const TableData: React.FC<TableDataPropsType> = ({
 		case 'tag':
 			return (
 				<CustomTd>
-					<Badge
-						colorScheme={colorScheme ? colorScheme(children) : 'gray'}
-						size='2xs'
-						fontSize='12px'>
-						{JSON.stringify(children)}
-					</Badge>
+					{Array.isArray(children)
+						? children.map((item: any, i: number) => (
+								<Badge
+									key={i}
+									colorScheme={colorScheme ? colorScheme(children) : 'gray'}
+									size='2xs'
+									fontSize='12px'>
+									{item}
+								</Badge>
+						  ))
+						: null}
+					{/* // <Badge
+					// 	colorScheme={colorScheme ? colorScheme(children) : 'gray'}
+					// 	size='2xs'
+					// 	fontSize='12px'>
+					// 	{JSON.stringify(children)}
+					// </Badge> */}
 				</CustomTd>
 			);
 		case 'number':
