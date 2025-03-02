@@ -199,6 +199,7 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 							return (
 								<item.modal
 									{...commonProps}
+									title={item?.title}
 									data={dataItem}
 									doc={doc}
 								/>

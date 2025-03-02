@@ -19,6 +19,7 @@ const page: NextPage = () => {
 			'email',
 			'phone',
 			'status',
+			'scheduledAt',
 			'fit',
 			'resume',
 			'university',
@@ -43,6 +44,8 @@ const page: NextPage = () => {
 			'coverLetter',
 			'resume',
 			'resumeUrl',
+			'status',
+			'scheduledAt',
 			'educationLevel',
 			'school',
 			'college',
@@ -55,7 +58,6 @@ const page: NextPage = () => {
 			'facebook',
 			'website',
 			'expectedSalary',
-			'status',
 			'appliedAt',
 			'appliedFrom',
 			'experienceLevel',
@@ -74,6 +76,10 @@ const page: NextPage = () => {
 			{
 				sectionTitle: 'Application Details',
 				fields: [['appliedAt', 'appliedFrom'], 'coverLetter', ['resume', 'resumeUrl']],
+			},
+			{
+				sectionTitle: 'Schedule Interview',
+				fields: ['scheduledAt'],
 			},
 			{
 				sectionTitle: 'Personal Details',
