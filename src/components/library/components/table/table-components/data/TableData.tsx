@@ -1,4 +1,4 @@
-import { Badge, TableCellProps, Text } from '@chakra-ui/react';
+import { Badge, Flex, TableCellProps, Text } from '@chakra-ui/react';
 import moment from 'moment';
 import React, { ReactNode } from 'react';
 
@@ -43,23 +43,21 @@ const TableData: React.FC<TableDataPropsType> = ({
 		case 'tag':
 			return (
 				<CustomTd>
-					{Array.isArray(children)
-						? children.map((item: any, i: number) => (
-								<Badge
-									key={i}
-									colorScheme={colorScheme ? colorScheme(children) : 'gray'}
-									size='2xs'
-									fontSize='12px'>
-									{item}
-								</Badge>
-						  ))
-						: null}
-					{/* // <Badge
-					// 	colorScheme={colorScheme ? colorScheme(children) : 'gray'}
-					// 	size='2xs'
-					// 	fontSize='12px'>
-					// 	{JSON.stringify(children)}
-					// </Badge> */}
+					<Flex
+						gap={2}
+						flexWrap='wrap'>
+						{Array.isArray(children)
+							? children.map((item: any, i: number) => (
+									<Badge
+										key={i}
+										colorScheme={colorScheme ? colorScheme(children) : 'gray'}
+										size='2xs'
+										fontSize='12px'>
+										{item}
+									</Badge>
+							  ))
+							: null}
+					</Flex>
 				</CustomTd>
 			);
 		case 'number':

@@ -10,7 +10,14 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 	const text = children;
 
 	const Container = isMobile ? Column : Td;
-	const TextContainer = isMobile ? (editable ? Fragment : Text) : Fragment;
+
+	const TextContainer = isMobile
+		? editable
+			? Fragment
+			: type == 'tag'
+			? Fragment
+			: Text
+		: Fragment;
 
 	const External = ({ children }: any) => {
 		if (text && (type == 'external-link' || type == 'file')) {
