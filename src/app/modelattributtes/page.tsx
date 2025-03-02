@@ -51,8 +51,8 @@ const formFields = [
 			'enum',
 			['required', 'default'],
 			['trim', 'lowercase'],
-			['unique', 'match'],
-			'isImmutable',
+			['unique', 'isImmutable'],
+			'match',
 		],
 	},
 	{
