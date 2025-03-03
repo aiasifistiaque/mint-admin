@@ -54,7 +54,7 @@ const formFields = [
 	{
 		sectionTitle: 'Manage Access',
 		description: 'Who can access this document?',
-		fields: ['acountLogin', 'privacy', 'access'],
+		fields: ['accountLogin', 'privacy', 'access'],
 	},
 ];
 
