@@ -157,6 +157,12 @@ const sidebar: SidebarItemType[] = [
 		path: 'expenses',
 	},
 	{
+		title: 'Subscriptions',
+		href: '/subscriptions',
+		icon: 'customer',
+		path: 'subscriptions',
+	},
+	{
 		startOfSection: true,
 		sectionTitle: 'HR',
 		title: 'Leave Management',
