@@ -60,7 +60,7 @@ const formFields = [
 
 const table: BackendTableObjectProps = {
 	title: 'Subscriptions',
-	path: 'subscriptions',
+	path: 'billsubscriptions',
 	export: false,
 	button: {
 		title: 'New Subscription',
