@@ -37,6 +37,7 @@ const tableFields = [
 	'unique',
 	'match',
 	'isImmutable',
+	'createdAt',
 ];
 
 const formFields = [
