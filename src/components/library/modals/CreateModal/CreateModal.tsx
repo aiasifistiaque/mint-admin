@@ -105,6 +105,7 @@ const CreateModal = (props: CreateModalProps) => {
 	useCustomToast({
 		successText,
 		...result,
+		...updateResult,
 	});
 
 	const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {

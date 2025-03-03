@@ -11,6 +11,12 @@ const jobApplicationSchema: SchemaType<any> = {
 		displayInTable: true,
 		default: true,
 	},
+	scheduledAt: {
+		label: 'Interview Schedule',
+		type: 'date',
+		displayInTable: true,
+		tableType: 'date-only',
+	},
 	fit: {
 		label: 'Fit',
 		type: 'select',
