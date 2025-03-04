@@ -63,11 +63,11 @@ const formFields = [
 ];
 
 const table: BackendTableObjectProps = {
-	title: 'Expenses',
-	path: 'expenses',
+	title: 'Bills',
+	path: 'bills',
 	export: false,
 	button: {
-		title: 'New Expense',
+		title: 'New Bill',
 		isModal: true,
 		layout: formFields,
 	},
