@@ -157,6 +157,12 @@ const sidebar: SidebarItemType[] = [
 		path: 'expenses',
 	},
 	{
+		title: 'Bills',
+		href: '/bills',
+		icon: 'customer',
+		path: 'bills',
+	},
+	{
 		title: 'Subscriptions',
 		href: '/subscriptions',
 		icon: 'customer',
