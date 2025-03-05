@@ -9,6 +9,7 @@ const viewFields = [
 	'description',
 	'status',
 	'images',
+	'attachment',
 	'priority',
 	'type',
 	'project',
@@ -30,8 +31,8 @@ const formLayout: FormLayout = [
 		fields: ['assignedTo', 'dueDate', 'note', 'isActive'],
 	},
 	{
-		sectionTitle: 'Add Issue Images',
-		fields: ['images'],
+		sectionTitle: 'Add Issue Images & files',
+		fields: ['images', 'attachment'],
 	},
 ];
 
