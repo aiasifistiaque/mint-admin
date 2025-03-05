@@ -8,10 +8,13 @@ import {
 	Flex,
 	Input,
 	Text,
+	FlexProps,
+	TextProps,
 } from '@chakra-ui/react';
 import { Icon, THEME, sidebarData } from '../';
 import ModalContentContainer from '../modals/modal-components/ModalContentContainer';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const SearchMenu = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,20 +28,72 @@ const SearchMenu = () => {
 			// Command + K (Mac) or Ctrl + K
 			if ((e.metaKey || e.altKey) && e.key === 'k') {
 				e.preventDefault();
-				onOpen();
+				if (isOpen) {
+					onClose();
+				} else {
+					onOpen();
+				}
 			}
 		};
 
 		window.addEventListener('keydown', handleKeyDown);
 		return () => window.removeEventListener('keydown', handleKeyDown);
-	}, [onOpen]);
+	}, [onOpen, onClose, isOpen]);
 
 	const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-	const data = sidebarData
+	const router = useRouter();
+
+	React.useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (!isOpen) return;
+
+			if (e.key === 'ArrowDown') {
+				e.preventDefault();
+				setSelectedIndex(prev => (prev < data.length - 1 ? prev + 1 : prev));
+			} else if (e.key === 'ArrowUp') {
+				e.preventDefault();
+				setSelectedIndex(prev => (prev > 0 ? prev - 1 : 0));
+			} else if (e.key === 'Enter') {
+				e.preventDefault();
+				if (data[selectedIndex]) {
+					router.push(data[selectedIndex].href);
+					onClose();
+				}
+			} else if (e.key === 'Escape') {
+				onClose();
+			}
+		};
+
+		window.addEventListener('keydown', handleKeyDown);
+		return () => window.removeEventListener('keydown', handleKeyDown);
+	}, [selectedIndex, isOpen, onClose]);
+
+	const restructureSidebar = (items: any): any[] => {
+		let currentSection = '';
+
+		return items.map((item: any, index: number) => {
+			if (item.sectionTitle) {
+				currentSection = item.sectionTitle;
+			}
+
+			return {
+				...item,
+				sectionTitle: currentSection,
+				index,
+			};
+		});
+	};
+
+	const restructData = restructureSidebar(sidebarData);
+
+	const data = restructData
 		.filter(
 			item =>
-				!search || search.length === 0 || item.title.toLowerCase().includes(search.toLowerCase())
+				!search ||
+				search.length === 0 ||
+				item.title.toLowerCase().includes(search.toLowerCase()) ||
+				item.sectionTitle.toLowerCase().includes(search.toLowerCase())
 		)
 		.sort((a, b) => {
 			if (a.title < b.title) return -1;
@@ -61,7 +116,7 @@ const SearchMenu = () => {
 				initialFocusRef={initialRef}
 				finalFocusRef={finalRef}
 				scrollBehavior='inside'
-				size='2xl'
+				size='xl'
 				isOpen={isOpen}
 				onClose={onClose}>
 				<ModalOverlay />
@@ -71,61 +126,70 @@ const SearchMenu = () => {
 					<ModalHeader>
 						<Input
 							variant='unstyled'
-							size='xl'
+							size='lg'
 							value={search}
 							onChange={(e: any) => setSearch(e.target.value)}
 							placeholder='Search the docs...'
+							_placeholder={{ fontSize: '16px', fontWeight: '700' }}
 						/>
 					</ModalHeader>
-					{/* <ModalCloseButton /> */}
-					<ModalBody
-						px={4}
-						mt={0}
-						pt={0}
-						display={search?.length > 1 ? 'block' : 'block'}>
-						<Flex
-							py={2}
-							gap={2}
-							pt={4}
-							borderTopWidth={1}
-							borderTopColor='gray.200'
-							_dark={{
-								borderTopColor: 'black',
-							}}
-							flexDir='column'>
+					<ModalBody {...modalBodyCss}>
+						<Flex {...bodyCss}>
 							{data?.map((item: any, i: number) => (
 								<Link
 									key={i}
 									href={item?.href}>
 									<Flex
-										borderRadius='8px'
-										bg='whitesmoke'
-										_dark={{ bg: 'black' }}
-										p={4}>
-										<Text
-											fontWeight='600'
-											fontSize='16px'>
-											{item?.title}
-										</Text>
+										{...itemContainerCss}
+										bg={selectedIndex === i ? 'whitesmoke' : 'transparent'}
+										_onMouseEnter={() => setSelectedIndex(item.index)}
+										_onMouseLeave={() => setSelectedIndex(-1)}>
+										<Text {...titleCss}>{item?.sectionTitle}</Text>
+										<Text {...textCss}>{item?.title}</Text>
 									</Flex>
 								</Link>
 							))}
 						</Flex>
 					</ModalBody>
-
-					{/* <ModalFooter>
-						<Button
-							colorScheme='blue'
-							mr={3}
-							onClick={onClose}>
-							Close
-						</Button>
-						<Button variant='ghost'>Secondary Action</Button>
-					</ModalFooter> */}
 				</ModalContentContainer>
 			</Modal>
 		</>
 	);
+};
+
+const modalBodyCss: any = {
+	px: 4,
+	mt: 0,
+	pt: 0,
+};
+
+const bodyCss: FlexProps = {
+	py: 2,
+	pt: 4,
+	borderTopWidth: 1,
+	borderTopColor: 'gray.200',
+	_dark: {
+		borderTopColor: 'black',
+	},
+	flexDir: 'column',
+};
+
+const itemContainerCss: FlexProps = {
+	borderRadius: 2,
+	cursor: 'pointer',
+	p: 2,
+	flexDir: 'column',
+	gap: 0.2,
+};
+
+const titleCss: TextProps = {
+	fontWeight: '400',
+	fontSize: '12px',
+};
+
+const textCss: TextProps = {
+	fontWeight: '700',
+	fontSize: '16px',
 };
 
 export default SearchMenu;
