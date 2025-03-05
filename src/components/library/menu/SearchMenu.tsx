@@ -17,11 +17,18 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 const SearchMenu = () => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
 	const [search, setSearch] = React.useState('');
 
 	const initialRef = React.useRef(null);
 	const finalRef = React.useRef(null);
+	const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+	const onClose = () => {
+		closeModal();
+		setSearch('');
+		//setSelectedIndex(0);
+	};
 
 	React.useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -39,8 +46,6 @@ const SearchMenu = () => {
 		window.addEventListener('keydown', handleKeyDown);
 		return () => window.removeEventListener('keydown', handleKeyDown);
 	}, [onOpen, onClose, isOpen]);
-
-	const [selectedIndex, setSelectedIndex] = React.useState(0);
 
 	const router = useRouter();
 
@@ -100,6 +105,13 @@ const SearchMenu = () => {
 			if (a.title > b.title) return 1;
 			return 0;
 		});
+
+	React.useEffect(() => {
+		if (data.length < selectedIndex) {
+			setSelectedIndex(0);
+		}
+	});
+
 	return (
 		<>
 			<Flex
@@ -121,16 +133,17 @@ const SearchMenu = () => {
 				onClose={onClose}>
 				<ModalOverlay />
 				<ModalContentContainer
-					borderRadius='xl'
+					borderRadius='lg'
+					px={0}
 					gap={0}>
-					<ModalHeader>
+					<ModalHeader px={4}>
 						<Input
 							variant='unstyled'
 							size='lg'
 							value={search}
 							onChange={(e: any) => setSearch(e.target.value)}
-							placeholder='Search the docs...'
-							_placeholder={{ fontSize: '16px', fontWeight: '700' }}
+							placeholder='Search the docs'
+							_placeholder={{ fontSize: '15px', fontWeight: '600' }}
 						/>
 					</ModalHeader>
 					<ModalBody {...modalBodyCss}>
@@ -142,8 +155,7 @@ const SearchMenu = () => {
 									<Flex
 										{...itemContainerCss}
 										bg={selectedIndex === i ? 'whitesmoke' : 'transparent'}
-										_onMouseEnter={() => setSelectedIndex(item.index)}
-										_onMouseLeave={() => setSelectedIndex(-1)}>
+										onMouseEnter={() => setSelectedIndex(i)}>
 										<Text {...titleCss}>{item?.sectionTitle}</Text>
 										<Text {...textCss}>{item?.title}</Text>
 									</Flex>
@@ -157,15 +169,16 @@ const SearchMenu = () => {
 	);
 };
 
+const PX = 3;
+
 const modalBodyCss: any = {
-	px: 4,
+	px: PX,
 	mt: 0,
 	pt: 0,
 };
 
 const bodyCss: FlexProps = {
 	py: 2,
-	pt: 4,
 	borderTopWidth: 1,
 	borderTopColor: 'gray.200',
 	_dark: {
@@ -188,7 +201,7 @@ const titleCss: TextProps = {
 };
 
 const textCss: TextProps = {
-	fontWeight: '700',
+	fontWeight: '600',
 	fontSize: '16px',
 };
 
