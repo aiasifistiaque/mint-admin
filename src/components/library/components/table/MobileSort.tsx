@@ -68,6 +68,7 @@ const MobileSort = ({ tableData }: { tableData: any }) => {
 		if (!sort) return null;
 		return (
 			<Flex
+				key={i}
 				onClick={() => handleSort(dataKey)}
 				{...sortItemsCss}>
 				<Text
