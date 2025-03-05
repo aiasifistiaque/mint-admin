@@ -79,7 +79,7 @@ const BackendPageHeading: React.FC<PageHeadingProps> = ({
 };
 
 const containerCss: FlexProps = {
-	flexDir: { base: 'row', md: 'column' },
+	flexDir: { base: 'row', md: 'row' },
 	flexWrap: 'wrap',
 	gap: 2,
 	justify: 'space-between',
