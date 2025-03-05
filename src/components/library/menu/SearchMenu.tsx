@@ -155,6 +155,9 @@ const SearchMenu = () => {
 									<Flex
 										{...itemContainerCss}
 										bg={selectedIndex === i ? 'whitesmoke' : 'transparent'}
+										_dark={{
+											bg: selectedIndex === i ? 'sidebar.dark' : 'transparent',
+										}}
 										onMouseEnter={() => setSelectedIndex(i)}>
 										<Text {...titleCss}>{item?.sectionTitle}</Text>
 										<Text {...textCss}>{item?.title}</Text>
