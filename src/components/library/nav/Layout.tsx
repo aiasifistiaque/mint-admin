@@ -22,6 +22,7 @@ import {
 	refresh,
 	navigate,
 	Align,
+	SearchMenu,
 } from '..';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
@@ -82,6 +83,7 @@ const Layout: FC<LayoutProps> = ({
 							size='20px'
 							position='navbar'
 						/>
+						<SearchMenu />
 						<SelfMenu />
 						<CreateMenu />
 					</Align>
