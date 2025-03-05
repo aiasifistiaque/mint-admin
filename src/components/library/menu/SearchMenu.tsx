@@ -156,7 +156,7 @@ const SearchMenu = () => {
 										{...itemContainerCss}
 										bg={selectedIndex === i ? 'whitesmoke' : 'transparent'}
 										_dark={{
-											bg: selectedIndex === i ? 'sidebar.dark' : 'transparent',
+											bg: selectedIndex === i ? 'container.dark' : 'transparent',
 										}}
 										onMouseEnter={() => setSelectedIndex(i)}>
 										<Text {...titleCss}>{item?.sectionTitle}</Text>
