@@ -14,14 +14,14 @@ const RowContainerBase: FC<RowContainerMobileProps> = ({ children, ...props }) =
 			width='100%'
 			borderRadius={radius.CONTAINER}
 			//boxShadow={shadow.CARD}
-			mb={3}
+			mb={2}
 			bg='container.newLight'
 			borderWidth={1}
 			borderColor='container.borderLight'
 			gap={4}
 			p={4}
-			pb={2}
-			_last={{ mb: 12 }}
+			pb={0}
+			_last={{ mb: 4 }}
 			// direction='column'
 			_dark={{
 				bg: 'menu.dark',

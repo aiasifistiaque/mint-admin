@@ -11,6 +11,7 @@ export type CustomTableProps = TableProps & {
 	pagination?: boolean;
 	path?: any;
 	headers?: string[];
+	schema: any;
 	hidePreferences?: boolean;
 	selectable?: boolean;
 	selectedItems?: any;

@@ -33,6 +33,8 @@ import { TbTruckDelivery } from 'react-icons/tb';
 import { RiSettings3Fill } from 'react-icons/ri';
 import { FaTable } from 'react-icons/fa6';
 import { TiPrinter } from 'react-icons/ti';
+import { BiSortAZ } from 'react-icons/bi';
+
 import { IoMdBarcode } from 'react-icons/io';
 
 import {
@@ -187,6 +189,7 @@ const icons: any = {
 	transfer: BiTransferAlt,
 	undo: HiArrowUturnLeft,
 	user: FaUserFriends,
+	sort: BiSortAZ,
 
 	//zhoei icons
 	'z-cart': IoBagOutline,

@@ -94,6 +94,7 @@ const TableCustom: FC<TableProps> = ({ table, inputFields }) => {
 	return (
 		<>
 			<CustomTable
+				schema={table?.data}
 				search={table?.search}
 				showFilters={table?.filters} //Hide filters
 				filters={table?.path} //Name of the filters

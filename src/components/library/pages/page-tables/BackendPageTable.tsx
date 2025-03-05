@@ -20,6 +20,7 @@ import {
 	BackendTableObjectProps,
 	useGetSchemaQuery,
 	convertToTableFields,
+	Column,
 } from '../..';
 import { Flex } from '@chakra-ui/react';
 
@@ -119,37 +120,40 @@ const BackendPageTable: FC<TableProps> = ({ table, layoutPath, children }) => {
 				pb='32px'
 				title={table?.title}
 				path={layoutPath || table?.path}>
-				<BackendPageHeading
-					table={table}
-					schema={schemaData}
-					title={table?.title} //Heading of the page
-					button={table?.button?.title} //Button Title
-					href={table?.button?.path} //Page where button would redirect to
-					isModal={table?.button?.isModal || table?.isModal} //If create page should be modal
-					path={table?.path} //Path of the table
-					layout={table?.button?.layout} //Input fields for the create page
-					export={table?.export} //If export button should be displayed
-				/>
-				<Flex>{children}</Flex>
+				<Column gap={2}>
+					<BackendPageHeading
+						table={table}
+						schema={schemaData}
+						title={table?.title} //Heading of the page
+						button={table?.button?.title} //Button Title
+						href={table?.button?.path} //Page where button would redirect to
+						isModal={table?.button?.isModal || table?.isModal} //If create page should be modal
+						path={table?.path} //Path of the table
+						layout={table?.button?.layout} //Input fields for the create page
+						export={table?.export} //If export button should be displayed
+					/>
+					<Flex>{children}</Flex>
 
-				<CustomTable
-					search={table?.search} //Hide search bar
-					showFilters={table?.filters} //Hide filters
-					filters={table?.path} //Name of the filters
-					col={col} //No of columns for skeleton
-					isLoading={schemaLoading || isLoading} //Loading state of the table
-					header={header} //Header of the table
-					data={isSuccess && data} //Data to be displayed in the table
-					preferences={table?.preferences} //Preferences for the table
-					path={table?.path} //Path of the table
-					hidePreferences={table?.hidePreferences} //Hide preferences
-					selectedItems={selectedItems} //Selected items
-					isError={isError} //If error while fetching data
-					select={table?.select} //Select menu
-					error={error} //Error message
-					table={table}>
-					<>{body}</>
-				</CustomTable>
+					<CustomTable
+						schema={schema} //Schema of the table
+						search={table?.search} //Hide search bar
+						showFilters={table?.filters} //Hide filters
+						filters={table?.path} //Name of the filters
+						col={col} //No of columns for skeleton
+						isLoading={schemaLoading || isLoading} //Loading state of the table
+						header={header} //Header of the table
+						data={isSuccess && data} //Data to be displayed in the table
+						preferences={table?.preferences} //Preferences for the table
+						path={table?.path} //Path of the table
+						hidePreferences={table?.hidePreferences} //Hide preferences
+						selectedItems={selectedItems} //Selected items
+						isError={isError} //If error while fetching data
+						select={table?.select} //Select menu
+						error={error} //Error message
+						table={table}>
+						<>{body}</>
+					</CustomTable>
+				</Column>
 			</Layout>
 			{/* Toast component to display error */}
 			<Toast

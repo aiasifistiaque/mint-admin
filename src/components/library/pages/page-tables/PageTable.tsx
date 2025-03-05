@@ -122,6 +122,7 @@ const PageTable: FC<TableProps> = ({ table, layoutPath, children, schemaLoading 
 				<Flex>{children}</Flex>
 
 				<CustomTable
+					schema={table?.data}
 					search={table?.search} //Hide search bar
 					showFilters={table?.filters} //Hide filters
 					filters={table?.path} //Name of the filters

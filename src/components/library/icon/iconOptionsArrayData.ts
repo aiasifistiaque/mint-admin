@@ -15,6 +15,7 @@ const iconOptionsArrayData: string[] = [
 	'read-only',
 	'editor',
 	'select',
+	'sort',
 	'data-select',
 	'data-menu',
 	'nested-data-menu',

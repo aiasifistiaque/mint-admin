@@ -79,11 +79,12 @@ const BackendPageHeading: React.FC<PageHeadingProps> = ({
 };
 
 const containerCss: FlexProps = {
-	flexDir: { base: 'column', md: 'row' },
+	flexDir: { base: 'row', md: 'column' },
+	flexWrap: 'wrap',
 	gap: 2,
 	justify: 'space-between',
 	align: { base: 'flex-start', md: 'center' },
-	pt: 4,
+	pt: { base: 3, md: 4 },
 };
 
 const headingCss: TextProps = {
@@ -92,7 +93,7 @@ const headingCss: TextProps = {
 
 const buttonGroupCss: FlexProps = {
 	gap: 2,
-	w: 'full',
+	//w: 'full',
 	justify: 'flex-end',
 };
 

@@ -19,10 +19,12 @@ import {
 	SelectedMenu,
 	selectAll,
 	TableResultContainer,
+	TableSort,
 } from '../..';
 
 const CustomTable: React.FC<CustomTableProps> = ({
 	headers,
+	schema,
 	children,
 	filters,
 	header,
@@ -88,6 +90,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
 
 					<TableSearchContainer>
 						{!hidePreferences && <Preferences path={path} />}
+						<TableSort tableData={schema} />
 						{search && (
 							<>
 								<TableSearch />
