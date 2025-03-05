@@ -107,7 +107,7 @@ const SearchMenu = () => {
 		});
 
 	React.useEffect(() => {
-		if (data.length < selectedIndex) {
+		if (data.length <= selectedIndex) {
 			setSelectedIndex(0);
 		}
 	});
