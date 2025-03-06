@@ -28,7 +28,6 @@ const ItemOfMenu: React.FC<ItemOfMenuProps> = ({ children, filter, id, ...props 
 
 	return (
 		<MenuItem
-			overflowX=''
 			py={{ base: 3, md: 1 }}
 			w={WIDTH}
 			_hover={{ bg: hoverBg }}
