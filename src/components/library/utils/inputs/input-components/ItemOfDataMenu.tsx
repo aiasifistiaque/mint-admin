@@ -28,7 +28,7 @@ const ItemOfMenu: React.FC<ItemOfMenuProps> = ({ children, filter, id, ...props 
 
 	return (
 		<MenuItem
-			py={{ base: 3, md: 1 }}
+			py={{ base: 3, md: 2 }}
 			w={WIDTH}
 			_hover={{ bg: hoverBg }}
 			bg={isActive(id) ? itemBg : 'transparent'}
