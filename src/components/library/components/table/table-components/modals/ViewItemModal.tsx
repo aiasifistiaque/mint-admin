@@ -104,8 +104,8 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 						<Column
 							gap={4}
 							pt={2}>
-							{schema?.map((item: ViewModalDataModelProps, i: number) => {
-								const { title, dataKey, type, colorScheme, path, copy } = item;
+							{schema?.map((item: any, i: number) => {
+								const { title, dataKey, type, colorScheme, path, copy, model } = item;
 
 								return (
 									<ViewItem
@@ -114,7 +114,7 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 										title={title}
 										type={type}
 										colorScheme={colorScheme}
-										path={path}
+										path={model || path}
 										key={i}>
 										{data && getValue({ dataKey, type, data })}
 									</ViewItem>

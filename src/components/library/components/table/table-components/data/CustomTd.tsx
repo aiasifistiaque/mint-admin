@@ -67,6 +67,7 @@ const tdCss = (type: any, heading: any): any => {
 		maxW: type == 'image-text' ? '240px' : '160px',
 		border: 'none',
 		whiteSpace: 'normal',
+		wordBreak: 'break-all',
 		py: PADDING_Y,
 		px: {
 			base: 0,

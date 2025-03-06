@@ -17,9 +17,16 @@ type Type = DocumentBaseType & {
 	addedBy: string;
 	access: any;
 	privacy: 'public' | 'private' | 'only-me';
+	code?: string;
 };
 
 const documentSchema: SchemaType<Type> = {
+	code: {
+		label: 'Document Code',
+		type: 'string',
+		default: true,
+		sort: true,
+	},
 	name: {
 		label: 'Name',
 		type: 'string',
@@ -87,7 +94,7 @@ const documentSchema: SchemaType<Type> = {
 	access: {
 		label: 'Access',
 		type: 'data-tag',
-		viewType: 'data-tag-array',
+		viewType: 'data-array-tag',
 		model: 'admins',
 		modelAddOn: 'email',
 		// menuKey: 'email',

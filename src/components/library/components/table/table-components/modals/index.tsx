@@ -12,3 +12,5 @@ export { default as UpdateDataMenuModal } from './UpdateDataMenuModal';
 export { default as UpdateStringModal } from './UpdateStringModal';
 
 export { default as DecisionAlert } from './Alert';
+
+export { default as FullScreenImage } from './modal-components/ImageModal';

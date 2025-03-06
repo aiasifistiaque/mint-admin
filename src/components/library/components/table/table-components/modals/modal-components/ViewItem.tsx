@@ -16,7 +16,15 @@ import {
 	Tooltip,
 	useClipboard,
 } from '@chakra-ui/react';
-import { Align, Column, Icon, ImageContainer, PLACEHOLDER_IMAGE, RenderTag } from '../../../../..';
+import {
+	Align,
+	Column,
+	Icon,
+	ImageContainer,
+	PLACEHOLDER_IMAGE,
+	RenderTag,
+	FullScreenImage,
+} from '../../../../..';
 import JSONDisplay from './JSONDisplay';
 
 type ViewItemProps = GridProps & {
@@ -100,17 +108,27 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 			return (
 				<Flex gap={2}>
 					<Link
-						{...textCss}
-						color='dodgerblue'
 						cursor='pointer'
 						href={children || '#'}
 						isExternal={children ? true : false}>
-						{children}
+						<Flex
+							align='center'
+							gap={2}>
+							<Text
+								{...textCss}
+								color='dodgerblue'>
+								{children}
+							</Text>
+							<Icon
+								name='external-link'
+								size={16}
+							/>
+						</Flex>
 					</Link>
 				</Flex>
 			);
 		case 'file':
-			if (!children) return null;
+			if (!children || children == '--') return null;
 			return (
 				<Flex gap={2}>
 					<Link
@@ -196,18 +214,29 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 				</Box>
 			);
 		case 'image':
-			return <ImageContainer src={children || PLACEHOLDER_IMAGE} />;
+			return (
+				<FullScreenImage src={children || PLACEHOLDER_IMAGE}>
+					<ImageContainer
+						size={300}
+						src={children || PLACEHOLDER_IMAGE}
+					/>
+				</FullScreenImage>
+			);
 		case 'image-array':
 			return (
 				<Align
 					flexWrap='wrap'
 					gap={2}>
 					{children?.map((item: string, i: number) => (
-						<ImageContainer
-							key={i}
+						<FullScreenImage
 							src={item || PLACEHOLDER_IMAGE}
-							size={100}
-						/>
+							key={i}>
+							<ImageContainer
+								key={i}
+								src={item || PLACEHOLDER_IMAGE}
+								size={100}
+							/>
+						</FullScreenImage>
 					))}
 				</Align>
 			);
@@ -221,6 +250,8 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 const textCss: TextProps & LinkProps = {
 	fontSize: '.95rem',
 	wordBreak: 'break-all',
+	whiteSpace: 'normal',
+	overflow: 'hidden',
 };
 
 const ViewItem: FC<ViewItemProps> = ({
