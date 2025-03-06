@@ -90,6 +90,8 @@ const documentSchema: SchemaType<Type> = {
 		viewType: 'data-tag-array',
 		model: 'admins',
 		modelAddOn: 'email',
+		// menuKey: 'email',
+		// menuAddOnKey: 'name',
 		tooltip: 'Users who can access this document',
 	},
 	privacy: {

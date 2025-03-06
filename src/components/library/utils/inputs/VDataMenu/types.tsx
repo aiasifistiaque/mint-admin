@@ -13,4 +13,6 @@ export type VDataMenuProps = InputProps & {
 	type?: 'object' | 'value' | string;
 	dataKey?: 'string';
 	unselect?: boolean;
+	menuKey?: string;
+	menuAddOnKey?: string;
 };

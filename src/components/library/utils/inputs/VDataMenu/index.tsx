@@ -11,7 +11,7 @@ import {
 	InputProps,
 } from '@chakra-ui/react';
 
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
 	DataMenuButton,
@@ -21,11 +21,12 @@ import {
 	ItemOfDataMenu,
 	useGetAllQuery,
 	FormControl,
+	Scroll,
 } from '../../..';
 
 import { VDataMenuProps } from './types';
 
-const WIDTH = '300px';
+const WIDTH = { base: '300px', md: '340px' };
 const MAX_H = '260px';
 
 const VDataMenu: React.FC<VDataMenuProps> = ({
@@ -40,12 +41,14 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 	field,
 	type = 'value',
 	dataKey = '_id',
+	menuKey = 'name',
+	menuAddOnKey,
 	unselect = true,
 	...props
 }) => {
 	const { onOpen, onClose, isOpen } = useDisclosure();
 
-	const close = () => {
+	const closeMenu = () => {
 		setSearch('');
 		onClose();
 	};
@@ -84,7 +87,7 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 			id={item?._id}
 			key={i}
 			onClick={() => handleChange(item)}>
-			{item?.name}
+			{item?.[menuKey]} {menuAddOnKey && `(${item?.[menuAddOnKey]})`}
 		</ItemOfDataMenu>
 	));
 
@@ -95,6 +98,12 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 
 	const inputRef = React.useRef<any>(null);
 	const btnRef = React.useRef<any>(null);
+
+	React.useEffect(() => {
+		if (isOpen) {
+			if (inputRef.current) inputRef.current.focus();
+		}
+	}, [isOpen, onOpen, onClose]);
 
 	return (
 		<Flex w='full'>
@@ -112,7 +121,7 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 					type='post'
 				/>
 			)}
-			<Menu onClose={close}>
+			<Menu onClose={closeMenu}>
 				{({ isOpen }) => (
 					<>
 						<FormControl
@@ -157,7 +166,7 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 								</>
 							)}
 
-							<MenuItemScrollContainer>
+							<Scroll maxH={MAX_H}>
 								{unselect && (
 									<MenuItem
 										{...unselectTextCss}
@@ -166,7 +175,7 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 									</MenuItem>
 								)}
 								{renderMenuItems}
-							</MenuItemScrollContainer>
+							</Scroll>
 						</MenuContainer>
 					</>
 				)}
@@ -174,16 +183,6 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 		</Flex>
 	);
 };
-
-const MenuItemScrollContainer = ({ children }: { children: ReactNode }) => (
-	<Flex
-		flexDir='column'
-		w='100%'
-		maxH={MAX_H}
-		overflowY='scroll'>
-		{children}
-	</Flex>
-);
 
 const hiddenInputCss: InputProps = {
 	h: '1px',

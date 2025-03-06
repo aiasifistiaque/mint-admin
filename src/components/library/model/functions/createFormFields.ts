@@ -58,6 +58,8 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 							...(fieldConfig?.getValue && { getValue: fieldConfig.getValue }),
 							...(fieldConfig?.modelAddOn && { modelAddOn: fieldConfig.modelAddOn }),
 							...(fieldConfig?.limit && { limit: fieldConfig.limit }),
+							...(fieldConfig.menuKey && { menuKey: fieldConfig.menuKey }),
+							...(fieldConfig.menuAddOnKey && { menuAddOnKey: fieldConfig.menuAddOnKey }),
 						});
 					}
 				});
@@ -89,6 +91,8 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 						...(fieldConfig.limit && { limit: fieldConfig.limit }),
 						...(fieldConfig.section && { section: fieldConfig.section }),
 						...(fieldConfig?.modelAddOn && { modelAddOn: fieldConfig.modelAddOn }),
+						...(fieldConfig.menuKey && { menuKey: fieldConfig.menuKey }),
+						...(fieldConfig.menuAddOnKey && { menuAddOnKey: fieldConfig.menuAddOnKey }),
 						endOfSection: lastElement,
 					});
 				}

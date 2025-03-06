@@ -9,6 +9,8 @@ type CommonProps = {
 	tableType?: TableDataFieldType;
 	imageKey?: string;
 	default?: boolean;
+	menuKey?: string;
+	menuAddOnKey?: string;
 	displayInTable?: boolean; // Display in table
 	model?: string;
 	dataModel?: any;

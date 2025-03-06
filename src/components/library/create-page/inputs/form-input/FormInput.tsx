@@ -283,6 +283,8 @@ const FormInput: FC<FormInputProps> = ({
 		case 'data-menu':
 			return (
 				<VDataMenu
+					menuKey={item?.menuKey}
+					menuAddOnKey={item?.menuAddOnKey}
 					dataModel={dataModel}
 					isRequired={isRequired}
 					model={props?.model || ''}
@@ -294,6 +296,8 @@ const FormInput: FC<FormInputProps> = ({
 		case 'nested-data-menu':
 			return (
 				<VDataMenu
+					menuKey={item?.menuKey}
+					menuAddOnKey={item?.menuAddOnKey}
 					dataModel={dataModel}
 					isRequired={isRequired}
 					model={props?.model || ''}
