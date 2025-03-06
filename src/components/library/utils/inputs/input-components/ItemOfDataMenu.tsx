@@ -13,7 +13,7 @@ type ItemOfMenuProps = MenuItemProps & {
 	filter?: string;
 };
 
-const WIDTH = '300px';
+const WIDTH = { base: '300px', md: '360px' };
 const MAX_H = '200px';
 
 const ItemOfMenu: React.FC<ItemOfMenuProps> = ({ children, filter, id, ...props }) => {
@@ -28,6 +28,8 @@ const ItemOfMenu: React.FC<ItemOfMenuProps> = ({ children, filter, id, ...props 
 
 	return (
 		<MenuItem
+			overflowX=''
+			py={{ base: 3, md: 1 }}
 			w={WIDTH}
 			_hover={{ bg: hoverBg }}
 			bg={isActive(id) ? itemBg : 'transparent'}
