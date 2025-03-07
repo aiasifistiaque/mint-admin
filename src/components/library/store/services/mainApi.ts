@@ -52,6 +52,7 @@ const tags = [
 	'schema',
 	'repos',
 	'softwares',
+	'employees',
 	'leaves',
 	'invoices',
 	'meetings',

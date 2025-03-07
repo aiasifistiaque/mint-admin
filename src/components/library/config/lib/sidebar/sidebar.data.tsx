@@ -171,6 +171,12 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'HR',
+		title: 'Employees',
+		href: '/employees',
+		icon: 'customer',
+		path: 'employees',
+	},
+	{
 		title: 'Leave Management',
 		href: '/leaves',
 		icon: 'customer',

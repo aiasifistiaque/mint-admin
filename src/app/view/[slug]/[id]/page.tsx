@@ -11,6 +11,7 @@ import {
 	shadow,
 	radius,
 	Column,
+	useGetItemNameById,
 } from '@/components/library';
 
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Grid, GridItem } from '@chakra-ui/react';
@@ -24,6 +25,8 @@ const ViewPage = () => {
 		fontSize: '14px',
 		fontWeight: '400',
 	};
+
+	const { display } = useGetItemNameById({ path: slug, id: id });
 
 	return (
 		<Layout
@@ -49,7 +52,7 @@ const ViewPage = () => {
 						{...crumbCss}
 						fontWeight='500'
 						isCurrentPage>
-						<Link href='#'>{id}</Link>
+						<Link href='#'>{display}</Link>
 					</BreadcrumbItem>
 				</Breadcrumb>
 				{slug && id && data && (

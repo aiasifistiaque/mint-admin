@@ -33,7 +33,7 @@ type Props = {
 	title?: string;
 	id: string;
 	path: string;
-	dataModel: ViewModalDataModelProps[];
+	dataModel?: ViewModalDataModelProps[];
 	trigger?: any;
 	item?: any;
 };

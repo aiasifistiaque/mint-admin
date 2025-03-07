@@ -24,6 +24,7 @@ import {
 	PLACEHOLDER_IMAGE,
 	RenderTag,
 	FullScreenImage,
+	ViewItemModal,
 } from '../../../../..';
 import JSONDisplay from './JSONDisplay';
 
