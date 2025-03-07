@@ -91,6 +91,7 @@ const formLayout: FormLayout = [
 			['gender', 'dob'],
 			['employeeType', 'reportingTo'],
 			['adminId', 'foodSubsidy'],
+			'cvAttachment',
 		],
 	},
 	{
