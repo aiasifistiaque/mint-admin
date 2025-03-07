@@ -13,7 +13,7 @@ type ToastProps = {
 	isLoading: boolean;
 };
 
-const VARIANT = 'left-accent';
+const VARIANT = 'solid';
 const POSITION = 'bottom-right';
 const IS_CLOSABLE = true;
 const DURATION = 9000;

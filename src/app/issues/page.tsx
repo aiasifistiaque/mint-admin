@@ -14,6 +14,7 @@ const viewFields = [
 	'type',
 	'project',
 	'assignedTo',
+	'assignees',
 	'addedBy',
 	'note',
 	'dueDate',
@@ -28,7 +29,7 @@ const formLayout: FormLayout = [
 	},
 	{
 		sectionTitle: 'More Details',
-		fields: ['assignedTo', 'dueDate', 'note', 'isActive'],
+		fields: ['assignedTo', 'assignees', 'dueDate', 'note', 'isActive'],
 	},
 	{
 		sectionTitle: 'Add Issue Images & files',

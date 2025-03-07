@@ -107,6 +107,10 @@ const CreateModal = (props: CreateModalProps) => {
 	useCustomToast({
 		successText,
 		...result,
+	});
+
+	useCustomToast({
+		successText,
 		...updateResult,
 	});
 
