@@ -87,7 +87,7 @@ const formLayout: FormLayout = [
 		fields: [
 			'photo',
 			['name', 'status'],
-			['phone,email'],
+			['phone', 'email'],
 			['gender', 'dob'],
 			['employeeType', 'reportingTo'],
 			['adminId', 'foodSubsidy'],
@@ -95,19 +95,15 @@ const formLayout: FormLayout = [
 	},
 	{
 		sectionTitle: 'Job Details',
-		fields: [
-			['jobTitle', 'department'],
-			['joiningDate', 'contractEndDate', 'contractDoc'],
-		],
+		fields: [['jobTitle', 'department'], ['joiningDate', 'contractEndDate'], 'contractDoc'],
 	},
 	{
 		sectionTitle: 'Personal Details',
 		fields: [
 			['maritalStatus', 'bloodGroup'],
 			['nid', 'nationality'],
-			['bkash', 'bankAccountName'],
-			['bankAccount', 'bankName'],
-			['branchName', 'bankRoutingNumber'],
+			['nid', 'nationality'],
+			'nidAttachment',
 		],
 	},
 	{
@@ -119,7 +115,12 @@ const formLayout: FormLayout = [
 	},
 	{
 		sectionTitle: 'Salary & Bank Details',
-		fields: [['salary', 'salaryDisburstmentPreference'], ['nid', 'nationality'], 'nidAttachment'],
+		fields: [
+			['salary', 'salaryDisburstmentPreference'],
+			['bkash', 'bankAccountName'],
+			['bankAccount', 'bankName'],
+			['branchName', 'bankRoutingNumber'],
+		],
 	},
 	{
 		sectionTitle: 'Emergency Contact',
