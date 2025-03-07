@@ -99,12 +99,11 @@ const formLayout: FormLayout = [
 	},
 	{
 		sectionTitle: 'Personal Details',
-		fields: [
-			['maritalStatus', 'bloodGroup'],
-			['nid', 'nationality'],
-			['nid', 'nationality'],
-			'nidAttachment',
-		],
+		fields: [['maritalStatus', 'bloodGroup'], ['nid', 'nationality'], 'nidAttachment'],
+	},
+	{
+		sectionTitle: 'Employee Address',
+		fields: ['presentAddress', 'permanentAddress'],
 	},
 	{
 		sectionTitle: 'Socials & Contact Details',
