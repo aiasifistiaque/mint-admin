@@ -4,7 +4,7 @@ type TableDataFieldConverter = {
 };
 
 const createViewField = ({ key, field }: { key: string; field: any }): any => {
-	let type = field?.viewType || field?.type || 'string';
+	let type = field?.viewType || field?.tableType || field?.type || 'string';
 
 	if (!field?.viewType) {
 		if (field?.type == 'data-tag') type = 'data-array-tag';

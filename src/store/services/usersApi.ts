@@ -3,6 +3,7 @@ import { User, ListType, TableProps } from '../store.types';
 import { BASE_LIMIT } from '@/lib/constants';
 
 export const userApi = mainApi.injectEndpoints({
+	overrideExisting: true,
 	endpoints: builder => ({
 		getFilters: builder.query<any, string>({
 			query: id => `${id}/get/filters`,

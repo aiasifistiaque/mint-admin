@@ -49,9 +49,9 @@ const Layout: FC<LayoutProps> = ({
 	...props
 }) => {
 	const dispatch = useAppDispatch();
-	dispatch(navigate({ selected: path }));
 
 	React.useEffect(() => {
+		dispatch(navigate({ selected: path }));
 		dispatch(refresh());
 	}, []);
 

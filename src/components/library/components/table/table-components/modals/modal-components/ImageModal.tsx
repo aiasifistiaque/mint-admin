@@ -15,17 +15,25 @@ const FullScreenImage = ({ src, children }: any) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	return (
 		<>
-			<Flex onClick={onOpen}>{children}</Flex>
+			<Flex
+				onClick={onOpen}
+				cursor='pointer'>
+				{children}
+			</Flex>
 
 			<Modal
 				isCentered
+				scrollBehavior='inside'
 				size='full'
 				isOpen={isOpen}
 				onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent bg='black'>
 					<ModalHeader color='whitesmoke'></ModalHeader>
-					<ModalCloseButton color='whitesmoke' />
+					<ModalCloseButton
+						color='whitesmoke'
+						// size='xl'
+					/>
 					<ModalBody
 						px={0}
 						flex={1}
@@ -36,6 +44,7 @@ const FullScreenImage = ({ src, children }: any) => {
 							my={4}
 							w='full'
 							h='auto'
+							maxH='80vh'
 							objectFit='contain'
 							src={src}
 							alt={src}

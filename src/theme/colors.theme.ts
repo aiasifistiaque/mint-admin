@@ -179,7 +179,7 @@ export const colors: any = {
 		light: '#fff',
 		dark: BLACK,
 		newLight: '#fff',
-		newDark: BLACK,
+		newDark: DARK,
 		borderLight: '#e7e7e7',
 		borderDark: 'transparent',
 		borderDarker: '#111',

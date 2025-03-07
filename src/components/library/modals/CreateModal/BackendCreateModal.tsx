@@ -1,3 +1,5 @@
+'use client';
+
 import React, { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { Button, Flex, useDisclosure } from '@chakra-ui/react';
 

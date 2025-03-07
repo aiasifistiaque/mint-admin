@@ -1,8 +1,9 @@
 import { mainApi } from '@/components/library/store';
-import { User, ListType, TableProps } from '../store.types';
+import { ListType, TableProps } from '../store.types';
 import { BASE_LIMIT } from '@/lib/constants';
 
 export const uploadApi = mainApi.injectEndpoints({
+	overrideExisting: true,
 	endpoints: builder => ({
 		getAllUploads: builder.query<ListType<any>, TableProps>({
 			query: ({

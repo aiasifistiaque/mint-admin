@@ -94,7 +94,7 @@ const documentSchema: SchemaType<Type> = {
 	access: {
 		label: 'Access',
 		type: 'data-tag',
-		viewType: 'data-array-tag',
+		// viewType: 'data-array-tag',
 		model: 'admins',
 		modelAddOn: 'email',
 		// menuKey: 'email',

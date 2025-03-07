@@ -14,4 +14,6 @@ export { default as AddToCartModal } from './modals/delete/AddToCartModal';
 export { default as SendBulkSmsModal } from './modals/marketing/SendBulkSmsModal';
 export { default as ListTransferModal } from './modals/products/ListTransferModal';
 
+export * from './view';
+
 export * from './buttons';

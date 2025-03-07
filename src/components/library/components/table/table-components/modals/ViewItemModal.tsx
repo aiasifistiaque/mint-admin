@@ -26,8 +26,8 @@ import {
 	DrawerContentContainer,
 	useGetSchemaQuery,
 	convertToViewFields,
+	ViewItem,
 } from '../../../..';
-import { ViewItem } from '.';
 
 type Props = {
 	title?: string;

@@ -42,22 +42,24 @@ const TableData: React.FC<TableDataPropsType> = ({
 
 		case 'tag':
 			return (
-				<CustomTd>
-					<Flex
+				<CustomTd
+					flexWrap='wrap'
+					gap={2}>
+					{/* <Flex
 						gap={2}
-						flexWrap='wrap'>
-						{Array.isArray(children)
-							? children.map((item: any, i: number) => (
-									<Badge
-										key={i}
-										colorScheme={colorScheme ? colorScheme(children) : 'gray'}
-										size='2xs'
-										fontSize='12px'>
-										{item}
-									</Badge>
-							  ))
-							: null}
-					</Flex>
+						flexWrap='wrap'> */}
+					{Array.isArray(children)
+						? children.map((item: any, i: number) => (
+								<Badge
+									key={i}
+									colorScheme={colorScheme ? colorScheme(children) : 'gray'}
+									size='2xs'
+									fontSize='12px'>
+									{item}
+								</Badge>
+						  ))
+						: null}
+					{/* </Flex> */}
 				</CustomTd>
 			);
 		case 'number':
