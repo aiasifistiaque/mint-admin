@@ -63,6 +63,7 @@ const tags = [
 	'adminroles',
 	'admins',
 	'leads',
+	'fgroups',
 	'purchasedthemes',
 	'themes',
 	'sellers',

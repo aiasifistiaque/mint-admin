@@ -42,12 +42,7 @@ const sidebar: SidebarItemType[] = [
 	// 	icon: 'category',
 	// 	path: 'categories',
 	// },
-	{
-		title: 'Leads',
-		href: '/leads',
-		icon: 'customer',
-		path: 'leads',
-	},
+
 	{
 		title: 'Customers',
 		href: '/customers',
@@ -67,6 +62,20 @@ const sidebar: SidebarItemType[] = [
 		href: '/purchased-themes',
 		icon: 'product',
 		path: 'purchased-themes',
+	},
+	{
+		sectionTitle: 'Sales Management',
+		startOfSection: true,
+		title: 'Sales',
+		href: '/leads',
+		icon: 'customer',
+		path: 'leads',
+	},
+	{
+		title: 'FB Groups',
+		href: '/fgroups',
+		icon: 'customer',
+		path: 'fgroups',
 	},
 	{
 		startOfSection: true,
