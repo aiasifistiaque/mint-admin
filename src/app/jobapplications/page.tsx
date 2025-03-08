@@ -39,10 +39,11 @@ const page: NextPage = () => {
 		},
 		menu: [
 			{
+				title: 'Quick View',
 				type: 'view-modal',
-				dataModel: viewFields,
-				title: 'View',
+				fields: fields,
 			},
+			{ type: 'view-item', title: 'View Details' },
 			{
 				type: 'edit-modal',
 				title: 'Edit',

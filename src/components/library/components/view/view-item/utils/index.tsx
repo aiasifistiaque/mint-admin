@@ -9,6 +9,9 @@ export type ViewItemProps = GridProps & {
 	path?: string;
 	isLoading?: boolean;
 	copy?: boolean;
+	originalType?: string;
+	idKey?: string;
+	id?: string;
 };
 
 export const SkeletonContent = ({

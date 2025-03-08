@@ -15,8 +15,12 @@ const table: BackendTableObjectProps = {
 	fields: tableFields,
 
 	menu: [
-		{ type: 'view-modal', title: 'View', fields: fields },
-		{ type: 'view-item', title: 'Go To Post' },
+		{
+			title: 'Quick View',
+			type: 'view-modal',
+			fields: fields,
+		},
+		{ type: 'view-item', title: 'View Details' },
 
 		{
 			type: 'edit-modal',

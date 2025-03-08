@@ -17,10 +17,11 @@ const table: BackendTableObjectProps = {
 	fields: tableFields,
 	menu: [
 		{
-			title: 'View',
+			title: 'Quick View',
 			type: 'view-modal',
 			fields: fields,
 		},
+		{ type: 'view-item', title: 'View Details' },
 		{
 			title: 'Edit',
 			type: 'edit-modal',

@@ -1,37 +1,17 @@
 'use client';
+
 import React from 'react';
 import { useParams } from 'next/navigation';
-import {
-	convertToViewFields,
-	useGetByIdQuery,
-	useGetSchemaQuery,
-	getValue,
-	ViewPageItem as PageItem,
-	Layout,
-	shadow,
-	radius,
-	Column,
-	useGetItemNameById,
-	SpaceBetween,
-	CreateModal,
-} from '@/components/library';
-
-import { Breadcrumb, BreadcrumbItem, Button, Grid, GridItem } from '@chakra-ui/react';
-import Link from 'next/link';
+import { Column, SpaceBetween, CreateModal, Breadcrumbs, ViewByIdPage } from '@/components/library';
+import { Layout, useGetSchemaQuery, useGetItemNameById } from '@/components/library';
+import { Button, FlexProps } from '@chakra-ui/react';
 import getFieldModule from '@/layouts';
 
 const ViewPage = () => {
 	const { id, slug }: { id: string; slug: string } = useParams();
 	const { data, isFetching, isError } = useGetSchemaQuery(slug, { skip: !slug });
 
-	const crumbCss: any = {
-		fontSize: '14px',
-		fontWeight: '400',
-	};
-
 	const { display } = useGetItemNameById({ path: slug, id: id });
-
-	//const { exists, module } = await getFieldModule(slug);
 	const [moduleData, setModuleData] = React.useState<any>(null);
 
 	React.useEffect(() => {
@@ -42,55 +22,39 @@ const ViewPage = () => {
 		fetchModule();
 	}, [slug]);
 
+	const breadCrumbData = [
+		{ href: '/', title: 'Home' },
+		{ href: `/${slug}`, title: slug },
+		{ href: '#', title: display },
+	];
+
+	const modalProps: any = {
+		id,
+		path: slug,
+		layout: moduleData?.module.formFields || [],
+		data: [],
+		type: 'update',
+		doc: data,
+	};
+
 	return (
 		<Layout
 			title={slug?.toUpperCase()}
 			path={slug}>
-			<Column
-				gap={4}
-				pt={4}>
+			<Column {...containerCss}>
 				<SpaceBetween>
-					<Breadcrumb>
-						<BreadcrumbItem {...crumbCss}>
-							<Link href='/'>Home</Link>
-						</BreadcrumbItem>
+					<Breadcrumbs data={breadCrumbData} />
 
-						<BreadcrumbItem {...crumbCss}>
-							<Link
-								style={{ textTransform: 'capitalize' }}
-								href={`/${slug}`}>
-								{slug}
-							</Link>
-						</BreadcrumbItem>
-
-						<BreadcrumbItem
-							{...crumbCss}
-							fontWeight='500'
-							isCurrentPage>
-							<Link href='#'>{display}</Link>
-						</BreadcrumbItem>
-					</Breadcrumb>
 					{moduleData?.exists && (
-						<CreateModal
-							path={slug}
-							type='update'
-							doc={data}
-							data={[]}
-							id={id}
-							layout={moduleData?.module.formFields || []}>
-							<Button
-								variant='white'
-								size='xs'
-								px={4}
-								h='24px'>
-								Edit
-							</Button>
+						<CreateModal {...modalProps}>
+							<Button {...editButtonCss}>Edit</Button>
 						</CreateModal>
 					)}
 				</SpaceBetween>
 
 				{slug && id && data && (
-					<ViewInfo
+					<ViewByIdPage
+						layout={moduleData}
 						schema={data}
 						slug={slug}
 						id={id}
@@ -101,102 +65,16 @@ const ViewPage = () => {
 	);
 };
 
-const ViewInfo = ({ slug, id, schema }: { slug: string; id: string; schema: any }) => {
-	const viewFields = convertToViewFields({ schema });
-
-	const { data, isFetching, isError } = useGetByIdQuery(
-		{
-			path: slug,
-			id: id,
-		},
-		{ skip: !id || !slug }
-	);
-
-	return (
-		<Grid
-			{...containerCss}
-			gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }}>
-			{viewFields.map((item: any, index: number) => {
-				const { title, dataKey, type, colorScheme, path, model } = item;
-
-				const defineSpan = () => {
-					const fields = viewFields;
-					// Full width fields
-					const fullWidthTypes = ['textarea', 'external-link', 'rich-text'];
-					if (fullWidthTypes.includes(type)) return 2;
-
-					// Last field gets full width if not already full width
-					if (index === fields.length - 1) return 2;
-
-					// Field before textarea gets single width unless it's odd indexed
-					const nextField = fields[index + 1];
-					if (nextField?.type === 'textarea') {
-						// If odd indexed and previous wasn't textarea, get single width
-						if (index % 2 !== 0) {
-							const prevField = fields[index - 1];
-							if (!fullWidthTypes.includes(prevField?.type)) return 1;
-						}
-						return 2;
-					}
-
-					// Default to single width
-					return 1;
-				};
-
-				// if (item[dataKey] == undefined || item[dataKey] == '') return null;
-
-				return (
-					<GridItem
-						borderBottomWidth={() => {
-							if (index === viewFields.length - 1) return 0;
-							if (index === viewFields.length - 2) return index % 2 === 0 ? 0 : 1;
-							return 1;
-						}}
-						{...itemCss}
-						key={index}>
-						<PageItem
-							isLoading={isFetching}
-							title={title}
-							type={type}
-							colorScheme={colorScheme}
-							path={item?.model || path}>
-							{data && getValue({ dataKey, type, data })}
-						</PageItem>
-					</GridItem>
-				);
-			})}
-		</Grid>
-	);
+const containerCss: FlexProps = {
+	pt: 4,
+	gap: 4,
 };
 
-const itemCss: any = {
-	px: 6,
-	py: 3,
-	// borderBottomWidth: 1,
-
-	// _last: {
-	// 	borderBottomWidth: 0,
-	// },
-	borderBottomColor: 'container.borderLight',
-	_dark: {
-		borderBottomColor: 'background.dark',
-	},
-	colSpan: { base: 2, md: 1 },
-};
-
-const containerCss: any = {
-	w: 'full',
-	py: 1,
-	flexDirection: 'column',
-	bg: 'container.newLight',
-	borderColor: 'container.borderLight',
-	shadow: shadow.DASH,
-	_dark: {
-		bg: 'container.newDark',
-		borderColor: 'background.dark',
-	},
-	borderRadius: radius.CONTAINER,
-	borderWidth: 1,
+const editButtonCss: any = {
+	variant: 'white',
+	size: 'xs',
+	px: 4,
+	h: '24px',
 };
 
 export default ViewPage;

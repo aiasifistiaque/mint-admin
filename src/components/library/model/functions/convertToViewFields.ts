@@ -19,6 +19,10 @@ const createViewField = ({ key, field }: { key: string; field: any }): any => {
 		title: title,
 		dataKey: dataKey,
 		type: type,
+		...((field?.type == 'data-menu' || field?.type == 'data-tag') && {
+			originalType: field?.type,
+		}),
+		...((field?.type == 'data-menu' || field?.type == 'data-tag') && { idKey: `${key}._id` }),
 		...(field?.copy && { copy: field.copy }),
 		...(field?.colorScheme && { colorScheme: field.colorScheme }),
 		...(field?.path && { path: field.path }),

@@ -44,7 +44,7 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 	const [schema, setSchema] = useState<any>([]);
 
 	const { data: schemaData, isFetching: schemaLoading } = useGetSchemaQuery(path, {
-		skip: !isOpen || !path || !item?.fields,
+		skip: !isOpen || !path,
 	});
 
 	useEffect(() => {
@@ -55,7 +55,8 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 				const viewFields = convertToViewFields({ schema: schemaData, fields: item?.fields });
 				setSchema(viewFields);
 			} else {
-				setSchema([]);
+				const viewFields = convertToViewFields({ schema: schemaData });
+				setSchema(viewFields);
 			}
 		}
 	}, [schemaData, schemaLoading]);

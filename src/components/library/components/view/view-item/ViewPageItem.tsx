@@ -9,8 +9,11 @@ const ViewPageItem: FC<ViewItemProps> = ({
 	type,
 	children,
 	colorScheme,
+	originalType,
 	path,
 	copy,
+	idKey,
+	id,
 	isLoading = false,
 	...props
 }) => {
@@ -33,7 +36,7 @@ const ViewPageItem: FC<ViewItemProps> = ({
 					align='center'>
 					{!isLoading &&
 						children &&
-						renderContent({ type, children, colorScheme, path, isLoading })}
+						renderContent({ type, children, colorScheme, path, isLoading, originalType, id })}
 					{copy && children && children != 'n/a' && (
 						<Tooltip
 							label={hasCopied ? 'Copied!' : 'Copy'}

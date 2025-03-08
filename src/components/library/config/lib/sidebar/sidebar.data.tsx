@@ -66,7 +66,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		sectionTitle: 'Sales Management',
 		startOfSection: true,
-		title: 'Sales',
+		title: 'Leads',
 		href: '/leads',
 		icon: 'customer',
 		path: 'leads',

@@ -1,6 +1,14 @@
 import { Flex, Badge, Text, Link, Tag, TagLabel, Box } from '@chakra-ui/react';
 import { TextProps, LinkProps, Grid, Heading } from '@chakra-ui/react';
-import { Column, Align, RenderTag, Icon, FullScreenImage } from '../../../..';
+import {
+	Column,
+	Align,
+	RenderTag,
+	Icon,
+	FullScreenImage,
+	CreateModal,
+	ViewItemModal,
+} from '../../../..';
 import { PLACEHOLDER_IMAGE, ImageContainer } from '../../../..';
 import { JSONDisplay } from '../..';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
@@ -13,7 +21,7 @@ const textCss: TextProps & LinkProps = {
 	overflow: 'hidden',
 };
 
-const renderContent = ({ type, children, colorScheme, path }: any) => {
+const renderContent = ({ type, children, colorScheme, path, originalType, id }: any) => {
 	switch (type) {
 		case 'section-data-array':
 			return (
@@ -234,6 +242,21 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 				</Text>
 			);
 		default:
+			if (originalType === 'data-menu')
+				return (
+					<ViewItemModal
+						id={id}
+						path={path}
+						trigger={
+							<Text
+								{...textCss}
+								cursor={'pointer'}
+								color='dodgerblue'>
+								{children}
+							</Text>
+						}
+					/>
+				);
 			return <Text {...textCss}>{children}</Text>;
 	}
 };

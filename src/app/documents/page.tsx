@@ -27,7 +27,7 @@ const table: TableObjectProps = {
 			type: 'view-modal',
 			dataModel: convertToViewFields({ schema, fields }),
 		},
-		{ type: 'view-item', title: 'Go To Post' },
+		{ type: 'view-item', title: 'Go To Document' },
 
 		{
 			title: 'Edit',
