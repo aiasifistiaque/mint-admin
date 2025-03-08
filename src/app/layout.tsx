@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang='en'>
 			{/* React Scan */}
 			<head>
-				<script src='https://unpkg.com/react-scan/dist/auto.global.js' />
+				{/* <script src='https://unpkg.com/react-scan/dist/auto.global.js' /> */}
 				{/* rest of your scripts go under */}
 			</head>
 			<body className={GeistSans.className}>
