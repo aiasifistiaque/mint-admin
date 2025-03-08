@@ -3,7 +3,7 @@ import React from 'react';
 import { NextPage } from 'next';
 import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
 
-const viewFields = [
+export const viewFields = [
 	'code',
 	'employee',
 	'leaveType',
@@ -17,6 +17,8 @@ const viewFields = [
 	'attachment',
 	'createdAt',
 ];
+
+export { viewFields as fields };
 
 const formLayout: FormLayout = [
 	{
@@ -44,6 +46,10 @@ const formLayout: FormLayout = [
 	},
 ];
 
+export { formLayout as formFields };
+
+export const tableFields = ['code', 'employee', 'leaveType', 'startDate', 'numberOfDays', 'status'];
+
 const table: BackendTableObjectProps = {
 	title: 'Leaves',
 	path: 'leaves',
@@ -54,7 +60,7 @@ const table: BackendTableObjectProps = {
 		isModal: true,
 		layout: formLayout,
 	},
-	fields: ['code', 'employee', 'leaveType', 'startDate', 'numberOfDays', 'status'],
+	fields: tableFields,
 
 	menu: [
 		{ type: 'view-modal', title: 'View', fields: viewFields },

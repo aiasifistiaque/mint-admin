@@ -11,7 +11,7 @@ import {
 } from '@/components/library';
 import { documentSchema as schema } from '@/models';
 
-const fields = [
+export const fields = [
 	'code',
 	'name',
 	'client',
@@ -26,7 +26,7 @@ const fields = [
 	'createdAt',
 ];
 
-const tableFields = [
+export const tableFields = [
 	'code',
 	'name',
 	'client',
@@ -40,7 +40,7 @@ const tableFields = [
 	'createdAt',
 ];
 
-const formFields = [
+export const formFields = [
 	{
 		sectionTitle: 'File Details',
 		fields: [['name'], ['client', 'project'], ['direction', 'category']],

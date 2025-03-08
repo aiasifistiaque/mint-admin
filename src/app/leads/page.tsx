@@ -10,81 +10,87 @@ import {
 } from '@/components/library';
 import { leadSchema as schema } from '@/models';
 
+const tFields = [
+	'name',
+	'email',
+	'businessName',
+	'phone',
+	'status',
+	'source',
+	'category',
+	'leadType',
+	'facebook',
+	'instagram',
+	'websiteUrl',
+	'priority',
+	'city',
+	'createdAt',
+];
+
+export { tFields as tableFields };
+
+export const fields = [
+	'name',
+	'email',
+	'phone',
+	'status',
+	'source',
+	'requirements',
+	'leadType',
+	'priority',
+	'category',
+	'interestedIn',
+	'estimatedBudget',
+	'businessName',
+	'businessAddress',
+	'facebook',
+	'instagram',
+	'hasWebsite',
+	'websiteUrl',
+	'city',
+	'createdAt',
+];
+
+const formLayout = [
+	{
+		sectionTitle: 'Basic Information',
+		fields: [
+			['name', 'email', 'phone'],
+			['businessName', 'businessAddress'],
+			['city', 'status'],
+			['source', 'leadType'],
+			['category', 'priority'],
+		],
+	},
+	{
+		sectionTitle: 'Requirements',
+		fields: ['requirements', 'interestedIn', 'estimatedBudget'],
+	},
+	{
+		sectionTitle: 'Social Media',
+		fields: ['facebook', 'instagram'],
+	},
+	{
+		sectionTitle: 'Website',
+		fields: ['hasWebsite', 'websiteUrl'],
+	},
+];
+
+export { formLayout as formFields };
+
 const page: NextPage = () => {
 	const tableFields = convertToTableFields({
 		schema,
-		fields: [
-			'name',
-			'email',
-			'businessName',
-			'phone',
-			'status',
-			'source',
-			'category',
-			'leadType',
-			'facebook',
-			'instagram',
-			'websiteUrl',
-			'priority',
-			'city',
-			'createdAt',
-		],
+		fields: tFields,
 	});
 
 	const viewFields = convertToViewFields({
 		schema,
-		fields: [
-			'name',
-			'email',
-			'phone',
-			'status',
-			'source',
-			'requirements',
-			'leadType',
-			'priority',
-			'category',
-			'interestedIn',
-			'estimatedBudget',
-			'businessName',
-			'businessAddress',
-			'facebook',
-			'instagram',
-			'hasWebsite',
-			'websiteUrl',
-			'city',
-			'createdAt',
-		],
+		fields: fields,
 	});
 	const formFields = convertToFormFields({
 		schema,
-		layout: [
-			{
-				sectionTitle: 'Basic Information',
-				fields: [
-					'name',
-					['email', 'phone'],
-					['businessName', 'position'],
-					['category', 'city'],
-					'businessAddress',
-				],
-			},
-			{
-				sectionTitle: 'Status Description',
-				fields: [
-					['status', 'leadType'],
-					['priority', 'group'],
-					['source', 'hasWebsite'],
-				],
-			},
-			{
-				sectionTitle: 'Socials',
-				fields: [['facebook', 'instagram'], 'websiteUrl'],
-			},
-			{
-				sectionTitle: 'More Details',
-				fields: ['estimatedBudget', 'requirements', 'interestedIn', 'tags'],
-			},
-		],
+		layout: formLayout,
 	});
 
 	const table: TableObjectProps = {

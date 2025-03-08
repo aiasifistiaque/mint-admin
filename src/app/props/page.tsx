@@ -4,7 +4,7 @@ import React from 'react';
 import { NextPage } from 'next';
 import { BackendPageTable, BackendTableObjectProps } from '@/components/library';
 
-const fields = [
+export const fields = [
 	'name',
 	'component',
 	'description',
@@ -16,7 +16,7 @@ const fields = [
 	'createdAt',
 ];
 
-const tableFields = [
+export const tableFields = [
 	'name',
 	'component',
 	'description',
@@ -27,7 +27,7 @@ const tableFields = [
 	'condition',
 ];
 
-const formFields = [
+export const formFields = [
 	{
 		sectionTitle: 'Prop Details',
 		fields: ['component', 'name', 'description'],

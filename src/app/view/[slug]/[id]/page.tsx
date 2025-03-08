@@ -12,10 +12,13 @@ import {
 	radius,
 	Column,
 	useGetItemNameById,
+	SpaceBetween,
+	CreateModal,
 } from '@/components/library';
 
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Grid, GridItem } from '@chakra-ui/react';
+import { Breadcrumb, BreadcrumbItem, Button, Grid, GridItem } from '@chakra-ui/react';
 import Link from 'next/link';
+import getFieldModule from '@/layouts';
 
 const ViewPage = () => {
 	const { id, slug }: { id: string; slug: string } = useParams();
@@ -28,6 +31,17 @@ const ViewPage = () => {
 
 	const { display } = useGetItemNameById({ path: slug, id: id });
 
+	//const { exists, module } = await getFieldModule(slug);
+	const [moduleData, setModuleData] = React.useState<any>(null);
+
+	React.useEffect(() => {
+		const fetchModule = async () => {
+			const response = await getFieldModule(slug);
+			setModuleData(response);
+		};
+		fetchModule();
+	}, [slug]);
+
 	return (
 		<Layout
 			title={slug?.toUpperCase()}
@@ -35,26 +49,46 @@ const ViewPage = () => {
 			<Column
 				gap={4}
 				pt={4}>
-				<Breadcrumb>
-					<BreadcrumbItem {...crumbCss}>
-						<Link href='/'>Home</Link>
-					</BreadcrumbItem>
+				<SpaceBetween>
+					<Breadcrumb>
+						<BreadcrumbItem {...crumbCss}>
+							<Link href='/'>Home</Link>
+						</BreadcrumbItem>
 
-					<BreadcrumbItem {...crumbCss}>
-						<Link
-							style={{ textTransform: 'capitalize' }}
-							href={`/${slug}`}>
-							{slug}
-						</Link>
-					</BreadcrumbItem>
+						<BreadcrumbItem {...crumbCss}>
+							<Link
+								style={{ textTransform: 'capitalize' }}
+								href={`/${slug}`}>
+								{slug}
+							</Link>
+						</BreadcrumbItem>
 
-					<BreadcrumbItem
-						{...crumbCss}
-						fontWeight='500'
-						isCurrentPage>
-						<Link href='#'>{display}</Link>
-					</BreadcrumbItem>
-				</Breadcrumb>
+						<BreadcrumbItem
+							{...crumbCss}
+							fontWeight='500'
+							isCurrentPage>
+							<Link href='#'>{display}</Link>
+						</BreadcrumbItem>
+					</Breadcrumb>
+					{moduleData?.exists && (
+						<CreateModal
+							path={slug}
+							type='update'
+							doc={data}
+							data={[]}
+							id={id}
+							layout={moduleData?.module.formFields || []}>
+							<Button
+								variant='white'
+								size='xs'
+								px={4}
+								h='24px'>
+								Edit
+							</Button>
+						</CreateModal>
+					)}
+				</SpaceBetween>
+
 				{slug && id && data && (
 					<ViewInfo
 						schema={data}

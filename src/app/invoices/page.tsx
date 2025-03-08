@@ -3,7 +3,7 @@ import React from 'react';
 import { NextPage } from 'next';
 import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
 
-const viewFields = [
+export const viewFields = [
 	'code',
 	'name',
 	'description',
@@ -26,7 +26,21 @@ const viewFields = [
 	'createdAt',
 ];
 
-const formLayout: FormLayout = [
+export { viewFields as fields };
+export const tableFields = [
+	'code',
+	'name',
+	'status',
+	'currency',
+	'total',
+	'issueDate',
+	'dueDate',
+	'client',
+	'project',
+	'addedBy',
+];
+
+export const formFields: FormLayout = [
 	{
 		sectionTitle: 'Invoice Details',
 		fields: ['name', 'status', ['issueDate', 'dueDate']],
@@ -64,20 +78,9 @@ const table: BackendTableObjectProps = {
 	button: {
 		title: 'New Invoice',
 		isModal: true,
-		layout: formLayout,
+		layout: formFields,
 	},
-	fields: [
-		'code',
-		'name',
-		'status',
-		'currency',
-		'total',
-		'issueDate',
-		'dueDate',
-		'client',
-		'project',
-		'addedBy',
-	],
+	fields: tableFields,
 
 	menu: [
 		{ type: 'view-modal', title: 'View', fields: viewFields },
@@ -86,7 +89,7 @@ const table: BackendTableObjectProps = {
 		{
 			type: 'edit-modal',
 			title: 'Edit',
-			layout: formLayout,
+			layout: formFields,
 		},
 
 		{ type: 'delete', title: 'Delete' },

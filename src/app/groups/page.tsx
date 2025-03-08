@@ -10,8 +10,8 @@ import {
 } from '@/components/library';
 import schema from '@/models/group/group.schema';
 
-const tableFields = convertToTableFields({ schema, fields: ['name'] });
-const formFields = convertToFormFields({
+export const tableFields = convertToTableFields({ schema, fields: ['name'] });
+export const formFields = convertToFormFields({
 	schema,
 	layout: [
 		{

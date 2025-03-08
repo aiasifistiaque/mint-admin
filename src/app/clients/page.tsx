@@ -11,7 +11,7 @@ import {
 } from '@/components/library';
 import { clientSchema as schema } from '@/models';
 
-const fields = [
+export const fields = [
 	'name',
 	'email',
 	'phone',
@@ -26,9 +26,9 @@ const fields = [
 	'createdAt',
 ];
 
-const tableFields = ['name', 'contactPerson', 'email', 'phone', 'city', 'country', 'status'];
+export const tableFields = ['name', 'contactPerson', 'email', 'phone', 'city', 'country', 'status'];
 
-const formFields = [
+export const formFields = [
 	{
 		sectionTitle: 'Basic Details',
 		fields: [

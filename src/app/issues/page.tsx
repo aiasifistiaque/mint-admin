@@ -3,7 +3,7 @@ import React from 'react';
 import { NextPage } from 'next';
 import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
 
-const viewFields = [
+export const viewFields = [
 	'code',
 	'name',
 	'description',
@@ -22,7 +22,9 @@ const viewFields = [
 	'createdAt',
 ];
 
-const formLayout: FormLayout = [
+export { viewFields as fields };
+
+export const formFields: FormLayout = [
 	{
 		sectionTitle: 'Issue Details',
 		fields: ['name', 'description', ['status', 'type'], ['project', 'priority']],
@@ -37,6 +39,21 @@ const formLayout: FormLayout = [
 	},
 ];
 
+export const tableFields = [
+	'code',
+	'name',
+	'status',
+	'priority',
+	'type',
+	'project',
+	'assignedTo',
+	'addedBy',
+	'note',
+	'dueDate',
+	'isActive',
+	'createdAt',
+];
+
 const table: BackendTableObjectProps = {
 	title: 'Issues',
 	path: 'issues',
@@ -45,22 +62,9 @@ const table: BackendTableObjectProps = {
 	button: {
 		title: 'New Issue',
 		isModal: true,
-		layout: formLayout,
+		layout: formFields,
 	},
-	fields: [
-		'code',
-		'name',
-		'status',
-		'priority',
-		'type',
-		'project',
-		'assignedTo',
-		'addedBy',
-		'note',
-		'dueDate',
-		'isActive',
-		'createdAt',
-	],
+	fields: tableFields,
 
 	menu: [
 		{ type: 'view-modal', title: 'View', fields: viewFields },
@@ -69,7 +73,7 @@ const table: BackendTableObjectProps = {
 		{
 			type: 'edit-modal',
 			title: 'Edit',
-			layout: formLayout,
+			layout: formFields,
 		},
 
 		{ type: 'delete', title: 'Delete' },

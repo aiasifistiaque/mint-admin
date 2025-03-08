@@ -11,7 +11,8 @@ import {
 } from '@/components/library';
 import { adminSchema as schema } from '@/models';
 
-const fields = ['name', 'email', 'phone', 'role', 'isActive', 'github'];
+export const fields = ['name', 'email', 'phone', 'role', 'isActive', 'github'];
+export const tableFields = ['name', 'email', 'phone', 'role', 'isActive', 'github'];
 
 const tableSchema = [
 	{
@@ -23,6 +24,8 @@ const tableSchema = [
 		fields: ['github'],
 	},
 ];
+
+export { tableSchema as formFields };
 
 const table: TableObjectProps = {
 	title: 'Admin',

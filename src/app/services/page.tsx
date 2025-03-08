@@ -5,12 +5,16 @@ import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/compone
 
 const viewFields = ['name', 'description', 'priority', 'isActive', 'createdAt'];
 
+export { viewFields as fields, viewFields as tableFields };
+
 const formLayout: FormLayout = [
 	{
 		sectionTitle: 'Service Details',
 		fields: ['name', 'description', ['priority', 'isActive']],
 	},
 ];
+
+export { formLayout as formFields };
 
 const table: BackendTableObjectProps = {
 	title: 'Services',

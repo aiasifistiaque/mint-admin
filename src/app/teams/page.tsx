@@ -18,6 +18,8 @@ const viewFields = [
 	'createdAt',
 ];
 
+export { viewFields as fields };
+
 const formLayout: FormLayout = [
 	{
 		sectionTitle: 'Member Details',
@@ -27,6 +29,18 @@ const formLayout: FormLayout = [
 		sectionTitle: 'More Details',
 		fields: [['phone', 'email'], 'bio', ['isActive', 'experienceInYears'], 'skills'],
 	},
+];
+
+export { formLayout as formFields };
+export const tableFields = [
+	'name',
+	'position',
+	'email',
+	'phone',
+	'priority',
+	'status',
+	'isActive',
+	'createdAt',
 ];
 
 const table: BackendTableObjectProps = {
@@ -39,7 +53,7 @@ const table: BackendTableObjectProps = {
 		isModal: true,
 		layout: formLayout,
 	},
-	fields: ['name', 'position', 'email', 'phone', 'priority', 'status', 'isActive', 'createdAt'],
+	fields: tableFields,
 
 	menu: [
 		{ type: 'view-modal', title: 'View', fields: viewFields },

@@ -21,6 +21,8 @@ const viewFields = [
 	'createdAt',
 ];
 
+export { viewFields as fields };
+
 const formLayout: FormLayout = [
 	{
 		sectionTitle: 'Resource Overview',
@@ -36,6 +38,22 @@ const formLayout: FormLayout = [
 	},
 ];
 
+export { formLayout as formFields };
+
+export const tableFields = [
+	'code',
+	'name',
+	'description',
+	'category',
+	'url',
+	'type',
+	'priority',
+	'status',
+	'isRecommended',
+	'focus',
+	'createdAt',
+];
+
 const table: BackendTableObjectProps = {
 	title: 'Developer Resources',
 	path: 'resources',
@@ -46,19 +64,7 @@ const table: BackendTableObjectProps = {
 		isModal: true,
 		layout: formLayout,
 	},
-	fields: [
-		'code',
-		'name',
-		'description',
-		'category',
-		'url',
-		'type',
-		'priority',
-		'status',
-		'isRecommended',
-		'focus',
-		'createdAt',
-	],
+	fields: tableFields,
 
 	menu: [
 		{ type: 'view-modal', title: 'View', fields: viewFields },

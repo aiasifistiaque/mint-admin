@@ -12,6 +12,10 @@ const formLayout: FormLayout = [
 	},
 ];
 
+export { viewFields as fields };
+export const tableFields = ['name', 'priority', 'isActive', 'createdAt'];
+export { formLayout as formFields };
+
 const table: BackendTableObjectProps = {
 	title: 'Clients',
 	path: 'tcclients',
@@ -22,7 +26,7 @@ const table: BackendTableObjectProps = {
 		isModal: true,
 		layout: formLayout,
 	},
-	fields: ['name', 'priority', 'isActive', 'createdAt'],
+	fields: tableFields,
 
 	menu: [
 		{ type: 'view-modal', title: 'View', fields: viewFields },

@@ -11,7 +11,7 @@ import {
 } from '@/components/library';
 import { projectSchema as schema } from '@/models';
 
-const fields = [
+export const fields = [
 	'name',
 	'project',
 	'category',
@@ -23,6 +23,8 @@ const fields = [
 	'prodUrl',
 	'domain',
 ];
+
+export { fields as tableFields };
 
 const tableSchema = [
 	{
@@ -42,6 +44,8 @@ const tableSchema = [
 		fields: ['libraries', 'frameworks', 'technologies'],
 	},
 ];
+
+export { tableSchema as formFields };
 
 const table: TableObjectProps = {
 	title: 'Repo',

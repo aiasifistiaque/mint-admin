@@ -14,12 +14,18 @@ const viewFields = [
 	'createdAt',
 ];
 
+export { viewFields as fields };
+
 const formLayout: FormLayout = [
 	{
 		sectionTitle: 'Project Details',
 		fields: ['image', 'name', ['category', 'status'], 'liveUrl', 'priority', 'isFeatured'],
 	},
 ];
+
+export { formLayout as formFields };
+
+export const tableFields = ['name', 'category', 'liveUrl', 'status', 'priority', 'isFeatured'];
 
 const table: BackendTableObjectProps = {
 	title: 'Featured Projects',
@@ -31,7 +37,7 @@ const table: BackendTableObjectProps = {
 		isModal: true,
 		layout: formLayout,
 	},
-	fields: ['name', 'category', 'liveUrl', 'status', 'priority', 'isFeatured'],
+	fields: tableFields,
 
 	select: {
 		show: true,

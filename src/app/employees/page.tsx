@@ -3,7 +3,7 @@ import React from 'react';
 import { NextPage } from 'next';
 import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
 
-const viewFields = [
+export const viewFields = [
 	'code',
 	'photo',
 
@@ -81,7 +81,9 @@ const viewFields = [
 	'access',
 ];
 
-const formLayout: FormLayout = [
+export { viewFields as fields };
+
+export const formLayout: FormLayout = [
 	{
 		sectionTitle: 'Employee Details',
 		fields: [
@@ -136,6 +138,25 @@ const formLayout: FormLayout = [
 	},
 ];
 
+export { formLayout as formFields };
+
+export const tableFields = [
+	'code',
+	'name',
+	'email',
+	'phone',
+	'gender',
+	'employeeType',
+	'reportingTo',
+	'whatsApp',
+	'github',
+	'discord',
+	'jobTitle',
+	'joiningDate',
+	'contractEndDate',
+	'foodSubsidy',
+];
+
 const table: BackendTableObjectProps = {
 	title: 'Employees',
 	path: 'employees',
@@ -144,30 +165,7 @@ const table: BackendTableObjectProps = {
 		isModal: true,
 		layout: formLayout,
 	},
-	fields: [
-		'code',
-
-		'name',
-		'email',
-
-		'phone',
-		'gender',
-
-		'employeeType',
-		'reportingTo',
-
-		'whatsApp',
-		'github',
-		'discord',
-
-		'jobTitle',
-
-		'joiningDate',
-
-		'contractEndDate',
-
-		'foodSubsidy',
-	],
+	fields: tableFields,
 
 	menu: [
 		{ type: 'view-modal', title: 'View', fields: viewFields },

@@ -10,107 +10,105 @@ import {
 } from '@/components/library';
 import { jobApplicationSchema as schema } from '@/models';
 
-const page: NextPage = () => {
-	const tableFields = convertToTableFields({
-		schema,
+export const tableFields = [
+	'name',
+	'jobPost',
+	'email',
+	'phone',
+	'status',
+	'scheduledAt',
+	'fit',
+	'resume',
+	'university',
+	'passingYear',
+	'linkedin',
+	'portfolioUrl',
+	'city',
+	'appliedAt',
+	'appliedFrom',
+];
+
+export const formFields = [
+	{
+		sectionTitle: 'Personal Information',
 		fields: [
-			'name',
-			'jobPost',
-			'email',
-			'phone',
-			'status',
-			'scheduledAt',
-			'fit',
-			'resume',
-			'university',
-			'passingYear',
-			'linkedin',
-			'portfolioUrl',
-			'city',
-			'appliedAt',
-			'appliedFrom',
+			['name', 'jobPost'],
+			['email', 'phone'],
+			['city', 'status'],
+			['scheduledAt', 'fit'],
 		],
+	},
+	{
+		sectionTitle: 'Education',
+		fields: [['university', 'passingYear']],
+	},
+	{
+		sectionTitle: 'Links',
+		fields: [['linkedin', 'portfolioUrl']],
+	},
+	{
+		sectionTitle: 'Application Details',
+		fields: ['appliedAt', 'appliedFrom'],
+	},
+];
+
+export const fields = [
+	'jobPost',
+	'name',
+	'email',
+	'phone',
+	'address',
+	'city',
+	'coverLetter',
+	'resume',
+	'resumeUrl',
+	'status',
+	'scheduledAt',
+	'educationLevel',
+	'school',
+	'college',
+	'degree',
+	'university',
+	'passingYear',
+	'portfolioUrl',
+	'linkedin',
+	'github',
+	'facebook',
+	'website',
+	'expectedSalary',
+	'appliedAt',
+	'appliedFrom',
+	'experienceLevel',
+	'skills',
+	'notes',
+	'tags',
+];
+
+const page: NextPage = () => {
+	const tableLayout = convertToTableFields({
+		schema,
+		fields: tableFields,
 	});
 
 	const viewFields = convertToViewFields({
 		schema,
-		fields: [
-			'jobPost',
-			'name',
-			'email',
-			'phone',
-			'address',
-			'city',
-			'coverLetter',
-			'resume',
-			'resumeUrl',
-			'status',
-			'scheduledAt',
-			'educationLevel',
-			'school',
-			'college',
-			'degree',
-			'university',
-			'passingYear',
-			'portfolioUrl',
-			'linkedin',
-			'github',
-			'facebook',
-			'website',
-			'expectedSalary',
-			'appliedAt',
-			'appliedFrom',
-			'experienceLevel',
-			'skills',
-			'notes',
-			'tags',
-		],
+		fields: fields,
 	});
-	const formFields = convertToFormFields({
+	const formLayout = convertToFormFields({
 		schema,
-		layout: [
-			{
-				sectionTitle: 'Basic Information',
-				fields: ['jobPost', ['name', 'status'], ['email', 'phone'], ['city', 'fit'], 'address'],
-			},
-			{
-				sectionTitle: 'Application Details',
-				fields: [['appliedAt', 'appliedFrom'], 'coverLetter', ['resume', 'resumeUrl']],
-			},
-			{
-				sectionTitle: 'Schedule Interview',
-				fields: ['scheduledAt'],
-			},
-			{
-				sectionTitle: 'Personal Details',
-				fields: [
-					['educationLevel', 'degree'],
-					['school', 'college'],
-					['university', 'passingYear'],
-					['portfolioUrl', 'linkedin'],
-					['github', 'facebook'],
-					['website', 'expectedSalary'],
-					'skills',
-				],
-			},
-
-			{
-				sectionTitle: 'For Official Use',
-				fields: ['notes', 'tags'],
-			},
-		],
+		layout: formFields,
 	});
 
 	const table: TableObjectProps = {
 		title: 'Job Applications',
 		path: 'jobapplications',
-		data: tableFields,
+		data: tableLayout,
 		export: true,
 
 		button: {
 			title: 'New Job Application',
 			isModal: true,
-			dataModel: formFields,
+			dataModel: formLayout,
 		},
 		menu: [
 			{
@@ -121,7 +119,7 @@ const page: NextPage = () => {
 			{
 				type: 'edit-modal',
 				title: 'Edit',
-				dataModel: formFields,
+				dataModel: formLayout,
 			},
 			{
 				type: 'delete',

@@ -4,6 +4,7 @@ import { Column, Align, RenderTag, Icon, FullScreenImage } from '../../../..';
 import { PLACEHOLDER_IMAGE, ImageContainer } from '../../../..';
 import { JSONDisplay } from '../..';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
+import moment from 'moment';
 
 const textCss: TextProps & LinkProps = {
 	fontSize: '.95rem',
@@ -221,6 +222,17 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 			);
 		case 'date':
 			return <Text {...textCss}>{children?.toLocaleString()}</Text>;
+		case 'date-only':
+			return <Text {...textCss}>{children ? moment(children).format('DD-MM-YYYY') : '--'}</Text>;
+
+		case 'textarea':
+			return (
+				<Text
+					{...textCss}
+					whiteSpace='pre-line'>
+					{children}
+				</Text>
+			);
 		default:
 			return <Text {...textCss}>{children}</Text>;
 	}

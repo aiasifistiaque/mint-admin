@@ -38,6 +38,8 @@ const viewFields = [
 	'createdAt',
 ];
 
+export { viewFields as fields };
+
 const formLayout: FormLayout = [
 	{
 		sectionTitle: 'Meeting Details',
@@ -92,6 +94,21 @@ const formLayout: FormLayout = [
 	},
 ];
 
+export { formLayout as formFields };
+
+export const tableFields = [
+	'name',
+	'priority',
+	'date',
+	'scheduledTime',
+	'meetingType',
+	'status',
+	'meetingUrl',
+	'meetingId',
+	'privacy',
+	'addedBy',
+];
+
 const table: BackendTableObjectProps = {
 	title: 'Meeting',
 	path: 'meetings',
@@ -102,18 +119,7 @@ const table: BackendTableObjectProps = {
 		isModal: true,
 		layout: formLayout,
 	},
-	fields: [
-		'name',
-		'priority',
-		'date',
-		'scheduledTime',
-		'meetingType',
-		'status',
-		'meetingUrl',
-		'meetingId',
-		'privacy',
-		'addedBy',
-	],
+	fields: tableFields,
 
 	menu: [
 		{ type: 'view-modal', title: 'View', fields: viewFields },

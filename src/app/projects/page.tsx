@@ -10,7 +10,7 @@ import {
 } from '@/components/library';
 import { projectSchema as schema } from '@/models';
 
-const fields = [
+export const fields = [
 	'name',
 	'category',
 	'status',
@@ -56,23 +56,27 @@ const tableSchema = [
 	},
 ];
 
+export const tableFields = [
+	'name',
+	'category',
+	'status',
+	'client',
+	'startDate',
+	'endDate',
+	'deadline',
+	'file',
+	'filerl',
+	'privacy',
+	'addedBy',
+];
+
+export { tableSchema as formFields };
+
 const table: BackendTableObjectProps = {
 	title: 'Projects',
 	path: 'projects',
 
-	fields: [
-		'name',
-		'category',
-		'status',
-		'client',
-		'startDate',
-		'endDate',
-		'deadline',
-		'file',
-		'filerl',
-		'privacy',
-		'addedBy',
-	],
+	fields: tableFields,
 	button: {
 		title: 'New Project',
 		isModal: true,

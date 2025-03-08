@@ -3,16 +3,26 @@ import React from 'react';
 import { NextPage } from 'next';
 import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
 
-const viewFields = ['name', 'url', 'description', 'category', 'members', 'priority', 'createdAt'];
+export const fields = [
+	'name',
+	'url',
+	'description',
+	'category',
+	'members',
+	'priority',
+	'createdAt',
+];
 
-const formLayout: FormLayout = [
+export const formFields: FormLayout = [
 	{
 		sectionTitle: 'Group Details',
 		fields: ['name', 'url', ['category', 'priority'], 'members', 'description'],
 	},
 ];
 
-const table: BackendTableObjectProps = {
+export const tableFields = ['name', 'url', 'category', 'members', 'priority', 'createdAt'];
+
+export const table: BackendTableObjectProps = {
 	title: 'FB Groups',
 	path: 'fgroups',
 	export: true,
@@ -20,18 +30,18 @@ const table: BackendTableObjectProps = {
 	button: {
 		title: 'Add Group',
 		isModal: true,
-		layout: formLayout,
+		layout: formFields,
 	},
-	fields: ['name', 'url', 'description', 'category', 'members', 'priority', 'createdAt'],
+	fields: tableFields,
 
 	menu: [
-		{ type: 'view-modal', title: 'View', fields: viewFields },
+		{ type: 'view-modal', title: 'View', fields: fields },
 		{ type: 'view-item', title: 'Go To Post' },
 
 		{
 			type: 'edit-modal',
 			title: 'Edit',
-			layout: formLayout,
+			layout: formFields,
 		},
 
 		{ type: 'delete', title: 'Delete' },
