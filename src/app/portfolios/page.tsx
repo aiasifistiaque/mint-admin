@@ -2,30 +2,7 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
-
-const viewFields = [
-	'image',
-	'name',
-	'category',
-	'status',
-	'liveUrl',
-	'priority',
-	'isFeatured',
-	'createdAt',
-];
-
-export { viewFields as fields };
-
-const formLayout: FormLayout = [
-	{
-		sectionTitle: 'Project Details',
-		fields: ['image', 'name', ['category', 'status'], 'liveUrl', 'priority', 'isFeatured'],
-	},
-];
-
-export { formLayout as formFields };
-
-export const tableFields = ['name', 'category', 'liveUrl', 'status', 'priority', 'isFeatured'];
+import { fields, formFields, tableFields } from './config';
 
 const table: BackendTableObjectProps = {
 	title: 'Featured Projects',
@@ -35,7 +12,7 @@ const table: BackendTableObjectProps = {
 	button: {
 		title: 'Add Project',
 		isModal: true,
-		layout: formLayout,
+		layout: formFields,
 	},
 	fields: tableFields,
 
@@ -88,13 +65,13 @@ const table: BackendTableObjectProps = {
 	},
 
 	menu: [
-		{ type: 'view-modal', title: 'View', fields: viewFields },
+		{ type: 'view-modal', title: 'View', fields },
 		{ type: 'view-item', title: 'Go To Post' },
 
 		{
 			type: 'edit-modal',
 			title: 'Edit',
-			layout: formLayout,
+			layout: formFields,
 		},
 		{
 			type: 'update-api',

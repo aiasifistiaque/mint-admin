@@ -1,20 +1,8 @@
 'use client';
 import React from 'react';
 import { NextPage } from 'next';
-import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
-
-const viewFields = ['name', 'description', 'priority', 'isActive', 'createdAt'];
-
-export { viewFields as fields, viewFields as tableFields };
-
-const formLayout: FormLayout = [
-	{
-		sectionTitle: 'Service Details',
-		fields: ['name', 'description', ['priority', 'isActive']],
-	},
-];
-
-export { formLayout as formFields };
+import { BackendPageTable, BackendTableObjectProps } from '@/components/library';
+import { formFields, fields, tableFields } from './config';
 
 const table: BackendTableObjectProps = {
 	title: 'Services',
@@ -24,18 +12,18 @@ const table: BackendTableObjectProps = {
 	button: {
 		title: 'Add Service',
 		isModal: true,
-		layout: formLayout,
+		layout: formFields,
 	},
-	fields: ['name', 'priority', 'isActive', 'createdAt'],
+	fields: tableFields,
 
 	menu: [
-		{ type: 'view-modal', title: 'View', fields: viewFields },
+		{ type: 'view-modal', title: 'View', fields: fields },
 		{ type: 'view-item', title: 'Go To Post' },
 
 		{
 			type: 'edit-modal',
 			title: 'Edit',
-			layout: formLayout,
+			layout: formFields,
 		},
 
 		{ type: 'delete', title: 'Delete' },

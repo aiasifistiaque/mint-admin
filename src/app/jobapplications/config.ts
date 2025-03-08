@@ -1,0 +1,73 @@
+export const tableFields = [
+	'name',
+	'jobPost',
+	'email',
+	'phone',
+	'status',
+	'scheduledAt',
+	'fit',
+	'resume',
+	'university',
+	'passingYear',
+	'linkedin',
+	'portfolioUrl',
+	'city',
+	'appliedAt',
+	'appliedFrom',
+];
+
+export const formFields = [
+	{
+		sectionTitle: 'Personal Information',
+		fields: [
+			['name', 'jobPost'],
+			['email', 'phone'],
+			['city', 'status'],
+			['scheduledAt', 'fit'],
+		],
+	},
+	{
+		sectionTitle: 'Education',
+		fields: [['university', 'passingYear']],
+	},
+	{
+		sectionTitle: 'Links',
+		fields: [['linkedin', 'portfolioUrl']],
+	},
+	{
+		sectionTitle: 'Application Details',
+		fields: ['appliedAt', 'appliedFrom'],
+	},
+];
+
+export const fields = [
+	'jobPost',
+	'name',
+	'email',
+	'phone',
+	'address',
+	'city',
+	'coverLetter',
+	'resume',
+	'resumeUrl',
+	'status',
+	'scheduledAt',
+	'educationLevel',
+	'school',
+	'college',
+	'degree',
+	'university',
+	'passingYear',
+	'portfolioUrl',
+	'linkedin',
+	'github',
+	'facebook',
+	'website',
+	'expectedSalary',
+	'appliedAt',
+	'appliedFrom',
+	'experienceLevel',
+	'skills',
+	'notes',
+	'tags',
+];

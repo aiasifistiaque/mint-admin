@@ -2,27 +2,9 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
+import { fields, formFields, tableFields } from './config';
 
-export const fields = [
-	'name',
-	'url',
-	'description',
-	'category',
-	'members',
-	'priority',
-	'createdAt',
-];
-
-export const formFields: FormLayout = [
-	{
-		sectionTitle: 'Group Details',
-		fields: ['name', 'url', ['category', 'priority'], 'members', 'description'],
-	},
-];
-
-export const tableFields = ['name', 'url', 'category', 'members', 'priority', 'createdAt'];
-
-export const table: BackendTableObjectProps = {
+const table: BackendTableObjectProps = {
 	title: 'FB Groups',
 	path: 'fgroups',
 	export: true,

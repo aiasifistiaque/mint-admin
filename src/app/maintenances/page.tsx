@@ -2,58 +2,7 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
-
-export const viewFields = [
-	'code',
-	'name',
-	'project',
-	'client',
-	'description',
-	'startDate',
-	'endDate',
-	'status',
-	'attachment',
-	'priority',
-	'privacy',
-	'access',
-	'addedBy',
-	'createdAt',
-];
-
-export { viewFields as fields };
-
-const formLayout: FormLayout = [
-	{
-		sectionTitle: 'Maintenance Details',
-		fields: ['name', 'project', ['startDate', 'endDate']],
-	},
-	{
-		sectionTitle: 'Details',
-		fields: ['description'],
-	},
-	{
-		sectionTitle: 'Status',
-		fields: [['status', 'priority'], 'attachment'],
-	},
-	{
-		sectionTitle: 'Access',
-		fields: ['privacy', 'access'],
-	},
-];
-
-export { formLayout as formFields };
-
-export const tableFields = [
-	'code',
-	'name',
-	'project',
-	'client',
-	'startDate',
-	'endDate',
-	'status',
-	'priority',
-	'privacy',
-];
+import { fields, formFields, tableFields } from './config';
 
 const table: BackendTableObjectProps = {
 	title: 'Maintenance Contracts',
@@ -63,18 +12,18 @@ const table: BackendTableObjectProps = {
 	button: {
 		title: 'New Maintenance',
 		isModal: true,
-		layout: formLayout,
+		layout: formFields,
 	},
 	fields: tableFields,
 
 	menu: [
-		{ type: 'view-modal', title: 'View', fields: viewFields },
+		{ type: 'view-modal', title: 'View', fields: fields },
 		{ type: 'view-item', title: 'Go To Post' },
 
 		{
 			type: 'edit-modal',
 			title: 'Edit',
-			layout: formLayout,
+			layout: formFields,
 		},
 
 		{ type: 'delete', title: 'Delete' },

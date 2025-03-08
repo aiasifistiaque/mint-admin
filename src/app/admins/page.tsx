@@ -10,22 +10,7 @@ import {
 	createFormFields,
 } from '@/components/library';
 import { adminSchema as schema } from '@/models';
-
-export const fields = ['name', 'email', 'phone', 'role', 'isActive', 'github'];
-export const tableFields = ['name', 'email', 'phone', 'role', 'isActive', 'github'];
-
-const tableSchema = [
-	{
-		sectionTitle: 'Basic Details',
-		fields: ['name', ['email', 'phone'], ['password', 'role']],
-	},
-	{
-		sectionTitle: 'Advanced Details',
-		fields: ['github'],
-	},
-];
-
-export { tableSchema as formFields };
+import { fields, tableFields, formFields as tableSchema } from './config';
 
 const table: TableObjectProps = {
 	title: 'Admin',
@@ -43,7 +28,7 @@ const table: TableObjectProps = {
 			dataModel: convertToViewFields({ schema, fields }),
 		},
 	],
-	data: convertToTableFields({ schema, fields }),
+	data: convertToTableFields({ schema, fields: tableFields }),
 };
 
 const page: NextPage = () => {

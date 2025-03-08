@@ -2,19 +2,7 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
-
-const viewFields = ['icon', 'name', 'description', 'priority', 'isActive', 'createdAt'];
-
-const formLayout: FormLayout = [
-	{
-		sectionTitle: 'Client Details',
-		fields: ['icon', 'name', ['priority', 'isActive'], 'description'],
-	},
-];
-
-export { viewFields as fields };
-export const tableFields = ['name', 'priority', 'isActive', 'createdAt'];
-export { formLayout as formFields };
+import { formFields, fields, tableFields } from './config';
 
 const table: BackendTableObjectProps = {
 	title: 'Clients',
@@ -24,18 +12,18 @@ const table: BackendTableObjectProps = {
 	button: {
 		title: 'Add Client',
 		isModal: true,
-		layout: formLayout,
+		layout: formFields,
 	},
 	fields: tableFields,
 
 	menu: [
-		{ type: 'view-modal', title: 'View', fields: viewFields },
+		{ type: 'view-modal', title: 'View', fields },
 		{ type: 'view-item', title: 'Go To Post' },
 
 		{
 			type: 'edit-modal',
 			title: 'Edit',
-			layout: formLayout,
+			layout: formFields,
 		},
 
 		{ type: 'delete', title: 'Delete' },

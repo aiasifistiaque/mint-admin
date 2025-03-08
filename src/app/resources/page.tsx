@@ -2,57 +2,7 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
-
-const viewFields = [
-	'code',
-	'name',
-	'icon',
-	'description',
-	'category',
-	'url',
-	'type',
-	'priority',
-	'status',
-	'attachment',
-	'note',
-	'tags',
-	'isRecommended',
-	'focus',
-	'createdAt',
-];
-
-export { viewFields as fields };
-
-const formLayout: FormLayout = [
-	{
-		sectionTitle: 'Resource Overview',
-		fields: ['name', ['category', 'type'], 'url', 'description'],
-	},
-	{
-		sectionTitle: 'Focus & Priority',
-		fields: [['focus', 'priority'], 'status'],
-	},
-	{
-		sectionTitle: 'Details',
-		fields: [['icon', 'isRecommended'], 'attachment', 'note', 'tags'],
-	},
-];
-
-export { formLayout as formFields };
-
-export const tableFields = [
-	'code',
-	'name',
-	'description',
-	'category',
-	'url',
-	'type',
-	'priority',
-	'status',
-	'isRecommended',
-	'focus',
-	'createdAt',
-];
+import { formFields, fields, tableFields } from './config';
 
 const table: BackendTableObjectProps = {
 	title: 'Developer Resources',
@@ -62,18 +12,18 @@ const table: BackendTableObjectProps = {
 	button: {
 		title: 'Add resource',
 		isModal: true,
-		layout: formLayout,
+		layout: formFields,
 	},
 	fields: tableFields,
 
 	menu: [
-		{ type: 'view-modal', title: 'View', fields: viewFields },
+		{ type: 'view-modal', title: 'View', fields: fields },
 		{ type: 'view-item', title: 'Go To Post' },
 
 		{
 			type: 'edit-modal',
 			title: 'Edit',
-			layout: formLayout,
+			layout: formFields,
 		},
 
 		{ type: 'delete', title: 'Delete' },

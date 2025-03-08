@@ -15,7 +15,7 @@ type ModuleResponse = {
 
 const getFieldModule = async (key: string): Promise<ModuleResponse> => {
 	try {
-		const { fields, tableFields, formFields } = await import(`../app/${key}/page`);
+		const { fields, tableFields, formFields } = await import(`../app/${key}/config`);
 		return {
 			exists: true,
 			module: {

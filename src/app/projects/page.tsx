@@ -9,68 +9,7 @@ import {
 	BackendPageTable,
 } from '@/components/library';
 import { projectSchema as schema } from '@/models';
-
-export const fields = [
-	'name',
-	'category',
-	'status',
-	'description',
-	'client',
-	'startDate',
-	'endDate',
-	'deadline',
-	'requirements',
-	'file',
-	'fileUrl',
-	'tags',
-	'addedBy',
-	'privacy',
-	'access',
-	'createdAt',
-];
-
-const tableSchema = [
-	{
-		sectionTitle: 'Basic Details',
-		fields: [['name', 'client'], ['category', 'status'], 'tags'],
-	},
-	{
-		sectionTitle: 'Description',
-		fields: ['description'],
-	},
-	{
-		sectionTitle: 'Timeline',
-		fields: [['startDate', 'endDate'], 'deadline'],
-	},
-	{
-		sectionTitle: 'Requirements & Details',
-		fields: ['requirements', 'file', 'fileUrl'],
-	},
-	{
-		sectionTitle: 'Access Control',
-		fields: ['privacy', 'access'],
-	},
-	{
-		sectionTitle: 'Note & Tags',
-		fields: ['note'],
-	},
-];
-
-export const tableFields = [
-	'name',
-	'category',
-	'status',
-	'client',
-	'startDate',
-	'endDate',
-	'deadline',
-	'file',
-	'filerl',
-	'privacy',
-	'addedBy',
-];
-
-export { tableSchema as formFields };
+import { fields, formFields, tableFields } from './config';
 
 const table: BackendTableObjectProps = {
 	title: 'Projects',
@@ -80,18 +19,18 @@ const table: BackendTableObjectProps = {
 	button: {
 		title: 'New Project',
 		isModal: true,
-		layout: tableSchema,
+		layout: formFields,
 	},
 	menu: [
 		{
 			title: 'View',
 			type: 'view-modal',
-			dataModel: convertToViewFields({ schema }),
+			dataModel: convertToViewFields({ schema, fields }),
 		},
 		{
 			title: 'Edit',
 			type: 'edit-modal',
-			layout: tableSchema,
+			layout: formFields,
 		},
 		{
 			title: 'Delete',

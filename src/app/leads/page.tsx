@@ -9,74 +9,7 @@ import {
 	TableObjectProps,
 } from '@/components/library';
 import { leadSchema as schema } from '@/models';
-
-const tFields = [
-	'name',
-	'email',
-	'businessName',
-	'phone',
-	'status',
-	'source',
-	'category',
-	'leadType',
-	'facebook',
-	'instagram',
-	'websiteUrl',
-	'priority',
-	'city',
-	'createdAt',
-];
-
-export { tFields as tableFields };
-
-export const fields = [
-	'name',
-	'email',
-	'phone',
-	'status',
-	'source',
-	'requirements',
-	'leadType',
-	'priority',
-	'category',
-	'interestedIn',
-	'estimatedBudget',
-	'businessName',
-	'businessAddress',
-	'facebook',
-	'instagram',
-	'hasWebsite',
-	'websiteUrl',
-	'city',
-	'createdAt',
-];
-
-const formLayout = [
-	{
-		sectionTitle: 'Basic Information',
-		fields: [
-			['name', 'email', 'phone'],
-			['businessName', 'businessAddress'],
-			['city', 'status'],
-			['source', 'leadType'],
-			['category', 'priority'],
-		],
-	},
-	{
-		sectionTitle: 'Requirements',
-		fields: ['requirements', 'interestedIn', 'estimatedBudget'],
-	},
-	{
-		sectionTitle: 'Social Media',
-		fields: ['facebook', 'instagram'],
-	},
-	{
-		sectionTitle: 'Website',
-		fields: ['hasWebsite', 'websiteUrl'],
-	},
-];
-
-export { formLayout as formFields };
+import { fields, formFields as formLayout, tableFields as tFields } from './config';
 
 const page: NextPage = () => {
 	const tableFields = convertToTableFields({

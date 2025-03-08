@@ -3,16 +3,7 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { BackendPageTable, BackendTableObjectProps } from '@/components/library';
-
-export const fields = ['name', 'description', 'status', 'stack', 'createdAt'];
-export const tableFields = ['name', 'status', 'stack', 'createdAt'];
-
-export const formFields = [
-	{
-		sectionTitle: 'Project Plan',
-		fields: ['name', ['platform', 'status', 'stack']],
-	},
-];
+import { fields, formFields, tableFields } from './config';
 
 const table: BackendTableObjectProps = {
 	title: 'Plan Project',

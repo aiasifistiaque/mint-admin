@@ -10,42 +10,7 @@ import {
 	createFormFields,
 } from '@/components/library';
 import { projectSchema as schema } from '@/models';
-
-export const fields = [
-	'name',
-	'project',
-	'category',
-	'status',
-	'githubUrl',
-	'devUrl',
-	'liveUrl',
-	'testUrl',
-	'prodUrl',
-	'domain',
-];
-
-export { fields as tableFields };
-
-const tableSchema = [
-	{
-		sectionTitle: 'Basic Details',
-		fields: [['name', 'project'], ['category', 'status'], ['projectType']],
-	},
-	{
-		sectionTitle: 'Links',
-		fields: [
-			['githubUrl', 'devUrl'],
-			['liveUrl', 'testUrl'],
-			['prodUrl', 'domain'],
-		],
-	},
-	{
-		sectionTitle: 'Technologies',
-		fields: ['libraries', 'frameworks', 'technologies'],
-	},
-];
-
-export { tableSchema as formFields };
+import { formFields, fields, tableFields } from './config';
 
 const table: TableObjectProps = {
 	title: 'Repo',
@@ -54,7 +19,7 @@ const table: TableObjectProps = {
 	button: {
 		title: 'New Repo',
 		isModal: true,
-		dataModel: createFormFields({ schema, layout: tableSchema }),
+		dataModel: createFormFields({ schema, layout: formFields }),
 	},
 	menu: [
 		{
@@ -65,7 +30,7 @@ const table: TableObjectProps = {
 		{
 			title: 'Edit',
 			type: 'edit-modal',
-			dataModel: createFormFields({ schema, layout: tableSchema }),
+			dataModel: createFormFields({ schema, layout: formFields }),
 		},
 		{
 			title: 'Delete',
