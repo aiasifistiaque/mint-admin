@@ -5,22 +5,7 @@ type DocumentBaseType = {
 	updatedAt?: Date;
 };
 
-type Type = DocumentBaseType & {
-	name: string;
-	client: string;
-	docUrl: string;
-	fileUrl: string;
-	category: string;
-	direction: 'inbound' | 'outbound' | 'internal' | 'other';
-	tags?: string[];
-	project: string;
-	addedBy: string;
-	access: any;
-	privacy: 'public' | 'private' | 'only-me';
-	code?: string;
-};
-
-const documentSchema: SchemaType<Type> = {
+const documentSchema: SchemaType<any> = {
 	code: {
 		label: 'Document Code',
 		type: 'string',
@@ -34,6 +19,10 @@ const documentSchema: SchemaType<Type> = {
 		default: true,
 		displayInTable: true,
 		sort: true,
+	},
+	description: {
+		label: 'Description',
+		type: 'textarea',
 	},
 	client: {
 		label: 'Client',

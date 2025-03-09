@@ -1,8 +1,9 @@
 export const fields = [
 	'code',
 	'name',
-	'client',
+	'description',
 	'docUrl',
+	'client',
 	'fileUrl',
 	'direction',
 	'category',
@@ -30,7 +31,7 @@ export const tableFields = [
 export const formFields = [
 	{
 		sectionTitle: 'File Details',
-		fields: [['name'], ['client', 'project'], ['direction', 'category']],
+		fields: ['name', 'description', ['client', 'project'], ['direction', 'category']],
 	},
 	{
 		sectionTitle: 'URLs',
