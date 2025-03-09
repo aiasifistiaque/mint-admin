@@ -40,8 +40,9 @@ const page: NextPage = () => {
 			{
 				type: 'view-modal',
 				dataModel: viewFields,
-				title: 'View',
+				title: 'Quick View',
 			},
+			{ type: 'view-item', title: 'Details' },
 			{
 				type: 'edit-modal',
 				title: 'Edit',
