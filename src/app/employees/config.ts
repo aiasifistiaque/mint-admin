@@ -70,6 +70,7 @@ export const fields = [
 	//attachments
 	'nidAttachment',
 	'cvAttachment',
+	'ternimationDate',
 
 	//pricvacy
 	'createdAt',
@@ -93,7 +94,12 @@ export const formFields: FormLayout = [
 	},
 	{
 		sectionTitle: 'Job Details',
-		fields: [['jobTitle', 'department'], ['joiningDate', 'contractEndDate'], 'contractDoc'],
+		fields: [
+			['jobTitle', 'department'],
+			['joiningDate', 'contractEndDate'],
+			'contractDoc',
+			'terminationDate',
+		],
 	},
 	{
 		sectionTitle: 'Personal Details',
