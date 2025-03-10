@@ -8,6 +8,7 @@ const jobApplicationSchema: SchemaType<any> = {
 		model: 'jobposts',
 		tableType: 'text',
 		tableKey: 'jobPost.name',
+		viewKey: 'jobPost.name',
 		displayInTable: true,
 		default: true,
 	},

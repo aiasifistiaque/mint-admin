@@ -252,12 +252,12 @@ const renderContent = ({ type, children, colorScheme, path, originalType, id }: 
 								{...textCss}
 								cursor={'pointer'}
 								color='dodgerblue'>
-								{children}
+								{typeof children === 'string' ? children : 'View Details'}
 							</Text>
 						}
 					/>
 				);
-			return <Text {...textCss}>{children}</Text>;
+			return <Text {...textCss}>{typeof children === 'string' ? children : 'View Details'}</Text>;
 	}
 };
 
