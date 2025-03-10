@@ -1,4 +1,5 @@
 export const fields = [
+	'code',
 	'name',
 	'agenda',
 	'description',
@@ -88,6 +89,7 @@ export const formFields = [
 ];
 
 export const tableFields = [
+	'code',
 	'name',
 	'priority',
 	'date',
