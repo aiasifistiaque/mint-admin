@@ -19,7 +19,7 @@ export const tableFields = ['subject', 'recipients', 'group', 'createdAt'];
 export const formFields: FormLayout = [
 	{
 		sectionTitle: 'Draft Email',
-		fields: ['subject', 'to'],
+		fields: ['title', 'subject', 'to'],
 	},
 	{
 		sectionTitle: 'CC/BCC',
