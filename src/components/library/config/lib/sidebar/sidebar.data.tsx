@@ -78,6 +78,12 @@ const sidebar: SidebarItemType[] = [
 		path: 'fgroups',
 	},
 	{
+		title: 'Email',
+		href: '/emails',
+		icon: 'customer',
+		path: 'emails',
+	},
+	{
 		startOfSection: true,
 		sectionTitle: 'Project Management',
 		title: 'Projects',
