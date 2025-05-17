@@ -271,17 +271,20 @@ const sidebar: SidebarItemType[] = [
 		path: 'tcclients',
 	},
 	{
-		title: 'Setvice Offers',
-		href: '/offers',
-		icon: 'customer',
-		path: 'offers',
-	},
-	{
-		title: 'Service Category',
+		title: 'Solution List',
 		href: '/solutions',
 		icon: 'customer',
 		path: 'solutions',
 	},
+	{
+		startOfSection: true,
+		sectionTitle: 'Website Components',
+		title: 'Service Offers',
+		href: '/offers',
+		icon: 'customer',
+		path: 'offers',
+	},
+
 	{
 		title: 'Service Features',
 		href: '/features',
