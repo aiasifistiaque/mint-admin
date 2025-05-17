@@ -271,6 +271,18 @@ const sidebar: SidebarItemType[] = [
 		path: 'tcclients',
 	},
 	{
+		title: 'Setvice Offers',
+		href: '/offers',
+		icon: 'customer',
+		path: 'offers',
+	},
+	{
+		title: 'Setvice Features',
+		href: '/features',
+		icon: 'customer',
+		path: 'features',
+	},
+	{
 		startOfSection: true,
 		sectionTitle: 'Resources',
 		title: 'Dev Resources',
