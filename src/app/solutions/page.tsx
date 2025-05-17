@@ -5,12 +5,12 @@ import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/compone
 import { formFields, fields, tableFields } from './config';
 
 const table: BackendTableObjectProps = {
-	title: 'Service Features',
-	path: 'features',
+	title: 'Solutions',
+	path: 'solutions',
 	export: true,
 
 	button: {
-		title: 'Add Feature',
+		title: 'Add Solution',
 		isModal: true,
 		layout: formFields,
 	},
