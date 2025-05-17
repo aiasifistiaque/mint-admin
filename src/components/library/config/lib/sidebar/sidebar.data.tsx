@@ -292,6 +292,12 @@ const sidebar: SidebarItemType[] = [
 		path: 'features',
 	},
 	{
+		title: 'Tech Stacks',
+		href: '/techstacks',
+		icon: 'customer',
+		path: 'techstacks',
+	},
+	{
 		startOfSection: true,
 		sectionTitle: 'Resources',
 		title: 'Dev Resources',
