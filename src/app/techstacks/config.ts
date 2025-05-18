@@ -4,6 +4,7 @@ export const fields = [
 	'shortDescription',
 	'description',
 	'priority',
+	'isFeatured',
 	'status',
 	'tags',
 	'createdAt',
@@ -12,7 +13,7 @@ export const fields = [
 export const formFields = [
 	{
 		sectionTitle: 'Tech Stack',
-		fields: ['icon', 'name', ['priority', 'status'], 'shortDescription'],
+		fields: ['icon', 'name', ['priority', 'status'], 'isFeatured', 'shortDescription'],
 	},
 	{
 		sectionTitle: 'Description',
@@ -24,4 +25,4 @@ export const formFields = [
 	},
 ];
 
-export const tableFields = ['name', 'priority', 'status', 'shortDescription'];
+export const tableFields = ['name', 'priority', 'status', 'isFeatured', 'shortDescription'];
