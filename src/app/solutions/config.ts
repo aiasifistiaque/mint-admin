@@ -6,6 +6,7 @@ export const fields = [
 	'toStaticPage',
 	'staticPageUrl',
 	'priority',
+	'isFeatured',
 	'coverImage',
 	'title',
 	'subtitle',
@@ -36,7 +37,7 @@ export const fields = [
 export const formFields = [
 	{
 		sectionTitle: 'Card Information',
-		fields: ['icon', 'name', ['priority', 'status'], 'shortDescription'],
+		fields: ['icon', 'name', ['priority', 'status'], 'isFeatured', 'shortDescription'],
 	},
 	{
 		sectionTitle: 'Should it lead to a static page?',
@@ -81,6 +82,7 @@ export const tableFields = [
 	'name',
 	'shortDescription',
 	'status',
+	'isFeatured',
 	'toStaticPage',
 	'staticPageUrl',
 	'priority',
