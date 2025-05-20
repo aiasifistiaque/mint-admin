@@ -14,22 +14,29 @@ export const formFields = [
 		sectionTitle: 'Project Details',
 		fields: [
 			'image',
-
 			'name',
 			['category', 'status'],
 			'priority',
-
 			['liveUrl', 'showLiveUrl'],
 			'isFeatured',
 		],
 	},
 	{
+		sectionTitle: 'Project Card Details',
+		fields: ['shortDescription', 'tags'],
+	},
+
+	{
+		sectionTitle: 'Project Details: SEO',
+		fields: ['seoTitle', 'seoDescription', 'seoKeywords'],
+	},
+	{
 		sectionTitle: 'Case Study',
-		fields: ['coverImage', 'title', 'showCaseStudy', 'subTitle', 'shortDescription', 'overview'],
+		fields: ['coverImage', 'title', 'showCaseStudy', 'subTitle', 'overview'],
 	},
 	{
 		sectionTitle: 'Case Study: Project Overview',
-		fields: ['logo', 'client', ['duration', 'year'], 'productTitle', 'productDescription', 'tags'],
+		fields: ['logo', 'client', ['duration', 'year'], 'productTitle', 'productDescription'],
 	},
 	{
 		sectionTitle: 'Case Study: Project Images',
