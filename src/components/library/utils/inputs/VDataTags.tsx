@@ -85,7 +85,7 @@ const VDataTags: React.FC<InputContainerProps> = ({
 	const getNameById = (id: string) => {
 		const ite = data?.doc?.find((item: any) => item._id === id);
 
-		return `${ite?.name} ${item?.modelAddOn && `(${ite?.[item?.modelAddOn]})`}` || id;
+		return `${ite?.name} ${`(${ite?.[item?.modelAddOn]})` || ''}` || id;
 	};
 
 	return (
