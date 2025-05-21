@@ -276,12 +276,7 @@ const sidebar: SidebarItemType[] = [
 		icon: 'customer',
 		path: 'solutions',
 	},
-	{
-		title: 'Solution Category',
-		href: '/servicecat',
-		icon: 'customer',
-		path: 'servicecat',
-	},
+
 	{
 		startOfSection: true,
 		sectionTitle: 'Website Components',
@@ -289,6 +284,12 @@ const sidebar: SidebarItemType[] = [
 		href: '/offers',
 		icon: 'customer',
 		path: 'offers',
+	},
+	{
+		title: 'Offer Category',
+		href: '/servicecat',
+		icon: 'customer',
+		path: 'servicecat',
 	},
 
 	{
