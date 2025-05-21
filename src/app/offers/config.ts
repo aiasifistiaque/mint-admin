@@ -2,6 +2,8 @@ export const fields = [
 	'icon',
 	'name',
 	'priority',
+	'category',
+	'isFeatured',
 	'status',
 	'shortDescription',
 	'description',
@@ -12,7 +14,13 @@ export const fields = [
 export const formFields = [
 	{
 		sectionTitle: 'Offer',
-		fields: ['icon', 'name', ['priority', 'status'], 'shortDescription'],
+		fields: [
+			'icon',
+			'name',
+			['category', 'isFeatured'],
+			['priority', 'status'],
+			'shortDescription',
+		],
 	},
 	{
 		sectionTitle: 'Description',
@@ -24,4 +32,4 @@ export const formFields = [
 	},
 ];
 
-export const tableFields = ['name', 'priority', 'status', 'shortDescription'];
+export const tableFields = ['name', 'priority', 'isFeatured', 'status', 'shortDescription'];
