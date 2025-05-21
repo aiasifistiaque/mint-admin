@@ -278,7 +278,7 @@ const sidebar: SidebarItemType[] = [
 	},
 	{
 		title: 'Solution Category',
-		href: '/servicecategories',
+		href: '/servicecat',
 		icon: 'customer',
 		path: 'servicecat',
 	},
