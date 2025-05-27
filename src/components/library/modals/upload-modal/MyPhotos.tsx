@@ -50,8 +50,7 @@ const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type: s
 					bg='whitesmoke'>
 					{type == 'video' ? (
 						<video
-							// controls={isMobile}
-							autoPlay={isMobile}
+							controls={isMobile}
 							muted
 							ref={videoRef}
 							playsInline
