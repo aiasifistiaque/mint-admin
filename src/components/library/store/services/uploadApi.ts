@@ -5,17 +5,18 @@ import { BASE_LIMIT } from '../..';
 export const uploadApi = mainApi.injectEndpoints({
 	overrideExisting: true,
 	endpoints: builder => ({
-		getAllUploads: builder.query<ListType<any>, TableProps>({
+		getAllUploads: builder.query<ListType<any>, any>({
 			query: ({
 				sort = '-createdAt',
 				page = 1,
 				limit = BASE_LIMIT,
 				search = '',
 				isActive,
+				type,
 				filters = {},
 			}) => ({
 				url: 'upload',
-				params: { sort, page, limit, search, isActive, ...filters },
+				params: { sort, page, limit, type, search, isActive, ...filters },
 			}),
 			providesTags: ['uploads'],
 		}),
@@ -28,6 +29,7 @@ export const uploadApi = mainApi.injectEndpoints({
 			}),
 			invalidatesTags: ['uploads'],
 		}),
+
 		addFile: builder.mutation<any, any>({
 			query: body => ({
 				url: `upload/file`,

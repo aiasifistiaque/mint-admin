@@ -5,11 +5,12 @@ import { Icon } from '../..';
 type AddImageButtonProps = FlexProps & {
 	children?: React.ReactNode;
 	size?: string;
+	title?: string;
 };
 
 const DEFAULT_IMAGE_SIZE = '100px';
 
-const AddImageButton: React.FC<AddImageButtonProps> = ({ children, size, ...props }) => {
+const AddImageButton: React.FC<AddImageButtonProps> = ({ children, title, size, ...props }) => {
 	return (
 		<Center
 			cursor='pointer'
@@ -29,7 +30,7 @@ const AddImageButton: React.FC<AddImageButtonProps> = ({ children, size, ...prop
 			<Heading
 				color='#ccc'
 				size='xs'>
-				{children || 'Add Image'}
+				{title || 'Add Image'}
 			</Heading>
 		</Center>
 	);

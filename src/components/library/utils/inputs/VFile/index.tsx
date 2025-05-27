@@ -13,7 +13,7 @@ type InputContainerProps = InputProps & {
 	label: string;
 	isRequired?: boolean;
 	helper?: string;
-	value: string | number | undefined;
+	value: string;
 	placeholder?: any;
 };
 
@@ -85,7 +85,7 @@ const VFile: FC<InputContainerProps> = ({
 					fontSize='12px'
 					color='blue.500'
 					isExternal
-					href='#'>
+					href={value ? value : '#'}>
 					{value}
 				</Link>
 			)}

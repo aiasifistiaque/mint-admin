@@ -34,6 +34,7 @@ import {
 	VFontSize,
 	VAlignment,
 	VFile,
+	VVideo,
 } from '../../..';
 import { flexAlignOptions, flexJustifyOptions, textAlignOptions } from './options';
 
@@ -97,6 +98,15 @@ const FormInput: FC<FormInputProps> = ({
 		case 'image':
 			return (
 				<VImage
+					isRequired={isRequired}
+					onChange={props.onChange}
+					helper={item?.helper}
+					{...props}
+				/>
+			);
+		case 'video':
+			return (
+				<VVideo
 					isRequired={isRequired}
 					onChange={props.onChange}
 					helper={item?.helper}

@@ -33,6 +33,8 @@ type UploadModalProps = {
 	type?: 'add' | 'edit' | 'delete';
 	multiple?: boolean;
 	handleDelete?: any;
+	title?: string;
+	fileType?: 'image' | 'video' | 'file';
 };
 
 const tabs = ['Photos', 'Upload', 'Web Address (URL)'];
@@ -42,7 +44,9 @@ const UploadModal: FC<UploadModalProps> = ({
 	multiple,
 	trigger,
 	handleImage,
+	title = 'Insert Photo/File',
 	handleDelete,
+	fileType = 'image',
 	type = 'add',
 }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,7 +69,12 @@ const UploadModal: FC<UploadModalProps> = ({
 	};
 
 	const buttonTypes = {
-		add: <AddImageButton size='200px' />,
+		add: (
+			<AddImageButton
+				size='200px'
+				title={title || 'Add Image'}
+			/>
+		),
 		edit: <EditImageButton />,
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
@@ -103,10 +112,16 @@ const UploadModal: FC<UploadModalProps> = ({
 								px={0}
 								overflowY='scroll'>
 								<TabPanel sx={styles.panel}>
-									<MyPhotos handleSelect={handleImageSelect} />
+									<MyPhotos
+										handleSelect={handleImageSelect}
+										type={fileType || 'image'}
+									/>
 								</TabPanel>
 								<TabPanel sx={styles.panel}>
-									<UploadImage handleSelect={handleUploadComplete} />
+									<UploadImage
+										// type={fileType || 'image'}
+										handleSelect={handleUploadComplete}
+									/>
 								</TabPanel>
 								<TabPanel sx={styles.panel}>
 									<InsertUrl handleSelect={handleImageSelect} />

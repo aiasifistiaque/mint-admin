@@ -7,6 +7,7 @@ export { default as VDataMenu } from './VDataMenu';
 export { default as VDataSelect } from './VDataSelect';
 export { default as VDataTags } from './VDataTags';
 export { default as VImage } from './VImage';
+export { default as VVideo } from './VVideo';
 export { default as VSelect } from './VSelect';
 export { default as VSwitch } from './VSwitch';
 export { default as VTags } from './VTags';

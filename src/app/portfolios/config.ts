@@ -4,6 +4,8 @@ export const fields = [
 	'category',
 	'status',
 	'liveUrl',
+	'isVideoEnabled',
+	'videoURL',
 	'priority',
 	'isFeatured',
 	'createdAt',
@@ -14,12 +16,28 @@ export const formFields = [
 		sectionTitle: 'Project Details',
 		fields: [
 			'image',
+
 			'name',
 			['category', 'status'],
 			'priority',
+
 			['liveUrl', 'showLiveUrl'],
 			'isFeatured',
 		],
+	},
+	{
+		sectionTitle: 'Project Details: Video',
+		fields: ['isVideoEnabled', 'videoURL'],
+	},
+
+	{
+		sectionTitle: 'Project Images',
+		fields: ['images'],
+	},
+
+	{
+		sectionTitle: 'Project Card',
+		fields: ['client', 'shortDescription', 'tags'],
 	},
 	{
 		sectionTitle: 'Project Card Details',
@@ -73,4 +91,12 @@ export const formFields = [
 	},
 ];
 
-export const tableFields = ['name', 'category', 'liveUrl', 'status', 'priority', 'isFeatured'];
+export const tableFields = [
+	'name',
+	'category',
+	'liveUrl',
+	'isVideoEnabled',
+	'status',
+	'priority',
+	'isFeatured',
+];
