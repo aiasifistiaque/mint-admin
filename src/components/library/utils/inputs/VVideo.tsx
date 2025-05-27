@@ -34,7 +34,7 @@ const VVideo: FC<FormDataType> = ({
 		videoRef.current.currentTime = 0;
 	};
 
-	const imageComponent = (
+	const imageComponent = value && (
 		<ImageContainer
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}>

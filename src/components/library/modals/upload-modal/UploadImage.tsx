@@ -2,11 +2,17 @@ import React from 'react';
 import { useAddUploadMutation, useAddVideoMutation } from '@/store/services/uploadApi';
 import { Button, Center, Heading, Progress, Text } from '@chakra-ui/react';
 
-const UploadImage = ({ handleSelect, fileType }: { handleSelect: any; fileType?: string }) => {
+const UploadImage = ({
+	handleSelect,
+	fileType = 'image',
+}: {
+	handleSelect: any;
+	fileType?: string;
+}) => {
 	const [image, setImage] = React.useState<any>(null);
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
-	const [trigger, result] = fileType == 'video' ? useAddVideoMutation() : useAddUploadMutation();
+	const [trigger, result] = useAddVideoMutation();
 
 	const handleUpload = () => {
 		inputRef.current?.click();
@@ -24,7 +30,7 @@ const UploadImage = ({ handleSelect, fileType }: { handleSelect: any; fileType?:
 			formData.append('folder', 'products');
 
 			// Trigger the mutation with the FormData object
-			trigger(formData);
+			trigger({ body: formData, type: fileType });
 		}
 	};
 
