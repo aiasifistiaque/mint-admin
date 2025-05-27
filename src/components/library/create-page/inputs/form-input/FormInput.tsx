@@ -98,6 +98,7 @@ const FormInput: FC<FormInputProps> = ({
 		case 'image':
 			return (
 				<VImage
+					folder={item?.folder}
 					isRequired={isRequired}
 					onChange={props.onChange}
 					helper={item?.helper}
@@ -117,6 +118,7 @@ const FormInput: FC<FormInputProps> = ({
 			return (
 				<VImage
 					isRequired={isRequired}
+					folder={item?.folder}
 					onChange={props.onChange}
 					helper={item?.helper}
 					{...props}
@@ -126,6 +128,7 @@ const FormInput: FC<FormInputProps> = ({
 			return (
 				<VImageArray
 					limit={item?.limit}
+					folder={item?.folder}
 					isRequired={isRequired}
 					onChange={props.onChange}
 					helper={item?.helper}

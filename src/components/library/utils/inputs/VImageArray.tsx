@@ -23,6 +23,7 @@ type FormDataType = InputProps &
 		helper?: string;
 		isDisabled?: boolean;
 		limit?: number;
+		folder?: string;
 	};
 
 const VImageArray: FC<FormDataType> = ({
@@ -32,6 +33,7 @@ const VImageArray: FC<FormDataType> = ({
 	label,
 	helper,
 	isDisabled = false,
+	folder,
 	limit = 999,
 }) => {
 	const type = value ? 'edit' : 'add';
@@ -63,6 +65,7 @@ const VImageArray: FC<FormDataType> = ({
 					{value && value?.length >= limit ? null : (
 						<Center {...containerCSS}>
 							<UploadModal
+								folder={folder}
 								type='add'
 								handleImage={onChange}
 								multiple={true}

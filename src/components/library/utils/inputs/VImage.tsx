@@ -11,6 +11,7 @@ type FormDataType = InputProps &
 		label?: string;
 		helper?: string;
 		isDisabled?: boolean;
+		folder?: string;
 	};
 
 const VImage: FC<FormDataType> = ({
@@ -19,6 +20,7 @@ const VImage: FC<FormDataType> = ({
 	isRequired = false,
 	label,
 	helper,
+	folder,
 	isDisabled = false,
 }) => {
 	const type = value ? 'edit' : 'add';
@@ -44,6 +46,8 @@ const VImage: FC<FormDataType> = ({
 						type={type}
 						handleImage={onChange}
 						multiple={true}
+						folder={folder}
+						fileType='image'
 					/>
 					{value && imageComponent}
 				</Center>

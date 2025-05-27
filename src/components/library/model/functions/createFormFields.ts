@@ -60,6 +60,7 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 							...(fieldConfig?.limit && { limit: fieldConfig.limit }),
 							...(fieldConfig.menuKey && { menuKey: fieldConfig.menuKey }),
 							...(fieldConfig.menuAddOnKey && { menuAddOnKey: fieldConfig.menuAddOnKey }),
+							...(fieldConfig.folder && { folder: fieldConfig.folder }),
 						});
 					}
 				});
@@ -93,6 +94,7 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 						...(fieldConfig?.modelAddOn && { modelAddOn: fieldConfig.modelAddOn }),
 						...(fieldConfig.menuKey && { menuKey: fieldConfig.menuKey }),
 						...(fieldConfig.menuAddOnKey && { menuAddOnKey: fieldConfig.menuAddOnKey }),
+						...(fieldConfig.folder && { folder: fieldConfig.folder }),
 						endOfSection: lastElement,
 					});
 				}
