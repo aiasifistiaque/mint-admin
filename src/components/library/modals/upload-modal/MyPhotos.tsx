@@ -51,6 +51,7 @@ const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type: s
 					{type == 'video' ? (
 						<video
 							// controls={isMobile}
+							autoPlay={isMobile}
 							muted
 							ref={videoRef}
 							playsInline
