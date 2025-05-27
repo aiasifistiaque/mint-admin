@@ -27,7 +27,7 @@ export const formFields = [
 	},
 	{
 		sectionTitle: 'Project Details: Video',
-		fields: ['isVideoEnabled', 'videoURL'],
+		fields: ['isVideoEnabled', 'videoURL', 'thumbnail'],
 	},
 
 	{

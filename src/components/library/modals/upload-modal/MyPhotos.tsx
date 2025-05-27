@@ -32,11 +32,13 @@ const ImageComponent = ({
 	src,
 	type,
 	selected,
+	thumbnail,
 	...props
 }: FlexProps & {
 	src: string;
 	type: string;
 	selected: any;
+	thumbnail?: string;
 }) => {
 	const videoRef = useRef<any>(null);
 	const isMobile = useIsMobile();
@@ -79,6 +81,7 @@ const ImageComponent = ({
 			{type == 'video' ? (
 				<video
 					muted
+					poster={thumbnail || undefined}
 					ref={videoRef}
 					playsInline
 					loop
