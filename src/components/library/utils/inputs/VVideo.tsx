@@ -28,6 +28,7 @@ const VVideo: FC<FormDataType> = ({
 	const isMobile = useIsMobile();
 
 	const handleMouseEnter = () => {
+		if (isMobile) return;
 		videoRef.current?.play();
 	};
 
