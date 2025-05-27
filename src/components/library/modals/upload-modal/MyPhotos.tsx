@@ -8,10 +8,8 @@ const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type: s
 	const { data } = useGetAllUploadsQuery({ limit: '999', type, page: 1, sort: '-createdAt' });
 	const [selected, setSelected] = useState<any>(null);
 	const borderColor = useColorModeValue('brand.500', 'brand.200');
-
-	const isMobile = useIsMobile();
-
 	const videoRef = useRef<any>(null);
+	const isMobile = useIsMobile();
 
 	const handleMouseEnter = () => {
 		if (isMobile) return;
@@ -50,10 +48,10 @@ const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type: s
 					bg='whitesmoke'>
 					{type == 'video' ? (
 						<video
-							controls={isMobile}
 							muted
+							poster={`${item?.url}?x-oss-process=video/snapshot,t_0,f_jpg,w_0,h_0,m_fast`} // Add thumbnail
 							ref={videoRef}
-							playsInline
+							playsInline={!isMobile}
 							loop
 							style={{ width: '100%', height: '100%', objectFit: 'contain' }}>
 							<source
