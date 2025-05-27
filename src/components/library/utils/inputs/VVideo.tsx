@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 
 import { Center, FormControl, Image, Stack, InputProps, GridProps } from '@chakra-ui/react';
 import { UploadModal, HelperText, Label, ImageContainer } from '../..';
@@ -23,14 +23,34 @@ const VVideo: FC<FormDataType> = ({
 }) => {
 	const type = value ? 'edit' : 'add';
 
+	const videoRef = useRef<any>(null);
+
+	const handleMouseEnter = () => {
+		videoRef.current?.play();
+	};
+
+	const handleMouseLeave = () => {
+		videoRef.current?.pause();
+		videoRef.current.currentTime = 0;
+	};
+
 	const imageComponent = (
-		<ImageContainer>
-			<Image
-				h='100%'
-				w='100%'
-				objectFit='contain'
-				src={value}
-			/>
+		<ImageContainer
+			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}>
+			<video
+				muted
+				key={value}
+				ref={videoRef}
+				playsInline
+				loop
+				style={{ width: '100%', height: '60%', objectFit: 'contain' }}>
+				<source
+					src={value}
+					type='video/mp4'
+				/>
+				Your browser does not support the video tag.
+			</video>
 		</ImageContainer>
 	);
 
@@ -47,6 +67,7 @@ const VVideo: FC<FormDataType> = ({
 						handleImage={onChange}
 						multiple={true}
 					/>
+
 					{value && imageComponent}
 				</Center>
 				{helper && <HelperText>{helper}</HelperText>}

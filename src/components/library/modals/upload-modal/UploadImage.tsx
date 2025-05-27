@@ -1,12 +1,12 @@
 import React from 'react';
-import { useAddUploadMutation } from '@/store/services/uploadApi';
+import { useAddUploadMutation, useAddVideoMutation } from '@/store/services/uploadApi';
 import { Button, Center, Heading, Progress, Text } from '@chakra-ui/react';
 
-const UploadImage = ({ handleSelect }: { handleSelect: any }) => {
+const UploadImage = ({ handleSelect, fileType }: { handleSelect: any; fileType?: string }) => {
 	const [image, setImage] = React.useState<any>(null);
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
-	const [trigger, result] = useAddUploadMutation();
+	const [trigger, result] = fileType == 'video' ? useAddVideoMutation() : useAddUploadMutation();
 
 	const handleUpload = () => {
 		inputRef.current?.click();

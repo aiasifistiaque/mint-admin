@@ -29,7 +29,16 @@ export const uploadApi = mainApi.injectEndpoints({
 			}),
 			invalidatesTags: ['uploads'],
 		}),
+		addVideo: builder.mutation<any, any>({
+			query: body => ({
+				url: 'upload/video',
+				method: 'POST',
+				body,
+				formData: true,
+			}),
+			invalidatesTags: ['uploads'],
+		}),
 	}),
 });
 
-export const { useGetAllUploadsQuery, useAddUploadMutation } = uploadApi;
+export const { useGetAllUploadsQuery, useAddUploadMutation, useAddVideoMutation } = uploadApi;

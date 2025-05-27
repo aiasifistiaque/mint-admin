@@ -34,7 +34,7 @@ type UploadModalProps = {
 	multiple?: boolean;
 	handleDelete?: any;
 	title?: string;
-	fileType?: 'image' | 'video' | 'file';
+	fileType?: any;
 };
 
 const tabs = ['Photos', 'Upload', 'Web Address (URL)'];
@@ -119,7 +119,7 @@ const UploadModal: FC<UploadModalProps> = ({
 								</TabPanel>
 								<TabPanel sx={styles.panel}>
 									<UploadImage
-										// type={fileType || 'image'}
+										fileType={fileType || 'image'}
 										handleSelect={handleUploadComplete}
 									/>
 								</TabPanel>
