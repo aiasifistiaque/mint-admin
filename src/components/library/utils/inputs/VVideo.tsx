@@ -1,7 +1,7 @@
 import React, { FC, useRef } from 'react';
 
 import { Center, FormControl, Image, Stack, InputProps, GridProps } from '@chakra-ui/react';
-import { UploadModal, HelperText, Label, ImageContainer } from '../..';
+import { UploadModal, HelperText, Label, ImageContainer, useIsMobile } from '../..';
 
 type FormDataType = InputProps &
 	GridProps & {
@@ -25,11 +25,14 @@ const VVideo: FC<FormDataType> = ({
 
 	const videoRef = useRef<any>(null);
 
+	const isMobile = useIsMobile();
+
 	const handleMouseEnter = () => {
 		videoRef.current?.play();
 	};
 
 	const handleMouseLeave = () => {
+		if (isMobile) return;
 		videoRef.current?.pause();
 		videoRef.current.currentTime = 0;
 	};
