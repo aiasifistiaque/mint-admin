@@ -27,6 +27,10 @@ export default function UserFeedback() {
 				pt={3}
 				gridTemplateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }}
 				gap={2}>
+				<Count
+					title='Website views'
+					path='views'
+				/>
 				<ShowSum
 					title='SMS Balance'
 					isLoading={isFetching}

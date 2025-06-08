@@ -6,6 +6,7 @@ export const fields = [
 	'locationCity',
 	'locationCountry',
 	'deviceType',
+	'deviceBrowser',
 
 	'visitDate',
 
@@ -27,21 +28,22 @@ export const fields = [
 ];
 
 export const tableFields = [
+	'pageTitle',
 	'pageSlug',
 	'pageName',
 	'createdAt',
+	'visitDate',
 
 	'locationCity',
 	'locationCountry',
 	'deviceType',
 
-	'visitDate',
+	'deviceBrowser',
 
 	'isUniqueVisitor',
 	'isReturnVisitor',
-	'visitCount',
+	// 'visitCount',
 
-	'pageTitle',
 	'pageUrl',
 
 	'ipAddress',
