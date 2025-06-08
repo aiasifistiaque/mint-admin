@@ -4,7 +4,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		title: 'Dashboard',
 		href: '/',
-		icon: 'home',
+		icon: 'dashboard',
 		path: 'dashboard',
 	},
 	{
