@@ -1,47 +1,37 @@
 'use client';
-
 import React from 'react';
 import { NextPage } from 'next';
-import {
-	PageTable,
-	TableObjectProps,
-	convertToViewFields,
-	convertToTableFields,
-	createFormFields,
-} from '@/components/library';
-import { clientSchema as schema } from '@/models';
-import { fields, tableFields, formFields } from './config';
+import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
+import { formFields, fields, tableFields } from './config';
 
-const table: TableObjectProps = {
-	title: 'Website Views',
+const table: BackendTableObjectProps = {
+	title: 'Page Views',
 	path: 'views',
 	export: true,
+
 	// button: {
-	// 	title: 'New Client',
+	// 	title: 'Add Stack',
 	// 	isModal: true,
-	// 	dataModel: createFormFields({ schema, layout: formFields }),
+	// 	layout: formFields,
 	// },
+	fields: tableFields,
+
 	menu: [
+		{ type: 'view-modal', title: 'View', fields },
+		{ type: 'view-item', title: 'Go To Post' },
+
 		{
-			title: 'View',
-			type: 'view-modal',
-			dataModel: convertToViewFields({ schema, fields }),
+			type: 'edit-modal',
+			title: 'Edit',
+			layout: formFields,
 		},
-		// {
-		// 	title: 'Edit',
-		// 	type: 'edit-modal',
-		// 	dataModel: createFormFields({ schema, layout: formFields }),
-		// },
-		{
-			title: 'Delete',
-			type: 'delete',
-		},
+
+		{ type: 'delete', title: 'Delete' },
 	],
-	data: convertToTableFields({ schema, fields: tableFields }),
 };
 
-const page: NextPage = () => {
-	return <PageTable table={table} />;
+const BrandPage: NextPage = () => {
+	return <BackendPageTable table={table} />;
 };
 
-export default page;
+export default BrandPage;
