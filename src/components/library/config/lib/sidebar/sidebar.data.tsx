@@ -7,6 +7,12 @@ const sidebar: SidebarItemType[] = [
 		icon: 'home',
 		path: 'dashboard',
 	},
+	{
+		title: 'Analytics',
+		href: '/views',
+		icon: 'analytics',
+		path: 'views',
+	},
 
 	{
 		startOfSection: true,

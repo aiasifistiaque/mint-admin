@@ -101,6 +101,8 @@ import { MdAlignHorizontalLeft } from 'react-icons/md';
 import { MdAlignHorizontalRight } from 'react-icons/md';
 import { RxSpaceBetweenHorizontally, RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import iconOptionsArrayData from './iconOptionsArrayData';
+import { SiGoogleanalytics } from 'react-icons/si';
+import { MdSpaceDashboard } from 'react-icons/md';
 
 export type IconNameOptions = (typeof iconOptionsArrayData)[number];
 
@@ -111,6 +113,9 @@ type IconProps = {
 };
 
 const icons: any = {
+	// dashboard: MdSpaceDashboard,
+	views: SiGoogleanalytics,
+	analytics: SiGoogleanalytics,
 	'action-menu': GoListUnordered,
 	add: IoAdd,
 	'add-circle': IoMdAddCircleOutline,
@@ -133,7 +138,7 @@ const icons: any = {
 	customer: FaUserTag,
 	customers: HiUserGroup,
 	damage: GiBrokenPottery,
-	dashboard: IoIosHome,
+	dashboard: MdSpaceDashboard,
 	date: BsCalendar2Date,
 	delete: MdDelete,
 	'delete-builder': RiDeleteBinLine,
