@@ -16,7 +16,7 @@ const createType = ({ type, isReadOnly, fieldType }: any) => {
 const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] => {
 	const dataFields: any[] = [];
 
-	layout.forEach((section: any) => {
+	layout?.forEach((section: any) => {
 		const { sectionTitle, fields, description, collapsible } = section;
 
 		fields.forEach((field: any, index: number) => {
