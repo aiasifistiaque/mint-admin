@@ -7,7 +7,7 @@ export const fields = [
 	'locationCountry',
 
 	'customRef',
-	'referer',
+	'referrer',
 
 	'deviceType',
 	'deviceBrowser',
@@ -44,7 +44,7 @@ export const tableFields = [
 	'visitDate',
 
 	'customRef',
-	'referer',
+	'referrer',
 
 	'locationCity',
 	'locationCountry',
