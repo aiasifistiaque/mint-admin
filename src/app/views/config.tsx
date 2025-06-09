@@ -1,15 +1,19 @@
 export const fields = [
 	'pageSlug',
-	'pageName',
+	'pageTitle',
 	'visitDate',
 
 	'locationCity',
 	'locationCountry',
+
+	'customRef',
+
 	'deviceType',
 	'deviceBrowser',
 	'deviceOs',
 	'deviceBrand',
 	'deviceModel',
+
 	'isBot',
 	'botName',
 
@@ -19,7 +23,6 @@ export const fields = [
 	'isReturnVisitor',
 	'visitCount',
 
-	'pageTitle',
 	'pageUrl',
 
 	'ipAddress',
@@ -35,11 +38,11 @@ export const fields = [
 export const tableFields = [
 	'pageTitle',
 	'pageSlug',
-	'pageName',
+
 	// 'createdAt',
 	'visitDate',
-	'isBot',
-	'botName',
+
+	'customRef',
 
 	'locationCity',
 	'locationCountry',
@@ -51,9 +54,13 @@ export const tableFields = [
 	'isReturnVisitor',
 	// 'visitCount',
 
+	'ipAddress',
+
+	'isBot',
+	'botName',
+
 	'pageUrl',
 
-	'ipAddress',
 	'locationRegion',
 	'locationRegionCode',
 	'locationIsp',
