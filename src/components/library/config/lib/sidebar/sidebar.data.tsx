@@ -17,9 +17,9 @@ const sidebar: SidebarItemType[] = [
 	},
 	{
 		title: 'Click Events',
-		href: '/clicks',
+		href: '/clickevents',
 		icon: 'clicks',
-		path: 'clicks',
+		path: 'clickevents',
 	},
 
 	{
