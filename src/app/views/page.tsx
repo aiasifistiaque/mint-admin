@@ -20,12 +20,6 @@ const table: BackendTableObjectProps = {
 		{ type: 'view-modal', title: 'View', fields },
 		{ type: 'view-item', title: 'Go To Post' },
 
-		{
-			type: 'edit-modal',
-			title: 'Edit',
-			layout: formFields,
-		},
-
 		{ type: 'delete', title: 'Delete' },
 	],
 };

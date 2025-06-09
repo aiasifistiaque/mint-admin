@@ -11,3 +11,5 @@ export { default as generateText } from './generateTextContent';
 export { default as getFontSize } from './getFontSize';
 
 export { default as getOnChangeHandler } from './getOnChangeHandler';
+
+export { default as formatFieldNameAdvanced } from './fonrmatFieldNameAdvanced';

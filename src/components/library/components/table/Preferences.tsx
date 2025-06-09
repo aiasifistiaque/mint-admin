@@ -95,11 +95,11 @@ const Preferences = ({ path }: { path: string }) => {
 				<MenuModalHeader>Select Preferences</MenuModalHeader>
 				<MenuModalCloseButton />
 				<MenuModalBody>
-					<Grid {...style.checkboxGrid}>{checkboxes}</Grid>
+					<Grid {...style?.checkboxGrid}>{checkboxes}</Grid>
 				</MenuModalBody>
 				<MenuModalFooter>
 					{selected?.length < 2 ? (
-						<Text {...style.errorText}>Please select at least 2 fields</Text>
+						<Text {...style?.errorText}>Please select at least 2 fields</Text>
 					) : (
 						<>
 							<Button

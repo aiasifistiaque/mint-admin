@@ -10,6 +10,7 @@ import {
 	EditableTableData,
 	TableData,
 	TableMenu,
+	formatFieldName,
 } from '../../../..';
 
 type TableProps = StackProps &
@@ -125,7 +126,7 @@ const TableRowComponent: FC<TableProps> = ({
 					return (
 						<Container key={dataKey}>
 							{isMobile && type !== 'image-text' && (
-								<Heading size='xs'>{formatDataKey(dataKey)}</Heading>
+								<Heading size='xs'>{formatFieldName(dataKey)}</Heading>
 							)}
 
 							<TableData
