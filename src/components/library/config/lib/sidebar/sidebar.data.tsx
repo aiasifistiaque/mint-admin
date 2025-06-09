@@ -10,7 +10,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Analytics',
-		title: 'Paeg Views',
+		title: 'Page Views',
 		href: '/views',
 		icon: 'analytics',
 		path: 'views',
