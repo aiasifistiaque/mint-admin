@@ -2,14 +2,10 @@
 import React, { FC } from 'react';
 import { IoIosHome, IoIosAddCircleOutline, IoIosStar } from 'react-icons/io';
 import { IoAdd, IoBagOutline, IoGridOutline, IoSearchOutline } from 'react-icons/io5';
-import { TbArrowBack, TbSelector } from 'react-icons/tb';
-import { BsBuildingsFill, BsCalendar2Date, BsJustifyLeft, BsJustifyRight } from 'react-icons/bs';
+import { BsBuildingsFill, BsCalendar2Date, BsCollectionFill, BsThreeDots } from 'react-icons/bs';
 import colors from '@/theme/colors.theme';
 import { useColorModeValue } from '@chakra-ui/react';
-import { TbArrowForward } from 'react-icons/tb';
-import { TbDownload } from 'react-icons/tb';
-
-import { TbSettings } from 'react-icons/tb';
+import { TbArrowForward, TbDownload, TbSettings, TbSelector } from 'react-icons/tb';
 import {
 	LuAlignEndVertical,
 	LuAlignHorizontalJustifyCenter,
@@ -20,23 +16,16 @@ import {
 	LuAlignVerticalJustifyCenter,
 	LuImagePlus,
 } from 'react-icons/lu';
-import { GoHomeFill } from 'react-icons/go';
-import { ImPriceTag } from 'react-icons/im';
-import { BiSolidCategory } from 'react-icons/bi';
-import { TbFileInvoice } from 'react-icons/tb';
+
+import { BiSolidCategory, BiSortAZ, BiSolidBookContent, BiSolidReport } from 'react-icons/bi';
+import { TbFileInvoice, TbTruckDelivery, TbBrandPatreonFilled, TbFileExport } from 'react-icons/tb';
 import { MdBrandingWatermark } from 'react-icons/md';
-import { RiCoupon2Fill } from 'react-icons/ri';
-import { FaRegEnvelope, FaUserFriends } from 'react-icons/fa';
-import { FaUserTag } from 'react-icons/fa';
-import { FaUnlockKeyhole } from 'react-icons/fa6';
-import { TbTruckDelivery } from 'react-icons/tb';
-import { RiSettings3Fill } from 'react-icons/ri';
-import { FaTable } from 'react-icons/fa6';
+import { FaRegEnvelope, FaUserFriends, FaUserTag, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaTruck, FaTshirt, FaDesktop, FaCheckCircle } from 'react-icons/fa';
+
+import { RiSettings3Fill, RiDiscountPercentFill, RiDeleteBinLine } from 'react-icons/ri';
 import { TiPrinter } from 'react-icons/ti';
-import { BiSortAZ } from 'react-icons/bi';
-
-import { IoMdBarcode } from 'react-icons/io';
-
+import { IoMdBarcode, IoIosArrowBack, IoMdAddCircleOutline } from 'react-icons/io';
 import {
 	CiMenuBurger,
 	CiStar,
@@ -45,64 +34,38 @@ import {
 	CiTextAlignLeft,
 	CiTextAlignRight,
 } from 'react-icons/ci';
-import { GrSubtract } from 'react-icons/gr';
-import { SiCkeditor4 } from 'react-icons/si';
-import { FaRegEdit } from 'react-icons/fa';
-import { MdFastfood } from 'react-icons/md';
-import { BsCollectionFill } from 'react-icons/bs';
+import { GrSubtract, GrEdit } from 'react-icons/gr';
+import { SiCkeditor4, SiGoogleanalytics } from 'react-icons/si';
+import { MdFastfood, MdLocalPhone, MdInventory, MdSpaceDashboard } from 'react-icons/md';
 import { FcFeedback } from 'react-icons/fc';
-import { MdFeedback } from 'react-icons/md';
-import { FaRegClock } from 'react-icons/fa6';
-import { BsThreeDots } from 'react-icons/bs';
-import { MdOutlineCancel } from 'react-icons/md';
-import { MdOutlineEdit } from 'react-icons/md';
-import { MdDelete } from 'react-icons/md';
+import { MdOutlineCancel, MdOutlineEdit, MdDelete, MdFeedback } from 'react-icons/md';
 import { HiUserGroup } from 'react-icons/hi';
 // import { IoMdBarcode } from 'react-icons/io';
-import { FaCartShopping } from 'react-icons/fa6';
-import { IoStorefront } from 'react-icons/io5';
-import { BiSolidBookContent } from 'react-icons/bi';
-import { BiSolidReport } from 'react-icons/bi';
-import { FaMoneyCheckAlt } from 'react-icons/fa';
-import { TbBrandPatreonFilled } from 'react-icons/tb';
-import { GiBuyCard } from 'react-icons/gi';
-import { FaTruck } from 'react-icons/fa';
-import { FaCircleInfo } from 'react-icons/fa6';
-import { FaRegCopy } from 'react-icons/fa6';
-import { IoIosArrowRoundBack } from 'react-icons/io';
-import { IoIosArrowBack } from 'react-icons/io';
-import { MdLocalPhone } from 'react-icons/md';
-import { FaMapMarkerAlt } from 'react-icons/fa';
-import { GoListUnordered } from 'react-icons/go';
-import { TbFileExport } from 'react-icons/tb';
-import { IoMdAddCircleOutline } from 'react-icons/io';
-import { HiArrowUturnLeft, HiArrowUturnRight } from 'react-icons/hi2';
-import { GiBrokenPottery } from 'react-icons/gi';
-import { GiReturnArrow } from 'react-icons/gi';
-import { RiDiscountPercentFill } from 'react-icons/ri';
-import { HiMiniRocketLaunch } from 'react-icons/hi2';
-import { FaTshirt } from 'react-icons/fa';
-import { FaMoneyCheckDollar } from 'react-icons/fa6';
-import { GiMoneyStack } from 'react-icons/gi';
+
+import { IoStorefront, IoEye, IoEyeOff } from 'react-icons/io5';
+
+import { FaCircleInfo, FaRegCopy, FaCartShopping, FaMoneyCheckDollar } from 'react-icons/fa6';
+import { FaUnlockKeyhole, FaTable, FaRegClock, FaPeopleGroup } from 'react-icons/fa6';
+import { GoListUnordered, GoHomeFill } from 'react-icons/go';
+import {
+	HiMiniRocketLaunch,
+	HiMiniDevicePhoneMobile,
+	HiArrowUturnLeft,
+	HiArrowUturnRight,
+} from 'react-icons/hi2';
+
+import { GiMoneyStack, GiClick, GiBuyCard, GiBrokenPottery, GiReturnArrow } from 'react-icons/gi';
 import { PiUserListFill } from 'react-icons/pi';
 import { AiOutlineThunderbolt } from 'react-icons/ai';
-import { FaCheckCircle } from 'react-icons/fa';
-import { GrEdit } from 'react-icons/gr';
-import { RiDeleteBinLine } from 'react-icons/ri';
-import { HiMiniDevicePhoneMobile } from 'react-icons/hi2';
-import { FaDesktop } from 'react-icons/fa';
-import { FaPeopleGroup } from 'react-icons/fa6';
-import { MdInventory } from 'react-icons/md';
 import { BiTransferAlt } from 'react-icons/bi';
-import { IoEye } from 'react-icons/io5';
-import { IoEyeOff } from 'react-icons/io5';
-import { MdAlignHorizontalCenter } from 'react-icons/md';
-import { MdAlignHorizontalLeft } from 'react-icons/md';
-import { MdAlignHorizontalRight } from 'react-icons/md';
+
+import {
+	MdAlignHorizontalCenter,
+	MdAlignHorizontalLeft,
+	MdAlignHorizontalRight,
+} from 'react-icons/md';
 import { RxSpaceBetweenHorizontally, RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import iconOptionsArrayData from './iconOptionsArrayData';
-import { SiGoogleanalytics } from 'react-icons/si';
-import { MdSpaceDashboard } from 'react-icons/md';
 
 export type IconNameOptions = (typeof iconOptionsArrayData)[number];
 
@@ -117,6 +80,7 @@ const icons: any = {
 	views: SiGoogleanalytics,
 	analytics: SiGoogleanalytics,
 	'action-menu': GoListUnordered,
+	clicks: GiClick,
 	add: IoAdd,
 	'add-circle': IoMdAddCircleOutline,
 	'add-image': LuImagePlus,
