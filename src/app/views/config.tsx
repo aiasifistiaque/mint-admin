@@ -7,6 +7,9 @@ export const fields = [
 	'locationCountry',
 	'deviceType',
 	'deviceBrowser',
+	'deviceOs',
+	'deviceBrand',
+	'deviceModel',
 	'isBot',
 	'botName',
 
