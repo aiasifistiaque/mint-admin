@@ -8,10 +8,18 @@ const sidebar: SidebarItemType[] = [
 		path: 'dashboard',
 	},
 	{
-		title: 'Analytics',
+		startOfSection: true,
+		sectionTitle: 'Analytics',
+		title: 'Paeg Views',
 		href: '/views',
 		icon: 'analytics',
 		path: 'views',
+	},
+	{
+		title: 'Click Events',
+		href: '/clicks',
+		icon: 'clicks',
+		path: 'clicks',
 	},
 
 	{
