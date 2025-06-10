@@ -29,7 +29,7 @@ import {
 	sizes,
 } from '../..';
 
-const Preferences = ({ path }: { path: string }) => {
+const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { fields = [], preferences = [] } = useAppSelector(state => state.table);
 	const [selected, setSelected] = useState<string[]>([]);
@@ -62,7 +62,7 @@ const Preferences = ({ path }: { path: string }) => {
 		else setSelected(prevSelected => prevSelected.filter(item => item !== field));
 	}, []);
 
-	const checkboxes = fields.map((field: string, i: number) => (
+	const checkboxes = fields?.map((field: string, i: number) => (
 		<Checkbox
 			{...style.checkbox}
 			key={i}
@@ -95,7 +95,8 @@ const Preferences = ({ path }: { path: string }) => {
 				<MenuModalHeader>Select Preferences</MenuModalHeader>
 				<MenuModalCloseButton />
 				<MenuModalBody>
-					<Grid {...style?.checkboxGrid}>{checkboxes}</Grid>
+					<Text>{JSON.stringify(schema)}</Text>
+					{/* <Grid {...style?.checkboxGrid}>{checkboxes}</Grid> */}
 				</MenuModalBody>
 				<MenuModalFooter>
 					{selected?.length < 2 ? (

@@ -19,7 +19,6 @@ const table: BackendTableObjectProps = {
 	menu: [
 		{ type: 'view-modal', title: 'View', fields },
 		{ type: 'view-item', title: 'Go To Post' },
-
 		{ type: 'delete', title: 'Delete' },
 	],
 };

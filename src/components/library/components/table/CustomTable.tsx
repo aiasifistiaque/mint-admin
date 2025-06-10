@@ -89,7 +89,12 @@ const CustomTable: React.FC<CustomTableProps> = ({
 					)}
 
 					<TableSearchContainer>
-						{!hidePreferences && <Preferences path={path} />}
+						{!hidePreferences && (
+							<Preferences
+								path={path}
+								schema={schema}
+							/>
+						)}
 						<TableSort tableData={schema} />
 						{search && (
 							<>
