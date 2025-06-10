@@ -13,3 +13,5 @@ export { default as getFontSize } from './getFontSize';
 export { default as getOnChangeHandler } from './getOnChangeHandler';
 
 export { default as formatFieldNameAdvanced } from './fonrmatFieldNameAdvanced';
+
+export { default as formatFieldTitle } from './findFieldTitle';

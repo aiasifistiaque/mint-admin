@@ -27,6 +27,7 @@ import {
 	radius,
 	formatFieldName,
 	sizes,
+	formatFieldTitle,
 } from '../..';
 
 const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
@@ -68,7 +69,7 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 			key={i}
 			isChecked={selected?.includes(field)}
 			onChange={e => handleCheckboxChange(e, field)}>
-			{formatFieldName(field)}
+			{formatFieldTitle({ field, schema })}
 		</Checkbox>
 	));
 
@@ -95,8 +96,7 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 				<MenuModalHeader>Select Preferences</MenuModalHeader>
 				<MenuModalCloseButton />
 				<MenuModalBody>
-					<Text>{JSON.stringify(schema)}</Text>
-					{/* <Grid {...style?.checkboxGrid}>{checkboxes}</Grid> */}
+					<Grid {...style?.checkboxGrid}>{checkboxes}</Grid>
 				</MenuModalBody>
 				<MenuModalFooter>
 					{selected?.length < 2 ? (

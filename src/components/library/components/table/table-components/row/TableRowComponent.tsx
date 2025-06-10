@@ -11,6 +11,7 @@ import {
 	TableData,
 	TableMenu,
 	formatFieldName,
+	formatFieldTitle,
 } from '../../../..';
 
 type TableProps = StackProps &
@@ -126,7 +127,7 @@ const TableRowComponent: FC<TableProps> = ({
 					return (
 						<Container key={dataKey}>
 							{isMobile && type !== 'image-text' && (
-								<Heading size='xs'>{formatFieldName(dataKey)}</Heading>
+								<Heading size='xs'>{formatFieldTitle({ field: dataKey, schema: data })}</Heading>
 							)}
 
 							<TableData
