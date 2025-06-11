@@ -114,11 +114,23 @@ const QuillEditor = ({ value, onChange, name, isRequired, label, helper }: any) 
 					}}
 					modules={modules}
 					formats={[
-						'header', 'bold', 'italic', 'underline', 'strike',
-						'align', 'script', 'color', 'background',
-						'blockquote', 'code-block', 'clean',
-						'list', 'bullet', 'indent',
-						'image', 'link'
+						'header',
+						'bold',
+						'italic',
+						'underline',
+						'strike',
+						'align',
+						'script',
+						'color',
+						'background',
+						'blockquote',
+						'code-block',
+						'clean',
+						'list',
+						'bullet',
+						'indent',
+						'image',
+						'link',
 					]}
 					value={value}
 					onChange={(content: any, delta: any, source: any, editor: any) => {
