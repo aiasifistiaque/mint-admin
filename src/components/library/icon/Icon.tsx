@@ -21,7 +21,7 @@ import { BiSolidCategory, BiSortAZ, BiSolidBookContent, BiSolidReport } from 're
 import { TbFileInvoice, TbTruckDelivery, TbBrandPatreonFilled, TbFileExport } from 'react-icons/tb';
 import { MdBrandingWatermark } from 'react-icons/md';
 import { FaRegEnvelope, FaUserFriends, FaUserTag, FaMapMarkerAlt } from 'react-icons/fa';
-import { FaTruck, FaTshirt, FaDesktop, FaCheckCircle } from 'react-icons/fa';
+import { FaTruck, FaTshirt, FaDesktop, FaCheckCircle, FaPenAlt } from 'react-icons/fa';
 
 import { RiSettings3Fill, RiDiscountPercentFill, RiDeleteBinLine } from 'react-icons/ri';
 import { TiPrinter } from 'react-icons/ti';
@@ -55,7 +55,7 @@ import {
 } from 'react-icons/hi2';
 
 import { GiMoneyStack, GiClick, GiBuyCard, GiBrokenPottery, GiReturnArrow } from 'react-icons/gi';
-import { PiUserListFill } from 'react-icons/pi';
+import { PiUserListFill, PiArticleMediumFill } from 'react-icons/pi';
 import { AiOutlineThunderbolt } from 'react-icons/ai';
 import { BiTransferAlt } from 'react-icons/bi';
 
@@ -77,6 +77,8 @@ type IconProps = {
 
 const icons: any = {
 	// dashboard: MdSpaceDashboard,
+	author: FaPenAlt,
+	blog: PiArticleMediumFill,
 	views: SiGoogleanalytics,
 	analytics: SiGoogleanalytics,
 	'action-menu': GoListUnordered,

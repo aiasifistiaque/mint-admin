@@ -320,6 +320,20 @@ const sidebar: SidebarItemType[] = [
 	},
 	{
 		startOfSection: true,
+		sectionTitle: 'TC Blog',
+		title: 'Blog',
+		href: '/blogs',
+		icon: 'blog',
+		path: 'blogs',
+	},
+	{
+		title: 'Author',
+		href: '/authors',
+		icon: 'author',
+		path: 'authors',
+	},
+	{
+		startOfSection: true,
 		sectionTitle: 'Resources',
 		title: 'Dev Resources',
 		href: '/resources',
