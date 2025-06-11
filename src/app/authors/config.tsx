@@ -1,6 +1,6 @@
 export const fields = ['image', 'name', 'email', 'bio', 'createdAt'];
 
-export const tableFields = ['image', 'name', 'email', 'bio', 'createdAt'];
+export const tableFields = ['name', 'email', 'createdAt'];
 
 export const formFields = [
 	{
