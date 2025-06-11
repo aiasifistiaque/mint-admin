@@ -1,4 +1,4 @@
-export const styles = {
+export const styles: any = {
 	container: {
 		border: '1px solid red',
 		h: '80vh',
@@ -16,5 +16,25 @@ export const styles = {
 		flex: 1,
 		h: 'full',
 		px: 0,
+	},
+	tabsCss: {
+		h: '60vh',
+		colorScheme: 'brand',
+		flex: 1,
+	},
+	tabPanelCss: {
+		px: 0,
+		h: 'full',
+		overflowY: 'scroll',
+	},
+	modalContentCss: {
+		bg: 'menu.light',
+		_dark: {
+			bg: 'menu.dark',
+		},
+	},
+	cancelBtnCss: {
+		colorScheme: 'gray',
+		size: 'sm',
 	},
 };

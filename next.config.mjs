@@ -14,6 +14,19 @@ const nextConfig = {
 	reactStrictMode: false,
 	webpack: config => {
 		config.cache = true;
+
+		// Handle Quill modules
+		config.module.rules.push({
+			test: /\.svg$/,
+			use: ['@svgr/webpack'],
+		});
+
+		// Ignore specific modules that cause issues
+		config.resolve.fallback = {
+			...config.resolve.fallback,
+			fs: false,
+		};
+
 		return config;
 	},
 };

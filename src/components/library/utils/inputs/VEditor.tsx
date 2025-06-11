@@ -3,12 +3,16 @@ import React, { useMemo, useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { URL } from '../../../../lib/constants';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 import { FormControl } from './input-components';
+import ImageUploader from '../../modals/upload-modal/ImageUploader';
+import { useDisclosure } from '@chakra-ui/react';
+
+import QuillResizeImage from 'quill-resize-image';
 
 const QuillNoSSRWrapper = dynamic(
 	async () => {
-		const { default: RQ } = await import('react-quill');
+		const { default: RQ } = await import('react-quill-new');
 		// eslint-disable-next-line react/display-name
 		return ({ forwardedRef, ...props }: any) => (
 			<RQ
@@ -24,57 +28,42 @@ const QuillNoSSRWrapper = dynamic(
 );
 
 const QuillEditor = ({ value, onChange, name, isRequired, label, helper }: any) => {
+	// Register quill-resize-image module for React 19 compatibility
 	useEffect(() => {
-		const ReactQuill = require('react-quill');
-		const Quill = ReactQuill.Quill;
-		const ImageResize = require('quill-image-resize-module-react').default;
-		if (Quill && typeof window !== 'undefined') {
-			Quill.register('modules/imageResize', ImageResize);
-		}
-	}, []);
-	// useEffect(() => {
-	// 	console.log('quill', value, name);
-	// }, [value, name]);
-	// console.log(name, value);
-
-	const quillRef = useRef(null);
-
-	const imageHandler = async () => {
-		const input = document.createElement('input');
-		input.setAttribute('type', 'file');
-		input.setAttribute('accept', 'image/*');
-		input.click();
-
-		input.onchange = async () => {
-			const file = input.files ? input.files[0] : null;
-			const quillObj: any = (quillRef as any)?.current?.getEditor();
-			const range = quillObj?.getSelection();
-
-			if (file) {
-				const formData = new FormData();
-				formData.append('image', file);
+		const registerImageResize = async () => {
+			if (typeof window !== 'undefined') {
 				try {
-					const { data } = await axios.post(`${URL.backend}/api/upload`, formData, {
-						headers: {
-							'Content-Type': 'multipart/form-data',
-						},
-					});
+					const ReactQuill = (await import('react-quill-new')).default;
+					const Quill = ReactQuill.Quill;
+					const ImageResize = (await import('quill-resize-image')).default;
 
-					if (data) {
-						console.log(data);
-						quillObj.editor.insertEmbed(range.index, 'image', data?.Location);
+					if (Quill) {
+						Quill.register('modules/resize', ImageResize);
 					}
-				} catch (e) {
-					console.log(e);
+				} catch (error) {
+					console.warn('Failed to register image resize module:', error);
 				}
 			}
 		};
+
+		registerImageResize();
+	}, []);
+
+	const quillRef = useRef(null);
+	const { onOpen, isOpen, onClose } = useDisclosure();
+
+	const handleImage = (image: string) => {
+		const quillObj: any = (quillRef as any)?.current?.getEditor();
+		if (!quillObj) console.log('Quill Object Not Found');
+		const range = quillObj.getSelection() || { index: 0 };
+		quillObj.insertEmbed(range.index, 'image', image);
+		quillObj.setSelection(range.index + 1);
 	};
 
 	const modules = useMemo(
 		() => ({
-			imageResize: {
-				modules: ['Resize', 'DisplaySize'],
+			resize: {
+				locale: {},
 			},
 			toolbar: {
 				clipboard: {
@@ -84,19 +73,18 @@ const QuillEditor = ({ value, onChange, name, isRequired, label, helper }: any) 
 				container: [
 					[{ header: [1, 2, 3, 4, 5, 6, false] }],
 					['bold', 'italic', 'underline', 'strike'],
-					[{ font: [] }],
+					// [{ font: [] }],
 					[{ align: [] }],
 					[{ script: 'sub' }, { script: 'super' }],
 					[{ color: [] }, { background: [] }], // dropdown with defaults from theme
 					['blockquote', 'code-block'],
 
 					['clean'],
-
 					[{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
 					['image', 'link'],
 				],
 				handlers: {
-					image: imageHandler,
+					image: onOpen,
 				},
 			},
 		}),
@@ -109,6 +97,12 @@ const QuillEditor = ({ value, onChange, name, isRequired, label, helper }: any) 
 				isRequired={isRequired}
 				label={label}
 				helper={helper}>
+				<ImageUploader
+					handleImage={handleImage}
+					isOpen={isOpen}
+					onClose={onClose}
+					onOpen={onOpen}
+				/>
 				<QuillNoSSRWrapper
 					forwardedRef={quillRef}
 					theme='snow'
@@ -119,6 +113,13 @@ const QuillEditor = ({ value, onChange, name, isRequired, label, helper }: any) 
 						marginBottom: '50px',
 					}}
 					modules={modules}
+					formats={[
+						'header', 'bold', 'italic', 'underline', 'strike',
+						'align', 'script', 'color', 'background',
+						'blockquote', 'code-block', 'clean',
+						'list', 'bullet', 'indent',
+						'image', 'link'
+					]}
 					value={value}
 					onChange={(content: any, delta: any, source: any, editor: any) => {
 						// Assuming you want to capture the HTML content and pass it along with a name

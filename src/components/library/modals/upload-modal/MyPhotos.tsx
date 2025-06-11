@@ -4,7 +4,7 @@ import { Box, Flex, FlexProps, Grid, Image, useColorModeValue } from '@chakra-ui
 import { useGetAllUploadsQuery } from '@/store/services/uploadApi';
 import { useIsMobile } from '../../hooks';
 
-const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type: string }) => {
+const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type?: string }) => {
 	const { data } = useGetAllUploadsQuery({ limit: '999', type, page: 1, sort: '-createdAt' });
 	const [selected, setSelected] = useState<any>(null);
 
