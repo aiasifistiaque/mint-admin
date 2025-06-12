@@ -14,3 +14,5 @@ export { default as EditorSidebar } from './sidebar/EditorSidebar';
 
 export { default as EditorSideDrawer } from './sidebar/EditorSideDrawer';
 export { default as EditorLayoutFetching } from './EditorLayoutFetching';
+
+export { default as EditorNav } from './EditorNav';

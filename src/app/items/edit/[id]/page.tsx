@@ -1,12 +1,8 @@
 'use client';
 
 import React from 'react';
-import { useFormData, EditItemPage } from '@/components/library';
-import { useParams } from 'next/navigation';
-import {
-	useGetByIdQuery,
-	useUpdateByIdMutation,
-} from '@/components/library/store/services/commonApi';
+import { EditItemPage } from '@/components/library';
+
 import { table } from '../../create/dataModel';
 
 const inputFields: any = [
@@ -76,17 +72,6 @@ const UpdateItemPage = () => {
 	return (
 		<>
 			<EditItemPage data={table} />
-			{/* <FormPage
-				data={inputFields}
-				formData={formData}
-				setFormData={setFormData}
-				trigger={trigger}
-				result={result}
-				path='items'
-				title='Update Menu Item'
-				type='update'
-				id={id}
-			/> */}
 		</>
 	);
 };

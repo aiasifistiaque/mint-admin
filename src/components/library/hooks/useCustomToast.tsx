@@ -1,6 +1,6 @@
 'use client';
 
-import { Flex, Heading, Text, useToast } from '@chakra-ui/react';
+import { Flex, Heading, Text, useToast, CloseButton } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { Icon } from '../icon';
 
@@ -44,23 +44,16 @@ const useCustomToast = ({
 
 	useEffect(() => {
 		if (isLoading) return;
-		// isSuccess &&
-		// 	toast({
-		// 		title: successTitle || 'Success',
-		// 		description: successText || 'success',
-		// 		status: 'success',
-		// 		duration: DURATION,
-		// 		isClosable: IS_CLOSABLE,
-		// 		variant: 'solid',
-		// 		position: POSITION,
-		// 	});
+
 		isSuccess &&
 			toast({
 				duration: DURATION,
 				position: POSITION,
 				isClosable: IS_CLOSABLE,
-				render: () => (
-					<Flex {...successContainer}>
+				render: ({ onClose }) => (
+					<Flex
+						{...successContainer}
+						position='relative'>
 						<Flex pt={1}>
 							<Icon
 								name='check'
@@ -78,6 +71,13 @@ const useCustomToast = ({
 							</Heading>
 							<Text {...textColor}>{successText || 'success'}</Text>
 						</Flex>
+						<CloseButton
+							onClick={onClose}
+							position='absolute'
+							top={2}
+							right={2}
+							zIndex={1}
+						/>
 					</Flex>
 				),
 			});

@@ -1,10 +1,10 @@
 'use client';
 import React, { useMemo, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import 'react-quill-new/dist/quill.snow.css';
-import { FormControl } from './input-components';
-import ImageUploader from '../../modals/upload-modal/ImageUploader';
+import { FormControl } from '../input-components';
+import ImageUploader from '../../../modals/upload-modal/ImageUploader';
 import { useDisclosure } from '@chakra-ui/react';
+import './style.css';
 
 const QuillNoSSRWrapper = dynamic(
 	async () => {
@@ -25,7 +25,7 @@ const QuillNoSSRWrapper = dynamic(
 	}
 );
 
-const QuillEditor = ({ value, onChange, name, isRequired, label, helper }: any) => {
+const FullEditor = ({ value, onChange, name, isRequired, label, helper }: any) => {
 	// Register quill-resize-image module for React 19 compatibility
 	useEffect(() => {
 		const registerImageResize = async () => {
@@ -73,10 +73,10 @@ const QuillEditor = ({ value, onChange, name, isRequired, label, helper }: any) 
 					['bold', 'italic', 'underline', 'strike'],
 					// [{ font: [] }],
 					[{ align: [] }],
-					[{ script: 'sub' }, { script: 'super' }],
-					[{ color: [] }, { background: [] }], // dropdown with defaults from theme
+					// [{ script: 'sub' }, { script: 'super' }],
+					// [{ color: [] }, { background: [] }], // dropdown with defaults from theme
 					['blockquote', 'code-block'],
-					['clean'],
+					// ['clean'],
 					[{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
 					['image', 'link'],
 				],
@@ -85,11 +85,11 @@ const QuillEditor = ({ value, onChange, name, isRequired, label, helper }: any) 
 				},
 			},
 		}),
-		[]
+		[onOpen]
 	);
 
 	return (
-		<>
+		<div className='full-editor-quill'>
 			<FormControl
 				isRequired={isRequired}
 				label={label}
@@ -103,19 +103,17 @@ const QuillEditor = ({ value, onChange, name, isRequired, label, helper }: any) 
 				<QuillNoSSRWrapper
 					forwardedRef={quillRef}
 					theme='snow'
+					className='custom-quill-editor'
 					style={{
-						backgroundColor: 'white',
-						minHeight: '600px',
-						height: '600px',
-						marginBottom: '50px',
+						overflow: 'hidden',
+						maxW: '50vw',
+						marginBottom: '20px',
 					}}
 					modules={modules}
 					formats={formats}
 					value={value}
 					onChange={(content: any, delta: any, source: any, editor: any) => {
-						// Assuming you want to capture the HTML content and pass it along with a name
-						const htmlContent = editor.getHTML(); // or editor.getText() for plain text
-						// Construct an event-like object or directly use the content as needed
+						const htmlContent = editor.getHTML();
 						const customEvent = {
 							target: {
 								name: name,
@@ -126,7 +124,7 @@ const QuillEditor = ({ value, onChange, name, isRequired, label, helper }: any) 
 					}}
 				/>
 			</FormControl>
-		</>
+		</div>
 	);
 };
 
@@ -150,4 +148,4 @@ const formats = [
 	'link',
 ];
 
-export default QuillEditor;
+export default FullEditor;

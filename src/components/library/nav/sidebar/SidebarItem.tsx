@@ -42,15 +42,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ href, children, path, icon, s
 	const isMobile = useIsMobile();
 
 	const Container = ({ children }: any) => {
-		return href ? (
-			<Link
-				href={href}
-				passHref={children}>
-				{children}
-			</Link>
-		) : (
-			<>{children}</>
-		);
+		return href ? <Link href={href}>{children}</Link> : <>{children}</>;
 	};
 
 	// return <Link href='/'>home</Link>;

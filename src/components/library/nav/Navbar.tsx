@@ -3,7 +3,7 @@
 import { Flex, FlexProps } from '@chakra-ui/react';
 import React, { FC, ReactNode } from 'react';
 import SideDrawer from './sidebar/SideDrawer';
-import { sizes, zIndex, padding, styles } from '..';
+import { padding, styles } from '..';
 
 type FlexPropsType = FlexProps & {
 	children: ReactNode;

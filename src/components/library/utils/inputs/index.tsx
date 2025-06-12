@@ -47,6 +47,7 @@ export { default as VColor } from './VColor';
 export { default as VFile } from './VFile';
 
 export { default as VEditor } from './VEditor';
+export { default as FullEditor } from './FullEditor';
 
 export * from './input-components';
 
