@@ -3,44 +3,42 @@
 import React from 'react';
 import { NextPage } from 'next';
 import {
-	PageTable,
-	TableObjectProps,
 	convertToViewFields,
-	convertToTableFields,
-	createFormFields,
+	BackendTableObjectProps,
+	BackendPageTable,
 } from '@/components/library';
 import { clientSchema as schema } from '@/models';
 import { fields, tableFields, formFields } from './config';
 
-const table: TableObjectProps = {
+const table: BackendTableObjectProps = {
 	title: 'Npm Packages',
 	path: 'npmlibraries',
 	button: {
 		title: 'Add Package',
 		isModal: true,
-		dataModel: createFormFields({ schema, layout: formFields }),
+		layout: formFields,
 	},
+	fields: tableFields,
 	menu: [
 		{
 			title: 'View',
 			type: 'view-modal',
-			dataModel: convertToViewFields({ schema, fields }),
+			fields,
 		},
 		{
 			title: 'Edit',
 			type: 'edit-modal',
-			dataModel: createFormFields({ schema, layout: formFields }),
+			layout: formFields,
 		},
 		{
 			title: 'Delete',
 			type: 'delete',
 		},
 	],
-	data: convertToTableFields({ schema, fields: tableFields }),
 };
 
 const page: NextPage = () => {
-	return <PageTable table={table} />;
+	return <BackendPageTable table={table} />;
 };
 
 export default page;
