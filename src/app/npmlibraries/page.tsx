@@ -14,7 +14,7 @@ import { fields, tableFields, formFields } from './config';
 
 const table: TableObjectProps = {
 	title: 'Npm Packages',
-	path: 'npmpackages',
+	path: 'npmlibraries',
 	button: {
 		title: 'Add Package',
 		isModal: true,
