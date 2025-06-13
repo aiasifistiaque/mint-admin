@@ -340,6 +340,12 @@ const sidebar: SidebarItemType[] = [
 		icon: 'settings-fill',
 		path: 'resources',
 	},
+	{
+		title: 'Npm Packages',
+		href: '/npmlibraries',
+		icon: 'settings-fill',
+		path: 'npmlibraries',
+	},
 
 	{
 		startOfSection: true,
