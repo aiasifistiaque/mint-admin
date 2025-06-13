@@ -88,13 +88,13 @@ const sidebar: SidebarItemType[] = [
 	{
 		title: 'FB Groups',
 		href: '/fgroups',
-		icon: 'customer',
+		icon: 'facebook',
 		path: 'fgroups',
 	},
 	{
 		title: 'Email',
 		href: '/emails',
-		icon: 'customer',
+		icon: 'email',
 		path: 'emails',
 	},
 	{
@@ -108,7 +108,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		title: 'Repos',
 		href: '/repos',
-		icon: 'customer',
+		icon: 'repo',
 		path: 'repos',
 	},
 	{
@@ -142,13 +142,13 @@ const sidebar: SidebarItemType[] = [
 	{
 		title: 'Meetings',
 		href: '/meetings',
-		icon: 'customer',
+		icon: 'meeting',
 		path: 'meetings',
 	},
 	{
 		title: 'Documents',
 		href: '/documents',
-		icon: 'customer',
+		icon: 'document',
 		path: 'documents',
 	},
 	{
@@ -176,13 +176,13 @@ const sidebar: SidebarItemType[] = [
 		sectionTitle: 'Accounts',
 		title: 'Invoices',
 		href: '/invoices',
-		icon: 'customer',
+		icon: 'invoice',
 		path: 'invoices',
 	},
 	{
 		title: 'Expenses',
 		href: '/expenses',
-		icon: 'customer',
+		icon: 'expense',
 		path: 'expenses',
 	},
 	{
@@ -202,7 +202,7 @@ const sidebar: SidebarItemType[] = [
 		sectionTitle: 'HR',
 		title: 'Employees',
 		href: '/employees',
-		icon: 'customer',
+		icon: 'employee',
 		path: 'employees',
 	},
 	{
@@ -343,7 +343,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		title: 'Npm Packages',
 		href: '/npmlibraries',
-		icon: 'settings-fill',
+		icon: 'npm',
 		path: 'npmlibraries',
 	},
 

@@ -1,7 +1,5 @@
 'use client';
 import React, { FC } from 'react';
-import { IoIosHome, IoIosAddCircleOutline, IoIosStar } from 'react-icons/io';
-import { IoAdd, IoBagOutline, IoGridOutline, IoSearchOutline } from 'react-icons/io5';
 import { BsBuildingsFill, BsCalendar2Date, BsCollectionFill, BsThreeDots } from 'react-icons/bs';
 import colors from '@/theme/colors.theme';
 import { useColorModeValue } from '@chakra-ui/react';
@@ -16,16 +14,33 @@ import {
 	LuAlignVerticalJustifyCenter,
 	LuImagePlus,
 } from 'react-icons/lu';
+import { DiNpm } from 'react-icons/di';
 
-import { BiSolidCategory, BiSortAZ, BiSolidBookContent, BiSolidReport } from 'react-icons/bi';
 import { TbFileInvoice, TbTruckDelivery, TbBrandPatreonFilled, TbFileExport } from 'react-icons/tb';
-import { MdBrandingWatermark } from 'react-icons/md';
-import { FaRegEnvelope, FaUserFriends, FaUserTag, FaMapMarkerAlt } from 'react-icons/fa';
-import { FaTruck, FaTshirt, FaDesktop, FaCheckCircle, FaPenAlt } from 'react-icons/fa';
+import {
+	FaTruck,
+	FaTshirt,
+	FaDesktop,
+	FaCheckCircle,
+	FaPenAlt,
+	FaRegEnvelope,
+	FaUserFriends,
+	FaUserTag,
+	FaMapMarkerAlt,
+	FaGitSquare,
+	FaFacebookSquare,
+} from 'react-icons/fa';
 
 import { RiSettings3Fill, RiDiscountPercentFill, RiDeleteBinLine } from 'react-icons/ri';
 import { TiPrinter } from 'react-icons/ti';
-import { IoMdBarcode, IoIosArrowBack, IoMdAddCircleOutline } from 'react-icons/io';
+import {
+	IoMdBarcode,
+	IoIosArrowBack,
+	IoMdAddCircleOutline,
+	IoIosHome,
+	IoIosAddCircleOutline,
+	IoIosStar,
+} from 'react-icons/io';
 import {
 	CiMenuBurger,
 	CiStar,
@@ -36,16 +51,50 @@ import {
 } from 'react-icons/ci';
 import { GrSubtract, GrEdit } from 'react-icons/gr';
 import { SiCkeditor4, SiGoogleanalytics } from 'react-icons/si';
-import { MdFastfood, MdLocalPhone, MdInventory, MdSpaceDashboard } from 'react-icons/md';
+
 import { FcFeedback } from 'react-icons/fc';
-import { MdOutlineCancel, MdOutlineEdit, MdDelete, MdFeedback } from 'react-icons/md';
+import {
+	MdOutlineCancel,
+	MdOutlineEdit,
+	MdDelete,
+	MdFeedback,
+	MdFastfood,
+	MdLocalPhone,
+	MdInventory,
+	MdSpaceDashboard,
+	MdBrandingWatermark,
+	MdEmail,
+	MdAlignHorizontalCenter,
+	MdAlignHorizontalLeft,
+	MdAlignHorizontalRight,
+} from 'react-icons/md';
 import { HiUserGroup } from 'react-icons/hi';
 // import { IoMdBarcode } from 'react-icons/io';
 
-import { IoStorefront, IoEye, IoEyeOff } from 'react-icons/io5';
+import {
+	IoStorefront,
+	IoEye,
+	IoEyeOff,
+	IoAdd,
+	IoBagOutline,
+	IoGridOutline,
+	IoSearchOutline,
+} from 'react-icons/io5';
 
-import { FaCircleInfo, FaRegCopy, FaCartShopping, FaMoneyCheckDollar } from 'react-icons/fa6';
-import { FaUnlockKeyhole, FaTable, FaRegClock, FaPeopleGroup } from 'react-icons/fa6';
+import {
+	FaUnlockKeyhole,
+	FaTable,
+	FaRegClock,
+	FaPeopleGroup,
+	FaFileInvoiceDollar,
+	FaCircleInfo,
+	FaRegCopy,
+	FaCartShopping,
+	FaMoneyCheckDollar,
+	FaAddressCard,
+	FaFileLines,
+	FaIdCardClip,
+} from 'react-icons/fa6';
 import { GoListUnordered, GoHomeFill } from 'react-icons/go';
 import {
 	HiMiniRocketLaunch,
@@ -54,16 +103,25 @@ import {
 	HiArrowUturnRight,
 } from 'react-icons/hi2';
 
-import { GiMoneyStack, GiClick, GiBuyCard, GiBrokenPottery, GiReturnArrow } from 'react-icons/gi';
+import {
+	GiMoneyStack,
+	GiClick,
+	GiBuyCard,
+	GiBrokenPottery,
+	GiReturnArrow,
+	GiDiscussion,
+} from 'react-icons/gi';
 import { PiUserListFill, PiArticleMediumFill } from 'react-icons/pi';
 import { AiOutlineThunderbolt } from 'react-icons/ai';
-import { BiTransferAlt } from 'react-icons/bi';
 
 import {
-	MdAlignHorizontalCenter,
-	MdAlignHorizontalLeft,
-	MdAlignHorizontalRight,
-} from 'react-icons/md';
+	BiSolidCategory,
+	BiSortAZ,
+	BiSolidBookContent,
+	BiSolidReport,
+	BiTransferAlt,
+} from 'react-icons/bi';
+
 import { RxSpaceBetweenHorizontally, RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import iconOptionsArrayData from './iconOptionsArrayData';
 
@@ -77,6 +135,14 @@ type IconProps = {
 
 const icons: any = {
 	// dashboard: MdSpaceDashboard,
+	repo: FaGitSquare,
+	email: MdEmail,
+	facebook: FaFacebookSquare,
+	document: FaFileLines,
+	employee: FaIdCardClip,
+	meeting: GiDiscussion,
+	npm: DiNpm,
+	invoice: FaFileInvoiceDollar,
 	author: FaPenAlt,
 	blog: PiArticleMediumFill,
 	views: SiGoogleanalytics,
