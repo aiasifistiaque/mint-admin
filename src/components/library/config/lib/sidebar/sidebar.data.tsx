@@ -27,7 +27,7 @@ const sidebar: SidebarItemType[] = [
 		sectionTitle: 'Shop Management',
 		title: 'Shops',
 		href: '/shops',
-		icon: 'order',
+		icon: 'shop',
 		path: 'shops',
 	},
 	{
@@ -74,7 +74,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		title: 'Purchases',
 		href: '/purchased-themes',
-		icon: 'product',
+		icon: 'purchase',
 		path: 'purchased-themes',
 	},
 	{
@@ -102,7 +102,7 @@ const sidebar: SidebarItemType[] = [
 		sectionTitle: 'Project Management',
 		title: 'Projects',
 		href: '/projects',
-		icon: 'customer',
+		icon: 'project',
 		path: 'projects',
 	},
 	{
@@ -129,7 +129,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		title: 'Roles',
 		href: '/adminroles',
-		icon: 'customer',
+		icon: 'role',
 		path: 'adminroles',
 	},
 	{
@@ -154,7 +154,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		title: 'Maintenance',
 		href: '/maintenances',
-		icon: 'customer',
+		icon: 'mainteinance',
 		path: 'maintenances',
 	},
 	{

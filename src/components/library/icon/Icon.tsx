@@ -1,6 +1,12 @@
 'use client';
 import React, { FC } from 'react';
-import { BsBuildingsFill, BsCalendar2Date, BsCollectionFill, BsThreeDots } from 'react-icons/bs';
+import {
+	BsBuildingsFill,
+	BsCalendar2Date,
+	BsCollectionFill,
+	BsFillUnlockFill,
+	BsThreeDots,
+} from 'react-icons/bs';
 import colors from '@/theme/colors.theme';
 import { useColorModeValue } from '@chakra-ui/react';
 import { TbArrowForward, TbDownload, TbSettings, TbSelector } from 'react-icons/tb';
@@ -94,6 +100,7 @@ import {
 	FaAddressCard,
 	FaFileLines,
 	FaIdCardClip,
+	FaFileCode,
 } from 'react-icons/fa6';
 import { GoListUnordered, GoHomeFill } from 'react-icons/go';
 import {
@@ -110,6 +117,7 @@ import {
 	GiBrokenPottery,
 	GiReturnArrow,
 	GiDiscussion,
+	GiAutoRepair,
 } from 'react-icons/gi';
 import { PiUserListFill, PiArticleMediumFill } from 'react-icons/pi';
 import { AiOutlineThunderbolt } from 'react-icons/ai';
@@ -135,6 +143,10 @@ type IconProps = {
 
 const icons: any = {
 	// dashboard: MdSpaceDashboard,
+	// role: BsFillUnlockFill,
+	purchase: FaCartShopping,
+	mainteinance: GiAutoRepair,
+	project: FaFileCode,
 	repo: FaGitSquare,
 	email: MdEmail,
 	facebook: FaFacebookSquare,
@@ -205,7 +217,8 @@ const icons: any = {
 	pos: TiPrinter,
 	phone: MdLocalPhone,
 	product: FaTshirt,
-	purchase: GiBuyCard,
+	// purchase: GiBuyCard,
+
 	rating: IoIosStar,
 	'rating-fill': IoIosStar,
 	'rating-outline': CiStar,
