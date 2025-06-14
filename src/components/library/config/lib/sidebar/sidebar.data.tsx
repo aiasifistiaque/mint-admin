@@ -106,7 +106,7 @@ const sidebar: SidebarItemType[] = [
 		path: 'projects',
 	},
 	{
-		title: 'Repos',
+		title: 'Git Repos',
 		href: '/repos',
 		icon: 'repo',
 		path: 'repos',
