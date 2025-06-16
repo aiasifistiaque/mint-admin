@@ -6,7 +6,6 @@ import { ServerPageTable, ServerTableObjectProps } from '@/components/library';
 const table: ServerTableObjectProps = {
 	title: 'Blog Management',
 	path: 'blogs',
-
 	button: {
 		title: 'New Blog',
 		isModal: true,

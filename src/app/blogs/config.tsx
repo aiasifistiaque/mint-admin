@@ -9,17 +9,13 @@ export const fields = [
 	'slug',
 	'status',
 	'isFeatured',
-
 	'content',
 	'publishedAt',
 	'tags',
-
 	'coverImage',
 	'images',
-
 	'views',
 	'likes',
-
 	'allowComments',
 	'seoScore',
 	'contentScore',
