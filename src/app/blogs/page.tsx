@@ -1,27 +1,23 @@
 'use client';
 import React from 'react';
 import { NextPage } from 'next';
-import { BackendPageTable, BackendTableObjectProps } from '@/components/library';
-import { formFields, fields, tableFields } from './config';
+import { ServerPageTable, ServerTableObjectProps } from '@/components/library';
 
-const table: BackendTableObjectProps = {
+const table: ServerTableObjectProps = {
 	title: 'Blog Management',
 	path: 'blogs',
 
 	button: {
-		title: 'Write Blog',
+		title: 'New Blog',
 		isModal: true,
-		layout: formFields,
 	},
-	fields: tableFields,
 
 	menu: [
-		{ type: 'view-modal', title: 'View', fields },
+		{ type: 'view-server-modal', title: 'View' },
 		{ type: 'view-item', title: 'Go To Post' },
 		{
 			title: 'Edit Details',
-			type: 'edit-modal',
-			layout: formFields,
+			type: 'edit-server-modal',
 		},
 		{
 			title: 'Open Editor',
@@ -34,7 +30,7 @@ const table: BackendTableObjectProps = {
 };
 
 const BrandPage: NextPage = () => {
-	return <BackendPageTable table={table} />;
+	return <ServerPageTable table={table} />;
 };
 
 export default BrandPage;

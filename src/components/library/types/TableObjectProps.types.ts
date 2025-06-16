@@ -29,6 +29,7 @@ export type TableObjectProps = CommonTableProps & {
 };
 
 export type BackendTableObjectProps = CommonTableProps & { fields: string[] };
+export type ServerTableObjectProps = CommonTableProps;
 
 type CommonButton = {
 	title: string;

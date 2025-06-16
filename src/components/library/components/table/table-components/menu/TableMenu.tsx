@@ -12,6 +12,8 @@ import {
 	DecisionModal,
 	UpdateDataMenuModal,
 	UpdateStringModal,
+	ViewServerModal,
+	useGetConfigQuery,
 } from '../../../..';
 import Link from 'next/link';
 
@@ -25,6 +27,7 @@ type TableMenuProps = {
 };
 
 const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, doc }) => {
+	const { data: schemaData, isFetching } = useGetConfigQuery(path);
 	return (
 		<Menu>
 			<CustomTd>
@@ -98,6 +101,19 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 									{...commonProps}
 									data={item?.dataModel}
 									title='Edit'
+									type='update'
+									trigger={<MenuItem>{item?.title}</MenuItem>}
+									layout={item?.layout}
+									item={item}
+								/>
+							);
+
+						case 'edit-server-modal':
+							return (
+								<CreateModal
+									{...commonProps}
+									data={schemaData?.form}
+									title='Update'
 									type='update'
 									trigger={<MenuItem>{item?.title}</MenuItem>}
 									layout={item?.layout}
@@ -192,6 +208,13 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 									title={item?.title}
 									dataModel={item?.dataModel}
 									item={item}
+								/>
+							);
+						case 'view-server-modal':
+							return (
+								<ViewServerModal
+									{...commonProps}
+									title={item?.title}
 								/>
 							);
 
