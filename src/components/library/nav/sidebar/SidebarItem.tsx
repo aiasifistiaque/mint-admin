@@ -20,6 +20,7 @@ type SidebarItemProps = {
 	path: string;
 	icon: IconNameOptions;
 	sx?: any;
+	isLoading?: boolean;
 };
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ href, children, path, icon, sx }) => {

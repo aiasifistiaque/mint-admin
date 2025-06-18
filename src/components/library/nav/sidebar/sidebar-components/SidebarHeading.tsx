@@ -4,6 +4,7 @@ import React, { FC } from 'react';
 type SidebarHeadingProps = TextProps & {
 	children: any;
 	show: boolean | undefined;
+	isLoading?: boolean;
 };
 
 const SidebarHeading: FC<SidebarHeadingProps> = ({ children, show = false, ...props }) => {

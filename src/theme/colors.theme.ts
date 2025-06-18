@@ -1,6 +1,7 @@
 // import { THEME } from '../components/library';
 
 const THEME: 'basic' | 'fancy' = 'basic';
+const BORDER_DARK = '#222';
 
 type ColorMode = {
 	light?: string;
@@ -150,11 +151,64 @@ export const colors: any = {
 	sidebar: {
 		//light: '#F3F3EF',
 		light: '#fafafa',
-		dark: DARK,
+		dark: '#111',
+		header: {
+			light: '#fff',
+			dark: '#0a0a0a',
+		},
+		borderBottom: {
+			light: '#e7e7e7',
+			dark: BORDER_DARK,
+		},
+		selectedItemBorder: {
+			light: '#e7e7e7',
+			dark: '#222',
+		},
+		selectedItemBg: {
+			light: '#fff',
+			dark: '#0a0a0a',
+		},
+		hover: {
+			bgLight: '#fff',
+			bgDark: 'transparent',
+		},
+
+		headerText: {
+			// light: '#111',na
+			// dark: '#fafafa',
+			light: '#222',
+			dark: '#fafafa',
+		},
+		bodyText: {
+			// light: '#111',
+			// dark: '#fafafa',
+			light: '#222',
+			dark: '#fafafa',
+			headingLight: '#222',
+			headingDark: '#fafafa',
+			selectedLight: '#222',
+			selectedDark: '#fafafa',
+		},
+
+		//dark: DARK,
+
 		darker: '#121212',
-		hoverLight: '#ECECEC',
+		hoverLight: '#e7e7e7',
 		hoverDark: '#141414',
+		headingBorderDark: BORDER_DARK,
 	},
+
+	sidebarItem: {
+		light: 'transparent',
+		dark: 'transparent',
+		lightSelect: 'transparent',
+		darkSelect: '#0A0A0A',
+		lightHover: 'transparent',
+		darkhover: 'transparent',
+		textLight: 'transparent',
+		textDark: '#ededed',
+	},
+
 	menu: {
 		light: '#fff',
 		dark: DARK,

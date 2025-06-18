@@ -11,7 +11,7 @@ import {
 	IconButton,
 } from '@chakra-ui/react';
 import React from 'react';
-import Sidebar from './Sidebar';
+import Sidebar from './Sidebar.v0';
 
 import { useGetSelfQuery } from '@/store/services/authApi';
 import { zIndex } from '@/lib/constants';
