@@ -1,8 +1,12 @@
 'use client';
 import Attendance from '@/components/attendance/Attendance';
-import { VInput, useCustomToast, useAppDispatch } from '@/components/library';
-import { useRegisterMutation } from '@/store/services/authApi';
-import { login } from '@/components/library/store/slices/authSlice';
+import {
+	VInput,
+	useCustomToast,
+	useAppDispatch,
+	useRegisterMutation,
+	login,
+} from '@/components/library';
 import React, { FC, ChangeEvent, useState, useEffect } from 'react';
 
 const LoginPage: FC<{}> = () => {

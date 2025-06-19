@@ -1,9 +1,13 @@
 'use client';
 import Attendance from '@/components/attendance/Attendance';
-import { VInput, useCustomToast } from '@/components/library';
-import { useAppDispatch } from '@/hooks';
-import { useLgoinMutation } from '@/store/services/authApi';
-import { login } from '@/components/library/store/slices/authSlice';
+import {
+	VInput,
+	useCustomToast,
+	useLgoinMutation,
+	useAppDispatch,
+	login,
+} from '@/components/library';
+
 import React, { FC, ChangeEvent, useState, useEffect } from 'react';
 
 type FormDataType = {

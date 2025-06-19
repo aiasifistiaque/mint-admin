@@ -13,11 +13,11 @@ const ClientOnlyReduxProvider = dynamic(() => import('./ClientReduxProvider'), {
 
 export function Providers({ children }: { children: React.ReactNode }) {
 	return (
-		<ClientOnlyReduxProvider>
+		<Provider store={store}>
 			<ChakraProvider theme={theme}>
 				<ColorModeScript initialColorMode={theme.config.initialColorMode} />
 				{children}
 			</ChakraProvider>
-		</ClientOnlyReduxProvider>
+		</Provider>
 	);
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { REFRESH_TOKEN, TOKEN_NAME } from '../../';
+import { REFRESH_TOKEN, TOKEN_NAME } from '../..';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type AuthStateType = {
@@ -25,18 +25,6 @@ export const authSlice = createSlice({
 	name: 'auth',
 	initialState: initialState,
 	reducers: {
-		hydrate: state => {
-			if (typeof window !== 'undefined') {
-				const token = localStorage.getItem(TOKEN_NAME);
-				if (token && token !== 'null') {
-					state.token = token;
-					state.loggedIn = true;
-				} else {
-					state.token = null;
-					state.loggedIn = false;
-				}
-			}
-		},
 		logout: (state): void => {
 			localStorage.setItem(TOKEN_NAME, 'null');
 			localStorage.setItem(REFRESH_TOKEN, 'null');

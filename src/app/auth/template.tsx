@@ -1,8 +1,6 @@
 import { TemplateProps } from '@/types';
 import React, { FC } from 'react';
-import { Flex, Heading, Center, Button } from '@chakra-ui/react';
-import { NotLoggedIn, ColorMode, Navbar, Body } from '@/components/library';
-import { labels } from '@/lib/info';
+import { NotLoggedIn, ColorMode } from '@/components/library';
 
 const PX_BASE = '16px';
 const PX_MD = '64px';
