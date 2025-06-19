@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactNode } from 'react';
 import HorizontalImageView from './HorizontalImageView';
 import VerticalImageView from './VerticalImageView';
 import { PLACEHOLDER_IMAGE } from '../../config';
@@ -9,7 +9,7 @@ const ImageView = ({
 	direction,
 }: {
 	src: string;
-	children: React.ReactNode;
+	children: ReactNode;
 	direction?: 'row' | 'column';
 }) => {
 	if (direction === 'row') {

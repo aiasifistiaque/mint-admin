@@ -1,8 +1,8 @@
 import { StatProps, Stat } from '@chakra-ui/react';
-import React from 'react';
+import { ReactNode } from 'react';
 import { shadow, radius } from '../..';
 
-const StatContainer = ({ children, ...props }: StatProps & { children: React.ReactNode }) => {
+const StatContainer = ({ children, ...props }: StatProps & { children: ReactNode }) => {
 	return (
 		<Stat
 			borderRadius={radius.CONTAINER}

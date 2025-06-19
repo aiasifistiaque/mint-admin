@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import { MenuItem } from '../../..';
 import { MenuItemProps, useColorModeValue } from '@chakra-ui/react';
 
@@ -8,7 +8,7 @@ import { MenuItemProps, useColorModeValue } from '@chakra-ui/react';
  */
 
 type ItemOfMenuProps = MenuItemProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 	id: string;
 	filter?: string;
 };
@@ -16,7 +16,7 @@ type ItemOfMenuProps = MenuItemProps & {
 const WIDTH = { base: '300px', md: '360px' };
 const MAX_H = '200px';
 
-const ItemOfMenu: React.FC<ItemOfMenuProps> = ({ children, filter, id, ...props }) => {
+const ItemOfMenu: FC<ItemOfMenuProps> = ({ children, filter, id, ...props }) => {
 	const hoverBg = useColorModeValue('hover.light', 'hover.dark');
 	const itemBg = useColorModeValue('brand.500', 'brand.200');
 	const itemColor = useColorModeValue('white', '#4a4a4a');

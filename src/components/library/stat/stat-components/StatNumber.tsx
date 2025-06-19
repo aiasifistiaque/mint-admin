@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { StatNumber as CStatNumber, StatNumberProps } from '@chakra-ui/react';
 
 const StatNumber = ({ children, ...props }: StatNumberProps & { children: ReactNode }) => {

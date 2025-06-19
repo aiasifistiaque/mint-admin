@@ -1,4 +1,3 @@
-import React from 'react';
 import { styles, useIsMobile } from '../../../..';
 import { DrawerOverlay, ModalOverlay } from '@chakra-ui/react';
 

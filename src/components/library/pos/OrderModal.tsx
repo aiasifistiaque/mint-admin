@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	Modal,
 	ModalOverlay,
@@ -21,7 +21,7 @@ import {
 
 import PosInput from './PosInput';
 import OrderPriceDetails from './pos-card/OrderPriceDetails/OrderPriceDetails';
-import { useAddOrderMutation, useGetCartTotalMutation } from '@/components/library';
+import { useAddOrderMutation, useGetCartTotalMutation } from '../';
 
 import {
 	resetCart,
@@ -35,7 +35,7 @@ import {
 	useIsMobile,
 	SpaceBetween,
 	VCheckbox,
-} from '@/components/library';
+} from '../';
 import {
 	OrderAddress,
 	OrderButton,

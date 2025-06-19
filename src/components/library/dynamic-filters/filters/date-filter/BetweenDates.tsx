@@ -1,19 +1,19 @@
-import React from 'react';
+import { useState, ChangeEvent } from 'react';
 import { Flex, Text } from '@chakra-ui/react';
 
 import { FilterInput } from '../../..';
 
 const BetweenDates = ({ setVal }: { setVal: (val: string) => void }) => {
-	const [start, setStart] = React.useState<any>();
-	const [end, setEnd] = React.useState<any>();
+	const [start, setStart] = useState<any>();
+	const [end, setEnd] = useState<any>();
 
-	const handleStart = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleStart = (e: ChangeEvent<HTMLInputElement>) => {
 		const newDate = e.target.value;
 		setStart(newDate);
 		setVal(`${newDate}_${end}`);
 	};
 
-	const handleEnd = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleEnd = (e: ChangeEvent<HTMLInputElement>) => {
 		const newDate = e.target.value;
 		setEnd(newDate);
 		setVal(`${start}_${newDate}`);

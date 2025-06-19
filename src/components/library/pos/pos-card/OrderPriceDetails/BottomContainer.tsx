@@ -1,8 +1,7 @@
-import React from 'react';
-import { Column } from '@/components/library';
+import { ReactNode } from 'react';
 import { Flex, FlexProps } from '@chakra-ui/react';
 
-const BottomContainer = ({ children, ...props }: FlexProps & { children: React.ReactNode }) => (
+const BottomContainer = ({ children, ...props }: FlexProps & { children: ReactNode }) => (
 	<Flex
 		align='center'
 		justify='space-between'

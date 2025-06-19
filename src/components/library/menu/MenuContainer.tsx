@@ -1,19 +1,21 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import { MenuList, MenuListProps } from '@chakra-ui/react';
+import { radius } from '../config';
 
 type MenuContainerProps = MenuListProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
-const MenuContainer: React.FC<MenuContainerProps> = ({ children, ...props }) => {
+const MenuContainer: FC<MenuContainerProps> = ({ children, ...props }) => {
 	return (
 		<MenuList
-			boxShadow='lg'
-			borderRadius='xl'
+			boxShadow='xl'
+			borderRadius={radius?.MENU}
 			bg='menu.light'
-			// backdropFilter='blur(5px)'
+			borderColor='container.borderLight'
 			_dark={{
 				bg: 'menu.dark',
+				borderColor: 'container.borderDark',
 			}}
 			{...props}>
 			{children}

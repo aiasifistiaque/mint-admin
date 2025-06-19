@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Center, Heading, Text, Flex } from '@chakra-ui/react';
 import { ConfigContainer, ConfigContainerBody, Icon } from '../../..';
 import { mainProps, iconContainerProps, NoDataContainerProps } from './styles';

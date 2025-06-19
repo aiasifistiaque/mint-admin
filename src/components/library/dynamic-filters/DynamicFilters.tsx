@@ -1,6 +1,5 @@
 'use client';
 
-import { useGetFiltersQuery } from '@/store/services/usersApi';
 import { Button } from '@chakra-ui/react';
 
 import {
@@ -12,6 +11,7 @@ import {
 	clearFilters,
 	TextFilter,
 	SelectFilter,
+	useGetFiltersQuery,
 } from '..';
 import { FilterSectionContainer } from './filter-components';
 

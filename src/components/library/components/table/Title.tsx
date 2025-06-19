@@ -3,9 +3,10 @@ import { motion } from 'framer-motion';
 import { TbArrowUp, TbArrowDown, TbArrowsDownUp } from 'react-icons/tb';
 import { BsInfoCircle } from 'react-icons/bs';
 import { useAppDispatch, useAppSelector, updateTable } from '../..';
+import { FC, ReactNode } from 'react';
 
 export type TitleProps = FlexProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 	info?: string;
 	sort?: string;
 	ifItemsSelected?: boolean;
@@ -14,7 +15,7 @@ export type TitleProps = FlexProps & {
 	item?: any;
 };
 
-export const Title: React.FC<TitleProps> = ({
+export const Title: FC<TitleProps> = ({
 	children,
 	sort,
 	info,
@@ -63,7 +64,12 @@ export const Title: React.FC<TitleProps> = ({
 	return (
 		<Th
 			isNumeric={isNumeric}
-			_light={{ borderBottomColor: 'container.borderLight' }}
+			bg='inherit'
+			_light={{ borderColor: 'container.borderLight' }}
+			_dark={{
+				bg: 'inherit',
+				borderColor: 'container.borderDark',
+			}}
 			cursor={Boolean(sort) ? 'pointer' : 'default'}
 			onClick={handleSort}
 			userSelect='none'>
@@ -72,8 +78,9 @@ export const Title: React.FC<TitleProps> = ({
 				align='center'
 				gap={2}
 				fontWeight='700'
-				_light={{
-					color: 'text.light',
+				color='text.light'
+				_dark={{
+					color: 'text.dark',
 				}}
 				{...props}>
 				<Skeleton

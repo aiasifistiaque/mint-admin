@@ -1,17 +1,8 @@
 'use client';
 
-import {
-	Menu,
-	MenuGroup,
-	Flex,
-	Input,
-	useDisclosure,
-	MenuDivider,
-	Button,
-	InputProps,
-} from '@chakra-ui/react';
+import { Menu, MenuGroup, Flex, Input, useDisclosure, MenuDivider, Button } from '@chakra-ui/react';
 
-import React, { useState } from 'react';
+import { useState, FC, useRef, useEffect } from 'react';
 
 import {
 	DataMenuButton,
@@ -25,11 +16,9 @@ import {
 } from '../../..';
 
 import { VDataMenuProps } from './types';
+import { hiddenInputCss, searchInputCss, unselectTextCss, MAX_H, WIDTH } from './styles';
 
-const WIDTH = { base: '300px', md: '340px' };
-const MAX_H = '260px';
-
-const VDataMenu: React.FC<VDataMenuProps> = ({
+const VDataMenu: FC<VDataMenuProps> = ({
 	label,
 	isRequired,
 	placeholder,
@@ -96,10 +85,10 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 		return item?.name || id;
 	};
 
-	const inputRef = React.useRef<any>(null);
-	const btnRef = React.useRef<any>(null);
+	const inputRef = useRef<any>(null);
+	const btnRef = useRef<any>(null);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (isOpen) {
 			if (inputRef.current) inputRef.current.focus();
 		}
@@ -182,26 +171,6 @@ const VDataMenu: React.FC<VDataMenuProps> = ({
 			</Menu>
 		</Flex>
 	);
-};
-
-const hiddenInputCss: InputProps = {
-	h: '1px',
-	color: 'transparent',
-	focusBorderColor: 'transparent',
-	border: 'none',
-};
-
-const searchInputCss: InputProps = {
-	borderRadius: 6,
-	size: 'sm',
-	placeholder: 'Search',
-};
-
-const unselectTextCss: any = {
-	fontWeight: '400',
-	fontSize: '12px',
-	textStyle: 'italic',
-	w: WIDTH,
 };
 
 export default VDataMenu;

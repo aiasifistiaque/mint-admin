@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { ReactNode, FC } from 'react';
 import { SelectProps } from '@chakra-ui/react';
 import { FormControl, SelectContainer } from '../..';
 
@@ -8,11 +8,11 @@ type InputContainerProps = SelectProps & {
 	isRequired?: boolean;
 	helper?: string;
 	value: string | boolean | number;
-	children: React.ReactNode;
+	children: ReactNode;
 	placeholder?: any;
 };
 
-const VSelect: React.FC<InputContainerProps> = ({
+const VSelect: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,

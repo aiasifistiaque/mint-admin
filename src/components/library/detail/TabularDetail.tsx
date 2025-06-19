@@ -1,4 +1,3 @@
-import React from 'react';
 import { Grid, Flex, Text, Heading, GridProps } from '@chakra-ui/react';
 import { sizes } from '../config';
 

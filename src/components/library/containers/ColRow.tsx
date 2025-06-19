@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { Flex, FlexProps } from '@chakra-ui/react';
 
 const ColRow: FC<FlexProps & { children: ReactNode }> = ({ children, ...props }) => {

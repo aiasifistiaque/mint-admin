@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC } from 'react';
+import { FC, useEffect, ReactNode } from 'react';
 import { Flex, Heading, useMediaQuery, FlexProps } from '@chakra-ui/react';
 
 import {
@@ -28,11 +28,11 @@ import {
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 
 export type FlexPropsType = FlexProps & {
-	children?: React.ReactNode;
+	children?: ReactNode;
 };
 
 type LayoutProps = FlexPropsType & {
-	children: React.ReactNode;
+	children: ReactNode;
 	title: string;
 	path?: string;
 	type?: 'default' | 'pos';
@@ -50,7 +50,7 @@ const Layout: FC<LayoutProps> = ({
 }) => {
 	const dispatch = useAppDispatch();
 
-	React.useEffect(() => {
+	useEffect(() => {
 		dispatch(navigate({ selected: path }));
 		dispatch(refresh());
 	}, []);
@@ -72,7 +72,10 @@ const Layout: FC<LayoutProps> = ({
 					left={showMenu ? 0 : sizes.HOME_NAV_LEFT}>
 					<SpaceBetween>
 						<Heading
-							color={THEME == 'basic' ? 'inherit' : 'white'}
+							color='inherit'
+							_dark={{
+								color: 'inherit',
+							}}
 							size='md'
 							fontFamily='Bebas Neue'>
 							{title}
@@ -109,7 +112,7 @@ const Layout: FC<LayoutProps> = ({
 	);
 };
 
-const Main = ({ children }: { children: React.ReactNode }) => (
+const Main = ({ children }: { children: ReactNode }) => (
 	<Flex
 		overflowY='hidden'
 		h={`calc(100vh - ${sizes.NAV_HEIGHT})`}

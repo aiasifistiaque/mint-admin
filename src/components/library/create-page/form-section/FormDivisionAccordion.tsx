@@ -1,18 +1,20 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import {
 	AccordionButton,
 	AccordionIcon,
 	AccordionItem,
+	AccordionItemProps,
 	AccordionPanel,
 	Box,
-	Flex,
 	FlexProps,
 	Grid,
 	GridItem,
+	GridProps,
 } from '@chakra-ui/react';
+import { radius } from '../../config';
 
 type FormDivisionProps = FlexProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 	isModal?: boolean;
 	title?: string;
 };
@@ -25,39 +27,49 @@ const FormDivisionAccordion: FC<FormDivisionProps> = ({
 }) => {
 	return (
 		<AccordionItem
-			bg={isModal ? 'menu.light' : 'white'}
-			boxShadow={isModal ? 'none' : 'md'}
-			borderWidth={1}
-			mb={4}
-			_dark={{ bg: isModal ? 'menu.dark' : 'background.dark' }}
-			// p={4}
-			borderRadius='12px'
+			{...accordionCss(isModal)}
 			{...props}>
 			<AccordionButton
 				as={GridItem}
 				colSpan={2}>
-				<Box
-					py={2}
-					fontSize='18px'
-					fontWeight='700'
-					as='span'
-					flex='1'
-					textAlign='left'>
-					{title}
-				</Box>
+				<Box {...modalTitleCss}>{title}</Box>
 				<AccordionIcon />
 			</AccordionButton>
 			<AccordionPanel>
-				<Grid
-					templateColumns='repeat(2, 1fr)'
-					gap={8}
-					w='full'
-					columnGap={4}>
-					{children}
-				</Grid>
+				<Grid {...childrenGridCss}>{children}</Grid>
 			</AccordionPanel>
 		</AccordionItem>
 	);
+};
+
+const accordionCss = (isModal: boolean): AccordionItemProps => {
+	return {
+		borderWidth: 1,
+		boxShadow: isModal ? 'none' : 'md',
+		bg: isModal ? 'menu.light' : 'white',
+		borderColor: 'border.light',
+		mb: 4,
+		_dark: { bg: isModal ? 'menu.dark' : 'background.dark', borderColor: 'border.dark' },
+		borderRadius: radius.MODAL,
+	};
+};
+
+const modalTitleCss: any = {
+	py: 2,
+	fontSize: '18px',
+	fontWeight: '700',
+	as: 'span',
+	flex: '1',
+	color: 'text.heading.light',
+	_dark: { color: 'text.heading.dark' },
+	textAlign: 'left',
+};
+
+const childrenGridCss: GridProps = {
+	templateColumns: 'repeat(2, 1fr)',
+	gap: 8,
+	w: 'full',
+	columnGap: 4,
 };
 
 export default FormDivisionAccordion;

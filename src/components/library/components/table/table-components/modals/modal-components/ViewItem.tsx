@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 import {
 	Badge,
 	Box,
@@ -241,8 +241,23 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 					))}
 				</Align>
 			);
+		case 'basic-editor':
+			return (
+				<Text
+					dangerouslySetInnerHTML={children}
+					{...textCss}
+				/>
+			);
+		case 'editor':
+			return (
+				<Text
+					dangerouslySetInnerHTML={children}
+					{...textCss}
+				/>
+			);
 		case 'date':
 			return <Text {...textCss}>{children?.toLocaleString()}</Text>;
+
 		default:
 			return <Text {...textCss}>{children}</Text>;
 	}
@@ -278,11 +293,14 @@ const ViewItem: FC<ViewItemProps> = ({
 			{...props}
 			gridTemplateColumns={{
 				base: '1fr',
-				md: type == 'textarea' || type == 'section-data-array' ? '1fr' : '2fr 3fr',
+				md:
+					type == 'textarea' || type == 'editor' || type == 'section-data-array'
+						? '1fr'
+						: '2fr 3fr',
 			}}
 			gap={{
-				base: '8px',
-				md: type == 'textarea' || type == 'section-data-array' ? '12px' : '32px',
+				base: 2,
+				md: type == 'textarea' || type == 'editor' || type == 'section-data-array' ? 3 : 8,
 			}}>
 			<SkeletonContent isLoading={isLoading}>
 				<Heading size='xs'>{title}:</Heading>

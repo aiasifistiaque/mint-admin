@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { useIsMobile, radius } from '../../../..';
 import {
 	DrawerContent,
@@ -11,7 +11,7 @@ import {
 
 type Props = ModalContentProps &
 	DrawerContentProps & {
-		children: React.ReactNode;
+		children: ReactNode;
 	};
 
 const DialogContent: FC<Props> = ({ children, ...props }) => {

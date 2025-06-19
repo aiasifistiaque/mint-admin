@@ -1,18 +1,24 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { useIsMobile, ModalHeader } from '../../../..';
-import { DrawerHeader } from '@chakra-ui/react';
+import { DrawerHeader, Flex, ModalHeaderProps } from '@chakra-ui/react';
 
-type MenuModalBodyProps = {
-	children: React.ReactNode;
+type MenuModalBodyProps = ModalHeaderProps & {
+	children: ReactNode;
 };
 
-const MenuModalHeader: FC<MenuModalBodyProps> = ({ children }) => {
+const MenuModalHeader: FC<MenuModalBodyProps> = ({ children, ...props }) => {
 	const isMobile = useIsMobile();
 	if (isMobile) {
 		return <DrawerHeader>{children}</DrawerHeader>;
 	}
 
-	return <ModalHeader h='52px'>{children}</ModalHeader>;
+	return (
+		<ModalHeader
+			h='52px'
+			{...props}>
+			{children}
+		</ModalHeader>
+	);
 };
 
 export default MenuModalHeader;

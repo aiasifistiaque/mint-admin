@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState, FC } from 'react';
 import {
 	InputProps,
 	FormControl,
@@ -15,7 +15,7 @@ import {
 	Flex,
 } from '@chakra-ui/react';
 
-import { useGetSelectDataQuery } from '@/store/services/usersApi';
+import { useGetSelectDataQuery } from '../../';
 import { Label, SelectContainer, HelperText, Icon } from '../..';
 
 type InputContainerProps = InputProps &
@@ -29,7 +29,7 @@ type InputContainerProps = InputProps &
 		item?: any;
 	};
 
-const VDataTags: React.FC<InputContainerProps> = ({
+const VDataTags: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,
@@ -85,7 +85,7 @@ const VDataTags: React.FC<InputContainerProps> = ({
 	const getNameById = (id: string) => {
 		const ite = data?.doc?.find((item: any) => item._id === id);
 
-		return `${ite?.name} ${`(${ite?.[item?.modelAddOn]})` || ''}` || id;
+		return `${ite?.name} ${item?.modelAddOn && `(${ite?.[item?.modelAddOn]})`}` || id;
 	};
 
 	return (

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { FC } from 'react';
 import { FormControl, Stack, useColorModeValue, Textarea, TextareaProps } from '@chakra-ui/react';
 import { HelperText } from '../..';
 
@@ -11,7 +11,7 @@ type InputContainerProps = TextareaProps & {
 	placeholder?: any;
 };
 
-const UserTextArea: React.FC<InputContainerProps> = ({
+const UserTextArea: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,

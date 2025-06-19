@@ -1,18 +1,18 @@
 'use client';
 import { Box, Button, Flex, FlexProps, ButtonProps, useToast } from '@chakra-ui/react';
-import React, { FC, useEffect } from 'react';
+import { FC, useEffect, ReactNode, FormEvent } from 'react';
 
 type FormProps = ButtonProps &
 	FlexProps & {
-		children: React.ReactNode;
-		onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+		children: ReactNode;
+		onSubmit: (e: FormEvent<HTMLFormElement>) => void;
 		buttonText?: string;
 		isError?: boolean;
 		error?: any;
 		isSuccess?: boolean;
 		success?: string;
 		isLoading?: boolean;
-		button?: React.ReactNode;
+		button?: ReactNode;
 	};
 
 const Form: FC<FormProps> = ({

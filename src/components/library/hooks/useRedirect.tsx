@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import { useEffect, FC } from 'react';
 
 type RedirectProps = {
 	isSuccess: boolean;
@@ -7,7 +7,7 @@ type RedirectProps = {
 	isLoading: boolean;
 };
 
-const useRedirect: React.FC<RedirectProps> = ({ isSuccess, path, isLoading }) => {
+const useRedirect: FC<RedirectProps> = ({ isSuccess, path, isLoading }) => {
 	const router = useRouter();
 	useEffect(() => {
 		if (!isLoading && isSuccess) {

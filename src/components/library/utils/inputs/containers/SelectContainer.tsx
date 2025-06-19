@@ -1,13 +1,13 @@
 'use client';
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import { Select, SelectProps, useColorModeValue } from '@chakra-ui/react';
 import { Icon } from '../../..';
 
 type InputContainerProps = SelectProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
-const SelectContainer: React.FC<InputContainerProps> = ({ children, ...props }) => {
+const SelectContainer: FC<InputContainerProps> = ({ children, ...props }) => {
 	const borderColor = useColorModeValue('brand.500', 'brand.200');
 
 	return (

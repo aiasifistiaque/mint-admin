@@ -2,7 +2,6 @@
 
 import React, { FC, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useGetSelfQuery } from '@/store/services/authApi';
 
 import {
 	useAppDispatch,
@@ -19,6 +18,7 @@ import {
 	useGetConfigQuery,
 	ServerTableObjectProps,
 	ServerPageHeading,
+	useGetSelfQuery,
 } from '../..';
 import { Flex } from '@chakra-ui/react';
 

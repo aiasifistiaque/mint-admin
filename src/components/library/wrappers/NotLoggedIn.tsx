@@ -1,11 +1,11 @@
 'use client';
 import { FlexProps } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
-import React, { FC, useEffect } from 'react';
+import { FC, useEffect, ReactNode } from 'react';
 import { useAuth } from '..';
 
 export type FlexPropsType = FlexProps & {
-	children?: React.ReactNode;
+	children?: ReactNode;
 };
 
 const NotLoggedIn: FC<FlexPropsType> = ({ children }) => {

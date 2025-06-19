@@ -1,14 +1,7 @@
 'use client';
-import React from 'react';
-
 import { Flex } from '@chakra-ui/react';
 
-import {
-	PosResultContainer,
-	NoDataFound,
-	useAppSelector,
-	useGetAllQuery,
-} from '@/components/library';
+import { PosResultContainer, NoDataFound, useAppSelector, useGetAllQuery } from '../';
 
 import { PosCard } from '.';
 import PosCart from './PosCart';

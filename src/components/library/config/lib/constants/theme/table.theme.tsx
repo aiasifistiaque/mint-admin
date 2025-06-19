@@ -24,10 +24,11 @@ const TABLE: TableObjectProps = {
 	padding: {
 		bottom: 0,
 	},
+
 	border: {
 		color: {
-			light: 'container.borderLight',
-			dark: 'stroke.dark',
+			light: 'table.outerBorder.light',
+			dark: 'table.outerBorder.dark',
 		},
 		width: 1,
 		radius: 6,
@@ -37,7 +38,8 @@ const TABLE: TableObjectProps = {
 		dark: 'table.dark',
 	},
 	stroke: {
-		light: 'container.borderLight',
+		// light: 'container.borderLight',
+		light: 'red',
 		dark: 'transparent',
 	},
 };

@@ -2,6 +2,7 @@
 import {
 	Button,
 	Flex,
+	FlexProps,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
@@ -14,10 +15,9 @@ import {
 	TabPanel,
 	TabPanels,
 	Tabs,
-	useColorModeValue,
 	useDisclosure,
 } from '@chakra-ui/react';
-import React, { FC, useState } from 'react';
+import { FC, useState, ReactNode } from 'react';
 
 import InsertUrl from './InsertUrl';
 import MyPhotos from './MyPhotos';
@@ -36,6 +36,7 @@ type UploadModalProps = {
 	title?: string;
 	fileType?: any;
 	folder?: string;
+	children?: ReactNode;
 };
 
 const tabs = ['Photos', 'Upload', 'Web Address (URL)'];
@@ -48,16 +49,14 @@ const UploadModal: FC<UploadModalProps> = ({
 	folder,
 	title = 'Insert Photo/File',
 	handleDelete,
+	children,
 	fileType = 'image',
 	type = 'add',
 }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const bg = useColorModeValue('menu.light', 'menu.dark');
 	const [img, setImg] = useState(null);
 
-	const handleImageSelect = (e: any) => {
-		setImg(e);
-	};
+	const handleImageSelect = (e: any) => setImg(e);
 
 	const handleInsert = () => {
 		handleImage(img);
@@ -81,6 +80,14 @@ const UploadModal: FC<UploadModalProps> = ({
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
 
+	const flexCss: FlexProps =
+		type == 'add'
+			? {
+					w: 'full',
+					h: 'full',
+			  }
+			: {};
+
 	let triggerButton = (buttonTypes[type] as any) || trigger;
 
 	return (
@@ -88,7 +95,11 @@ const UploadModal: FC<UploadModalProps> = ({
 			{multiple && type == 'delete' ? (
 				<DeleteImageButton onClick={handleDelete} />
 			) : (
-				<Flex onClick={onOpen}>{triggerButton}</Flex>
+				<Flex
+					onClick={onOpen}
+					{...flexCss}>
+					{children || triggerButton}
+				</Flex>
 			)}
 			<Modal
 				isOpen={isOpen}
@@ -96,23 +107,17 @@ const UploadModal: FC<UploadModalProps> = ({
 				size='6xl'
 				isCentered>
 				<ModalOverlay />
-				<ModalContent bg={bg}>
+				<ModalContent {...styles.modalContentCss}>
 					<ModalHeader>Insert Photo/File</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody minH='70vh'>
-						<Tabs
-							h='60vh'
-							colorScheme='brand'
-							flex={1}>
+						<Tabs {...styles.tabsCss}>
 							<TabList>
 								{tabs.map((label: string, i: number) => (
 									<Tab key={i}>{label}</Tab>
 								))}
 							</TabList>
-							<TabPanels
-								h='full'
-								px={0}
-								overflowY='scroll'>
+							<TabPanels {...styles.tabPanelCss}>
 								<TabPanel sx={styles.panel}>
 									<MyPhotos
 										handleSelect={handleImageSelect}

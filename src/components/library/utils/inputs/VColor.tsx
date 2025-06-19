@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import {
 	InputProps,
 	Flex,
@@ -28,7 +28,7 @@ const VColor: FC<InputContainerProps> = ({
 	helper,
 	...props
 }) => {
-	const [prevValue, setPrevValue] = React.useState(value);
+	const [prevValue, setPrevValue] = useState(value);
 	const onEyeClick = () => {
 		if (value == 'transparent') {
 			let changedValue;

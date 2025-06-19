@@ -10,7 +10,7 @@ import {
 	InputProps,
 } from '@chakra-ui/react';
 
-import React, { ReactNode, useState } from 'react';
+import { ReactNode, useState, FC, useRef } from 'react';
 
 import {
 	DataMenuButton,
@@ -34,7 +34,7 @@ type VDataMenuProps = InputProps & {
 	unselect?: boolean;
 };
 
-const VFont: React.FC<VDataMenuProps> = ({
+const VFont: FC<VDataMenuProps> = ({
 	label,
 	isRequired,
 	placeholder,
@@ -94,7 +94,7 @@ const VFont: React.FC<VDataMenuProps> = ({
 		</ItemOfDataMenu>
 	));
 
-	const inputRef = React.useRef<any>(null);
+	const inputRef = useRef<any>(null);
 
 	return (
 		<Flex w='full'>

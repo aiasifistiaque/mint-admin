@@ -1,10 +1,11 @@
 import { Flex } from '@chakra-ui/react';
 import { SpaceBetween } from '../../../../..';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 const TableSettingsMenuContainer = ({ children }: { children: ReactNode }) => {
 	return (
 		<SpaceBetween
+			py={1}
 			align='flex-start'
 			border='1px solid transparent'>
 			<Flex

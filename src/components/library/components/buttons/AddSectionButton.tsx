@@ -1,15 +1,15 @@
-import React from 'react';
+import { ReactNode, FC } from 'react';
 import { Center, FlexProps, Heading } from '@chakra-ui/react';
 import { Icon } from '../..';
 
 type AddImageButtonProps = FlexProps & {
-	children?: React.ReactNode;
+	children?: ReactNode;
 	size?: string;
 };
 
 const DEFAULT_IMAGE_SIZE = '100px';
 
-const AddSectionButton: React.FC<AddImageButtonProps> = ({ children, size, ...props }) => {
+const AddSectionButton: FC<AddImageButtonProps> = ({ children, size, ...props }) => {
 	return (
 		<Center
 			cursor='pointer'

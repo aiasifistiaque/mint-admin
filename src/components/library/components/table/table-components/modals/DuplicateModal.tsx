@@ -8,7 +8,7 @@ import {
 	Button,
 	useDisclosure,
 } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import { useEffect, FC, useRef } from 'react';
 
 import { useCopyItemMutation } from '../../../../store';
 import { useCustomToast, MenuItem, AlertDialogContent, AlertDialogHeader } from '../../../..';
@@ -19,9 +19,9 @@ type DeleteItemModalProps = {
 	path: string;
 };
 
-const DuplicateModal: React.FC<DeleteItemModalProps> = ({ title, path, id }) => {
+const DuplicateModal: FC<DeleteItemModalProps> = ({ title, path, id }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>(undefined);
+	const cancelRef = useRef<any>(undefined);
 
 	const [trigger, result] = useCopyItemMutation();
 

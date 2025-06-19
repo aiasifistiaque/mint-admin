@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { ModalFooter, ModalFooterProps } from '@chakra-ui/react';
 
 type CustomModalHeaderProps = ModalFooterProps & {

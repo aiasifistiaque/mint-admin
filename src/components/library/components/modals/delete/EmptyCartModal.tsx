@@ -9,7 +9,7 @@ import {
 	Flex,
 	useDisclosure,
 } from '@chakra-ui/react';
-import React from 'react';
+import { FC, useRef } from 'react';
 
 import { AlertDialogHeader, AlertDialogContent } from '../../..';
 
@@ -20,14 +20,9 @@ type DeleteItemModalProps = {
 	description?: string;
 };
 
-const EmptyCartModal: React.FC<DeleteItemModalProps> = ({
-	trigger,
-	title,
-	description,
-	onClick,
-}) => {
+const EmptyCartModal: FC<DeleteItemModalProps> = ({ trigger, title, description, onClick }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>(undefined);
+	const cancelRef = useRef<any>(undefined);
 
 	const closeItem = () => {
 		onClose();

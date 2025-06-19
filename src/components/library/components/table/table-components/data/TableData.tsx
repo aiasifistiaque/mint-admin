@@ -1,9 +1,9 @@
-import { Badge, Flex, TableCellProps, Text } from '@chakra-ui/react';
+import { Badge, BadgeProps, TableCellProps, Tooltip, useClipboard } from '@chakra-ui/react';
 import moment from 'moment';
-import React, { ReactNode } from 'react';
-
+import { FC } from 'react';
 import { CustomTd } from '.';
 import { TableObjectDataProps } from '../../../..';
+import { CopyIcon } from '@chakra-ui/icons';
 
 // Define the type for the props of the TableData component
 type TableDataPropsType = TableCellProps &
@@ -11,9 +11,54 @@ type TableDataPropsType = TableCellProps &
 		children: any;
 		key: string;
 		colorScheme?: any;
+		item?: any;
+		copy?: boolean;
+		colorTheme?: any;
 	};
 
-const TableData: React.FC<TableDataPropsType> = ({
+const TableData: FC<TableDataPropsType> = ({
+	children,
+	id,
+	copy,
+	type,
+	colorScheme,
+	toLocaleStr,
+	tagType,
+	imageKey,
+	key,
+	item,
+	...props
+}) => {
+	const { onCopy, hasCopied } = useClipboard(children);
+	const commonProps = {
+		toLocaleStr,
+		colorScheme,
+		key,
+		type,
+		tagType,
+		imageKey,
+		...props,
+	};
+	if (copy) {
+		if (!children) return <TableBody {...commonProps}>--</TableBody>;
+		return (
+			<Tooltip label={hasCopied ? 'Copied!' : 'Click to Copy'}>
+				<TableBody
+					{...commonProps}
+					cursor='pointer'
+					onClick={onCopy}
+					{...props}>
+					{children}
+					{<CopyIcon ml={2} />}
+				</TableBody>
+			</Tooltip>
+		);
+	}
+
+	return <TableBody {...commonProps}>{children}</TableBody>;
+};
+
+const TableBody: FC<TableDataPropsType> = ({
 	children,
 	id,
 	type,
@@ -22,20 +67,20 @@ const TableData: React.FC<TableDataPropsType> = ({
 	tagType,
 	imageKey,
 	key,
+	item,
+	colorTheme,
 	...props
 }) => {
-	// Determine the component to use based on the type of the content
-
 	switch (type) {
 		case 'checkbox':
 			return (
 				<CustomTd>
 					<Badge
-						colorScheme={children?.toString() === 'true' ? 'green' : 'red'}
-						//colorScheme={colorScheme ? colorScheme(children) : 'gray'}
-						size='2xs'
-						fontSize='12px'>
-						{JSON.stringify(children)}
+						colorScheme={
+							colorTheme ? colorTheme[children] : children?.toString() === 'true' ? 'green' : 'red'
+						}
+						{...badgeCss}>
+						{children?.toString()}
 					</Badge>
 				</CustomTd>
 			);
@@ -45,48 +90,43 @@ const TableData: React.FC<TableDataPropsType> = ({
 				<CustomTd
 					flexWrap='wrap'
 					gap={2}>
-					{/* <Flex
-						gap={2}
-						flexWrap='wrap'> */}
 					{Array.isArray(children)
 						? children.map((item: any, i: number) => (
 								<Badge
 									key={i}
-									colorScheme={colorScheme ? colorScheme(children) : 'gray'}
-									size='2xs'
-									fontSize='12px'>
+									colorScheme={
+										item?.colorTheme
+											? item?.colorTheme[item.toLowerCase()]
+											: colorScheme
+											? colorScheme(children)
+											: 'gray'
+									}
+									{...badgeCss}>
 									{item}
 								</Badge>
 						  ))
 						: null}
-					{/* </Flex> */}
 				</CustomTd>
 			);
 		case 'number':
-			return (
-				<CustomTd
-					// isNumeric={true}
-					{...props}>
-					{children?.toLocaleString()}
-				</CustomTd>
-			);
+			return <CustomTd {...props}>{children?.toLocaleString()}</CustomTd>;
 
 		case 'image-text':
 			return (
 				<CustomTd
 					display='flex'
 					alignItems='center'
+					type='image-text'
 					gap={2}
 					src={imageKey}
-					{...props}
-					type='image-text'>
+					{...props}>
 					{children}
 				</CustomTd>
 			);
 		case 'time':
 			return (
 				<CustomTd
-					fontSize={{ base: '1rem', md: '.8rem' }}
+					{...dateCss}
 					{...props}>
 					{children ? moment(children).format('hh:mm A') : '--'}
 				</CustomTd>
@@ -94,7 +134,7 @@ const TableData: React.FC<TableDataPropsType> = ({
 		case 'date-only':
 			return (
 				<CustomTd
-					fontSize={{ base: '1rem', md: '.7rem' }}
+					{...dateCss}
 					{...props}>
 					{children ? moment(children).format('DD-MM-YYYY') : '--'}
 				</CustomTd>
@@ -102,7 +142,7 @@ const TableData: React.FC<TableDataPropsType> = ({
 		case 'date':
 			return (
 				<CustomTd
-					fontSize={{ base: '1rem', md: '.7rem' }}
+					{...dateCss}
 					{...props}>
 					{children ? moment(children).calendar() : '--'}
 				</CustomTd>
@@ -129,6 +169,15 @@ const TableData: React.FC<TableDataPropsType> = ({
 		default:
 			return <CustomTd {...props}>{children}</CustomTd>;
 	}
+};
+
+const dateCss: any = {
+	fontSize: { base: '1rem', md: '.7rem' },
+};
+
+const badgeCss: BadgeProps = {
+	fontSize: '12px',
+	size: '2xs',
 };
 
 export default TableData;

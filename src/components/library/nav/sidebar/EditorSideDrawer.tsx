@@ -10,13 +10,9 @@ import {
 	Heading,
 	IconButton,
 } from '@chakra-ui/react';
-import React from 'react';
-import Sidebar from './Sidebar.v0';
+import Sidebar from './Sidebar';
 
-import { useGetSelfQuery } from '@/store/services/authApi';
-import { zIndex } from '@/lib/constants';
-
-import { EditorSidebar, Icon } from '../..';
+import { EditorSidebar, Icon, useGetSelfQuery } from '../..';
 
 const EditorSideDrawer = ({ sidebarData, doc }: { sidebarData: any; doc: any }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,7 +61,7 @@ const EditorSideDrawer = ({ sidebarData, doc }: { sidebarData: any; doc: any }) 
 const styles = {
 	container: {
 		gap: 2,
-		zIndex: zIndex.NAV,
+		zIndex: 999,
 		alignItems: 'center',
 		h: '64px',
 		px: 0,

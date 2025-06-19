@@ -1,10 +1,10 @@
-import React, { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Grid } from '@chakra-ui/react';
 
 import { Icon, FilterInput } from '../../..';
 
 const DatePicker = ({ setVal }: { setVal: (val: string) => void }) => {
-	const [value, setValue] = React.useState<any>();
+	const [value, setValue] = useState<any>();
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const newDAte = e.target.value;

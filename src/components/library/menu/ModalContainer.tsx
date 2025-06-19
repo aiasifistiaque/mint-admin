@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import {
 	DrawerContent,
 	DrawerContentProps,
@@ -12,11 +12,11 @@ import { radius } from '../config';
 type MenuContainerProps = ModalContentProps &
 	DrawerContentProps &
 	MenuListProps & {
-		children: React.ReactNode;
+		children: ReactNode;
 		isSmallScreen?: boolean;
 	};
 
-const ModalContainer: React.FC<MenuContainerProps> = ({ children, isSmallScreen, ...props }) => {
+const ModalContainer: FC<MenuContainerProps> = ({ children, isSmallScreen, ...props }) => {
 	if (isSmallScreen)
 		return (
 			<DrawerContent

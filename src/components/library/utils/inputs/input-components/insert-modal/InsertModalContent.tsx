@@ -1,9 +1,9 @@
 import { ModalContentProps, ModalContent } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { radius } from '../../../..';
 
 type InsertModalContentProps = ModalContentProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 const InsertModalContent: FC<InsertModalContentProps> = ({ children, ...props }) => {

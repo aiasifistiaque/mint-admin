@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { ModalBody, ModalBodyProps } from '@chakra-ui/react';
 
 type InsertModalBodyProps = ModalBodyProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 const InsertModalBody: FC<InsertModalBodyProps> = ({ children, ...props }) => {

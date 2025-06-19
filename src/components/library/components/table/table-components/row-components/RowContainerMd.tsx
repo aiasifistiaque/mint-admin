@@ -1,4 +1,4 @@
-import React, { FC, useState, ReactNode } from 'react';
+import { FC, useState, ReactNode } from 'react';
 import { Tr, TextProps } from '@chakra-ui/react';
 
 type RowContainerMdProps = TextProps & {
@@ -17,9 +17,9 @@ const RowContainerMd: FC<RowContainerMdProps> = ({ children, ...props }) => {
 		<Tr
 			_notLast={{
 				borderBottom: '1px solid',
-				borderBottomColor: 'container.borderLight',
+				borderBottomColor: 'table.innerBorder.light',
 				_dark: {
-					borderBottomColor: 'container.borderDarker',
+					borderBottomColor: 'table.innerBorder.dark',
 				},
 			}}
 			// border='1px solid red'

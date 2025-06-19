@@ -1,4 +1,3 @@
-import React from 'react';
 import { Flex, Heading, Text } from '@chakra-ui/react';
 
 const ColorInput = ({ value, title }: { value: string; title: string }) => (

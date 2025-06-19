@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useCallback, useState } from 'react';
+import { useCallback, useState, FC } from 'react';
 import {
 	InputProps,
 	FormControl,
@@ -23,7 +23,7 @@ type InputContainerProps = InputProps & {
 	placeholder?: any;
 };
 
-const VCatCollectionList: React.FC<InputContainerProps> = ({
+const VCatCollectionList: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,

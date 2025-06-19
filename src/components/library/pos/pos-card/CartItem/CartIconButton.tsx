@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { IconButton } from '@chakra-ui/react';
-import { Icon } from '@/components/library';
+import { Icon } from '../../../';
 
 type CartIconButtonProps = {
 	size: number;

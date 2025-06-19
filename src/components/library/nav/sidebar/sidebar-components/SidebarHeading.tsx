@@ -1,5 +1,5 @@
-import { TextProps, Text } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { TextProps, Text, Skeleton } from '@chakra-ui/react';
+import { FC } from 'react';
 
 type SidebarHeadingProps = TextProps & {
 	children: any;
@@ -7,19 +7,30 @@ type SidebarHeadingProps = TextProps & {
 	isLoading?: boolean;
 };
 
-const SidebarHeading: FC<SidebarHeadingProps> = ({ children, show = false, ...props }) => {
+const SidebarHeading: FC<SidebarHeadingProps> = ({
+	children,
+	isLoading = false,
+	show = false,
+	...props
+}) => {
 	if (!show) return null;
 	return (
-		<Text
+		<Skeleton
+			isLoaded={!isLoading}
 			px={2}
-			pt={4}
-			fontSize={{ base: 'md', md: '2xs' }}
-			fontWeight='700'
-			// fontFamily='Bebas Neue'
-			textTransform='uppercase'
-			{...props}>
-			{children}
-		</Text>
+			mt={4}
+			h='20px'
+			borderRadius='8px'>
+			<Text
+				color='sidebar.bodyText.headingLight'
+				_dark={{ color: 'sidebar.bodyText.headingDark' }}
+				fontSize={{ base: 'md', md: '2xs' }}
+				fontWeight='700'
+				textTransform='uppercase'
+				{...props}>
+				{children}
+			</Text>
+		</Skeleton>
 	);
 };
 

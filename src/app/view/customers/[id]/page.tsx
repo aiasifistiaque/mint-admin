@@ -5,7 +5,7 @@ import { schema } from '../../../../models';
 import { Heading } from '@chakra-ui/react';
 
 import { viewAllDataFields } from '../../../../models/order';
-import TableCustom from '../../../../components/library/sections/table/TableCustom';
+import TableCustom from '../../../../components-v0/library/sections/table/TableCustom';
 import ledgerSchema from '@/models/ledger/ledger.schema';
 import {
 	convertToTableFields,

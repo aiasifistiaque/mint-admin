@@ -1,9 +1,9 @@
 import { StackProps, Stack, Grid } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { radius, shadow, sizes } from '../../../..';
 
 type RowContainerMobileProps = StackProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 const RowContainerBase: FC<RowContainerMobileProps> = ({ children, ...props }) => {
@@ -13,19 +13,17 @@ const RowContainerBase: FC<RowContainerMobileProps> = ({ children, ...props }) =
 			position='relative'
 			width='100%'
 			borderRadius={radius.CONTAINER}
-			//boxShadow={shadow.CARD}
 			mb={2}
-			bg='container.newLight'
+			bg='table.bg.light'
 			borderWidth={1}
-			borderColor='container.borderLight'
+			borderColor='table.cardBorder.light'
 			gap={4}
 			p={4}
 			pb={0}
 			_last={{ mb: 4 }}
-			// direction='column'
 			_dark={{
-				bg: 'menu.dark',
-				borderColor: 'container.borderDark',
+				bg: 'table.bg.dark',
+				borderColor: 'table.cardBorder.dark',
 			}}
 			{...props}>
 			{children}

@@ -1,5 +1,5 @@
 import { FormLabelProps, FormLabel } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 const FONT_SIZE = '.85rem';
 const FONT_WEIGHT = '600';
@@ -12,6 +12,8 @@ type LabelProps = FormLabelProps & {
 const Label: FC<LabelProps> = ({ children, ...props }) => {
 	return (
 		<FormLabel
+			color='text.formLabel.light'
+			_dark={{ color: 'text.formLabel.dark' }}
 			userSelect='none'
 			m={M}
 			fontSize={FONT_SIZE}

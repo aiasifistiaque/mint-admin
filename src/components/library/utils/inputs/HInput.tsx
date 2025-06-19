@@ -1,10 +1,10 @@
-import React from 'react';
+import { FC } from 'react';
 import { Input } from '@chakra-ui/react';
 import { styles, HInputProps } from './util';
 
 import { InputContainer } from '../..';
 
-const HInput: React.FC<HInputProps> = ({ label, isRequired, placeholder, value, ...props }) => {
+const HInput: FC<HInputProps> = ({ label, isRequired, placeholder, value, ...props }) => {
 	return (
 		<InputContainer
 			label={label}

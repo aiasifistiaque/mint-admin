@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { TextProps, Text } from '@chakra-ui/react';
 import { FormControl } from '../..';
 
@@ -10,7 +10,7 @@ type InputContainerProps = TextProps & {
 	placeholder?: any;
 };
 
-const ViewOnly: React.FC<InputContainerProps> = ({
+const ViewOnly: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,

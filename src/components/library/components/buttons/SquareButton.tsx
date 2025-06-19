@@ -1,13 +1,12 @@
 import { Center, FlexProps, Text, Tooltip, Flex } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
-import React from 'react';
+import { ReactNode, FC } from 'react';
 
 type SquareButtonProps = FlexProps & {
 	label: string;
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
-const SquareButton: React.FC<SquareButtonProps> = ({ children, label, ...props }) => {
+const SquareButton: FC<SquareButtonProps> = ({ children, label, ...props }) => {
 	return (
 		<Flex
 			// whileTap={{ scale: 0.8 }}

@@ -9,7 +9,7 @@
 // 	Flex,
 // 	useDisclosure,
 // } from '@chakra-ui/react';
-// import React, { useEffect } from 'react';
+// import  { useEffect } from 'react';
 
 // import {
 // 	useCustomToast,
@@ -22,17 +22,17 @@
 // 	title?: string;
 // 	id: string;
 // 	path?: string;
-// 	children: React.ReactNode;
+// 	children: ReactNode;
 // };
 
-// const DeleteProductListModal: React.FC<DeleteItemModalProps> = ({
+// const DeleteProductListModal: FC<DeleteItemModalProps> = ({
 // 	title,
 // 	id,
 // 	children,
 // 	path = 'nexa',
 // }) => {
 // 	const { isOpen, onOpen, onClose } = useDisclosure();
-// 	const cancelRef = React.useRef<any>(undefined);
+// 	const cancelRef = useRef<any>(undefined);
 
 // 	const [trigger, result] = useDeleteByIdMutation();
 
@@ -119,7 +119,7 @@ import {
 	Flex,
 	useDisclosure,
 } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import { useEffect, ReactNode, FC, useRef } from 'react';
 
 import {
 	useCustomToast,
@@ -133,11 +133,11 @@ type DeleteItemModalProps = {
 	title?: string;
 	id: string;
 	path?: string;
-	children: React.ReactNode;
+	children: ReactNode;
 	productListKeys?: any;
 };
 
-const DeleteProductListModal: React.FC<DeleteItemModalProps> = ({
+const DeleteProductListModal: FC<DeleteItemModalProps> = ({
 	title,
 	id,
 	children,
@@ -145,7 +145,7 @@ const DeleteProductListModal: React.FC<DeleteItemModalProps> = ({
 	productListKeys,
 }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>(undefined);
+	const cancelRef = useRef<any>(undefined);
 	const [trigger, result] = useDeleteByIdMutation();
 	const [triggerProduct, productResult] = useDeleteProductlistByKeyIdMutation();
 	const closeItem = () => {

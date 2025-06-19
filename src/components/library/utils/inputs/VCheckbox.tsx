@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { FC } from 'react';
 import { FormControl, Stack, Checkbox, CheckboxProps } from '@chakra-ui/react';
 
 import { Label, HelperText } from '../..';
@@ -12,7 +12,7 @@ type InputContainerProps = CheckboxProps & {
 	placeholder?: string;
 };
 
-const VCheckbox: React.FC<InputContainerProps> = ({
+const VCheckbox: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,

@@ -1,9 +1,9 @@
 import { Flex, FlexProps, Heading, Text } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 type HeadingSectionProps = FlexProps & {
 	title?: string;
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 const HeadingSection: FC<HeadingSectionProps> = ({ title, children, ...props }) => {

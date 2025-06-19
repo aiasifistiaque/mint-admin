@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	Flex,
 	useDisclosure,
@@ -11,9 +11,8 @@ import {
 	Button,
 } from '@chakra-ui/react';
 import ModalContainer from '../../menu/ModalContainer';
-import { useUpdatePasswordMutation } from '@/store/services/authApi';
 
-import { useCustomToast, ModalFormSection, VInput } from '../..';
+import { useCustomToast, ModalFormSection, VInput, useUpdatePasswordMutation } from '../..';
 
 const UpdatePasswordModal = ({ trigger, path }: { trigger?: any; path?: any }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();

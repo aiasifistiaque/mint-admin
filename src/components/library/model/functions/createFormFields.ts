@@ -16,15 +16,17 @@ const createType = ({ type, isReadOnly, fieldType }: any) => {
 const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] => {
 	const dataFields: any[] = [];
 
+	if (!layout) return [];
+
 	layout?.forEach((section: any) => {
 		const { sectionTitle, fields, description, collapsible } = section;
 
-		fields.forEach((field: any, index: number) => {
+		fields?.forEach((field: any, index: number) => {
 			const lastElement = index === fields.length - 1;
 			const firstIndex = index === 0;
 
 			if (Array.isArray(field)) {
-				field.forEach((subField: any, subIndex: number) => {
+				field?.forEach((subField: any, subIndex: number) => {
 					const fieldConfig = schema?.[subField];
 					const lastSubIndex = subIndex === field.length - 1;
 					const firstSubIndex = subIndex === 0;
@@ -60,6 +62,8 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 							...(fieldConfig?.limit && { limit: fieldConfig.limit }),
 							...(fieldConfig.menuKey && { menuKey: fieldConfig.menuKey }),
 							...(fieldConfig.menuAddOnKey && { menuAddOnKey: fieldConfig.menuAddOnKey }),
+							...(fieldConfig?.style && { style: fieldConfig.style }),
+							...(fieldConfig?.renderIf && { renderIf: fieldConfig.renderIf }),
 							...(fieldConfig.folder && { folder: fieldConfig.folder }),
 						});
 					}
@@ -94,7 +98,10 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 						...(fieldConfig?.modelAddOn && { modelAddOn: fieldConfig.modelAddOn }),
 						...(fieldConfig.menuKey && { menuKey: fieldConfig.menuKey }),
 						...(fieldConfig.menuAddOnKey && { menuAddOnKey: fieldConfig.menuAddOnKey }),
+						...(fieldConfig?.style && { style: fieldConfig.style }),
+						...(fieldConfig?.renderIf && { renderIf: fieldConfig.renderIf }),
 						...(fieldConfig.folder && { folder: fieldConfig.folder }),
+
 						endOfSection: lastElement,
 					});
 				}

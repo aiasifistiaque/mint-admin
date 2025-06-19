@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Skeleton, Tooltip } from '@chakra-ui/react';
 import { currency, Align, Icon } from '..';
 import { StatContainer, StatLabel, StatNumber } from './stat-components';

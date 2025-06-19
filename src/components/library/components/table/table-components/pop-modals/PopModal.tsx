@@ -9,12 +9,12 @@ import {
 	Flex,
 } from '@chakra-ui/react';
 
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Column, FilterButton } from '../../../..';
 import { DrawerContentContainer, PopoverContentContainer } from '.';
 
 type MenuModalProps = {
-	children: React.ReactNode;
+	children: ReactNode;
 	trigger: any;
 	onOpen: any;
 	onClose: any;

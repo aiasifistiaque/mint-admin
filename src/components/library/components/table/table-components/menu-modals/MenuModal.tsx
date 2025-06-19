@@ -7,15 +7,14 @@ import {
 	DrawerContent,
 	ModalOverlay,
 	ModalContent,
-	DrawerContentProps,
 } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
-import { radius, shadow, styles, useIsMobile } from '../../../..';
+import { styles, useIsMobile } from '../../../..';
 
 type MenuModalProps = ModalProps &
 	DrawerProps & {
-		children: React.ReactNode;
+		children: ReactNode;
 	};
 
 const MenuModal: FC<MenuModalProps> = ({ children, ...props }) => {
@@ -38,7 +37,10 @@ const MenuModal: FC<MenuModalProps> = ({ children, ...props }) => {
 		<Modal
 			isCentered
 			{...props}>
-			<ModalOverlay _light={{ bg: styles?.color?.MODAL_OVERLAY?.LIGHT }} />
+			<ModalOverlay
+				_light={{ bg: styles?.color?.MODAL_OVERLAY?.LIGHT }}
+				_dark={{ bg: styles?.color?.MODAL_OVERLAY?.DARK }}
+			/>
 			<ModalContent {...styles?.MODAL}>{children}</ModalContent>
 		</Modal>
 	);

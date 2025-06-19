@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useRef } from 'react';
+import { FC, useRef } from 'react';
 import { InputGroup, Input, InputProps, Select, SelectProps } from '@chakra-ui/react';
 import { FormControl } from '..';
 import { Icon } from '../../..';

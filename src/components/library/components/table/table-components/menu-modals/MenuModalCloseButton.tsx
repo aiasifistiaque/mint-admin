@@ -1,4 +1,3 @@
-import React from 'react';
 import { useIsMobile } from '../../../..';
 import { DrawerCloseButton, ModalCloseButton } from '@chakra-ui/react';
 

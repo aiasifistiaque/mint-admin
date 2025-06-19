@@ -1,4 +1,3 @@
-import React from 'react';
 import { IconButton as IButton, IconButtonProps, Tooltip } from '@chakra-ui/react';
 import { Icon } from '..';
 

@@ -1,3 +1,5 @@
+import formatFieldNameAdvanced from './fonrmatFieldNameAdvanced';
+
 export { default as formatDataKey } from './formatDataKey';
 export { default as generateFormSections } from './generateFormSections';
 export { default as getFieldValue } from './getFieldValue';
@@ -12,6 +14,5 @@ export { default as getFontSize } from './getFontSize';
 
 export { default as getOnChangeHandler } from './getOnChangeHandler';
 
-export { default as formatFieldNameAdvanced } from './fonrmatFieldNameAdvanced';
-
 export { default as formatFieldTitle } from './findFieldTitle';
+export { default as formatFieldNameAdvanced } from './fonrmatFieldNameAdvanced';

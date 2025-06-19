@@ -1,12 +1,12 @@
 'use client';
 
 import { Menu, MenuGroup, Flex, Input, useDisclosure, MenuDivider, Button } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { useState, useRef } from 'react';
 
 import ItemOfMenu from './ItemOfMenu';
 import ButtonOfMenu from './ButtonOfMenu';
 
-import { MenuContainer, MenuItem, CreateModal, useGetAllQuery } from '@/components/library';
+import { MenuContainer, MenuItem, CreateModal, useGetAllQuery } from '../';
 
 const WIDTH = '300px';
 const MAX_H = '300px';
@@ -66,7 +66,7 @@ const PosSelect = ({
 			{item?.name}
 		</ItemOfMenu>
 	));
-	const btnRef = React.useRef<any>(null);
+	const btnRef = useRef<any>(null);
 
 	return (
 		<>

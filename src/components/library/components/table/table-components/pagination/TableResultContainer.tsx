@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Flex, FlexProps, Text, useColorModeValue } from '@chakra-ui/react';
 
 import { useIsMobile, useAppSelector, Pagination, THEME, SpaceBetween } from '../../../..';
@@ -32,9 +32,11 @@ const TableResultContainer: FC<ResultContainerProps> = ({ data, ...props }) => {
 				px={4}
 				gap={4}
 				w='100%'
-				bg={bg}
+				bg='result.bg.light'
+				_dark={{ bg: 'result.bg.dark' }}
 				borderBottom='1px solid'
-				borderBottomColor={borderColor}>
+				borderBottomColor='result.border.light'
+				_light={{ borderBottomColor: 'result.border.dark' }}>
 				<Text>
 					<b>{data?.totalDocs || '--'}</b> results
 				</Text>

@@ -1,5 +1,3 @@
-import { BsBorderWidth } from 'react-icons/bs';
-
 export const TOKEN_NAME: string = process.env.NEXT_PUBLIC_TOKEN_NAME || 'MINT_CAFE_TOKEN_TWO';
 
 export const REFRESH_TOKEN: string =
@@ -73,19 +71,21 @@ export const zIndex = {
 };
 
 export const radius = {
-	CONTAINER: '8px',
-	MODAL: '16px',
+	CONTAINER: '6px',
+	MODAL: '8px',
+	MENU: '6px',
 	BUTTON: '6px',
 	INPUT: '6px',
 	SELECT_CONTAINER: '6px',
+	FILTER: 'full',
 };
 
 export const styles = {
 	backdropFilter: 'blur(5px)',
 	BACKDROP_FILTER: 'blur(5px)',
 	BLUR_CONTAINER: {
+		backdropFilter: 'blur(10px)',
 		bg: 'navbar.blurLight',
-		backdropFilter: 'blur(5px)',
 	},
 	MODAL_BLUR: {
 		bg: 'rgba(255, 255, 255, .6)',
@@ -94,14 +94,30 @@ export const styles = {
 	NAVBAR: {
 		h: sizes.NAV_HEIGHT || 12,
 		alignItems: 'center',
-		bg: 'navbar.blurLight',
+		bg: 'navbar.light',
 		backdropFilter: 'blur(5px)',
 		borderBottomWidth: 1,
 		zIndex: zIndex.NAV || 999,
-		borderBottomColor: 'navbar.borderBottomLight',
+		borderBottomColor: 'navbar.border.light',
+		color: 'navbar.text.light',
 		_dark: {
+			color: 'navbar.text.dark',
 			bg: 'navbar.dark',
-			borderBottomColor: 'navbar.borderBottomDark',
+			borderBottomColor: 'navbar.border.dark',
+		},
+	},
+	SIDEBAR_NAV: {
+		h: sizes.NAV_HEIGHT || 12,
+		alignItems: 'center',
+		bg: 'sidebar.header.light',
+		backdropFilter: 'blur(5px)',
+
+		borderBottomWidth: 1,
+		zIndex: zIndex.NAV || 999,
+		borderColor: 'sidebar.borderBottom.light',
+		_dark: {
+			bg: 'sidebar.header.dark',
+			borderColor: 'sidebar.borderBottom.dark',
 		},
 	},
 	bigInput: {
@@ -113,6 +129,7 @@ export const styles = {
 	color: {
 		MODAL_OVERLAY: {
 			LIGHT: 'rgba(250, 250, 250, .8)',
+			DARK: 'menu.overlayDark',
 		},
 	},
 	BORDER: {
@@ -124,14 +141,13 @@ export const styles = {
 	},
 	MODAL: {
 		bg: 'menu.light',
-		_light: {
-			borderWidth: 1,
-			borderColor: 'container.borderLight',
-		},
+		borderWidth: 1,
+		borderColor: 'container.borderLight',
 		_dark: {
 			bg: 'menu.dark',
+			borderColor: 'container.borderDark',
 		},
-		borderRadius: '16px',
+		borderRadius: '8px',
 		shadow: '2xl',
 	},
 	DRAWER: {

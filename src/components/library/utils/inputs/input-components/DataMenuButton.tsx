@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { MenuButton, Button, MenuButtonProps, ButtonProps } from '@chakra-ui/react';
 import { sizes, shadow, Icon } from '../../..';
 

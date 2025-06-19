@@ -1,9 +1,9 @@
 'use client';
 
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { useGetSelfQuery } from '@/store/services/authApi';
+import { useGetSelfQuery } from '../../';
 
 import {
 	useAppDispatch,
@@ -27,7 +27,7 @@ import { Flex } from '@chakra-ui/react';
 type TableProps = {
 	table: BackendTableObjectProps;
 	layoutPath?: string;
-	children?: React.ReactNode;
+	children?: ReactNode;
 };
 
 // Define the PageTable component

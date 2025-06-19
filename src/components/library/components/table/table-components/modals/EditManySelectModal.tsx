@@ -10,7 +10,7 @@ import {
 	Text,
 	Select,
 } from '@chakra-ui/react';
-import React, { useEffect, useRef, FC, useState } from 'react';
+import { useEffect, useRef, FC, useState } from 'react';
 import { useCustomToast, MenuItem, AlertDialogHeader, AlertDialogContent } from '../../../..';
 import { useUpdateManyMutation } from '../../../../store';
 

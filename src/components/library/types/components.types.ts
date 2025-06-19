@@ -1,8 +1,9 @@
 import { TableProps } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 
 export type CustomTableProps = TableProps & {
-	children: React.ReactNode;
-	header?: React.ReactNode;
+	children: ReactNode;
+	header?: ReactNode;
 	data: any;
 	isLoading: boolean;
 	col?: number;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Flex, Input, Text, InputProps } from '@chakra-ui/react';
 
 type EditablePriceItemProps = InputProps & {

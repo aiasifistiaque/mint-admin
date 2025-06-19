@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Center, Text, FlexProps } from '@chakra-ui/react';
 
 const TableErrorMessage = ({

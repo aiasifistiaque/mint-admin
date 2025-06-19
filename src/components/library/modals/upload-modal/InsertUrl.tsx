@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import {
 	Center,
 	Flex,
@@ -30,47 +30,50 @@ const Label = ({ children }: { children: ReactNode }) => (
 	</FormLabel>
 );
 
-const Container = ({ children }: FlexProps & { children: ReactNode }) => (
-	<Center
-		gap={1}
-		flexDir='column'>
-		{children}
-	</Center>
-);
+const imageContainerCss: FlexProps = {
+	flexDir: 'column',
+	gap: 1,
+	h: '300px',
+	w: '400px',
+	bg: 'gray.300',
+};
+
+const bodyContainerCss: FlexProps = {
+	gap: 1,
+	flexDir: 'column',
+	textAlign: 'center',
+	flex: 1,
+	color: 'gray.400',
+};
 
 const InsertUrl = ({ handleSelect }: { handleSelect: any }) => {
 	const borderColor = useColorModeValue('brand.500', 'brand.200');
-	const [url, setUrl] = React.useState<any>(null);
+	const [url, setUrl] = useState<any>(null);
 	const handleChange = (e: any) => {
 		setUrl(e.target.value);
 		handleSelect(e.target.value);
 	};
 	const ImageContainer = (
 		<Center flex={1}>
-			<Container
-				h='300px'
-				w='400px'
-				bg='gray.300'>
+			<Flex {...imageContainerCss}>
 				<Image
 					src={url}
 					alt='Preview'
 					objectFit='contain'
 				/>
-			</Container>
+			</Flex>
 		</Center>
 	);
 
 	const bodyContainer = (
-		<Container
-			flex={1}
-			color='gray.400'>
+		<Flex {...bodyContainerCss}>
 			<Text
 				fontWeight='600'
 				fontSize='1.1rem'>
 				{bodyText?.title}
 			</Text>
 			<Text fontSize='.9rem'>{bodyText?.subtitle}</Text>
-		</Container>
+		</Flex>
 	);
 
 	const body = url ? ImageContainer : bodyContainer;
@@ -83,6 +86,7 @@ const InsertUrl = ({ handleSelect }: { handleSelect: any }) => {
 			<Flex>
 				<FormControl>
 					<Flex
+						flexDir={{ base: 'column', md: 'row' }}
 						gap={2}
 						align='center'>
 						<Label>Paste an image URL here:</Label>

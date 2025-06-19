@@ -1,20 +1,22 @@
-import { FlexProps, useColorModeValue } from '@chakra-ui/react';
-import React, { ReactNode } from 'react';
-import { Column } from '@/components/library';
+import { FlexProps, Flex } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 
 const HEIGHT = 'calc(100vh - 52px)';
 
 const CartContainer = ({ children, ...props }: FlexProps & { children: ReactNode }) => {
-	const borderColor = useColorModeValue('stroke.deepL', 'stroke.deepD');
 	return (
-		<Column
+		<Flex
+			flexDir='column'
 			h={`calc(${HEIGHT} - 160px)`}
 			overflowY='scroll'
 			borderTopWidth={1}
-			borderColor={borderColor}
+			borderColor='stroke.deepL'
+			_dark={{
+				borderColor: 'stroke.deepD',
+			}}
 			{...props}>
 			{children}
-		</Column>
+		</Flex>
 	);
 };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { GridItem, useColorModeValue } from '@chakra-ui/react';
 
 type FormItemProps = {
@@ -10,7 +10,7 @@ type FormItemProps = {
 		span?: number;
 		description?: string;
 	};
-	children: React.ReactNode;
+	children: ReactNode;
 	isHidden?: boolean;
 };
 

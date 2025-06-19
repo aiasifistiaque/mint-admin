@@ -1,7 +1,6 @@
 'use client';
-import React from 'react';
-import { Flex, Text, useColorModeValue } from '@chakra-ui/react';
-import Link from 'next/link';
+import { FC } from 'react';
+import { Flex, FlexProps, Skeleton, Text, TextProps } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 
 import {
@@ -23,13 +22,9 @@ type SidebarItemProps = {
 	isLoading?: boolean;
 };
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ href, children, path, icon, sx }) => {
+const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoading = false }) => {
 	const { selected } = useAppSelector((state: any) => state.route);
 	const dispatch = useAppDispatch();
-
-	const color = useColorModeValue('#4a4a4a', '#fff');
-	const bg = useColorModeValue('white', '#222');
-	const hover = useColorModeValue('sidebar.hoverLight', 'sidebar.hoverDark');
 
 	const router = useRouter();
 
@@ -41,44 +36,48 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ href, children, path, icon, s
 	};
 
 	const isMobile = useIsMobile();
-
-	const Container = ({ children }: any) => {
-		return href ? <Link href={href}>{children}</Link> : <>{children}</>;
-	};
-
-	// return <Link href='/'>home</Link>;
+	const isSelected = selected === path;
 
 	return (
-		<>
-			<Flex
-				userSelect='none'
-				_hover={selected !== path ? { bg: hover } : !href ? { bg: hover } : {}}
-				onClick={changeRoute}
-				borderColor={selected == path ? 'container.borderLight' : 'transparent'}
-				borderWidth='1px'
-				_dark={{
-					borderColor: 'container.borderDark',
-				}}
-				h={{ base: 10, md: 7 }}
-				bg={selected == path ? bg : 'transparent'}
-				sx={{ ...styles.container, ...sx }}>
+		<Flex
+			onClick={changeRoute}
+			{...containerCss(isLoading, isSelected, href)}>
+			{isLoading ? (
+				<Skeleton
+					isLoaded={!isLoading}
+					{...skeletonCss}
+				/>
+			) : (
 				<Icon
-					color={color}
+					color='inherit'
 					name={icon}
 					size={isMobile ? 20 : undefined}
 				/>
-				<Text
-					fontSize={{ base: '16px', md: '14px' }}
-					fontWeight='600'>
-					{children}
-				</Text>
-			</Flex>
-		</>
+			)}
+
+			<Skeleton
+				isLoaded={!isLoading}
+				borderRadius={SKELETON_BORDER_RADIUS}>
+				<Text {...bodyTextCss(isSelected)}>{children}</Text>
+			</Skeleton>
+		</Flex>
 	);
 };
 
-const styles = {
-	container: {
+const bodyTextCss = (isSelected?: boolean): TextProps => {
+	return {
+		color: isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
+		_dark: {
+			color: isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark',
+		},
+
+		fontSize: { base: '16px', md: '14px' },
+		fontWeight: '600',
+	};
+};
+
+const containerCss = (isLoading: boolean, isSelected: boolean, href?: string): FlexProps => {
+	return {
 		borderRadius: radius.CONTAINER,
 		alignItems: 'center',
 		gap: 3,
@@ -87,7 +86,36 @@ const styles = {
 		fontWeight: '600',
 		cursor: 'pointer',
 		fontSize: '.9rem',
-	},
+		userSelect: 'none',
+		borderWidth: '1px',
+		h: { base: 10, md: 7 },
+		borderColor: isSelected ? 'sidebar.selectedItemBorder.light' : 'transparent',
+		bg: isLoading ? 'transparent' : isSelected ? 'sidebar.selectedItemBg.light' : 'transparent',
+		color: isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
+		_hover: !isSelected
+			? { bg: 'sidebar.hover.bgLight' }
+			: !href
+			? { bg: 'sidebar.hover.bgLight' }
+			: {},
+		_dark: {
+			bg: isLoading ? 'transparent' : isSelected ? 'sidebar.selectedItemBg.dark' : 'transparent',
+			borderColor: isSelected ? 'sidebar.selectedItemBorder.dark' : 'transparent',
+			color: isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark',
+			_hover: !isSelected
+				? { bg: 'sidebar.hover.bgDark' }
+				: !href
+				? { bg: 'sidebar.hover.bgDark' }
+				: {},
+		},
+	};
+};
+
+const SKELETON_BORDER_RADIUS = '8px';
+
+const skeletonCss: any = {
+	borderRadius: SKELETON_BORDER_RADIUS,
+	height: '20px',
+	width: '20px',
 };
 
 export default SidebarItem;

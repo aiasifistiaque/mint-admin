@@ -1,4 +1,4 @@
-import React, { FC, Fragment, ReactNode } from 'react';
+import { FC, Fragment, ReactNode } from 'react';
 import {
 	Flex,
 	Heading,
@@ -19,7 +19,7 @@ type SettingsEditContainerProps = {
 	closeEdit: () => void;
 	handleSubmit: (e: any) => void;
 	isLoading: boolean;
-	children: React.ReactNode;
+	children: ReactNode;
 	heading: string;
 	cols?: string;
 };
@@ -112,7 +112,7 @@ const footerProps: FlexProps = {
 	justifyContent: 'flex-end',
 };
 
-const Footer = ({ children, ...props }: FlexProps & { children: React.ReactNode }) => {
+const Footer = ({ children, ...props }: FlexProps & { children: ReactNode }) => {
 	return (
 		<Flex
 			{...footerProps}

@@ -1,5 +1,5 @@
 import { GridItem, GridItemProps } from '@chakra-ui/react';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 const ItemText = ({ children, ...props }: GridItemProps & { children: ReactNode }) => {
 	return (

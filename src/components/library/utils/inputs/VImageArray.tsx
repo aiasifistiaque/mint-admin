@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import {
 	Center,
@@ -49,6 +49,7 @@ const VImageArray: FC<FormDataType> = ({
 							key={i}
 							{...containerCSS}>
 							<UploadModal
+								folder={folder}
 								type='delete'
 								handleImage={onChange}
 								handleDelete={() => onChange(image, 'delete')}
@@ -65,7 +66,6 @@ const VImageArray: FC<FormDataType> = ({
 					{value && value?.length >= limit ? null : (
 						<Center {...containerCSS}>
 							<UploadModal
-								folder={folder}
 								type='add'
 								handleImage={onChange}
 								multiple={true}

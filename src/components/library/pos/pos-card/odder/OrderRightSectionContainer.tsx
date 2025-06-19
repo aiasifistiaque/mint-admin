@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Grid, useColorModeValue } from '@chakra-ui/react';
 
 const OrderRightSectionContainer = ({ children }: { children: ReactNode }) => {

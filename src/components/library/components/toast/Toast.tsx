@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { useEffect, FC } from 'react';
 
 type ToastProps = {
 	isError?: boolean;
@@ -9,7 +9,7 @@ type ToastProps = {
 	successTitle?: string;
 };
 
-const Toast: React.FC<ToastProps> = ({ isError, isSuccess, error, successText, successTitle }) => {
+const Toast: FC<ToastProps> = ({ isError, isSuccess, error, successText, successTitle }) => {
 	const toast = useToast();
 
 	useEffect(() => {

@@ -10,11 +10,9 @@ import {
 	Heading,
 	IconButton,
 } from '@chakra-ui/react';
-import React from 'react';
-import Sidebar from './Sidebar.v0';
+import Sidebar from './Sidebar';
 
-import { useGetSelfQuery } from '@/store/services/authApi';
-import { zIndex } from '@/lib/constants';
+import { useGetSelfQuery } from '../../';
 
 import { Icon, styles } from '../..';
 
@@ -63,7 +61,7 @@ const SideDrawer = () => {
 const style = {
 	container: {
 		gap: 2,
-		zIndex: zIndex.NAV,
+		zIndex: 999,
 		alignItems: 'center',
 		h: '64px',
 		px: 0,

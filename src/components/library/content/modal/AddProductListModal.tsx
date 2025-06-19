@@ -1,4 +1,4 @@
-// import React, { FormEvent, useEffect, useState } from 'react';
+// import  { FormEvent, useEffect, useState } from 'react';
 // import {
 // 	Flex,
 // 	Modal,
@@ -27,7 +27,7 @@
 
 // type CreateModalProps = {
 // 	dataModel: InputData<any>[];
-// 	children?: React.ReactNode;
+// 	children?: ReactNode;
 // 	path?: string;
 // 	id?: string;
 // 	title?: string;
@@ -95,7 +95,7 @@
 // 				onClose={onModalClose}
 // 				closeOnOverlayClick={false}>
 // 				<ModalOverlay />
-// 				<ModalContainer onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+// 				<ModalContainer onClick={(e: MouseEvent) => e.stopPropagation()}>
 // 					<ModalHeader>{`Update ${title}`}</ModalHeader>
 // 					<ModalCloseButton />
 // 					<form onSubmit={handleSubmit}>
@@ -127,14 +127,13 @@
 
 // export default AddProductListModal;
 
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState, MouseEvent, ReactNode } from 'react';
 import {
 	Flex,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
 	ModalOverlay,
-	Select,
 	useDisclosure,
 } from '@chakra-ui/react';
 
@@ -157,7 +156,7 @@ import {
 
 type CreateModalProps = {
 	dataModel: InputData<any>[];
-	children?: React.ReactNode;
+	children?: ReactNode;
 	path?: string;
 	id?: string;
 	title?: string;
@@ -235,7 +234,7 @@ const AddProductListModal = ({
 				onClose={onModalClose}
 				closeOnOverlayClick={false}>
 				<ModalOverlay />
-				<ModalContainer onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+				<ModalContainer onClick={(e: MouseEvent) => e.stopPropagation()}>
 					<ModalHeader>{`Update ${title}`}</ModalHeader>
 					<ModalCloseButton />
 					<form onSubmit={handleSubmit}>

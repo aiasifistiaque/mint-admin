@@ -1,4 +1,4 @@
-// import React, { FC } from 'react';
+// import  { FC } from 'react';
 // import { Box, Skeleton } from '@chakra-ui/react';
 // import { QRCode } from 'react-qrcode-logo';
 
@@ -85,8 +85,6 @@
 // };
 
 // export default Qr;
-
-import React from 'react';
 
 const Qr = () => {
 	return <div>Qr</div>;

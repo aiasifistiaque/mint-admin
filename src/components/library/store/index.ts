@@ -12,4 +12,7 @@ export * from './slices/builderSlice';
 export * from './services/commonApi';
 
 export * from './services/ordersApi';
-// export * from './services/authApi';
+export * from './services/authApi';
+export * from './services/uploadApi';
+
+export * from './store';

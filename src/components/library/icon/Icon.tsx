@@ -7,7 +7,6 @@ import {
 	BsFillUnlockFill,
 	BsThreeDots,
 } from 'react-icons/bs';
-import colors from '@/theme/colors.theme';
 import { useColorModeValue } from '@chakra-ui/react';
 import { TbArrowForward, TbDownload, TbSettings, TbSelector } from 'react-icons/tb';
 import {
@@ -272,7 +271,7 @@ const icons: any = {
 
 const Icon: FC<IconProps> = ({ name, ...props }) => {
 	const IconComponent = icons[name] || IoIosHome;
-	const brandColor = useColorModeValue(colors.brand.light, colors.brand.dark);
+	const brandColor = useColorModeValue('brand.light', 'brand.dark');
 	const defaultColor = useColorModeValue('#4a4a4a', 'white');
 	return (
 		<IconComponent

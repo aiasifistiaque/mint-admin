@@ -9,3 +9,5 @@ export { default as DrawerHeader } from './modal-components/CustomDrawerHeader';
 export { default as AlertDialogHeader } from './modal-components/AlertDialogHeader';
 export { default as AlertContent } from './modal-components/AlertContent';
 export { default as AlertDialogContent } from './modal-components/AlertContent';
+
+export { default as ImageUploader } from './upload-modal/ImageUploader';

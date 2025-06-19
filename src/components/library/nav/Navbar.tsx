@@ -1,7 +1,7 @@
 'use client';
 
 import { Flex, FlexProps } from '@chakra-ui/react';
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import SideDrawer from './sidebar/SideDrawer';
 import { padding, styles } from '..';
 
@@ -29,6 +29,7 @@ const Navbar: FC<FlexPropsType> = ({ children, showMenu, ...props }) => {
 			{...props}
 			position='fixed'>
 			{showMenu && <SideDrawer />}
+
 			{children}
 		</Flex>
 	);

@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState, FC, ChangeEvent } from 'react';
 import {
 	InputProps,
 	FormControl,
@@ -23,7 +23,7 @@ type InputContainerProps = InputProps & {
 	placeholder?: any;
 };
 
-const VCustomAttributes: React.FC<InputContainerProps> = ({
+const VCustomAttributes: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,
@@ -36,7 +36,7 @@ const VCustomAttributes: React.FC<InputContainerProps> = ({
 		value: '',
 	});
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setTag(prevTag => ({ ...prevTag, [name]: value }));
 	};

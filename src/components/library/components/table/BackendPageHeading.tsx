@@ -1,6 +1,6 @@
 import { Flex, FlexProps, Heading, Button, useColorModeValue, TextProps } from '@chakra-ui/react';
 import Link from 'next/link';
-import React from 'react';
+import { FC } from 'react';
 import { BackendCreateModal, createFormFields, Icon } from '../..';
 import ExportModal from '../modals/export/ExportModal';
 
@@ -17,7 +17,7 @@ type PageHeadingProps = FlexProps & {
 	schema: any;
 };
 
-const BackendPageHeading: React.FC<PageHeadingProps> = ({
+const BackendPageHeading: FC<PageHeadingProps> = ({
 	title,
 	href,
 	button,

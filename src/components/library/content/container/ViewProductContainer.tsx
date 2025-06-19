@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { Button, Flex, FlexProps, Heading } from '@chakra-ui/react';
 import { Align, Column, EditContentModal } from '../..';
 

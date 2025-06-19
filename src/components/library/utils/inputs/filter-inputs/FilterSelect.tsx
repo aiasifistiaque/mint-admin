@@ -1,13 +1,13 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import { Select, SelectProps } from '@chakra-ui/react';
 
 import { Icon } from '../../..';
 
 type FilterSelectProps = SelectProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
-const FilterSelect: React.FC<FilterSelectProps> = ({ children, ...props }) => {
+const FilterSelect: FC<FilterSelectProps> = ({ children, ...props }) => {
 	return (
 		<Select
 			icon={<Icon name='select' />}

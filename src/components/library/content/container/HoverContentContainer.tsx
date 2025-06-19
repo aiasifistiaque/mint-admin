@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { Button, ButtonProps, Center, Flex, FlexProps } from '@chakra-ui/react';
 import { BuilderBgOverlay, BuilderEditButton, EditContentModal, Icon } from '../..';
 

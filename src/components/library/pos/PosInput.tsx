@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { FC } from 'react';
 import {
 	Input,
 	InputProps,
@@ -34,7 +34,7 @@ const FONT_SIZE = '1rem';
 const FONT_WEIGHT = '600';
 const M = 0;
 
-const PosInput: React.FC<InputContainerProps> = ({
+const PosInput: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,

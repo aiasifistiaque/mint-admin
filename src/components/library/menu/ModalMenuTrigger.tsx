@@ -1,5 +1,5 @@
 import { Flex, FlexProps } from '@chakra-ui/react';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 const ModalMenuTrigger = ({ children, ...props }: FlexProps & { children: ReactNode }) => {
 	return (

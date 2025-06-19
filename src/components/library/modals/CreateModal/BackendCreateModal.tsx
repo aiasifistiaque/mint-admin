@@ -1,7 +1,7 @@
 'use client';
 
-import React, { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
-import { Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
+import { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
+import { Button, Flex, useDisclosure } from '@chakra-ui/react';
 
 import { useCustomToast, useIsMobile, useFormData } from '../../hooks';
 
@@ -23,8 +23,20 @@ import {
 import CreateModalProps from './types';
 
 const CreateModal = (props: CreateModalProps) => {
-	const { data, trigger, path, title, type, id, invalidate, children, doc, prompt, populate } =
-		props;
+	const {
+		data,
+		trigger,
+		path,
+		title,
+		type,
+		id,
+		invalidate,
+		children,
+		doc,
+		prompt,
+		populate,
+		layout,
+	} = props;
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -116,6 +128,8 @@ const CreateModal = (props: CreateModalProps) => {
 			)}
 			<Button
 				{...(isMobile && { w: 'full' })}
+				// loadingText='Processing'
+				// spinnerPlacement='start'
 				type='submit'
 				size='sm'>
 				{isLoading ? 'Processing...' : prompt?.btnText || 'Confirm'}
@@ -139,7 +153,6 @@ const CreateModal = (props: CreateModalProps) => {
 					<DialogCloseButton />
 
 					<DialogBody>
-						{/* <Text>{ JSON.stringify(data)}</Text> */}
 						<ModalFormSection>
 							<FormMain
 								fields={data}

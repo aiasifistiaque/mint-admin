@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Grid, GridItem, GridProps } from '@chakra-ui/react';
 import { useGetByIdQuery, convertToViewFields, getValue, shadow, radius } from '../../../';
 import { ViewPageItem } from '../';
@@ -59,14 +59,9 @@ const ViewPageBasicInfo: FC<ViewPageBasicInfoProps> = ({ slug, id, schema, layou
 const itemCss: any = {
 	px: 6,
 	py: 3,
-	// borderBottomWidth: 1,
-
-	// _last: {
-	// 	borderBottomWidth: 0,
-	// },
 	borderBottomColor: 'container.borderLight',
 	_dark: {
-		borderBottomColor: 'background.dark',
+		borderColor: 'border.dark',
 	},
 	colSpan: { base: 2, md: 1 },
 };
@@ -79,8 +74,8 @@ const containerCss: GridProps = {
 	borderColor: 'container.borderLight',
 	shadow: shadow.DASH,
 	_dark: {
-		bg: 'container.newDark',
-		borderColor: 'background.dark',
+		bg: 'menu.dark',
+		borderColor: 'border.dark',
 	},
 	borderRadius: radius.CONTAINER,
 	borderWidth: 1,

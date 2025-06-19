@@ -1,11 +1,11 @@
-import React from 'react';
+import { ReactNode, FC } from 'react';
 import { PopoverHeader as PHeader, PopoverHeaderProps } from '@chakra-ui/react';
 
 type PopoverHeaderPropsType = PopoverHeaderProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
-export const PopoverHeader: React.FC<PopoverHeaderPropsType> = ({ children, ...props }) => {
+export const PopoverHeader: FC<PopoverHeaderPropsType> = ({ children, ...props }) => {
 	return (
 		<PHeader
 			color='header.500'

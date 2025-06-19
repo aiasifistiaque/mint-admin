@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { FC } from 'react';
 import { useColorModeValue, Textarea, TextareaProps } from '@chakra-ui/react';
 import { FormControl } from '../..';
 
@@ -12,7 +12,7 @@ type InputContainerProps = TextareaProps & {
 
 const MIN_H = '200px';
 
-const VTextarea: React.FC<InputContainerProps> = ({
+const VTextarea: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,

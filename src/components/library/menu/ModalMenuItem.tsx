@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { MenuItem, MenuItemProps } from '@chakra-ui/react';
 import Link from 'next/link';
 

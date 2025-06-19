@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Center, Button, Heading, Image, FlexProps } from '@chakra-ui/react';
 
 type AuthFormProps = FlexProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 	handleSubmit: any;
 	isLoading: boolean;
 };

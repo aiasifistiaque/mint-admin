@@ -1,5 +1,5 @@
 import { FormHelperText, FormHelperTextProps } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 const FONT_SIZE = '.8rem';
 const PX = 1;

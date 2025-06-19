@@ -1,4 +1,3 @@
-import React from 'react';
 import { Column } from '../../../../..';
 import { Flex, Heading, Text } from '@chakra-ui/react';
 

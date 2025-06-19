@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Flex, ButtonProps } from '@chakra-ui/react';
 
 const OrderButton = ({ children, ...props }: ButtonProps & { children: string }) => {

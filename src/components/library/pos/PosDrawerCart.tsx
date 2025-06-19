@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
 	useAppDispatch,
@@ -12,9 +12,8 @@ import {
 	EmptyCartModal,
 	SpaceBetween,
 	IconButton,
-} from '@/components/library';
-
-import { useGetCartTotalMutation } from '@/store/services/ordersApi';
+	useGetCartTotalMutation,
+} from '../';
 
 import EditablePriceItem from './pos-card/EditablePriceItem';
 import CartItem from './pos-card/CartItem/CartItem';
@@ -22,7 +21,6 @@ import PriceItem from './pos-card/PriceItem';
 import PosSelect from './PosSelect';
 import AddressWidget from './pos-card/AddressWidget';
 
-import { formFields as createCustomer } from '@/models/customer';
 import CartPriceContainer from './CartPriceContainer';
 
 import { CartContainer, DrawerSummaryContainer as SummaryContainer } from '.';
@@ -67,7 +65,6 @@ const PosCartDrawer = () => {
 	const selectCustomer = (
 		<PosSelect
 			insert={true}
-			dataModel={createCustomer}
 			path='customers'
 			value={user}
 			setValue={(e: string) => dispatch(updateUser(e))}

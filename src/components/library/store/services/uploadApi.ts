@@ -29,7 +29,6 @@ export const uploadApi = mainApi.injectEndpoints({
 			}),
 			invalidatesTags: ['uploads'],
 		}),
-
 		addFile: builder.mutation<any, any>({
 			query: body => ({
 				url: `upload/file`,

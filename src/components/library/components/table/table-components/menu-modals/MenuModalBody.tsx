@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { useIsMobile } from '../../../..';
 import { DrawerBody, DrawerContentProps, ModalBody, ModalBodyProps } from '@chakra-ui/react';
 
 type MenuModalBodyProps = ModalBodyProps &
 	DrawerContentProps & {
-		children: React.ReactNode;
+		children: ReactNode;
 	};
 
 const MenuModalBody: FC<MenuModalBodyProps> = ({ children, ...props }) => {

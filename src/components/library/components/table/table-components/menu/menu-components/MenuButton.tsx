@@ -1,4 +1,3 @@
-import React from 'react';
 import { MenuButton as CustomButton, IconButton } from '@chakra-ui/react';
 import { Icon, useIsMobile, radius } from '../../../../..';
 

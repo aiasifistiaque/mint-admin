@@ -9,7 +9,7 @@ import {
 	useDisclosure,
 	Text,
 } from '@chakra-ui/react';
-import React, { useEffect, useRef, FC, useState } from 'react';
+import { useEffect, useRef, FC, useState } from 'react';
 
 import {
 	useCustomToast,

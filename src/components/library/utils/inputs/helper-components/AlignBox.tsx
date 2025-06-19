@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Center } from '@chakra-ui/react';
 
 const AlignBox: FC<any> = ({ children, isSelected, ...props }) => {

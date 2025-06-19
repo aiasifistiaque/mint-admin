@@ -1,6 +1,6 @@
 import { Flex, Heading, Text } from '@chakra-ui/react';
-import React, { FC } from 'react';
-import { currency } from '@/lib/constants';
+import { FC } from 'react';
+import { currency } from '../../';
 
 type PriceItemProps = {
 	title: string;

@@ -1,22 +1,16 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogOverlay,
-	Button,
-	useDisclosure,
-	Text,
-	Select,
-} from '@chakra-ui/react';
-import React, { useEffect, useRef, FC, useState } from 'react';
+import { Button, useDisclosure, Text } from '@chakra-ui/react';
+import { useEffect, FC, useState } from 'react';
 import {
 	useCustomToast,
 	MenuItem,
-	AlertDialogHeader,
-	AlertDialogContent,
 	EditDataSelect,
+	MenuModal,
+	MenuModalHeader,
+	MenuModalCloseButton,
+	MenuModalBody,
+	MenuModalFooter,
 } from '../../../..';
 import { useUpdateManyMutation } from '../../../../store';
 
@@ -45,7 +39,6 @@ const EditManySelectModal: FC<EditManyModalType> = ({
 	keyType = 'string',
 }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = useRef<any>(undefined);
 	const [value, setValue] = useState<any>();
 
 	const [trigger, result] = useUpdateManyMutation();
@@ -89,55 +82,50 @@ const EditManySelectModal: FC<EditManyModalType> = ({
 		<>
 			<MenuItem onClick={onOpen}>{title}</MenuItem>
 
-			<AlertDialog
+			<MenuModal
 				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
 				onClose={closeItem}>
-				<AlertDialogOverlay>
-					<form onSubmit={handleSubmit}>
-						<AlertDialogContent>
-							<AlertDialogHeader>{prompt?.title || `Edit Item`}</AlertDialogHeader>
+				<form onSubmit={handleSubmit}>
+					<MenuModalHeader>{prompt?.title || `Edit Item`}</MenuModalHeader>
+					<MenuModalCloseButton />
 
-							<AlertDialogBody
-								pt={4}
-								gap={4}>
-								<Text mb={2}>{prompt?.body || 'Please select an option'}</Text>
+					<MenuModalBody
+						pt={4}
+						gap={4}>
+						<Text mb={2}>{prompt?.body || 'Please select an option'}</Text>
 
-								<EditDataSelect
-									dataModel={dataModel}
-									isRequired={true}
-									dataPath={dataPath}
-									value={value}
-									onChange={e => {
-										setValue(e.target.value);
-									}}
-								/>
-							</AlertDialogBody>
+						<EditDataSelect
+							dataModel={dataModel}
+							isRequired={true}
+							dataPath={dataPath}
+							value={value}
+							onChange={e => {
+								setValue(e.target.value);
+							}}
+						/>
+					</MenuModalBody>
 
-							<AlertDialogFooter>
-								{!isLoading && (
-									<Button
-										ref={cancelRef}
-										onClick={closeItem}
-										size='sm'
-										colorScheme='gray'>
-										Discard
-									</Button>
-								)}
-								<Button
-									type='submit'
-									isDisabled={!value}
-									isLoading={isLoading}
-									colorScheme='brand'
-									ml={2}
-									size='sm'>
-									Edit
-								</Button>
-							</AlertDialogFooter>
-						</AlertDialogContent>
-					</form>
-				</AlertDialogOverlay>
-			</AlertDialog>
+					<MenuModalFooter>
+						{!isLoading && (
+							<Button
+								onClick={closeItem}
+								variant='white'>
+								Discard
+							</Button>
+						)}
+						<Button
+							type='submit'
+							isDisabled={!value}
+							isLoading={isLoading}
+							colorScheme='brand'
+							size='sm'>
+							Update
+						</Button>
+					</MenuModalFooter>
+					{/* </AlertDialogContent> */}
+				</form>
+				{/* </AlertDialogOverlay> */}
+			</MenuModal>
 		</>
 	);
 };

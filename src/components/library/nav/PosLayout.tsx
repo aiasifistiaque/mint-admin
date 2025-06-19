@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 import { Flex, FlexProps } from '@chakra-ui/react';
 import { refresh, navigate } from '..';
 import { AuthWrapper, padding, useAppDispatch, ColorMode, Body, Column, LayoutWrapper } from '..';
@@ -8,11 +8,11 @@ import { AuthWrapper, padding, useAppDispatch, ColorMode, Body, Column, LayoutWr
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 
 export type FlexPropsType = FlexProps & {
-	children?: React.ReactNode;
+	children?: ReactNode;
 };
 
 type LayoutProps = FlexPropsType & {
-	children: React.ReactNode;
+	children: ReactNode;
 	title: string;
 	path?: string;
 	type?: 'default' | 'pos';
@@ -29,7 +29,7 @@ const Layout: FC<LayoutProps> = ({
 	const dispatch = useAppDispatch();
 	dispatch(navigate({ selected: path || '/pos' }));
 
-	React.useEffect(() => {
+	useEffect(() => {
 		dispatch(refresh());
 	}, []);
 

@@ -1,5 +1,5 @@
 import { Center, Flex } from '@chakra-ui/react';
-import React from 'react';
+import { FC, ReactNode } from 'react';
 
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { HiArrowUturnLeft, HiArrowUturnRight } from 'react-icons/hi2';
@@ -14,7 +14,7 @@ type PaginationProps = {
 	showPerPage?: boolean;
 };
 
-const Pagination: React.FC<PaginationProps> = ({ data, showPerPage = true }) => {
+const Pagination: FC<PaginationProps> = ({ data, showPerPage = true }) => {
 	const { page, limit } = useAppSelector(state => state.table);
 	const dispatch = useAppDispatch();
 	const isMobile = useIsMobile();

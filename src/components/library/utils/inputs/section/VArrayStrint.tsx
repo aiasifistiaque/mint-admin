@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import { FormControl, Stack, Flex, Text } from '@chakra-ui/react';
 import { HelperText, Label, Column } from '../../..';

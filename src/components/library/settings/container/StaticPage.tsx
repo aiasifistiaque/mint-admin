@@ -1,7 +1,7 @@
-import React from 'react';
+import { ReactNode } from 'react';
 import { Flex, FlexProps } from '@chakra-ui/react';
 
-const StaticPage = ({ children, ...props }: FlexProps & { children: React.ReactNode }) => {
+const StaticPage = ({ children, ...props }: FlexProps & { children: ReactNode }) => {
 	return (
 		<Flex
 			flexDir='column'

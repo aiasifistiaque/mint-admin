@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { DrawerHeader, PopoverHeader } from '@chakra-ui/react';
 
 type MenuModalBodyProps = {
-	children: React.ReactNode;
+	children: ReactNode;
 	isMobile: boolean;
 };
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, IconButton, Tooltip } from '@chakra-ui/react';
 import { TbRefresh } from 'react-icons/tb';
 import { useAppDispatch, refresh, radius, sizes } from '../../../../..';

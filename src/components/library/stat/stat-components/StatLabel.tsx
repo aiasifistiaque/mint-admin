@@ -1,5 +1,5 @@
 import { StatLabelProps, StatLabel as CStatLabel } from '@chakra-ui/react';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 const StatLabel = ({ children, ...props }: StatLabelProps & { children: ReactNode }) => {
 	return (

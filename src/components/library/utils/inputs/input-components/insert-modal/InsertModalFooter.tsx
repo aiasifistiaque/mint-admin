@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { ModalFooter, ModalFooterProps } from '@chakra-ui/react';
 
 const InsertModalFooter = ({ children, ...props }: ModalFooterProps & { children: ReactNode }) => {

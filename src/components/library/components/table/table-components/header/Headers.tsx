@@ -1,16 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 
-import { Checkbox, Skeleton, Tooltip } from '@chakra-ui/react';
-import {
-	useAppDispatch,
-	useAppSelector,
-	useIsMobile,
-	TableObjectDataProps,
-	Title,
-	selectAll,
-} from '../../../..';
+import { Checkbox } from '@chakra-ui/react';
+import { useAppDispatch, useAppSelector, useIsMobile, Title, selectAll } from '../../../..';
 
 type HeadersProps = {
 	tableData: any; // Schema of the table
@@ -26,7 +19,7 @@ const Headers = ({ tableData, fields, selectable, isLoading, data, showMenu }: H
 	const dispatch = useAppDispatch();
 	const { selectedItems } = useAppSelector(state => state.table);
 
-	const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleSelectAll = (e: ChangeEvent<HTMLInputElement>) => {
 		setChecked(e.target.checked);
 		const ids = data?.map((item: any) => item?._id);
 		dispatch(selectAll({ ids, isSelected: e.target.checked }));

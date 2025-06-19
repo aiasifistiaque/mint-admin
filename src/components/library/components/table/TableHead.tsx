@@ -1,13 +1,13 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import { Thead, FlexProps } from '@chakra-ui/react';
 
 type TableHeadProps = FlexProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 	onClick?: () => void;
 	type?: string;
 };
 
-export const TableHead: React.FC<TableHeadProps> = ({ children, onClick, ...props }) => {
+export const TableHead: FC<TableHeadProps> = ({ children, onClick, ...props }) => {
 	return <Thead {...props}>{children}</Thead>;
 };
 

@@ -1,5 +1,5 @@
 'use client';
-import React, { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, useState, CSSProperties, ReactNode } from 'react';
 
 import { CustomTd } from '.';
 import { Switch, useColorModeValue } from '@chakra-ui/react';
@@ -18,7 +18,7 @@ type EditableTableDataProps = {
 	dataKey: string;
 	editType?: string;
 	options?: { label: string; value: string }[];
-	style?: React.CSSProperties; // Use React.CSSProperties for style prop type
+	style?: CSSProperties; // Use CSSProperties for style prop type
 };
 
 const EditableTableData: FC<EditableTableDataProps> = props => {

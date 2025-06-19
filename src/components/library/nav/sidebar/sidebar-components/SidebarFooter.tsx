@@ -1,6 +1,6 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { Spacer, Flex } from '@chakra-ui/react';
-import useIsMobile from '@/components/library/hooks/useIsMobile.depricated';
+import { useIsMobile } from '../../../';
 
 type SidebarFooterProps = {
 	children: ReactNode;

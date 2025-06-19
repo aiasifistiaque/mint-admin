@@ -8,7 +8,7 @@ import {
 	Button,
 	useDisclosure,
 } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import { useEffect, FC, useRef } from 'react';
 
 import {
 	useCustomToast,
@@ -38,13 +38,13 @@ type DecisionModalProps = {
 	doc: any;
 };
 
-const DecisionModal: React.FC<DecisionModalProps> = ({ item, doc, path, itemId }) => {
+const DecisionModal: FC<DecisionModalProps> = ({ item, doc, path, itemId }) => {
 	const { title, id, prompt, invalidate, body, bodyFn } = item;
 	const getId = id ? id(doc) : itemId;
 	const getBody = bodyFn ? bodyFn(doc) : body;
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>(undefined);
+	const cancelRef = useRef<any>(undefined);
 
 	const [trigger, result] = useUpdateByIdMutation();
 	const { isSuccess, isLoading } = result;

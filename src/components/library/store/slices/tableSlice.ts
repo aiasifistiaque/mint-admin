@@ -18,7 +18,6 @@ type TableProps = {
 	selected?: string[]; // The selected items
 	preferences?: string[]; // The preferences
 	selectedItems: any[]; // The selected items
-	schema?: any;
 };
 
 // Define the type for the update properties
@@ -42,7 +41,6 @@ const initialState: TableProps = {
 	preferences: [], // Default preferences is an empty array
 	fields: [], // Default fields is an empty array
 	selectedItems: [], // Default selected is an empty array
-	schema: {}, // Default schema is an empty object
 };
 export const tableSlice = createSlice({
 	name: 'table', // Name of the slice
@@ -103,9 +101,6 @@ export const tableSlice = createSlice({
 
 			state.fields = action.payload;
 			//state.preferences = preferences;
-		},
-		setSchema: (state, action: PayloadAction<any>) => {
-			state.schema = action.payload;
 		},
 		setPreferences: (state, action: PayloadAction<any>) => {
 			state.preferences = action.payload;

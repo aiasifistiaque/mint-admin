@@ -1,4 +1,3 @@
-import React from 'react';
 import { currency } from '../..';
 
 const Price = ({ children }: { children: number }) => {

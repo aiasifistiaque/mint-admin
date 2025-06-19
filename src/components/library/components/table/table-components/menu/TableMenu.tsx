@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Menu } from '@chakra-ui/react';
 import {
 	MenuButton,
@@ -210,6 +210,7 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 									item={item}
 								/>
 							);
+
 						case 'view-server-modal':
 							return (
 								<ViewServerModal

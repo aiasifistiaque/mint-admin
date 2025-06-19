@@ -1,7 +1,7 @@
 // import { Portal } from '@ark-ui/react/portal';
 // import { Select, createListCollection } from '@ark-ui/react/select';
 // import { ChevronDownIcon } from 'lucide-react';
-// import React from 'react';
+// ;
 // import { FormControl } from '..';
 
 // type InputContainerProps = any & {
@@ -9,12 +9,12 @@
 // 	isRequired?: boolean;
 // 	helper?: string;
 // 	value: string | boolean | number;
-// 	children: React.ReactNode;
+// 	children: ReactNode;
 // 	placeholder?: any;
 // 	options: { value: string; label: string }[];
 // };
 
-// const ASelect: React.FC<InputContainerProps> = ({
+// const ASelect: FC<InputContainerProps> = ({
 // 	label,
 // 	isRequired,
 // 	placeholder,
@@ -66,8 +66,6 @@
 // };
 
 // export default ASelect;
-
-import React from 'react';
 
 const ASelect = () => {
 	return <div>ASelect</div>;

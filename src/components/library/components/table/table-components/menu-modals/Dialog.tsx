@@ -12,7 +12,7 @@ import {
 	ModalProps,
 } from '@chakra-ui/react';
 import { radius, styles, useIsMobile } from '../../../..';
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 
 const Dialog: FC<ModalProps & DrawerProps & { children: ReactNode }> = ({ children, ...props }) => {
 	const isMobile = useIsMobile();
@@ -44,24 +44,17 @@ const Dialog: FC<ModalProps & DrawerProps & { children: ReactNode }> = ({ childr
 				_light={{
 					bg: styles.color.MODAL_OVERLAY.LIGHT,
 				}}
+				_dark={{
+					bg: styles.color.MODAL_OVERLAY.DARK,
+				}}
 			/>
 			<ModalContent
 				onClick={(e: any) => e.stopPropagation()}
-				{...modalContentCss}>
+				{...styles.MODAL}>
 				{children}
 			</ModalContent>
 		</Modal>
 	);
-};
-
-const modalContentCss: ModalContentProps = {
-	marginTop: '32px',
-	boxShadow: 'lg',
-	borderRadius: radius.MODAL,
-	bg: 'container.newLight',
-	_dark: {
-		bg: 'menu.dark',
-	},
 };
 
 const drawerContentCss: DrawerContentProps = {

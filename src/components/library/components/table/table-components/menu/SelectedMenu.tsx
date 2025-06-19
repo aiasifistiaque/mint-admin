@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Menu, MenuButton, Button } from '@chakra-ui/react';
 import {
 	MenuContainer,
@@ -24,10 +24,8 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 		<Menu>
 			<MenuButton
 				as={Button}
-				variant='white'
-				leftIcon={<Icon name='action-menu' />}
-				size='sm'
-				pl={2}>
+				{...buttonCss}
+				leftIcon={<Icon name='action-menu' />}>
 				Menu
 			</MenuButton>
 			<MenuContainer>
@@ -99,6 +97,13 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 			</MenuContainer>
 		</Menu>
 	);
+};
+
+const buttonCss: any = {
+	variant: 'white',
+	size: 'xs',
+	h: '32px',
+	pl: 2,
 };
 
 export default SelectedMenu;

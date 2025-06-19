@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { GridItem, GridItemProps } from '@chakra-ui/react';
 
 const Heading = ({ children, ...props }: GridItemProps & { children: ReactNode }) => {

@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Center, Spinner, FlexProps, Flex } from '@chakra-ui/react';
 import { EditorLayout, EditorLayoutFetching as Layout, useAppSelector } from '../../..';
 
 type LayoutSpinnerProps = FlexProps & {
 	isLoading: boolean;
-	children: React.ReactNode;
+	children: ReactNode;
 	path: string;
 	title: string;
 	isError?: boolean;

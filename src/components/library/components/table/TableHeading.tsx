@@ -1,11 +1,11 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import { Heading, HeadingProps } from '@chakra-ui/react';
 
 type TableHeadingProps = HeadingProps & {
 	children: string;
 };
 
-const TableHeading: React.FC<TableHeadingProps> = ({ children, ...props }) => {
+const TableHeading: FC<TableHeadingProps> = ({ children, ...props }) => {
 	return (
 		<Heading
 			fontSize={12}

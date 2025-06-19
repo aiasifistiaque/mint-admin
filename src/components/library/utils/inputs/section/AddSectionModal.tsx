@@ -1,6 +1,6 @@
 'use client';
-import { Button, Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
-import React, { FC, useEffect, useState } from 'react';
+import { Button, Flex, IconButton, useDisclosure } from '@chakra-ui/react';
+import { FC, ReactNode, useState } from 'react';
 
 import {
 	Column,
@@ -20,7 +20,7 @@ import {
 } from '../../..';
 
 type UploadModalProps = {
-	trigger?: React.ReactNode;
+	trigger?: ReactNode;
 	handleDataChange: any;
 	type?: 'add' | 'edit' | 'delete';
 	multiple?: boolean;

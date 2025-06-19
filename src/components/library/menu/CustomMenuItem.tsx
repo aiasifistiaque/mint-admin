@@ -1,6 +1,7 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { MenuItem, MenuItemProps } from '@chakra-ui/react';
 import Link from 'next/link';
+import { radius } from '..';
 
 type CustomMenuItemProps = MenuItemProps & {
 	children: ReactNode;
@@ -19,9 +20,6 @@ const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, href, ...props }) =
 			bg='inherit'
 			color='text.selected'
 			fontWeight='600'
-			_hover={{
-				bg: 'hover.light',
-			}}
 			_dark={{
 				color: 'text.selectedDark',
 				borderBottomColor: 'border.dark',
@@ -33,6 +31,10 @@ const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, href, ...props }) =
 			_last={{
 				borderBottomWidth: 0,
 				borderBottomColor: 'transparent',
+				borderBottomRadius: radius?.MENU,
+			}}
+			_hover={{
+				bg: 'hover.light',
 			}}
 			{...props}>
 			{children}

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Flex } from '@chakra-ui/react';
 
 const FilterSectionContainer = ({ children }: { children: ReactNode }) => {

@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import { MenuItemProps, useColorModeValue } from '@chakra-ui/react';
-import { useAppSelector, MenuItem } from '@/components/library';
+import { useAppSelector, MenuItem } from '../';
 
 const WIDTH = '300px';
 const MAX_H = '300px';
 
 type ItemOfMenuProps = MenuItemProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 	id: string;
 	filter: string;
 };

@@ -65,10 +65,13 @@ const Layout: FC<LayoutProps> = ({
 				<Navbar
 					px={PX}
 					w={isMobile ? 'full' : sizes.HOME_NAV_MAX_WIDTH}
-					left={isMobile ? 0 : sizes.HOME_NAV_LEFT}
-					_dark={{ bg: 'navbar.dark' }}>
+					left={isMobile ? 0 : sizes.HOME_NAV_LEFT}>
 					<SpaceBetween>
 						<Heading
+							color='inherit'
+							_dark={{
+								color: 'inherit',
+							}}
 							size='md'
 							fontFamily='Bebas Neue'>
 							{title}

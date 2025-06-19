@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { AlertDialogHeader as AlertHeader, ModalHeaderProps } from '@chakra-ui/react';
 
 type CustomModalHeaderProps = ModalHeaderProps & {

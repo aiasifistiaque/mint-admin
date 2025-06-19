@@ -1,5 +1,4 @@
 'use client';
-import React from 'react';
 import {
 	Menu,
 	MenuButton,
@@ -12,9 +11,7 @@ import {
 } from '@chakra-ui/react';
 import CustomMenuItem from './CustomMenuItem';
 
-import { useGetSelfQuery } from '@/store/services/authApi';
-
-import { Icon, useAppDispatch, MenuContainer, THEME, logout } from '..';
+import { Icon, useAppDispatch, MenuContainer, THEME, logout, useGetSelfQuery } from '..';
 
 const SelfMenu = () => {
 	const { data, isFetching, isError, error, isSuccess } = useGetSelfQuery({});
@@ -26,12 +23,10 @@ const SelfMenu = () => {
 		<Menu>
 			<MenuButton
 				as={IconButton}
-				variant='ghost'
-				size='md'
-				borderRadius='full'
+				{...menuBtnCss}
 				icon={
 					<Icon
-						color={THEME == 'basic' ? 'inherit' : 'white'}
+						color='inherit'
 						name='settings'
 						size={24}
 					/>
@@ -40,11 +35,7 @@ const SelfMenu = () => {
 
 			<MenuContainer>
 				<MenuGroup>
-					<MenuItem
-						alignItems='flex-start'
-						flexDir='column'
-						_hover={{ bg: 'transparent' }}
-						bg='transparent'>
+					<MenuItem {...menuItemCss}>
 						<Heading
 							size='sm'
 							mb={2}>
@@ -62,6 +53,23 @@ const SelfMenu = () => {
 			</MenuContainer>
 		</Menu>
 	);
+};
+
+const menuBtnCss: any = {
+	variant: 'ghost',
+	size: 'md',
+	borderRadius: 'full',
+	color: 'navbar.text.light',
+	_dark: {
+		color: 'navbar.text.dark',
+	},
+};
+
+const menuItemCss: any = {
+	alignItems: 'flex-start',
+	flexDir: 'column',
+	_hover: { bg: 'transparent' },
+	bg: 'transparent',
 };
 
 export default SelfMenu;

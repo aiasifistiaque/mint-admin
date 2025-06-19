@@ -14,7 +14,7 @@ import {
 	FormControl,
 	Stack,
 } from '@chakra-ui/react';
-import React, { ReactNode, useState } from 'react';
+import { ReactNode, useState, FC, useRef } from 'react';
 
 import {
 	AlertDialogHeader,
@@ -33,10 +33,10 @@ type DeleteItemModalProps = {
 	children: ReactNode;
 };
 
-const AddToCartModal: React.FC<DeleteItemModalProps> = ({ children, item }) => {
+const AddToCartModal: FC<DeleteItemModalProps> = ({ children, item }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>(undefined);
-	const inputRef = React.useRef<HTMLInputElement>(null);
+	const cancelRef = useRef<any>(undefined);
+	const inputRef = useRef<HTMLInputElement>(null);
 
 	const inCart = useQtyInCart(item?._id);
 

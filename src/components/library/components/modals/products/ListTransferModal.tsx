@@ -1,7 +1,7 @@
 'use client';
 
 import { useDisclosure, Text, Button } from '@chakra-ui/react';
-import React, { FC, Fragment, useEffect, useState } from 'react';
+import { FC, Fragment, useEffect, useState } from 'react';
 
 import {
 	MenuModal,

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Image } from '@chakra-ui/react';
 import { Column } from '../..';
 

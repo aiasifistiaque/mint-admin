@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Breadcrumb, BreadcrumbItem } from '@chakra-ui/react';
 import Link from 'next/link';
 

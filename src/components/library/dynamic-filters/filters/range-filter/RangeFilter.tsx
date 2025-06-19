@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, ChangeEvent, FC } from 'react';
+import { useState, ChangeEvent, FC } from 'react';
 
 import { Flex, PopoverTrigger, useDisclosure } from '@chakra-ui/react';
 import BetweenValues from './BetweenValues';

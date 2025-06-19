@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Skeleton, Td, Tr } from '@chakra-ui/react';
 
 type TableSkeletonProps = {

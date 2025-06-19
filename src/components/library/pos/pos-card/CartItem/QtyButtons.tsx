@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { CartIconButton } from '.';
 import { Text } from '@chakra-ui/react';
-import { EmptyCartModal, Column } from '@/components/library';
+import { EmptyCartModal, Column } from '../../../';
 
 type QtyButtonsType = {
 	addOne: any;

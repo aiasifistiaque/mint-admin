@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState, FC } from 'react';
 import {
 	Input,
 	InputProps,
@@ -26,7 +26,7 @@ type InputContainerProps = InputProps & {
 	placeholder?: any;
 };
 
-const VTags: React.FC<InputContainerProps> = ({
+const VTags: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,

@@ -1,5 +1,5 @@
 import { Flex, FlexProps } from '@chakra-ui/react';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { sizes, shadow, radius } from '..';
 
 const ShadowContainer = ({ children, ...props }: FlexProps & { children?: ReactNode }) => {

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Grid } from '@chakra-ui/react';
 
 const OrderItemsContainer = ({ children }: { children: ReactNode }) => {

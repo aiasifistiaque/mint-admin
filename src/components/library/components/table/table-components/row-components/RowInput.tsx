@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Input, InputProps } from '@chakra-ui/react';
 
 const RowInput: FC<InputProps> = ({ ...props }) => {

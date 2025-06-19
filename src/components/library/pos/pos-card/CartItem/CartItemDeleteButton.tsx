@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { EmptyCartModal } from '@/components/library';
+import { FC } from 'react';
+import { EmptyCartModal } from '../../../';
 import { Button } from '@chakra-ui/react';
 
 type Props = {

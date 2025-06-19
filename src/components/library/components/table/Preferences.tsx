@@ -1,6 +1,5 @@
 'use client';
 
-import { useUpdatePreferencesMutation } from '@/store/services/authApi';
 import {
 	Button,
 	useDisclosure,
@@ -14,21 +13,17 @@ import {
 	Tooltip,
 	CheckboxProps,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import {
-	Icon,
-	useAppSelector,
-	MenuModal,
 	MenuModalHeader,
 	MenuModalBody,
 	MenuModalCloseButton,
 	MenuModalFooter,
-	radius,
-	formatFieldName,
-	sizes,
+	useUpdatePreferencesMutation,
 	formatFieldTitle,
 } from '../..';
+import { MenuModal, Icon, sizes, radius, useAppSelector, formatFieldName } from '../..';
 
 const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -58,12 +53,12 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 		if (isSuccess) closeModal();
 	}, [result]);
 
-	const handleCheckboxChange = React.useCallback((e: any, field: any) => {
+	const handleCheckboxChange = useCallback((e: any, field: any) => {
 		if (e.target.checked) setSelected(prevSelected => [...prevSelected, field]);
 		else setSelected(prevSelected => prevSelected.filter(item => item !== field));
 	}, []);
 
-	const checkboxes = fields?.map((field: string, i: number) => (
+	const checkboxes = fields.map((field: string, i: number) => (
 		<Checkbox
 			{...style.checkbox}
 			key={i}
@@ -96,11 +91,11 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 				<MenuModalHeader>Select Preferences</MenuModalHeader>
 				<MenuModalCloseButton />
 				<MenuModalBody>
-					<Grid {...style?.checkboxGrid}>{checkboxes}</Grid>
+					<Grid {...style.checkboxGrid}>{checkboxes}</Grid>
 				</MenuModalBody>
 				<MenuModalFooter>
 					{selected?.length < 2 ? (
-						<Text {...style?.errorText}>Please select at least 2 fields</Text>
+						<Text {...style.errorText}>Please select at least 2 fields</Text>
 					) : (
 						<>
 							<Button

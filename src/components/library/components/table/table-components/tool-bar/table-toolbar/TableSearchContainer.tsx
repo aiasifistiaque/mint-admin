@@ -1,8 +1,8 @@
 import { FlexProps, Flex } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 type TableSearchContainerProps = FlexProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 const TableSearchContainer: FC<TableSearchContainerProps> = ({ children, ...props }) => {

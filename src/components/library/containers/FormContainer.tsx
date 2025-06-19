@@ -1,8 +1,8 @@
 import { ContainerProps, Flex } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 type FormContainerProps = ContainerProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 const W_BASE = '100%';

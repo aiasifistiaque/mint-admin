@@ -1,6 +1,7 @@
 import mainApi from './mainApi';
 import { User, ListType, TableProps } from '../store.types';
-import { BASE_LIMIT } from '@/lib/constants';
+
+const BASE_LIMIT = 16;
 
 export const ordersApi = mainApi.injectEndpoints({
 	endpoints: builder => ({

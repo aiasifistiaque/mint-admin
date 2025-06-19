@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { FC } from 'react';
 import { SelectProps } from '@chakra-ui/react';
 import { FormControl, SelectContainer, useGetSelectDataQuery } from '../..';
 
@@ -12,7 +12,7 @@ type InputContainerProps = SelectProps & {
 	placeholder?: any;
 };
 
-const VDataSelect: React.FC<InputContainerProps> = ({
+const VDataSelect: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,

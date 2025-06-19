@@ -1,5 +1,5 @@
 import { Table, Thead, Tr, Tbody, Flex, Text, CloseButton } from '@chakra-ui/react';
-import React from 'react';
+import { FC } from 'react';
 
 import {
 	useAppDispatch,
@@ -22,7 +22,7 @@ import {
 	TableSort,
 } from '../..';
 
-const CustomTable: React.FC<CustomTableProps> = ({
+const CustomTable: FC<CustomTableProps> = ({
 	headers,
 	schema,
 	children,
@@ -108,8 +108,10 @@ const CustomTable: React.FC<CustomTableProps> = ({
 			{table?.topPagination && <TableResultContainer data={data} />}
 			<TableContainer>
 				<Table size='sm'>
-					<Thead _light={{ bg: 'background.light' }}>
-						<Tr>{header}</Tr>
+					<Thead
+						_light={{ bg: 'table.head.bgLight' }}
+						_dark={{ bg: 'table.head.bgDark' }}>
+						<Tr bg='inherit'>{header}</Tr>
 					</Thead>
 					<Tbody>{tbody}</Tbody>
 				</Table>

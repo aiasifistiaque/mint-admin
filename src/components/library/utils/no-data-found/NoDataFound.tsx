@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Center, FlexProps, Text } from '@chakra-ui/react';
 
 type NoDataFoundProps = FlexProps & {

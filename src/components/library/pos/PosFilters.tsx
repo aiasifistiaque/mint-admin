@@ -1,14 +1,8 @@
 'use client';
 
-import {
-	useGetAllQuery,
-	useAppDispatch,
-	MenuContainer,
-	MenuItem,
-	applyFilters,
-} from '@/components/library';
+import { useGetAllQuery, useAppDispatch, MenuContainer, MenuItem, applyFilters } from '../';
 import { Menu, MenuGroup, Flex, Input, useDisclosure, MenuDivider } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import ItemOfMenu from './ItemOfMenu';
 import ButtonOfMenu from './ButtonOfMenu';

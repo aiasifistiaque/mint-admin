@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import { Grid } from '@chakra-ui/react';
 
 import { Icon, FilterSelect, FilterInput } from '../../..';

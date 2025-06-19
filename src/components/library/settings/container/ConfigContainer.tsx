@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Flex, Heading, FlexProps } from '@chakra-ui/react';
-import { SpaceBetween, padding, radius, shadow } from '../..';
+import { padding, radius, shadow } from '../..';
 
 type SettingsEditContainerProps = FlexProps & {
 	isLoading?: boolean;
-	children: React.ReactNode;
-	heading?: React.ReactNode;
+	children: ReactNode;
+	heading?: ReactNode;
 };
 
 const P = { base: padding.CONTAINER.BASE, md: padding.CONTAINER.MD, lg: padding.CONTAINER.LG };
@@ -73,7 +73,7 @@ const bodyProps: FlexProps = {
 export const ConfigContainerBody = ({
 	children,
 	...props
-}: FlexProps & { children: React.ReactNode }) => {
+}: FlexProps & { children: ReactNode }) => {
 	return (
 		<Flex
 			{...bodyProps}
@@ -97,7 +97,7 @@ const footerProps: FlexProps = {
 export const ConfigContainerFooter = ({
 	children,
 	...props
-}: FlexProps & { children: React.ReactNode }) => {
+}: FlexProps & { children: ReactNode }) => {
 	return (
 		<Flex
 			{...footerProps}

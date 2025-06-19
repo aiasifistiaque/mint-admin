@@ -1,16 +1,18 @@
-import React from 'react';
-import { Column } from '@/components/library';
+import { ReactNode } from 'react';
+import { Flex, FlexProps } from '@chakra-ui/react';
 
-const Container = ({ children }: { children: React.ReactNode }) => (
-	<Column
+const Container = ({ children, ...props }: FlexProps & { children: ReactNode }) => (
+	<Flex
+		flexDir='column'
 		w='full'
 		pr={3}
 		py={2}
 		borderTop='1px dashed'
 		borderTopColor='#bbb'
-		_dark={{ borderTopColor: 'stroke.deepD' }}>
+		_dark={{ borderTopColor: 'stroke.deepD' }}
+		{...props}>
 		{children}
-	</Column>
+	</Flex>
 );
 
 export default Container;

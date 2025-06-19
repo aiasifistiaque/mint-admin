@@ -1,31 +1,15 @@
 'use client';
 import { FlexProps, Heading, Stack, Flex, useColorMode, useColorModeValue } from '@chakra-ui/react';
-import React, { ReactNode } from 'react';
+import { ReactNode, FC } from 'react';
 import SidebarItem from './SidebarItem';
 
-import {
-	sidebarData,
-	THEME,
-	Icon,
-	DecisionAlert,
-	EditContentModal,
-	sizes,
-	padding,
-	styles,
-} from '../..';
+import { sidebarData, THEME, Icon, DecisionAlert, EditContentModal, sizes, styles } from '../..';
 
-import {
-	SidebarBody,
-	SidebarContainer,
-	SidebarContent,
-	SidebarFooter,
-	SidebarHeading,
-	SidebarLogo,
-} from './sidebar-components';
+import { SidebarContent, SidebarHeading } from './sidebar-components';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-const EditorSidebar: React.FC<FlexProps & { closeBtn?: ReactNode; data?: any; doc?: any }> = ({
+const EditorSidebar: FC<FlexProps & { closeBtn?: ReactNode; data?: any; doc?: any }> = ({
 	closeBtn,
 	data,
 	doc,

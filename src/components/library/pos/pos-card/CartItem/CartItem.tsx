@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useGetCartTotalMutation } from '@/store/services/ordersApi';
+import { useEffect, useState } from 'react';
+import { useGetCartTotalMutation } from '../../../';
 import { Flex, Heading, Text } from '@chakra-ui/react';
 import { CartItemContainer as Container, QtyButtons, CartItemDeleteButton } from '.';
 
@@ -15,7 +15,7 @@ import {
 	Align,
 	Price,
 	PLACEHOLDER_IMAGE,
-} from '@/components/library';
+} from '../../../';
 
 type CartItem = {
 	item: {

@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Button, ButtonProps } from '@chakra-ui/react';
 
 type DiscardButtonProps = ButtonProps & {
-	children?: React.ReactNode;
+	children?: ReactNode;
 };
 
 const DiscardButton: FC<DiscardButtonProps> = ({ children, ...props }) => {

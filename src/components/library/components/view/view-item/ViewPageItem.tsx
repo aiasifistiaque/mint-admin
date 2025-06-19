@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { Flex, Heading, Tooltip, useClipboard } from '@chakra-ui/react';
 import { Column, Icon } from '../../..';
 import { renderViewItem as renderContent } from '..';

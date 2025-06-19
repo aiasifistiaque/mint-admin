@@ -1,19 +1,15 @@
 'use client';
 
-import React, { FC, useRef } from 'react';
-import { Button, InputProps, Input, Link } from '@chakra-ui/react';
+import { FC, useRef, useState, useEffect, ChangeEvent } from 'react';
+import { Button, InputProps, Input, Link, Flex, Text } from '@chakra-ui/react';
 import { FormControl } from '../';
-import { Icon } from '../../../';
-import {
-	useAddFileMutation,
-	useAddUploadMutation,
-} from '@/components/library/store/services/uploadApi';
+import { Icon, useAddFileMutation } from '../../../';
 
 type InputContainerProps = InputProps & {
 	label: string;
 	isRequired?: boolean;
 	helper?: string;
-	value: string;
+	value: string | number | undefined;
 	placeholder?: any;
 };
 
@@ -27,14 +23,14 @@ const VFile: FC<InputContainerProps> = ({
 }) => {
 	const ref = useRef(null);
 	const [trigger, result] = useAddFileMutation();
-	const [filee, setFile] = React.useState<any>(null);
+	const [file, setFile] = useState<any>(null);
 	const onRefClick = () => {
 		if (ref.current) {
 			(ref.current as any).click();
 		}
 	};
 
-	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (file) {
 			setFile(file);
@@ -50,7 +46,19 @@ const VFile: FC<InputContainerProps> = ({
 		}
 	};
 
-	React.useEffect(() => {
+	const onRemoveFile = () => {
+		if (value && props.onChange) {
+			const event = {
+				target: {
+					name: props?.name,
+					value: null,
+				},
+			} as any;
+			props.onChange(event); // Call onChange with the synthetic event
+		}
+	};
+
+	useEffect(() => {
 		if (!result?.isLoading && result?.isSuccess) {
 			if (props.onChange) {
 				const event = {
@@ -80,28 +88,48 @@ const VFile: FC<InputContainerProps> = ({
 				{value ? 'Change File' : 'Upload File'}
 			</Button>
 			{value && (
-				<Link
+				<Flex
 					mt={2}
-					fontSize='12px'
-					color='blue.500'
-					isExternal
-					href={value ? value : '#'}>
-					{value}
-				</Link>
+					align='center'
+					justify='space-between'
+					gap={4}>
+					<Link
+						{...linkCss}
+						href={value}>
+						View Uploaded File
+					</Link>
+					<Flex
+						align='center'
+						gap={2}
+						cursor='pointer'
+						onClick={onRemoveFile}>
+						<Text fontSize='12px'>Remove File</Text>
+						<Icon name='delete' />
+					</Flex>
+				</Flex>
 			)}
 			<Input
 				ref={ref}
-				display='none'
+				{...inputCss}
 				type='file'
-				size='sm'
-				px={3}
 				placeholder={placeholder ? placeholder : label}
-				// value={value}
-				// {...props}
 				onChange={handleFileChange}
 			/>
 		</FormControl>
 	);
+};
+
+const linkCss: any = {
+	fontSize: '12px',
+	color: 'blue.500',
+	fontWeight: '500',
+	isExternal: true,
+};
+
+const inputCss: InputProps = {
+	display: 'none',
+	size: 'sm',
+	px: 3,
 };
 
 export default VFile;

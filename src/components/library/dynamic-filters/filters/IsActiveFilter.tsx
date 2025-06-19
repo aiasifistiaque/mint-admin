@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { ReactNode, FC, ChangeEvent, useState } from 'react';
 
 import {
 	Popover,
@@ -13,18 +13,18 @@ import {
 import { FilterButton, PopoverContainer, PopoverHeader, Column, FilterSelect } from '../..';
 
 type IsActiveFilterProps = {
-	trigger: React.ReactNode;
+	trigger: ReactNode;
 	value: string;
 	onChange: any;
 };
 
-const IsActiveFilter: React.FC<IsActiveFilterProps> = ({ trigger, value, onChange }) => {
+const IsActiveFilter: FC<IsActiveFilterProps> = ({ trigger, value, onChange }) => {
 	const arrow = useColorModeValue('menu.light', 'menu.dark');
 	const { onOpen, onClose, isOpen } = useDisclosure();
 
-	const [val, setVal] = React.useState<string | undefined>(value);
+	const [val, setVal] = useState<string | undefined>(value);
 
-	const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+	const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
 		setVal(e.target.value);
 	};
 	const open = () => {

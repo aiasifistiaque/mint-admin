@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Flex, InputProps, Tooltip } from '@chakra-ui/react';
 import { FormControl, Icon } from '../../..';
 import { AlignBox } from '../helper-components';

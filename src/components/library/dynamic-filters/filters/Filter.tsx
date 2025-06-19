@@ -1,21 +1,21 @@
 import { Flex, Tag, TagLabel, TagProps } from '@chakra-ui/react';
-import React from 'react';
+import { FC, ReactNode } from 'react';
 
-import { Icon } from '../..';
+import { Icon, radius } from '../..';
 
 type FilterProps = TagProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 	isActive?: boolean;
 	onCancel?: any;
 };
 
-const Filter: React.FC<FilterProps> = ({ children, isActive = false, onCancel, ...props }) => {
+const Filter: FC<FilterProps> = ({ children, isActive = false, onCancel, ...props }) => {
 	return (
 		<Tag
 			userSelect='none'
 			cursor='pointer'
 			bg='transparent'
-			borderRadius='full'
+			borderRadius={radius?.FILTER || 'full'}
 			border='1px dashed'
 			borderColor='gray.400'
 			color='gray.600'

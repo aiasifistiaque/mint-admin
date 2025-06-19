@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { SelectProps } from '@chakra-ui/react';
 import { FormControl, SelectContainer } from '../..';
 
@@ -15,7 +15,7 @@ type InputContainerProps = SelectProps & {
 	options: Option[];
 };
 
-const ItemSelect: React.FC<InputContainerProps> = ({
+const ItemSelect: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,

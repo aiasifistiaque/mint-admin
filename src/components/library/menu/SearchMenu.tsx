@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
 	Modal,
 	ModalOverlay,
@@ -11,18 +11,18 @@ import {
 	FlexProps,
 	TextProps,
 } from '@chakra-ui/react';
-import { Icon, THEME, sidebarData } from '../';
+import { Icon, THEME, radius, sidebarData } from '../';
 import ModalContentContainer from '../modals/modal-components/ModalContentContainer';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 const SearchMenu = () => {
 	const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
-	const [search, setSearch] = React.useState('');
+	const [search, setSearch] = useState('');
 
-	const initialRef = React.useRef(null);
-	const finalRef = React.useRef(null);
-	const [selectedIndex, setSelectedIndex] = React.useState(0);
+	const initialRef = useRef(null);
+	const finalRef = useRef(null);
+	const [selectedIndex, setSelectedIndex] = useState(0);
 
 	const onClose = () => {
 		closeModal();
@@ -30,7 +30,7 @@ const SearchMenu = () => {
 		//setSelectedIndex(0);
 	};
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
 			// Command + K (Mac) or Ctrl + K
 			if ((e.metaKey || e.altKey) && e.key === 'k') {
@@ -49,7 +49,7 @@ const SearchMenu = () => {
 
 	const router = useRouter();
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (!isOpen) return;
 
@@ -106,7 +106,7 @@ const SearchMenu = () => {
 			return 0;
 		});
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (data.length <= selectedIndex) {
 			setSelectedIndex(0);
 		}
@@ -133,7 +133,7 @@ const SearchMenu = () => {
 				onClose={onClose}>
 				<ModalOverlay />
 				<ModalContentContainer
-					borderRadius='lg'
+					borderRadius={radius.MODAL}
 					px={0}
 					gap={0}>
 					<ModalHeader px={4}>

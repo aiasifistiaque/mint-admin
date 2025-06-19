@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { AlertDialogContent } from '@chakra-ui/react';
 
 type AlertContentProps = {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 const AlertContent: FC<AlertContentProps> = ({ children }) => {
@@ -11,7 +11,6 @@ const AlertContent: FC<AlertContentProps> = ({ children }) => {
 			boxShadow='lg'
 			borderRadius='xl'
 			bg='menu.light'
-			zIndex={100000}
 			_dark={{
 				bg: 'menu.dark',
 			}}>

@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Flex, FlexProps, Text } from '@chakra-ui/react';
 
 type TextSectionProps = FlexProps & {
 	title: string;
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 const TextSection: FC<TextSectionProps> = ({ title, children, ...props }) => {

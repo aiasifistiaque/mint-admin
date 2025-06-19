@@ -1,6 +1,6 @@
 import { Flex, FlexProps, Heading, Button, useColorModeValue, TextProps } from '@chakra-ui/react';
 import Link from 'next/link';
-import React from 'react';
+import { FC } from 'react';
 import { CreateModal, Icon } from '../..';
 import ExportModal from '../modals/export/ExportModal';
 
@@ -15,7 +15,7 @@ type PageHeadingProps = FlexProps & {
 	table: any;
 };
 
-const PageHeading: React.FC<PageHeadingProps> = ({
+const PageHeading: FC<PageHeadingProps> = ({
 	title,
 	href,
 	button,
@@ -26,7 +26,7 @@ const PageHeading: React.FC<PageHeadingProps> = ({
 	export: exportData,
 	...props
 }) => {
-	const iconColor = useColorModeValue('#fafafa', '#171717');
+	const iconColor = useColorModeValue('text.dark', 'text.light');
 	const btn = (
 		<Button
 			size='sm'

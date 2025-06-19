@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useState } from 'react';
+import { FC, useState, useMemo } from 'react';
 
 import { FormInput, FormItem, FormDivision } from '../..';
 
@@ -31,7 +31,7 @@ const FormContent: FC<FormPageType> = ({
 	//const { isSuccess, isLoading, isError, error } = result;
 	const [changedData, setChangedData] = useState({});
 
-	const sections = React.useMemo(() => {
+	const sections = useMemo(() => {
 		let section: any[] = [];
 		let sections: any[][] = [];
 

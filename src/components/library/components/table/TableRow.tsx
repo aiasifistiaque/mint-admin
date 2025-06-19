@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode, FC } from 'react';
+import { ReactNode, FC } from 'react';
 import { RowContainerBase, RowContainerMd, useIsMobile, TableSelectItem } from '../..';
 
 type TableRowProps = {
@@ -21,7 +21,12 @@ const TableRow: FC<TableRowProps> = ({ children, actions, selectable, id, ...pro
 
 	return (
 		<Container {...props}>
-			{selectable && <TableSelectItem id={id || ''} />}
+			{selectable && (
+				<TableSelectItem
+					id={id || ''}
+					isMobile={isMobile}
+				/>
+			)}
 			{children}
 		</Container>
 	);

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Button, Flex, Heading } from '@chakra-ui/react';
 import { Column, Icon } from '../..';
 

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { FC } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Button, Center, CloseButton, Divider, Flex, Heading } from '@chakra-ui/react';
@@ -11,7 +11,7 @@ type CreateNavProps = {
 	isLoading: boolean;
 };
 
-const CreateNav: React.FC<CreateNavProps> = ({ title, path, isLoading }) => {
+const CreateNav: FC<CreateNavProps> = ({ title, path, isLoading }) => {
 	const router = useRouter();
 	const handleBackClick = () => {
 		router.replace(`/${path}`);

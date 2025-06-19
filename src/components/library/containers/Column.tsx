@@ -1,5 +1,5 @@
 import { Flex, FlexProps } from '@chakra-ui/react';
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 
 const Column: FC<FlexProps & { children: ReactNode }> = ({ children, ...props }) => {
 	return (

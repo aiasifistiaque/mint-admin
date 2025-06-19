@@ -1,5 +1,5 @@
 import { Input, InputProps } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 type FilterInputProps = InputProps & {
 	date?: boolean;

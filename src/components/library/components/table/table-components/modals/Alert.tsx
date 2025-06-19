@@ -9,7 +9,7 @@ import {
 	Flex,
 	useDisclosure,
 } from '@chakra-ui/react';
-import React, { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, FC, useState, useRef } from 'react';
 
 import { AlertDialogHeader, AlertDialogContent } from '../../../..';
 
@@ -26,11 +26,11 @@ type DeleteItemModalProps = {
 	success?: boolean;
 };
 
-const Alert: React.FC<DeleteItemModalProps> = ({ prompt, loading, children, success, handler }) => {
+const Alert: FC<DeleteItemModalProps> = ({ prompt, loading, children, success, handler }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>(undefined);
+	const cancelRef = useRef<any>(undefined);
 
-	const [isLoading, setIsLoading] = React.useState<boolean>(loading || false);
+	const [isLoading, setIsLoading] = useState<boolean>(loading || false);
 
 	const closeItem = () => {
 		onClose();

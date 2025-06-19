@@ -1,7 +1,7 @@
 'use client';
 
 import { Flex, FlexProps } from '@chakra-ui/react';
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { sizes, zIndex, padding, EditorSideDrawer, styles } from '..';
 
 type FlexPropsType = FlexProps & {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Badge, Flex, Image, Text, Heading, Button } from '@chakra-ui/react';
 
 import {
@@ -9,8 +8,6 @@ import {
 	ViewItemModal,
 	AddToCartModal,
 } from '../..';
-
-import { viewPreviewFields as viewAllDataFields } from '@/models/products/products.model';
 
 const PosCard = ({ item }: { item: any }) => {
 	const title = `${item?.name} ${
@@ -36,7 +33,7 @@ const PosCard = ({ item }: { item: any }) => {
 			<ViewItemModal
 				id={item?._id}
 				path='/products'
-				dataModel={viewAllDataFields}
+				// dataModel={viewAllDataFields}
 				trigger={<Button size='xs'>Quick View</Button>}
 			/>
 		</Flex>

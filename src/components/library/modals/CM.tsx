@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState, MouseEvent } from 'react';
 import { Flex, useDisclosure } from '@chakra-ui/react';
 
 import { useCustomToast, useIsMobile, useFormData } from '../hooks';
@@ -139,7 +139,7 @@ const CreateModal = (props: CreateModalProps) => {
 				onClose={onModalClose}>
 				<DialogOverlay />
 				<form onSubmit={handleSubmit}>
-					<DialogContent onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+					<DialogContent onClick={(e: MouseEvent) => e.stopPropagation()}>
 						<DialogHeader>
 							{prompt?.title || title || `${type === 'update' ? 'Update' : 'Create'} ${path}`}
 						</DialogHeader>

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import { ViewModalDataModelProps, ViewItem } from '../..';
 import { getValue, convertToViewFields, useGetByIdQuery, shadow, radius } from '../..';

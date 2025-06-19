@@ -1,22 +1,22 @@
 import { Column, sizes, THEME } from '../../..';
 import { StackProps } from '@chakra-ui/react';
-import React from 'react';
+import { FC, ReactNode } from 'react';
 
 type SidebarContainerProps = StackProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
-const SidebarContent: React.FC<SidebarContainerProps> = ({ children, ...props }) => {
+const SidebarContent: FC<SidebarContainerProps> = ({ children, ...props }) => {
 	return (
 		<Column
 			flex={1}
-			bg='rgba(250, 250, 250, .8)'
-			backdropFilter='blur(10px)'
+			bg='sidebar.light'
 			_dark={{ bg: 'sidebar.dark' }}
+			backdropFilter='blur(10px)'
 			borderTopRadius={{ base: '0', md: THEME == 'basic' ? 0 : 'xl' }}
 			w='full'
 			pl={sizes.SIDEBAR_PX}
-			mx={THEME == 'basic' ? 0 : '16px'}
+			mx={THEME == 'basic' ? 0 : 4}
 			zIndex='9999'
 			{...props}>
 			{children}

@@ -1,10 +1,9 @@
-import React, { FC, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { useState } from 'react';
 
-import { CustomTd as Td, RowContainerBase, Icon } from '../..';
+import { CustomTd as Td, RowContainerBase, Icon, currency } from '../..';
 import { Box, Tr, Td as TD, InputProps } from '@chakra-ui/react';
 import InputElement from '../../utils/inputs/input-components/InputElement';
-import { currency } from '@/lib/constants';
 
 type PurchaseProductProps = {
 	item: any;

@@ -1,12 +1,13 @@
-import React, { ReactNode } from 'react';
-import { Column } from '@/components/library';
-import { FlexProps } from '@chakra-ui/react';
+import { ReactNode } from 'react';
+
+import { Flex, FlexProps } from '@chakra-ui/react';
 
 const HEIGHT = 'calc(100vh - 52px)';
 
 const SummaryContainer = ({ children, ...props }: FlexProps & { children: ReactNode }) => {
 	return (
-		<Column
+		<Flex
+			flexDir='column'
 			display={{ base: 'none', md: 'flex' }}
 			h={HEIGHT}
 			bg='white'
@@ -18,7 +19,7 @@ const SummaryContainer = ({ children, ...props }: FlexProps & { children: ReactN
 			}}
 			{...props}>
 			{children}
-		</Column>
+		</Flex>
 	);
 };
 

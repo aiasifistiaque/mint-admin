@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { TableContainer as ChakraTableContainer, Flex } from '@chakra-ui/react';
+import { ReactNode } from 'react';
+import { TableContainer as ChakraTableContainer } from '@chakra-ui/react';
 import { useIsMobile, theme, shadow, Column } from '../../../..';
 
 const { TABLE } = theme;

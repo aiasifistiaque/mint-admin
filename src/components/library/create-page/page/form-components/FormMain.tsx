@@ -1,7 +1,6 @@
-import React, { FC } from 'react';
+import { FC, useMemo } from 'react';
 import {
 	FormDivision,
-	FormItem,
 	FormInput,
 	getFieldValue,
 	handleChange,
@@ -30,7 +29,7 @@ const FormMain: FC<FormMainType> = ({
 	setChangedData,
 	isModal = false,
 }) => {
-	const sections = React.useMemo(() => {
+	const sections = useMemo(() => {
 		let section: any[] = [];
 		let sections: any[][] = [];
 
@@ -53,8 +52,6 @@ const FormMain: FC<FormMainType> = ({
 		switch (type) {
 			case 'image':
 				return (e: any) => handleImage({ e, dataKey: key || 'image', ...params });
-			case 'video':
-				return (e: any) => handleImage({ e, dataKey: key || 'image', ...params });
 			case 'switch':
 			case 'image-array':
 				return (e: any, type?: string) =>
@@ -69,6 +66,8 @@ const FormMain: FC<FormMainType> = ({
 				return (e: any) => handleNestedString({ e, ...params });
 			case 'nested-data-menu':
 				return (e: any) => handleNestedString({ e, ...params });
+			case 'video':
+				return (e: any) => handleImage({ e, dataKey: key || 'image', ...params });
 
 			default:
 				return (e: any) => handleChange({ e, ...params });
@@ -129,6 +128,19 @@ const FormMain: FC<FormMainType> = ({
 		);
 	};
 
+	const evaluateCondition = (item: any, formData: any) => {
+		const condition = item?.renderIf;
+		if (!condition) return false;
+		const { field, operator, value } = condition;
+
+		switch (operator) {
+			case 'eq':
+				return formData[field] !== value;
+			default:
+				return true;
+		}
+	};
+
 	return (
 		<Accordion
 			gap={4}
@@ -143,7 +155,10 @@ const FormMain: FC<FormMainType> = ({
 					{section?.map((item: any, i: number) => (
 						<FormItemAccordion
 							collapsible={true}
-							isHidden={item?.renderCondition && !item?.renderCondition(formData)}
+							isHidden={
+								evaluateCondition(item, formData) ||
+								(item?.renderCondition && !item?.renderCondition(formData))
+							}
 							item={item}
 							key={i}>
 							<>

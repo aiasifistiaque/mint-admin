@@ -1,5 +1,5 @@
 import { Center, CenterProps } from '@chakra-ui/react';
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { radius } from '../../config';
 
 const CardContainer: FC<CenterProps & { children: ReactNode }> = ({ children, ...props }) => {

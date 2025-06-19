@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 
 import { FormControl, Image, Stack, Flex, Text, Heading } from '@chakra-ui/react';
 import { HelperText, Label, ImageContainer, Column } from '../../..';

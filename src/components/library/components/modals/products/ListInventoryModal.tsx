@@ -1,7 +1,7 @@
 'use client';
 
 import { useDisclosure } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import {
 	MenuModal,

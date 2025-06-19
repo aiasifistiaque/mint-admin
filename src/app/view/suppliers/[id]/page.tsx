@@ -2,10 +2,10 @@
 import React from 'react';
 import { useParams } from 'next/navigation';
 import { schema } from '../../../../models';
-import { Column, Layout, ViewById, TableObjectProps } from '../../../../components/library';
+import { Column, Layout, ViewById, TableObjectProps } from '../../../../components-v0/library';
 import { Heading } from '@chakra-ui/react';
 
-import TableCustom from '../../../../components/library/sections/table/TableCustom';
+import TableCustom from '../../../../components-v0/library/sections/table/TableCustom';
 import ledgerSchema from '@/models/ledger/ledger.schema';
 import { convertToTableFields, convertToViewFields } from '@/components/library';
 

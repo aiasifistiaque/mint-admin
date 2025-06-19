@@ -1,6 +1,6 @@
 import { Flex, FlexProps, Heading, Button } from '@chakra-ui/react';
 import Link from 'next/link';
-import React from 'react';
+import { FC } from 'react';
 import { CreateModal } from '../..';
 import ExportModal from '../modals/export/ExportModal';
 
@@ -17,7 +17,7 @@ type PageHeadingProps = FlexProps & {
 	type?: 'post' | 'update';
 };
 
-const SimplePageHeading: React.FC<PageHeadingProps> = ({
+const SimplePageHeading: FC<PageHeadingProps> = ({
 	title,
 	href,
 	button,

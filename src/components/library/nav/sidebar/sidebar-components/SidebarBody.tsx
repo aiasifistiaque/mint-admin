@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { Stack, StackProps } from '@chakra-ui/react';
 import { padding, sizes, theme } from '../../..';
 

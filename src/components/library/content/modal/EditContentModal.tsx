@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState, ReactNode, MouseEvent } from 'react';
 import {
 	Flex,
 	FlexProps,
@@ -25,7 +25,7 @@ import { useUpdateContentMutation } from '../../store/services/contentApi';
 
 type CreateModalProps = FlexProps & {
 	dataModel: InputData<any>[];
-	children?: React.ReactNode;
+	children?: ReactNode;
 	path?: string;
 	title?: string;
 	data: any;
@@ -105,7 +105,7 @@ const EditContentModal = ({
 				onClose={onModalClose}
 				closeOnOverlayClick={false}>
 				<ModalOverlay />
-				<ModalContainer onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+				<ModalContainer onClick={(e: MouseEvent) => e.stopPropagation()}>
 					<ModalHeader>{`Update Content`}</ModalHeader>
 					<ModalCloseButton />
 					<form onSubmit={handleSubmit}>

@@ -1,11 +1,10 @@
-import React, { ReactNode } from 'react';
-import { Column } from '@/components/library';
-import { useColorModeValue } from '@chakra-ui/react';
+import { ReactNode } from 'react';
+import { Flex } from '@chakra-ui/react';
 
 const CartPriceContainer = ({ children }: { children: ReactNode }) => {
-	const borderColor = useColorModeValue('stroke.deepL', 'stroke.deepD');
 	return (
-		<Column
+		<Flex
+			flexDir='column'
 			p={2}
 			m={2}
 			mt={0}
@@ -14,10 +13,11 @@ const CartPriceContainer = ({ children }: { children: ReactNode }) => {
 			bg='#f7f7f7'
 			_dark={{
 				bg: 'sidebar.dark',
+				borderColor: 'stroke.deepD',
 			}}
-			borderColor={borderColor}>
+			borderColor='stroke.deepL'>
 			{children}
-		</Column>
+		</Flex>
 	);
 };
 

@@ -1,15 +1,7 @@
 'use client';
 
-import React, { FC } from 'react';
-import {
-	Flex,
-	Heading,
-	useMediaQuery,
-	FlexProps,
-	Button,
-	IconButton,
-	withDefaultVariant,
-} from '@chakra-ui/react';
+import { FC, useEffect, ReactNode } from 'react';
+import { Flex, useMediaQuery, FlexProps, Button, IconButton } from '@chakra-ui/react';
 
 import {
 	useIsMobile,
@@ -35,7 +27,6 @@ import {
 } from '..';
 import EditorNavbar from './EditorNavbar';
 import { useUpdateContentMutation } from '../store/services/contentApi';
-import { BiBorderRadius } from 'react-icons/bi';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 const navbarStyleProps = {
@@ -45,11 +36,11 @@ const navbarStyleProps = {
 };
 
 export type FlexPropsType = FlexProps & {
-	children?: React.ReactNode;
+	children?: ReactNode;
 };
 
 type LayoutProps = FlexPropsType & {
-	children: React.ReactNode;
+	children: ReactNode;
 	title: string;
 	path?: string;
 	type?: 'default' | 'pos';
@@ -73,7 +64,7 @@ const EditorLayout: FC<LayoutProps> = ({
 	dispatch(navigate({ selected: path }));
 	const [trigger, result] = useUpdateContentMutation();
 
-	React.useEffect(() => {
+	useEffect(() => {
 		dispatch(refresh());
 		dispatch(setDisplay('lg'));
 	}, []);
@@ -226,7 +217,7 @@ const EditorLayout: FC<LayoutProps> = ({
 	);
 };
 
-const Main = ({ children }: { children: React.ReactNode }) => (
+const Main = ({ children }: { children: ReactNode }) => (
 	<Flex {...mainProps}>
 		<Column
 			pl={{ base: 0, md: 0 }}

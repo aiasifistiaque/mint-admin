@@ -1,20 +1,13 @@
 'use client';
 
-import React, { FC } from 'react';
+import { FC, useState } from 'react';
 import { Input, InputGroup, InputGroupProps, InputLeftAddon } from '@chakra-ui/react';
-import {
-	useAppDispatch,
-	Icon,
-	updateSearch,
-	SideDrawer,
-	Sidebar,
-	Align,
-} from '@/components/library';
+import { useAppDispatch, Icon, updateSearch, SideDrawer, Sidebar, Align } from '../';
 
 type PosSearchProps = InputGroupProps & {};
 
 const PosSearch: FC<PosSearchProps> = ({ ...props }) => {
-	const [value, setValue] = React.useState<string>('');
+	const [value, setValue] = useState<string>('');
 	const dispatch = useAppDispatch();
 
 	const handleSearch = (e: any) => {

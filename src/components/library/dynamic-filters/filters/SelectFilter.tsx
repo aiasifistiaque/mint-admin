@@ -1,5 +1,5 @@
 'use client';
-import React, { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 
 import { Flex, PopoverTrigger, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import { applyFilters, FilterButton, FilterSelect } from '../..';

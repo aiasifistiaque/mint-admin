@@ -1,4 +1,3 @@
-import React from 'react';
 import { Input, InputProps, useColorModeValue } from '@chakra-ui/react';
 
 const InputElement = ({ ...props }: InputProps) => {

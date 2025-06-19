@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { FC } from 'react';
 import { InputProps, Checkbox, Grid } from '@chakra-ui/react';
 import { Column, FormControl } from '../..';
 
@@ -14,7 +14,7 @@ type VDataMenuProps = InputProps & {
 	options: any;
 };
 
-const VPermissions: React.FC<VDataMenuProps> = ({
+const VPermissions: FC<VDataMenuProps> = ({
 	label,
 	isRequired,
 	placeholder,

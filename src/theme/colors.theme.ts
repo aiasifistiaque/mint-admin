@@ -1,52 +1,14 @@
 // import { THEME } from '../components/library';
 
 const THEME: 'basic' | 'fancy' = 'basic';
-const BORDER_DARK = '#222';
-
-type ColorMode = {
-	light?: string;
-	dark?: string;
-	50?: string;
-	100?: string;
-	200?: string;
-	300?: string;
-	400?: string;
-	500?: string;
-	600?: string;
-	700?: string;
-	800?: string;
-	900?: string;
-	selected?: string;
-	selectedDark?: string;
-	darker?: string;
-};
-
-type Colors = {
-	background: ColorMode;
-	text: ColorMode & {
-		500: string;
-	};
-	stroke: ColorMode & { deepL: string; deepD: string };
-	header: ColorMode;
-	sidebar: ColorMode;
-	border: ColorMode;
-	container: ColorMode;
-	table: ColorMode;
-	navbar: ColorMode;
-	brand: ColorMode;
-	black?: ColorMode;
-	white?: ColorMode;
-	blackAlpha?: ColorMode;
-	menu: ColorMode;
-	hover: ColorMode;
-	selectBorder: ColorMode;
-	gray?: ColorMode;
-	card: ColorMode;
-	pos: ColorMode;
-};
 
 const RICH_BLACK = '#0E131F';
 const DARK = '#0E0E0E';
+
+const PRIMARY = 'black';
+
+const BORDER_LIGHT = '#e7e7e7';
+const BORDER_DARK = '#222';
 
 // const SAGE = '#B5BD89';
 const SAGE = 'whitesmoke';
@@ -55,30 +17,20 @@ const THIRSTLE = '#D0C4DF';
 //const BLACK = '#1f1f1f';
 const BLACK = '#171717';
 
-const test = {
-	100: 'red',
-	200: 'blue',
-	300: 'teal',
-	400: 'slateblue',
-	500: 'darkslateblue',
-	600: 'green',
-	700: 'yellow',
-	800: 'orange',
-	900: 'tomato',
-};
-
 export const colors: any = {
 	brand: {
 		// 100: 'red',
-		light: '#635BFF',
+		// light: '#635BFF',
+		light: '#40234A',
 		dark: SAGE,
 		200: SAGE,
 		// 300: 'blue',
 		// 400: 'teal',
 		//500: '#635BFF',
-		500: '#171717',
+		// 500: '#171717',
+		500: PRIMARY,
 		// 600: 'darkslateblue',
-		600: '#333',
+		600: '#34163F',
 	},
 
 	red: {
@@ -113,24 +65,16 @@ export const colors: any = {
 
 		light: '#fafafa',
 		//dark: BLACK,
-		dark: BLACK,
+		//dark: BLACK,
+		dark: '#111',
 	},
-	text: {
-		light: '#111',
-		dark: '#fafafa',
-		shade: '#666',
-		200: '#fff',
-		400: '#4a4a4a',
-		500: '#171717',
-		selected: '#4a4a4a',
-		selectedDark: SAGE,
-	},
+
 	stroke: {
 		light: 'transparent',
 		//light: '#fff',
 		dark: 'transparent',
 		deepL: '#e7e7e7',
-		deepD: '#2D2D2D',
+		deepD: 'transparent',
 	},
 	pos: {
 		light: '#ebebeb',
@@ -144,9 +88,54 @@ export const colors: any = {
 
 	header: {
 		light: '#fff',
-		dark: BLACK,
+		//dark: BLACK,
+		dark: 'black',
 		200: 'whitesmoke',
 		500: '#414552',
+	},
+	button: {
+		primary: {
+			textLight: '#fff',
+			textDark: '#fff',
+			bgLight: '#fafafa',
+			bgDark: PRIMARY,
+			hoverLight: '#583D60',
+			hoverDark: '#583D60',
+		},
+		secondary: {
+			borderLight: BORDER_LIGHT,
+			borderDark: BORDER_DARK,
+			textLight: PRIMARY,
+			textDark: '#fafafa',
+			bgLight: '#fff',
+			bgDark: 'transparent',
+			hoverLight: '#583D60',
+			hoverDark: '#222',
+		},
+	},
+	text: {
+		// light: '#40234A',
+		formLabel: {
+			light: PRIMARY,
+			dark: '#fafafa',
+		},
+
+		heading: {
+			light: PRIMARY,
+			dark: '#fafafa',
+		},
+		light: '#3D2C42',
+		dark: '#ededed',
+		shade: '#666',
+		200: '#fff',
+		300: '#fff',
+		// 400: '#4a4a4a',
+		400: 'blue',
+		// 500: '#171717',
+		// 500: 'blue',
+		500: PRIMARY,
+		selected: '#4a4a4a',
+		selectedDark: SAGE,
 	},
 	sidebar: {
 		//light: '#F3F3EF',
@@ -211,31 +200,41 @@ export const colors: any = {
 
 	menu: {
 		light: '#fff',
-		dark: DARK,
-		blurLight: 'rgba(255, 255, 255, 0.5)',
-		blurDark: 'rgba(14,14,14,.8)',
+		dark: '#0A0A0A',
+		blurLight: 'rgba(255, 255, 255, 0.4)',
+		blurDark: 'rgba(0, 0, 0, .8)',
+		overlayDark: 'rgba(10, 10, 10, .9)',
 	},
 	navbar: {
 		400: BLACK,
-		light: THEME == 'basic' ? '#fff' : BLACK,
+		text: {
+			light: '#222',
+			dark: '#e7e7e7',
+		},
+		light: 'rgba(255, 255, 255, 0.4)',
 		blurLight: 'rgba(255, 255, 255, 0.4)',
-		dark: BLACK,
+		blurDark: 'rgba(0, 0, 0, 1)',
+		dark: '#0A0A0A',
 		800: BLACK,
-		borderBottomLight: '#ECECEc',
-		borderBottomDark: 'transparent',
+		borderBottomLight: '#e7e7e7',
+		borderBottomDark: BORDER_DARK,
+		border: {
+			light: '#e7e7e7',
+			dark: '#222',
+		},
 	},
 	border: {
 		//light: '#F3F3EF',
-		light: '#ececec',
-		dark: '#2D2D2D',
+		light: BORDER_LIGHT,
+		dark: '#222',
 	},
 	container: {
 		light: '#fff',
-		dark: BLACK,
+		dark: '#0A0A0A',
 		newLight: '#fff',
 		newDark: DARK,
-		borderLight: '#e7e7e7',
-		borderDark: 'transparent',
+		borderLight: BORDER_LIGHT,
+		borderDark: BORDER_DARK,
 		borderDarker: '#111',
 	},
 	green: {
@@ -244,25 +243,59 @@ export const colors: any = {
 	},
 	//black: { 500: BLACK, 600: BLACK, 700: BLACK, 800: BLACK, 900: BLACK, 200: BLACK },
 	gray: {
-		// 50: 'purple',
-		// 100: 'teal',
-		//200: 'red',
-		// 300: 'green',
-		// 400: 'blue',
-		// 500: '#000',
-		// 600: '#000',
-		// 700: 'tomato',
-		800: BLACK, //initial bg color of the load of colormode
-		// 900: 'green',
+		50: 'white',
+		100: BORDER_LIGHT,
+		200: BORDER_LIGHT, //input borders
+		300: PRIMARY,
+		400: PRIMARY,
+		500: '#E0DCE5',
+		600: PRIMARY,
+		700: PRIMARY,
+		800: '#2B2233', //initial bg color of the load of colormode
+		900: 'green',
+	},
+
+	result: {
+		bg: {
+			light: '#fafafa',
+			dark: '#111',
+		},
+		border: {
+			light: 'transparent',
+			dark: 'transparent',
+		},
 	},
 
 	table: {
 		light: THEME == 'basic' ? 'transparent' : '#fff',
 		dark: THEME == 'basic' ? 'transparent' : DARK,
+		bgLight: '#fff',
+		bgDark: 'transparent',
+
+		bg: {
+			light: '#fff',
+			dark: 'transparent',
+		},
+		cardBorder: {
+			light: '#e7e7e7',
+			dark: BORDER_DARK,
+		},
+		innerBorder: {
+			light: '#e7e7e7',
+			dark: BORDER_DARK,
+		},
+		outerBorder: {
+			light: '#e7e7e7',
+			dark: BORDER_DARK,
+		},
+		head: {
+			bgLight: '#fafafa',
+			bgDark: '#0A0A0A',
+		},
 	},
 	selectBorder: {
-		light: '#d1d3d3',
-		dark: 'whitesmoke',
+		light: '#e7e7e7',
+		dark: BORDER_DARK,
 	},
 	//ecom-commers
 	white: {
@@ -277,8 +310,8 @@ export const colors: any = {
 		600: '#202020',
 	},
 	eborder: {
-		300: '#fafafa',
-		600: '#e3e3e3',
+		light: '#e7e7e7',
+		dark: BORDER_DARK,
 	},
 };
 

@@ -1,8 +1,8 @@
 import { Flex, FlexProps } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 type AlignCenterProps = FlexProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 const AlignCenter: FC<AlignCenterProps> = ({ children, ...props }) => {

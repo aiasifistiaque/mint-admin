@@ -1,11 +1,11 @@
 'use client';
 
 import { Slider, SliderTrack, SliderFilledTrack, SliderThumb, SliderMark } from '@chakra-ui/react';
-import React from 'react';
+import { FC } from 'react';
 import { FormControl } from '../../../..';
 import { labelStyle, variables, SliderProps, toolTipStyle } from '../styles';
 
-const BLineHeight: React.FC<SliderProps> = ({
+const BLineHeight: FC<SliderProps> = ({
 	label,
 	isRequired,
 	placeholder,

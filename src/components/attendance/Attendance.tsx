@@ -1,3 +1,5 @@
+'use client';
+
 import React, { FC } from 'react';
 import { Center, Button, Heading, Image, FlexProps } from '@chakra-ui/react';
 

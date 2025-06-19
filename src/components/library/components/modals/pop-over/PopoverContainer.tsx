@@ -1,14 +1,14 @@
-import React from 'react';
+import { ReactNode, FC } from 'react';
 
 import { PopoverContent, PopoverContentProps } from '@chakra-ui/react';
 
 import { shadow, sizes } from '../../..';
 
 type PopoverBodyProps = PopoverContentProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
-const PopoverContainer: React.FC<PopoverBodyProps> = ({ children, ...props }) => {
+const PopoverContainer: FC<PopoverBodyProps> = ({ children, ...props }) => {
 	return (
 		<PopoverContent
 			boxShadow={shadow.MENU}

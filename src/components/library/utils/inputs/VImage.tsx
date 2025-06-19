@@ -1,6 +1,14 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
-import { Center, FormControl, Image, Stack, InputProps, GridProps } from '@chakra-ui/react';
+import {
+	Center,
+	FormControl,
+	Image,
+	Stack,
+	InputProps,
+	GridProps,
+	FlexProps,
+} from '@chakra-ui/react';
 import { UploadModal, HelperText, Label, ImageContainer } from '../..';
 
 type FormDataType = InputProps &
@@ -11,6 +19,7 @@ type FormDataType = InputProps &
 		label?: string;
 		helper?: string;
 		isDisabled?: boolean;
+		style?: any;
 		folder?: string;
 	};
 
@@ -20,13 +29,16 @@ const VImage: FC<FormDataType> = ({
 	isRequired = false,
 	label,
 	helper,
-	folder,
 	isDisabled = false,
+	style,
+	folder,
 }) => {
 	const type = value ? 'edit' : 'add';
 
 	const imageComponent = (
-		<ImageContainer>
+		<ImageContainer
+			w='full'
+			h='full'>
 			<Image
 				h='100%'
 				w='100%'
@@ -41,7 +53,10 @@ const VImage: FC<FormDataType> = ({
 		<FormControl isRequired={isRequired}>
 			<Stack w='full'>
 				<Label>{label}</Label>
-				<Center sx={styles.container}>
+				<Center
+					{...imageCss}
+					w={style?.w || '200px'}
+					h={style?.h || '200px'}>
 					<UploadModal
 						type={type}
 						handleImage={onChange}
@@ -57,13 +72,9 @@ const VImage: FC<FormDataType> = ({
 	);
 };
 
-const styles = {
-	container: {
-		h: '200px',
-		w: '200px',
-		bg: 'transparent',
-		position: 'relative',
-	},
+const imageCss: FlexProps = {
+	bg: 'transparent',
+	position: 'relative',
 };
 
 export default VImage;

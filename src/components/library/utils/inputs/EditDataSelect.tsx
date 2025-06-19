@@ -2,10 +2,8 @@
 
 import {
 	Menu,
-	MenuGroup,
 	Flex,
 	Input,
-	useDisclosure,
 	MenuDivider,
 	FormControl,
 	Stack,
@@ -13,7 +11,9 @@ import {
 	Button,
 } from '@chakra-ui/react';
 
-import React, { useState } from 'react';
+import { useState, FC, useRef, useEffect } from 'react';
+
+import { hiddenInputCss, searchInputCss, unselectTextCss, MAX_H, WIDTH } from './VDataMenu/styles';
 
 import {
 	DataMenuButton,
@@ -26,9 +26,6 @@ import {
 
 import { useGetAllQuery } from '../../store';
 
-const WIDTH = '300px';
-const MAX_H = '200px';
-
 type VDataMenuProps = InputProps & {
 	isRequired?: boolean;
 	placeholder?: string;
@@ -38,7 +35,7 @@ type VDataMenuProps = InputProps & {
 	dataModel?: any;
 };
 
-const EditDataSelect: React.FC<VDataMenuProps> = ({
+const EditDataSelect: FC<VDataMenuProps> = ({
 	isRequired,
 	placeholder,
 	value,
@@ -47,11 +44,11 @@ const EditDataSelect: React.FC<VDataMenuProps> = ({
 	dataModel,
 	...props
 }) => {
-	const { onOpen, onClose, isOpen } = useDisclosure();
+	// const { onOpen, onClose, isOpen } = useDisclosure();
 
-	const close = () => {
+	const menuClose = () => {
 		setSearch('');
-		onClose();
+		// onClose();
 	};
 
 	const [title, setTitle] = useState<string>(`Select option`);
@@ -82,7 +79,7 @@ const EditDataSelect: React.FC<VDataMenuProps> = ({
 			}
 		}
 		setTitle(e?.name);
-		onClose();
+		// onClose();
 	};
 
 	const renderMenuItems = data?.doc?.map((item: any, i: number) => (
@@ -100,8 +97,20 @@ const EditDataSelect: React.FC<VDataMenuProps> = ({
 		return item?.name || id;
 	};
 
-	const inputRef = React.useRef<any>(null);
-	const btnRef = React.useRef<any>(null);
+	const inputRef = useRef<any>(null);
+	const searchInputRef = useRef<any>(null);
+	const btnRef = useRef<any>(null);
+
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [testt, setTestt] = useState('no');
+
+	useEffect(() => {
+		if (isFetching) return;
+		if (isMenuOpen)
+			setTimeout(() => {
+				searchInputRef?.current?.focus();
+			}, 10);
+	}, [isMenuOpen, searchInputRef, isFetching]);
 
 	return (
 		<>
@@ -119,79 +128,79 @@ const EditDataSelect: React.FC<VDataMenuProps> = ({
 					type='post'
 				/>
 			)}
-			<Menu onClose={close}>
-				{({ isOpen }) => (
-					<>
-						<FormControl
-							isRequired={isRequired}
-							gap={4}>
-							<Stack
-								spacing={2}
-								w='full'>
+			<Menu onClose={menuClose}>
+				{({ isOpen }) => {
+					setIsMenuOpen(isOpen);
+
+					return (
+						<>
+							<FormControl
+								isRequired={isRequired}
+								gap={4}>
 								<Stack
-									spacing={1}
+									spacing={2}
 									w='full'>
-									<DataMenuButton
-										value={value}
-										isActive={isOpen}>
-										{value ? getNameById(value) : `Select option`}
-									</DataMenuButton>
-									<Input
-										ref={inputRef}
-										isRequired={isRequired}
-										value={value}
-										h='1px'
-										w='full'
-										color='transparent'
-										focusBorderColor='transparent'
-										border='none'
-										{...props}
-									/>
+									<Stack
+										spacing={1}
+										w='full'>
+										<DataMenuButton
+											value={value}
+											isActive={isOpen}>
+											{value ? getNameById(value) : `Select option`}
+										</DataMenuButton>
+										<Input
+											ref={inputRef}
+											isRequired={isRequired}
+											value={value}
+											{...hiddenInputCss}
+											{...props}
+										/>
+									</Stack>
+
+									{helper && <HelperText>{helper}</HelperText>}
 								</Stack>
+							</FormControl>
 
-								{helper && <HelperText>{helper}</HelperText>}
-							</Stack>
-						</FormControl>
+							<MenuContainer
+								w={WIDTH}
+								py={0}>
+								{/* <MenuGroup py={0}> */}
 
-						<MenuContainer w={WIDTH}>
-							<MenuGroup>
+								<Input
+									{...searchInputCss}
+									ref={searchInputRef}
+									value={search}
+									onChange={handleSearch}
+								/>
+
+								{/* </MenuGroup> */}
+								<MenuDivider
+									py={0}
+									my={0}
+								/>
+								{dataModel && (
+									<>
+										<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
+										<MenuDivider mb={0} />
+									</>
+								)}
 								<Flex
-									p={2}
-									py={0.5}>
-									<Input
-										borderRadius={6}
-										size='sm'
-										placeholder='Search'
-										value={search}
-										onChange={handleSearch}
-									/>
+									flexDir='column'
+									w='100%'
+									maxH={MAX_H}
+									overflowY='scroll'>
+									<MenuItem
+										{...unselectTextCss}
+										w={WIDTH}
+										onClick={() => handleChange({ name: ``, _id: undefined })}>
+										Unselect
+									</MenuItem>
+									{renderMenuItems}
 								</Flex>
-							</MenuGroup>
-							<MenuDivider mb={1} />
-							{dataModel && (
-								<>
-									<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
-									<MenuDivider
-										mt={1}
-										mb={0}
-									/>
-								</>
-							)}
-							<Flex
-								flexDir='column'
-								w='100%'
-								maxH={MAX_H}
-								overflowY='scroll'>
-								<MenuItem
-									w={WIDTH}
-									onClick={() => handleChange({ name: ``, _id: undefined })}>
-									Unselect
-								</MenuItem>
-								{renderMenuItems}
-							</Flex>
-						</MenuContainer>
-					</>
-				)}
+							</MenuContainer>
+						</>
+					);
+				}}
 			</Menu>
 		</>
 	);

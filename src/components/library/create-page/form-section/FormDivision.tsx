@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Flex, FlexProps, Grid } from '@chakra-ui/react';
 
 type FormDivisionProps = FlexProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 	isModal?: boolean;
 };
 

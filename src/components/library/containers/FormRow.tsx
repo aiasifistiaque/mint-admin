@@ -1,8 +1,8 @@
 import { Flex, FlexProps } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 type FormRowProps = FlexProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 const FormRow: FC<FormRowProps> = ({ children, ...props }) => {

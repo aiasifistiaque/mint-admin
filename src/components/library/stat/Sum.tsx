@@ -1,5 +1,5 @@
 'use client';
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Skeleton, Tooltip } from '@chakra-ui/react';
 import { Align, currency, Icon, useGetSumQuery } from '..';
 import { StatContainer, StatLabel, StatNumber } from './stat-components';

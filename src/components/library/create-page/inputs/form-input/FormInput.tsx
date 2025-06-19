@@ -1,5 +1,5 @@
 import { InputProps, MenuProps, SelectProps, SwitchProps, TextareaProps } from '@chakra-ui/react';
-import React, { FC, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 
 import {
 	VInput,
@@ -102,6 +102,16 @@ const FormInput: FC<FormInputProps> = ({
 					isRequired={isRequired}
 					onChange={props.onChange}
 					helper={item?.helper}
+					style={item?.style}
+					{...props}
+				/>
+			);
+		case 'nested-image':
+			return (
+				<VImage
+					isRequired={isRequired}
+					onChange={props.onChange}
+					helper={item?.helper}
 					{...props}
 				/>
 			);
@@ -114,21 +124,12 @@ const FormInput: FC<FormInputProps> = ({
 					{...props}
 				/>
 			);
-		case 'nested-image':
-			return (
-				<VImage
-					isRequired={isRequired}
-					folder={item?.folder}
-					onChange={props.onChange}
-					helper={item?.helper}
-					{...props}
-				/>
-			);
+
 		case 'image-array':
 			return (
 				<VImageArray
-					limit={item?.limit}
 					folder={item?.folder}
+					limit={item?.limit}
 					isRequired={isRequired}
 					onChange={props.onChange}
 					helper={item?.helper}
@@ -535,6 +536,17 @@ const FormInput: FC<FormInputProps> = ({
 					type={type}
 					isRequired={isRequired}
 					helper={item?.helper}
+					{...props}
+				/>
+			);
+		case 'basic-editor':
+			return (
+				<VEditor
+					type='basic'
+					onChange={props.onChange}
+					name={props.name}
+					helper={item?.helper}
+					isRequired={item?.isRequired}
 					{...props}
 				/>
 			);

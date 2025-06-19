@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Grid as GridComponent, GridProps } from '@chakra-ui/react';
 
 const Grid = ({ children, ...props }: GridProps & { children?: ReactNode }) => {

@@ -241,6 +241,10 @@ const renderContent = ({ type, children, colorScheme, path, originalType, id }: 
 					{children}
 				</Text>
 			);
+		case 'editor':
+			return <div dangerouslySetInnerHTML={{ __html: children }} />;
+		case 'basic-editor':
+			return <div dangerouslySetInnerHTML={{ __html: children }} />;
 		default:
 			if (originalType === 'data-menu')
 				return (

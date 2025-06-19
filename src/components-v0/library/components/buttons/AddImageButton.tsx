@@ -1,0 +1,39 @@
+import React from 'react';
+import { Center, FlexProps, Heading } from '@chakra-ui/react';
+import { Icon } from '../..';
+
+type AddImageButtonProps = FlexProps & {
+	children?: React.ReactNode;
+	size?: string;
+	title?: string;
+};
+
+const DEFAULT_IMAGE_SIZE = '100px';
+
+const AddImageButton: React.FC<AddImageButtonProps> = ({ children, title, size, ...props }) => {
+	return (
+		<Center
+			cursor='pointer'
+			flexDir='column'
+			h={size || DEFAULT_IMAGE_SIZE}
+			w={size || DEFAULT_IMAGE_SIZE}
+			border='2px dashed #ccc'
+			borderRadius='8px'
+			color='#ccc'
+			userSelect='none'
+			gap={2}
+			{...props}>
+			<Icon
+				name='add-image'
+				size={30}
+			/>
+			<Heading
+				color='#ccc'
+				size='xs'>
+				{title || 'Add Image'}
+			</Heading>
+		</Center>
+	);
+};
+
+export default AddImageButton;

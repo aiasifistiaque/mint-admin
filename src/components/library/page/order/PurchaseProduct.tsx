@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { useState } from 'react';
 
 import { CustomTd as Td, RowContainerBase, Icon } from '../..';

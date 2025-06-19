@@ -1,16 +1,16 @@
 import { Grid, Flex, FlexProps, FormControl, FormHelperText } from '@chakra-ui/react';
-import React from 'react';
+import { ReactNode, FC } from 'react';
 
 import { Label, Column } from '../..';
 
 type InputContainerProps = FlexProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 	label?: string;
 	isRequired?: boolean;
 	helper?: string;
 };
 
-const InputContainer: React.FC<InputContainerProps> = ({
+const InputContainer: FC<InputContainerProps> = ({
 	children,
 	label,
 	isRequired,

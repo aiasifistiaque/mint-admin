@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react';
+import { FC, Fragment } from 'react';
 import { Td, Image, Text, Heading, ImageProps, FlexProps, Center, Link } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 
@@ -18,6 +18,8 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 			? Fragment
 			: Text
 		: Fragment;
+
+	if (type == 'selectMenu') return <Container {...tdCss(type, heading)}>{children}</Container>;
 
 	const External = ({ children }: any) => {
 		if (text && (type == 'external-link' || type == 'file')) {
@@ -73,6 +75,7 @@ const tdCss = (type: any, heading: any): any => {
 			base: 0,
 			md: PADDING_X,
 		},
+
 		fontWeight: '400',
 		gap: heading ? 2 : { base: 4, md: 0 },
 		flexDir: heading ? 'column' : 'row',

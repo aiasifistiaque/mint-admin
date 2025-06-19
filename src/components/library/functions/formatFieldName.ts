@@ -1,7 +1,4 @@
 const formatFieldName = (field: string): string => {
-	if (!field || typeof field !== 'string') {
-		return '';
-	}
 	return field
 		.split('.')
 		.map(

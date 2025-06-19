@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Flex, FlexProps } from '@chakra-ui/react';
 
 import { useIsMobile, useAppSelector } from '../../../..';
 
 type ResultContainerProps = FlexProps & {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 const StickyBottomContainer: FC<ResultContainerProps> = ({ children, ...props }) => {

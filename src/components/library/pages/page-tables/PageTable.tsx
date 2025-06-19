@@ -1,9 +1,9 @@
 'use client';
 
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { useGetSelfQuery } from '@/store/services/authApi';
+import { useGetSelfQuery } from '../../';
 
 import {
 	TableObjectProps,
@@ -24,7 +24,7 @@ import { Flex } from '@chakra-ui/react';
 type TableProps = {
 	table: TableObjectProps;
 	layoutPath?: string;
-	children?: React.ReactNode;
+	children?: ReactNode;
 	schemaLoading?: boolean;
 };
 

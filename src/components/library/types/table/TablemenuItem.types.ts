@@ -5,10 +5,8 @@ type Item =
 	| 'delete'
 	| 'view'
 	| 'view-modal'
-	| 'view-server-modal'
 	| 'view-item'
 	| 'edit-modal'
-	| 'edit-server-modal'
 	| 'post'
 	| 'update-api'
 	| 'redirect'
@@ -18,7 +16,9 @@ type Item =
 	| 'custom-modal'
 	| 'update-key'
 	| 'custom-redirect'
-	| 'duplicate';
+	| 'duplicate'
+	| 'view-server-modal'
+	| 'edit-server-modal';
 
 type BaseMenuItem = {
 	title: string;

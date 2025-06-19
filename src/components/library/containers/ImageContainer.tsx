@@ -1,21 +1,22 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import { Center, FlexProps, Image } from '@chakra-ui/react';
 import { PLACEHOLDER_IMAGE } from '..';
 
 type ImageContainerProps = FlexProps & {
 	size?: number;
-	children?: React.ReactNode;
+	children?: ReactNode;
 	src?: string;
 	alt?: string;
 	objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
 };
 
-const ImageContainer: React.FC<ImageContainerProps> = ({
+const ImageContainer: FC<ImageContainerProps> = ({
 	children,
 	objectFit,
 	size,
 	alt,
 	src,
+
 	...props
 }) => {
 	const boxSize = size || 200;
@@ -38,7 +39,7 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
 			borderRadius='4px'
 			h={`${boxSize}px`}
 			w={`${boxSize}px`}
-			bg='sidebar.light'
+			bg='whitesmoke'
 			_dark={{ bg: 'background.dark' }}
 			{...props}>
 			{innerComponent}

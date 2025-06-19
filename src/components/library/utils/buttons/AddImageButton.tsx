@@ -1,14 +1,14 @@
-import React from 'react';
+import { ReactNode, FC } from 'react';
 import { Center, FlexProps, Heading } from '@chakra-ui/react';
 import { Icon } from '../..';
 import { motion } from 'framer-motion';
 
 type AddImageButtonProps = FlexProps & {
-	children?: React.ReactNode;
+	children?: ReactNode;
 	size?: string;
 };
 
-const AddImageButton: React.FC<AddImageButtonProps> = ({ children, size, ...props }) => {
+const AddImageButton: FC<AddImageButtonProps> = ({ children, size, ...props }) => {
 	return (
 		<Center
 			as={motion.div}

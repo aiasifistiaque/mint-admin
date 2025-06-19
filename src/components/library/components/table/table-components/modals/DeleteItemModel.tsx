@@ -8,7 +8,7 @@ import {
 	Button,
 	useDisclosure,
 } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import { useEffect, FC, useRef } from 'react';
 
 import {
 	useCustomToast,
@@ -27,12 +27,12 @@ type DeleteItemModalProps = {
 	item: any;
 };
 
-const DeleteItemModal: React.FC<DeleteItemModalProps> = ({ title, path, id, item }) => {
+const DeleteItemModal: FC<DeleteItemModalProps> = ({ title, path, id, item }) => {
 	const { page, limit, search, sort, filters, preferences, selectedItems }: any = useAppSelector(
 		(state: any) => state.table
 	);
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>(undefined);
+	const cancelRef = useRef<any>(undefined);
 
 	const [trigger, result] = useDeleteByIdMutation();
 	const [getAllTrigger, getAllResults] = useLazyGetAllQuery();

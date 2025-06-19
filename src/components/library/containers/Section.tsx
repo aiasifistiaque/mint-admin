@@ -1,11 +1,11 @@
 import { FlexProps, Heading } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { SpaceBetween, Column, shadow, sizes } from '..';
 
 type SectionProps = FlexProps & {
 	heading?: string;
-	children?: React.ReactNode;
-	rightComponent?: React.ReactNode;
+	children?: ReactNode;
+	rightComponent?: ReactNode;
 };
 
 const Section: FC<SectionProps> = ({ heading, children, rightComponent, ...props }) => {

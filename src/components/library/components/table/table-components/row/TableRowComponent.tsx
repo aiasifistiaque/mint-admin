@@ -1,7 +1,16 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, Fragment } from 'react';
 
 import { format } from 'date-fns';
-import { GridItem, Heading, StackProps, TableRowProps } from '@chakra-ui/react';
+import {
+	GridItem,
+	Heading,
+	StackProps,
+	TableRowProps,
+	useClipboard,
+	Flex,
+	Tooltip,
+	Icon,
+} from '@chakra-ui/react';
 import {
 	useIsMobile,
 	formatDataKey,
@@ -10,9 +19,9 @@ import {
 	EditableTableData,
 	TableData,
 	TableMenu,
-	formatFieldName,
 	formatFieldTitle,
 } from '../../../..';
+import { CopyIcon } from '@chakra-ui/icons';
 
 type TableProps = StackProps &
 	TableRowProps & {
@@ -61,6 +70,8 @@ const TableRowComponent: FC<TableProps> = ({
 					style,
 					tagType,
 					colorScheme,
+					colorTheme,
+					copy,
 				}) => {
 					// Split the dataKey into keys
 					const keys = dataKey?.split('.');
@@ -91,15 +102,6 @@ const TableRowComponent: FC<TableProps> = ({
 						return null;
 					}
 
-					const Container = ({ children }: { children: ReactNode }) =>
-						isMobile && type !== 'image-text' ? (
-							<Column gap={0}>{children}</Column>
-						) : isMobile ? (
-							<GridItem colSpan={2}>{children}</GridItem>
-						) : (
-							<>{children}</>
-						);
-
 					// If the item is editable, return an EditableTableData component
 					if (editable && !clickable)
 						return (
@@ -125,12 +127,19 @@ const TableRowComponent: FC<TableProps> = ({
 
 					// Return a TableData cell with the value
 					return (
-						<Container key={dataKey}>
+						<Container
+							key={dataKey}
+							type={type}
+							copy={copy}
+							isMobile={isMobile}
+							value={value}>
 							{isMobile && type !== 'image-text' && (
 								<Heading size='xs'>{formatFieldTitle({ field: dataKey, schema: data })}</Heading>
 							)}
 
 							<TableData
+								colorTheme={colorTheme}
+								copy={copy}
 								toLocaleStr={toLocaleStr}
 								colorScheme={colorScheme}
 								key={dataKey}
@@ -144,6 +153,38 @@ const TableRowComponent: FC<TableProps> = ({
 				}
 			)}
 		</TableRow>
+	);
+};
+
+const Container = ({ children, isMobile, type, value, copy, ...props }: any) => {
+	const styleProps = {
+		...props,
+	};
+	if (isMobile && type !== 'image-text') {
+		return (
+			<Column
+				gap={0}
+				{...styleProps}>
+				{children}
+			</Column>
+		);
+	}
+	if (isMobile) {
+		return (
+			<GridItem
+				{...styleProps}
+				colSpan={2}>
+				{children}
+			</GridItem>
+		);
+	}
+
+	return (
+		<Flex
+			as={Fragment}
+			{...styleProps}>
+			{children}
+		</Flex>
 	);
 };
 

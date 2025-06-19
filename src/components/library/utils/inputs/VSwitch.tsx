@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import { FC } from 'react';
 import { FormControl, Switch, SwitchProps } from '@chakra-ui/react';
 
 import { Label } from '../..';
@@ -12,7 +12,7 @@ type InputContainerProps = SwitchProps & {
 	placeholder?: any;
 };
 
-const VSwitch: React.FC<InputContainerProps> = ({
+const VSwitch: FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,

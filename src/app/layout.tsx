@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Providers } from '@/components/library/providers/Providers';
+import { Providers } from '@/components/provider/AppProvider';
+
 import 'swiper/css';
 import { GeistSans } from 'geist/font/sans';
 

@@ -1,4 +1,4 @@
-// import React, { FormEvent, useEffect, useState } from 'react';
+// import  { FormEvent, useEffect, useState } from 'react';
 // import {
 // 	Flex,
 // 	Modal,
@@ -24,7 +24,7 @@
 
 // type CreateModalProps = {
 // 	dataModel: InputData<any>[];
-// 	children?: React.ReactNode;
+// 	children?: ReactNode;
 // 	path?: string;
 // 	type?: 'post' | 'update';
 // 	id: string;
@@ -97,7 +97,7 @@
 // 				onClose={onModalClose}
 // 				closeOnOverlayClick={false}>
 // 				<ModalOverlay />
-// 				<ModalContainer onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+// 				<ModalContainer onClick={(e: MouseEvent) => e.stopPropagation()}>
 // 					<ModalHeader>{`Update ${title}`}</ModalHeader>
 // 					<ModalCloseButton />
 // 					<form onSubmit={handleSubmit}>
@@ -130,7 +130,7 @@
 
 // export default EditProductListModal;
 
-import React, { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState, ReactNode, MouseEvent } from 'react';
 import {
 	Flex,
 	Modal,
@@ -156,7 +156,7 @@ import {
 
 type CreateModalProps = {
 	dataModel: InputData<any>[];
-	children?: React.ReactNode;
+	children?: ReactNode;
 	path?: string;
 	type?: 'post' | 'update';
 	id: string;
@@ -238,7 +238,7 @@ const EditProductListModal = ({
 				onClose={onModalClose}
 				closeOnOverlayClick={false}>
 				<ModalOverlay />
-				<ModalContainer onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+				<ModalContainer onClick={(e: MouseEvent) => e.stopPropagation()}>
 					<ModalHeader>{`Update ${title}`}</ModalHeader>
 					<ModalCloseButton />
 					<form onSubmit={handleSubmit}>
