@@ -1,5 +1,3 @@
-import { BsBorderWidth } from 'react-icons/bs';
-
 export const TOKEN_NAME: string = process.env.NEXT_PUBLIC_TOKEN_NAME || 'MINT_CAFE_TOKEN_TWO';
 
 export const REFRESH_TOKEN: string =

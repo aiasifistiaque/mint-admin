@@ -1,5 +1,7 @@
-import { URL } from '../..';
+// import { URL } from '../..';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+const URL = process.env.NEXT_PUBLIC_BACKEND || 'http://localhost:3000';
 
 const tags = [
 	'donors',
@@ -19,7 +21,7 @@ const tags = [
 export const mainApi = createApi({
 	reducerPath: 'mainApi',
 	baseQuery: fetchBaseQuery({
-		baseUrl: `${URL.api}/api`,
+		baseUrl: `${URL}`,
 		prepareHeaders: (headers, { getState }) => {
 			const token: string = (getState() as any).auth?.token;
 			if (token) {

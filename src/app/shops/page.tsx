@@ -1,4 +1,5 @@
 'use client';
+
 import React from 'react';
 import { NextPage } from 'next';
 import {
@@ -119,8 +120,8 @@ const table: TableObjectProps = {
 	],
 };
 
-const page: NextPage = () => {
+const ShopPage: NextPage = () => {
 	return <PageTable table={table} />;
 };
 
-export default page;
+export default ShopPage;
