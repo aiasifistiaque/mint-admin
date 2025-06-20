@@ -81,7 +81,7 @@ const tdCss = (type: any, heading: any): any => {
 		flexDir: heading ? 'column' : 'row',
 		fontSize: {
 			base: type == 'image-text' ? '1.2rem' : '1rem',
-			md: '.85rem',
+			md: '.9rem',
 		},
 	};
 };

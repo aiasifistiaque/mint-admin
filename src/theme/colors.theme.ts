@@ -66,7 +66,7 @@ export const colors: any = {
 		light: '#fafafa',
 		//dark: BLACK,
 		//dark: BLACK,
-		dark: '#111',
+		dark: 'black',
 	},
 
 	stroke: {
@@ -102,6 +102,7 @@ export const colors: any = {
 			hoverLight: '#583D60',
 			hoverDark: '#583D60',
 		},
+
 		secondary: {
 			borderLight: BORDER_LIGHT,
 			borderDark: BORDER_DARK,
@@ -124,6 +125,10 @@ export const colors: any = {
 			light: PRIMARY,
 			dark: '#fafafa',
 		},
+		secondary: {
+			light: PRIMARY,
+			dark: '#a1a1a1',
+		},
 		light: '#3D2C42',
 		dark: '#ededed',
 		shade: '#666',
@@ -140,7 +145,7 @@ export const colors: any = {
 	sidebar: {
 		//light: '#F3F3EF',
 		light: '#fafafa',
-		dark: '#111',
+		dark: '#000',
 		header: {
 			light: '#fff',
 			dark: '#0a0a0a',
@@ -172,9 +177,9 @@ export const colors: any = {
 			// light: '#111',
 			// dark: '#fafafa',
 			light: '#222',
-			dark: '#fafafa',
+			dark: '#a1a1a1',
 			headingLight: '#222',
-			headingDark: '#fafafa',
+			headingDark: '#a1a1a1',
 			selectedLight: '#222',
 			selectedDark: '#fafafa',
 		},
@@ -258,7 +263,7 @@ export const colors: any = {
 	result: {
 		bg: {
 			light: '#fafafa',
-			dark: '#111',
+			dark: 'black',
 		},
 		border: {
 			light: 'transparent',
@@ -270,11 +275,11 @@ export const colors: any = {
 		light: THEME == 'basic' ? 'transparent' : '#fff',
 		dark: THEME == 'basic' ? 'transparent' : DARK,
 		bgLight: '#fff',
-		bgDark: 'transparent',
+		bgDark: '#0A0A0A',
 
 		bg: {
 			light: '#fff',
-			dark: 'transparent',
+			dark: '#0A0A0A',
 		},
 		cardBorder: {
 			light: '#e7e7e7',
@@ -291,6 +296,10 @@ export const colors: any = {
 		head: {
 			bgLight: '#fafafa',
 			bgDark: '#0A0A0A',
+		},
+		row: {
+			light: 'white',
+			dark: '#0A0A0A',
 		},
 	},
 	selectBorder: {

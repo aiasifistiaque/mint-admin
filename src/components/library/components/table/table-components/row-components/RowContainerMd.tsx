@@ -1,4 +1,4 @@
-import { FC, useState, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { Tr, TextProps } from '@chakra-ui/react';
 
 type RowContainerMdProps = TextProps & {
@@ -6,25 +6,18 @@ type RowContainerMdProps = TextProps & {
 };
 
 const RowContainerMd: FC<RowContainerMdProps> = ({ children, ...props }) => {
-	// const [bg, setBg] = useState('transparent');
-	// const handleMouseEnter = () => {
-	// 	setBg('#ddd');
-	// };
-	// const handleMouseLeave = () => {
-	// 	setBg('transparent');
-	// };
 	return (
 		<Tr
+			h='60px'
+			bg='table.row.light'
+			_dark={{
+				bg: 'table.row.dark',
+				borderBottomColor: 'table.innerBorder.dark',
+			}}
 			_notLast={{
 				borderBottom: '1px solid',
 				borderBottomColor: 'table.innerBorder.light',
-				_dark: {
-					borderBottomColor: 'table.innerBorder.dark',
-				},
 			}}
-			// border='1px solid red'
-			// onMouseEnter={handleMouseEnter}
-			// onMouseLeave={handleMouseLeave}
 			{...props}>
 			{children}
 		</Tr>

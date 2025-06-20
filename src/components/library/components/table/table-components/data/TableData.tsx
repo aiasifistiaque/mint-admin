@@ -172,7 +172,7 @@ const TableBody: FC<TableDataPropsType> = ({
 };
 
 const dateCss: any = {
-	fontSize: { base: '1rem', md: '.7rem' },
+	fontSize: { base: '1rem', md: '.8rem' },
 };
 
 const badgeCss: BadgeProps = {
