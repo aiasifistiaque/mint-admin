@@ -56,6 +56,7 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 			)}
 
 			<Skeleton
+				height={isLoading ? 2 : 5}
 				isLoaded={!isLoading}
 				borderRadius={SKELETON_BORDER_RADIUS}>
 				<Text {...bodyTextCss(isSelected)}>{children}</Text>
@@ -110,7 +111,7 @@ const containerCss = (isLoading: boolean, isSelected: boolean, href?: string): F
 	};
 };
 
-const SKELETON_BORDER_RADIUS = '8px';
+const SKELETON_BORDER_RADIUS = '90px';
 
 const skeletonCss: any = {
 	borderRadius: SKELETON_BORDER_RADIUS,

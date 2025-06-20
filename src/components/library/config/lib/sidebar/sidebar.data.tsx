@@ -8,8 +8,6 @@ const sidebar: SidebarItemType[] = [
 		path: 'dashboard',
 	},
 	{
-		startOfSection: true,
-		sectionTitle: 'Analytics',
 		title: 'Page Views',
 		href: '/views',
 		icon: 'analytics',
@@ -25,13 +23,13 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Shop Management',
-		title: 'Shops',
+		title: 'Shops Management',
 		href: '/shops',
 		icon: 'shop',
 		path: 'shops',
 	},
 	{
-		title: 'Packages',
+		title: 'Packages ',
 		href: '/packages',
 		icon: 'order',
 		path: 'packages',
@@ -43,8 +41,6 @@ const sidebar: SidebarItemType[] = [
 		path: 'sellers',
 	},
 	{
-		startOfSection: true,
-		sectionTitle: 'Data Management',
 		title: 'Products',
 		href: '/products',
 		icon: 'product',
@@ -78,8 +74,6 @@ const sidebar: SidebarItemType[] = [
 		path: 'purchased-themes',
 	},
 	{
-		sectionTitle: 'Sales Management',
-		startOfSection: true,
 		title: 'Leads',
 		href: '/leads',
 		icon: 'customer',

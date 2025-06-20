@@ -20,7 +20,7 @@ const SidebarHeading: FC<SidebarHeadingProps> = ({
 			px={2}
 			mt={4}
 			h='20px'
-			borderRadius='8px'>
+			borderRadius='90px'>
 			<Text
 				color='sidebar.bodyText.headingLight'
 				_dark={{ color: 'sidebar.bodyText.headingDark' }}

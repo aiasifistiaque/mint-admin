@@ -21,6 +21,7 @@ export default function UserFeedback() {
 				gridTemplateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }}
 				gap={2}>
 				<Count
+					href='/views'
 					title='Website views'
 					path='views'
 				/>

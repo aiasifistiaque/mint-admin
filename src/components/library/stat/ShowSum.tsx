@@ -10,6 +10,7 @@ type CountProps = {
 	isLoading?: boolean;
 	isError?: boolean;
 	tooltip?: string;
+	href?: string;
 };
 
 const ShowSum: FC<CountProps> = ({
@@ -19,9 +20,10 @@ const ShowSum: FC<CountProps> = ({
 	tooltip,
 	isLoading = false,
 	isError = false,
+	href,
 }) => {
 	return (
-		<StatContainer>
+		<StatContainer href={href}>
 			<Align>
 				<StatLabel>{title}</StatLabel>
 				{tooltip && (

@@ -11,12 +11,13 @@ type CountProps = {
 	price?: boolean;
 	filters?: any;
 	tooltip?: string;
+	href?: string;
 };
 
-const Sum: FC<CountProps> = ({ title, path, field, price, tooltip, filters = {} }) => {
+const Sum: FC<CountProps> = ({ title, path, field, price, tooltip, href, filters = {} }) => {
 	const { data, isFetching, isError } = useGetSumQuery({ path, field, filters }, { skip: !path });
 	return (
-		<StatContainer>
+		<StatContainer href={href}>
 			<Align>
 				<StatLabel>{title}</StatLabel>
 				{tooltip && (
