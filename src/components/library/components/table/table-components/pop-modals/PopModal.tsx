@@ -70,11 +70,12 @@ const PopModal: FC<MenuModalProps> = ({
 			<span> {trigger}</span>
 			<PopoverContentContainer>
 				<PopoverArrow bg={arrow} />
-				<Column gap={1}>
+				<Column gap={0}>
 					{children}
 					<Flex
 						px={3}
-						pb={3}
+						pt={1}
+						pb={2}
 						w='full'>
 						<FilterButton
 							w='full'

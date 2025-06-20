@@ -23,9 +23,11 @@ const PopModalHeader: FC<MenuModalBodyProps> = ({ children, isMobile }) => {
 
 	return (
 		<PopoverHeader
+			lineHeight={1.4}
+			pb={1}
 			color='header.500'
 			_dark={{ color: 'header.200' }}
-			fontSize='.875rem'
+			fontSize='.9rem'
 			fontWeight='700'
 			border='none'>
 			{children}

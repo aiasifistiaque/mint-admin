@@ -1,4 +1,6 @@
-import { Flex, Tag, TagLabel, TagProps } from '@chakra-ui/react';
+'use client';
+
+import { Flex, Tag, TagLabel, TagProps, useColorModeValue } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 
 import { Icon, radius } from '../..';
@@ -10,37 +12,46 @@ type FilterProps = TagProps & {
 };
 
 const Filter: FC<FilterProps> = ({ children, isActive = false, onCancel, ...props }) => {
+	const iconColor = useColorModeValue('gray.600', 'text.secondary.dark');
 	return (
 		<Tag
 			userSelect='none'
 			cursor='pointer'
-			bg='transparent'
-			borderRadius={'full'}
-			border='1px dashed'
-			mr={0.5}
-			mb={0.5}
-			borderColor='text.secondary.dark'
+			bg='table.row.light'
+			borderRadius={radius?.FILTER || 'full'}
+			border='1px solid'
+			borderColor='border.light'
 			color='gray.600'
 			fontWeight='600'
+			shadow='xs'
 			_dark={{
 				borderColor: 'border.dark',
 				color: 'text.secondary.dark',
 				bg: 'table.row.dark',
 			}}
 			size='sm'
-			pl={1}
-			py={1}
+			mr={0.5}
+			pl={2}
+			py={1.5}
 			{...props}>
 			{!isActive && (
 				<Icon
-					name='add-tag'
-					size={16}
+					color={iconColor}
+					name='filter'
+					size={14}
 				/>
 			)}
-			<TagLabel mx={1}>{children}</TagLabel>
+			<TagLabel
+				mx={1}
+				ml={1.5}
+				fontSize='13px'
+				fontWeight='500'>
+				{children}
+			</TagLabel>
 			{isActive && (
 				<Flex onClick={onCancel}>
 					<Icon
+						color={iconColor}
 						name='close'
 						size={16}
 					/>

@@ -9,7 +9,7 @@ const FilterCheckbox: FC<FilterCheckboxProps> = ({ children, ...props }) => {
 	return (
 		<Checkbox
 			borderRadius='md'
-			size={{ base: 'lg', md: 'sm' }}
+			size={{ base: 'lg', md: 'md' }}
 			iconSize={20}
 			fontSize={{ base: '16px', md: '10px' }}
 			colorScheme='brand'

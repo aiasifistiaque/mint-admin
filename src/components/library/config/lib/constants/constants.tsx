@@ -71,13 +71,13 @@ export const zIndex = {
 };
 
 export const radius = {
-	CONTAINER: '6px',
+	CONTAINER: '4px',
 	MODAL: '8px',
 	MENU: '6px',
-	BUTTON: '6px',
-	INPUT: '6px',
+	BUTTON: '4px',
+	INPUT: '4px',
 	SELECT_CONTAINER: '6px',
-	FILTER: 'full',
+	FILTER: '4px',
 };
 
 export const styles = {

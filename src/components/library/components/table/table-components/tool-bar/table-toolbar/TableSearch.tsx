@@ -55,8 +55,11 @@ const TableSearch = () => {
 				as={Button}
 				onClick={handleSearch}
 				colorScheme='gray'
+				_dark={{
+					bg: 'container.dark',
+				}}
 				{...addOnCss}>
-				<TbSearch />
+				<TbSearch size={16} />
 			</InputRightAddon>
 		</InputGroup>
 	);
@@ -89,6 +92,11 @@ const inputCss: InputProps = {
 const addOnCss: InputRightAddonProps = {
 	h: sizes.SEARCH_BAR_HEIGHT,
 	borderRightRadius: radius.BUTTON,
+	_dark: {
+		bg: 'container.dark',
+		borderColor: 'border.dark',
+		borderLeftColor: 'border.dark',
+	},
 	_light: {
 		borderLeftColor: 'container.borderLight',
 		bg: 'container.newLight',

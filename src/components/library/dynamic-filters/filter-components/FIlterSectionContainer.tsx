@@ -4,7 +4,7 @@ import { Flex } from '@chakra-ui/react';
 const FilterSectionContainer = ({ children }: { children: ReactNode }) => {
 	return (
 		<Flex
-			gap={2}
+			gap={1}
 			flexWrap='wrap'>
 			{children}
 		</Flex>

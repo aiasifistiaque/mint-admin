@@ -73,7 +73,7 @@ import {
 	MdAlignHorizontalLeft,
 	MdAlignHorizontalRight,
 } from 'react-icons/md';
-import { HiUserGroup } from 'react-icons/hi';
+import { HiOutlineFilter, HiUserGroup } from 'react-icons/hi';
 // import { IoMdBarcode } from 'react-icons/io';
 
 import {
@@ -107,6 +107,7 @@ import {
 	HiMiniDevicePhoneMobile,
 	HiArrowUturnLeft,
 	HiArrowUturnRight,
+	HiViewColumns,
 } from 'react-icons/hi2';
 
 import {
@@ -131,6 +132,7 @@ import {
 
 import { RxSpaceBetweenHorizontally, RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import iconOptionsArrayData from './iconOptionsArrayData';
+import { FiFilter } from 'react-icons/fi';
 
 export type IconNameOptions = (typeof iconOptionsArrayData)[number];
 
@@ -158,6 +160,7 @@ const icons: any = {
 	blog: PiArticleMediumFill,
 	views: SiGoogleanalytics,
 	analytics: SiGoogleanalytics,
+	filter: FiFilter,
 	'action-menu': GoListUnordered,
 	clicks: GiClick,
 	add: IoAdd,
@@ -176,6 +179,7 @@ const icons: any = {
 	clock: FaRegClock,
 	'clock-outline': FaRegClock,
 	collections: BsCollectionFill,
+	column: HiViewColumns,
 	content: BiSolidBookContent,
 	copy: FaRegCopy,
 	customer: FaUserTag,

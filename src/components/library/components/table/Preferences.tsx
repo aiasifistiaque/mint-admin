@@ -77,7 +77,12 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 					<IconButton
 						onClick={onOpen}
 						{...style.iconButton}
-						icon={<Icon name='fields' />}
+						icon={
+							<Icon
+								name='fields'
+								size={16}
+							/>
+						}
 					/>
 				</span>
 			</Tooltip>
@@ -148,12 +153,15 @@ const style: Style = {
 		colorScheme: 'gray',
 		size: 'md',
 		borderWidth: 1,
+		mr: 0.5,
 		h: sizes?.SEARCH_BAR_HEIGHT,
 		w: sizes?.SEARCH_BAR_HEIGHT,
 		borderRadius: radius?.BUTTON,
 		_dark: {
-			borderWidth: 0,
+			bg: 'container.dark',
+			borderWidth: 1,
 		},
+
 		_light: {
 			borderColor: 'container.borderLight',
 			bg: 'container.newLight',

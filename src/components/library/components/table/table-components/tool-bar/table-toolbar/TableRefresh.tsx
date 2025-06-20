@@ -22,11 +22,15 @@ const TableRefresh = () => {
 				onClick={onReset}
 				colorScheme='gray'
 				borderWidth={1}
+				ml={0.5}
+				_dark={{
+					bg: 'container.dark',
+				}}
 				_light={{
 					borderColor: 'container.borderLight',
 					bg: 'container.newLight',
 				}}
-				icon={<TbRefresh />}
+				icon={<TbRefresh size={18} />}
 			/>
 		</Tooltip>
 	);

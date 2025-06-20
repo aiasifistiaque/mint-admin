@@ -27,8 +27,7 @@ const PopModalBody: FC<MenuModalBodyProps> = ({ children, isMobile }) => {
 		<PopoverBody>
 			<Flex
 				flexDir='column'
-				gap={3}
-				pb={1}>
+				gap={3}>
 				{children}
 			</Flex>
 		</PopoverBody>

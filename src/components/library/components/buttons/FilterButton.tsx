@@ -8,6 +8,8 @@ type FilterButtonProps = ButtonProps & {
 const FilterButton: FC<FilterButtonProps> = ({ children, ...props }) => {
 	return (
 		<Button
+			h='30px'
+			borderRadius='4px'
 			size='sm'
 			{...props}>
 			{children}

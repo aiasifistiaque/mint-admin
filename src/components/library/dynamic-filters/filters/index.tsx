@@ -1,5 +1,6 @@
 export { default as BooleanFilter } from './BooleanFilter';
-export { default as Filter } from './Filter';
+export { default as FilterV2 } from './Filter';
+export { default as Filter } from './Filter.v2';
 export { default as IsActiveFilter } from './IsActiveFilter';
 export { default as MultiSelectFilter } from './MultiSelectFilter';
 export { default as SelectFilter } from './SelectFilter';

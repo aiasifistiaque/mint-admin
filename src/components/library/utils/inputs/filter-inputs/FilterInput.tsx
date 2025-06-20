@@ -8,7 +8,7 @@ type FilterInputProps = InputProps & {
 const FilterInput: FC<FilterInputProps> = ({ date, ...props }) => {
 	const style = {
 		size: { base: '42px', md: 'xs' },
-		borderRadius: 'md',
+		borderRadius: '4px',
 		h: { base: '42px', md: '28px' },
 		borderColor: 'gray.200',
 		px: 2,
