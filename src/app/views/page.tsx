@@ -6,6 +6,8 @@ import { formFields, fields, tableFields } from './config';
 
 const table: BackendTableObjectProps = {
 	title: 'Page Views',
+	subTitle:
+		'Track and manage all your website page views in one place. Monitor real-time visitor activity, identify your most popular pages, and gain valuable insights with detailed analytics to optimize performance. Stay in control of your web traffic and make smarter decisions with ease.',
 	path: 'views',
 	export: true,
 

@@ -3,6 +3,7 @@ import { MenuItem } from './table';
 
 type CommonTableProps = {
 	title: string;
+	subTitle?: string;
 	path: string;
 	filters?: boolean;
 	button?: ButtonType;

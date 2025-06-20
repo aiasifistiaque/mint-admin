@@ -1,4 +1,12 @@
-import { Flex, FlexProps, Heading, Button, useColorModeValue, TextProps } from '@chakra-ui/react';
+import {
+	Flex,
+	FlexProps,
+	Heading,
+	Button,
+	useColorModeValue,
+	TextProps,
+	Text,
+} from '@chakra-ui/react';
 import Link from 'next/link';
 import { FC } from 'react';
 import { BackendCreateModal, createFormFields, Icon } from '../..';
@@ -67,15 +75,24 @@ const BackendPageHeading: FC<PageHeadingProps> = ({
 
 	return (
 		<Flex
-			{...containerCss}
+			{...wrapperCss}
 			{...props}>
-			<Heading {...headingCss}>{title}</Heading>
-			<Flex {...buttonGroupCss}>
-				<>{Boolean(exportData) && exportButton}</>
-				<>{(Boolean(button) || isModal) && renderButton()}</>
+			<Flex {...containerCss}>
+				<Heading {...headingCss}>{title}</Heading>
+
+				<Flex {...buttonGroupCss}>
+					<>{Boolean(exportData) && exportButton}</>
+					<>{(Boolean(button) || isModal) && renderButton()}</>
+				</Flex>
 			</Flex>
+			{table?.subTitle && <Text>{table?.subTitle}</Text>}
 		</Flex>
 	);
+};
+
+const wrapperCss: FlexProps = {
+	flexDir: 'column',
+	gap: 4,
 };
 
 const containerCss: FlexProps = {
@@ -93,7 +110,7 @@ const headingCss: TextProps = {
 
 const buttonGroupCss: FlexProps = {
 	gap: 2,
-	//w: 'full',
+
 	justify: 'flex-end',
 };
 
