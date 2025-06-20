@@ -3,7 +3,7 @@ import { FlexProps, Heading, Stack } from '@chakra-ui/react';
 import { ReactNode, FC } from 'react';
 import SidebarItem from './SidebarItem';
 
-import { sidebarData as sidebar, THEME, useGetQuery, useGetSelfQuery } from '../..';
+import { sidebarData as sidebar, useGetQuery, useGetSelfQuery } from '../..';
 
 import { SidebarBody, SidebarContainer, SidebarHeading, SidebarLogo } from './sidebar-components';
 import Link from 'next/link';

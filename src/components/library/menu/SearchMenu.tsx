@@ -11,12 +11,13 @@ import {
 	FlexProps,
 	TextProps,
 } from '@chakra-ui/react';
-import { Icon, THEME, radius, sidebarData } from '../';
+import { Icon, THEME, radius } from '../';
 import ModalContentContainer from '../modals/modal-components/ModalContentContainer';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { SidebarItemType } from '../config/lib/sidebar/types';
 
-const SearchMenu = () => {
+const SearchMenu = ({ sidebarData }: { sidebarData: SidebarItemType[] }) => {
 	const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
 	const [search, setSearch] = useState('');
 
@@ -35,11 +36,8 @@ const SearchMenu = () => {
 			// Command + K (Mac) or Ctrl + K
 			if ((e.metaKey || e.altKey) && e.key === 'k') {
 				e.preventDefault();
-				if (isOpen) {
-					onClose();
-				} else {
-					onOpen();
-				}
+				if (isOpen) onClose();
+				else onOpen();
 			}
 		};
 
@@ -62,7 +60,7 @@ const SearchMenu = () => {
 			} else if (e.key === 'Enter') {
 				e.preventDefault();
 				if (data[selectedIndex]) {
-					router.push(data[selectedIndex].href);
+					router.push(data[selectedIndex]?.href);
 					onClose();
 				}
 			} else if (e.key === 'Escape') {

@@ -53,10 +53,7 @@ const CustomTable: FC<CustomTableProps> = ({
 	);
 
 	const dispatch = useAppDispatch();
-
-	const onUnselect = () => {
-		dispatch(selectAll({ ids: [], isSelected: false }));
-	};
+	const onUnselect = () => dispatch(selectAll({ ids: [], isSelected: false }));
 
 	return (
 		<>

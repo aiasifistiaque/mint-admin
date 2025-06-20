@@ -16,3 +16,5 @@ export { default as getOnChangeHandler } from './getOnChangeHandler';
 
 export { default as formatFieldTitle } from './findFieldTitle';
 export { default as formatFieldNameAdvanced } from './fonrmatFieldNameAdvanced';
+
+export { default as linkRenderOptions } from './linkRenderOptions';

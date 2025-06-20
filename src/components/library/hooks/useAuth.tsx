@@ -17,7 +17,6 @@ const useAuth = (): UseAuthReturnProps => {
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
 			const storedToken = localStorage.getItem(TOKEN_NAME);
-
 			const token = storedToken ? storedToken : null;
 
 			if (token != null) {

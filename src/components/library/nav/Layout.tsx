@@ -1,8 +1,7 @@
 'use client';
 
 import { FC, useEffect, ReactNode } from 'react';
-import { Flex, Heading, useMediaQuery, FlexProps } from '@chakra-ui/react';
-
+import { Flex, Heading, useMediaQuery, FlexProps, HeadingProps } from '@chakra-ui/react';
 import {
 	useIsMobile,
 	AuthWrapper,
@@ -23,6 +22,7 @@ import {
 	navigate,
 	Align,
 	SearchMenu,
+	useGetQuery,
 } from '..';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
@@ -58,9 +58,10 @@ const Layout: FC<LayoutProps> = ({
 	const [isLargerThan800] = useMediaQuery('(min-width: 800px)');
 
 	const type = isLargerThan800 ? (props?.type == 'pos' ? 'pos' : 'default') : 'pos';
-
 	const isMobile = useIsMobile();
 	const showMenu = isMobile || props?.type == 'pos';
+
+	const { data, isFetching, isError } = useGetQuery({ path: `/sidebar/crm/page` });
 
 	return (
 		<AuthWrapper>
@@ -71,22 +72,14 @@ const Layout: FC<LayoutProps> = ({
 					w={showMenu ? 'full' : sizes.HOME_NAV_MAX_WIDTH}
 					left={showMenu ? 0 : sizes.HOME_NAV_LEFT}>
 					<SpaceBetween>
-						<Heading
-							color='inherit'
-							_dark={{
-								color: 'inherit',
-							}}
-							size='md'
-							fontFamily='Bebas Neue'>
-							{title}
-						</Heading>
+						<Heading {...titleCss}>{title}</Heading>
 					</SpaceBetween>
 					<Align gap={4}>
 						<ColorMode
 							size='20px'
 							position='navbar'
 						/>
-						<SearchMenu />
+						{data && <SearchMenu sidebarData={data} />}
 						<SelfMenu />
 						<CreateMenu />
 					</Align>
@@ -131,5 +124,14 @@ const Main = ({ children }: { children: ReactNode }) => (
 		</Column>
 	</Flex>
 );
+
+const titleCss: HeadingProps = {
+	color: 'inherit',
+	_dark: {
+		color: 'inherit',
+	},
+	size: 'md',
+	fontFamily: 'Bebas Neue',
+};
 
 export default Layout;

@@ -1,11 +1,11 @@
 'use client';
-import Attendance from '@/components/attendance/Attendance';
 import {
 	VInput,
 	useCustomToast,
 	useLgoinMutation,
 	useAppDispatch,
 	login,
+	LoginContainer,
 } from '@/components/library';
 
 import React, { FC, ChangeEvent, useState, useEffect } from 'react';
@@ -47,7 +47,7 @@ const LoginPage: FC<{}> = () => {
 	});
 
 	return (
-		<Attendance
+		<LoginContainer
 			title='Login'
 			isLoading={isLoading}
 			handleSubmit={handleSubmit}>
@@ -68,7 +68,7 @@ const LoginPage: FC<{}> = () => {
 				name='password'
 				type='password'
 			/>
-		</Attendance>
+		</LoginContainer>
 	);
 };
 
