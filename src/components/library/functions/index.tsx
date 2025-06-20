@@ -18,3 +18,5 @@ export { default as formatFieldTitle } from './findFieldTitle';
 export { default as formatFieldNameAdvanced } from './fonrmatFieldNameAdvanced';
 
 export { default as linkRenderOptions } from './linkRenderOptions';
+export { default as hasActiveFilters } from './hasActiveFilters';
+export { default as formatFilterKeys } from './formatFIlterKeys';

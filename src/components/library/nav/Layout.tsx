@@ -87,16 +87,13 @@ const Layout: FC<LayoutProps> = ({
 				<Body>
 					{type == 'default' && <Sidebar />}
 					<Flex
+						bg={{ base: 'background.light' }}
+						_dark={{ bg: 'background.dark' }}
 						flexDir='column'
 						w='full'
 						pl={type !== 'default' ? 0 : sizes.HOME_NAV_LEFT}
 						{...props}>
-						<Flex
-							pt={props?.type == 'pos' ? 0 : type == 'pos' ? 12 : sizes.NAV_HEIGHT}
-							flex={1}
-							w='full'>
-							<Main>{!isLoading && children}</Main>
-						</Flex>
+						<Main>{!isLoading && children}</Main>
 					</Flex>
 				</Body>
 				{!hideColorMode && <ColorMode />}
@@ -107,17 +104,18 @@ const Layout: FC<LayoutProps> = ({
 
 const Main = ({ children }: { children: ReactNode }) => (
 	<Flex
+		pt={sizes.NAV_HEIGHT}
 		overflowY='hidden'
 		h={`calc(100vh - ${sizes.NAV_HEIGHT})`}
 		borderTopRightRadius={{ base: `0`, md: THEME == 'basic' ? 0 : 'xl' }}
 		bg={{ base: 'background.light', md: 'background.light' }}
 		_dark={{ bg: 'background.dark', borderTopRightRadius: 0 }}
 		px={PX}
-		pt={{ base: 4, md: 1 }}
+		// pt={{ base: 4, md: 1 }}
 		pb='32px'
 		w='full'>
 		<Column
-			pl={{ base: 0, md: 0 }}
+			pt={{ base: 4, md: 1 }}
 			w='full'
 			gap={4}>
 			{children}

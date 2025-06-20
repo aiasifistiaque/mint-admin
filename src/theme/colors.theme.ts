@@ -7,7 +7,7 @@ const DARK = '#0E0E0E';
 
 const PRIMARY = 'black';
 
-const BORDER_LIGHT = '#e7e7e7';
+const BORDER_LIGHT = '#e4e4e4';
 const BORDER_DARK = '#222';
 
 // const SAGE = '#B5BD89';
@@ -129,7 +129,7 @@ export const colors: any = {
 			light: PRIMARY,
 			dark: '#a1a1a1',
 		},
-		light: '#3D2C42',
+		light: '#222',
 		dark: '#ededed',
 		shade: '#666',
 		200: '#fff',
@@ -231,7 +231,9 @@ export const colors: any = {
 	border: {
 		//light: '#F3F3EF',
 		light: BORDER_LIGHT,
+		secondary_light: '#aeaeae',
 		dark: '#222',
+		secondary_dark: '#5a5a5a',
 	},
 	container: {
 		light: '#fff',
@@ -256,7 +258,7 @@ export const colors: any = {
 		500: '#E0DCE5',
 		600: PRIMARY,
 		700: PRIMARY,
-		800: '#2B2233', //initial bg color of the load of colormode
+		800: 'black', //initial bg color of the load of colormode
 		900: 'green',
 	},
 

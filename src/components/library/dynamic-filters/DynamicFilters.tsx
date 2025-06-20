@@ -12,6 +12,8 @@ import {
 	TextFilter,
 	SelectFilter,
 	useGetFiltersQuery,
+	useAppSelector,
+	hasActiveFilters,
 } from '..';
 import { FilterSectionContainer } from './filter-components';
 
@@ -25,9 +27,8 @@ type FilterItemType = {
 
 const DynamicFilters = ({ path }: { path: any }) => {
 	const dispatch = useAppDispatch();
-
 	const { data, isFetching, isError } = useGetFiltersQuery(path);
-
+	const { filters } = useAppSelector(state => state.table);
 	const handleClearFilter = () => dispatch(clearFilters());
 
 	if (isFetching || isError) return null;
@@ -91,13 +92,17 @@ const DynamicFilters = ({ path }: { path: any }) => {
 					);
 				}
 			})}
-			<Button
-				_dark={{ color: 'text.secondary.dark' }}
-				onClick={handleClearFilter}
-				variant='link'
-				size='xs'>
-				Clear filters
-			</Button>
+			{hasActiveFilters(filters) && (
+				<Button
+					_dark={{ color: 'text.dark' }}
+					onClick={handleClearFilter}
+					variant='link'
+					fontWeight='600'
+					ml={2}
+					size='sm'>
+					Clear filters
+				</Button>
+			)}
 		</FilterSectionContainer>
 	);
 };

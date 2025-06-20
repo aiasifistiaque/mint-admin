@@ -20,13 +20,13 @@ const Filter: FC<FilterProps> = ({ children, isActive = false, onCancel, ...prop
 			bg='table.row.light'
 			borderRadius={radius?.FILTER || 'full'}
 			border='1px solid'
-			borderColor='border.light'
+			borderColor={isActive ? 'border.secondary_light' : 'border.light'}
 			color='gray.600'
 			fontWeight='600'
-			shadow='xs'
+			shadow={isActive ? 'none' : 'sm'}
 			_dark={{
-				borderColor: 'border.dark',
-				color: 'text.secondary.dark',
+				borderColor: isActive ? 'border.secondary_dark' : 'border.dark',
+				color: isActive ? 'text.dark' : 'border.secondary_light',
 				bg: 'table.row.dark',
 			}}
 			size='sm'
@@ -43,9 +43,9 @@ const Filter: FC<FilterProps> = ({ children, isActive = false, onCancel, ...prop
 			)}
 			<TagLabel
 				mx={1}
-				ml={1.5}
+				ml={isActive ? 0.5 : 1.5}
 				fontSize='13px'
-				fontWeight='500'>
+				fontWeight={isActive ? '700' : '400'}>
 				{children}
 			</TagLabel>
 			{isActive && (
