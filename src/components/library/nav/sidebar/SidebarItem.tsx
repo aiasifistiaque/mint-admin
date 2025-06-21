@@ -51,7 +51,7 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 				<Icon
 					color='inherit'
 					name={icon}
-					size={isMobile ? 20 : undefined}
+					size={isMobile ? 20 : 16}
 				/>
 			)}
 
@@ -72,8 +72,8 @@ const bodyTextCss = (isSelected?: boolean): TextProps => {
 			color: isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark',
 		},
 
-		fontSize: { base: '16px', md: '14px' },
-		fontWeight: '600',
+		fontSize: { base: '16px', md: '15px' },
+		fontWeight: isSelected ? '700' : '500',
 	};
 };
 
@@ -81,7 +81,7 @@ const containerCss = (isLoading: boolean, isSelected: boolean, href?: string): F
 	return {
 		borderRadius: radius.CONTAINER,
 		alignItems: 'center',
-		gap: 3,
+		gap: 2.5,
 		px: 2.5,
 		transition: 'all .1s ease-in-out',
 		fontWeight: '600',
@@ -89,7 +89,7 @@ const containerCss = (isLoading: boolean, isSelected: boolean, href?: string): F
 		fontSize: '.9rem',
 		userSelect: 'none',
 		borderWidth: '1px',
-		h: { base: 10, md: 7 },
+		h: { base: 10, md: 8 },
 		borderColor: isSelected ? 'sidebar.selectedItemBorder.light' : 'transparent',
 		bg: isLoading ? 'transparent' : isSelected ? 'sidebar.selectedItemBg.light' : 'transparent',
 		color: isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',

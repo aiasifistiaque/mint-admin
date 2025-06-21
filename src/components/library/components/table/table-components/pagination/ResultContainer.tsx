@@ -22,7 +22,7 @@ const ResultContainer: FC<ResultContainerProps> = ({ data, ...props }) => {
 				...styles.container,
 				left: isMobile ? 0 : sizes.HOME_NAV_LEFT,
 				w: isMobile ? '100vw' : sizes.HOME_NAV_MAX_WIDTH,
-				pb: isMobile ? 4 : 0,
+				// pb: isMobile ? 4 : 0,
 				...props,
 			}}
 			bg='result.bg.light'

@@ -54,8 +54,8 @@ export const buttonTheme = defineStyleConfig({
 			},
 			_dark: {
 				color: '#fafafa',
-				borderColor: '#333',
-				bg: '#171717',
+				borderColor: '#222',
+				bg: '#0A0A0A',
 				_hover: {
 					bg: 'gray.800',
 				},

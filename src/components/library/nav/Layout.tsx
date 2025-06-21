@@ -63,6 +63,8 @@ const Layout: FC<LayoutProps> = ({
 
 	const { data, isFetching, isError } = useGetQuery({ path: `/sidebar/crm/page` });
 
+	const ICON_SIZE = 17;
+
 	return (
 		<AuthWrapper>
 			<LayoutWrapper>
@@ -74,29 +76,31 @@ const Layout: FC<LayoutProps> = ({
 					<SpaceBetween>
 						<Heading {...titleCss}>{title}</Heading>
 					</SpaceBetween>
-					<Align gap={4}>
+					<Align gap={1}>
 						<ColorMode
-							size='20px'
+							size={ICON_SIZE}
 							position='navbar'
 						/>
-						{data && <SearchMenu sidebarData={data} />}
-						<SelfMenu />
-						<CreateMenu />
+						{data && (
+							<SearchMenu
+								sidebarData={data}
+								iconSize={ICON_SIZE}
+							/>
+						)}
+						<SelfMenu iconSize={ICON_SIZE} />
+						{/* <CreateMenu /> */}
 					</Align>
 				</Navbar>
 				<Body>
 					{type == 'default' && <Sidebar />}
 					<Flex
-						bg={{ base: 'background.light' }}
-						_dark={{ bg: 'background.dark' }}
-						flexDir='column'
-						w='full'
+						{...mainContainer}
 						pl={type !== 'default' ? 0 : sizes.HOME_NAV_LEFT}
 						{...props}>
 						<Main>{!isLoading && children}</Main>
 					</Flex>
 				</Body>
-				{!hideColorMode && <ColorMode />}
+				{!hideColorMode && <ColorMode size={ICON_SIZE} />}
 			</LayoutWrapper>
 		</AuthWrapper>
 	);
@@ -104,22 +108,15 @@ const Layout: FC<LayoutProps> = ({
 
 const Main = ({ children }: { children: ReactNode }) => (
 	<Flex
-		pt={sizes.NAV_HEIGHT}
+		pt={{ base: 2, md: 1 }}
+		flexDir='column'
+		gap={4}
 		overflowY='hidden'
 		h={`calc(100vh - ${sizes.NAV_HEIGHT})`}
-		borderTopRightRadius={{ base: `0`, md: THEME == 'basic' ? 0 : 'xl' }}
-		bg={{ base: 'background.light', md: 'background.light' }}
-		_dark={{ bg: 'background.dark', borderTopRightRadius: 0 }}
 		px={PX}
-		// pt={{ base: 4, md: 1 }}
 		pb='32px'
 		w='full'>
-		<Column
-			pt={{ base: 4, md: 1 }}
-			w='full'
-			gap={4}>
-			{children}
-		</Column>
+		{children}
 	</Flex>
 );
 
@@ -130,6 +127,14 @@ const titleCss: HeadingProps = {
 	},
 	size: 'md',
 	fontFamily: 'Bebas Neue',
+};
+
+const mainContainer: FlexProps = {
+	bg: 'background.light',
+	_dark: { bg: 'background.dark' },
+	flexDir: 'column',
+	w: 'full',
+	pt: sizes.NAV_HEIGHT,
 };
 
 export default Layout;

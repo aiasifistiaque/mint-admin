@@ -11,13 +11,19 @@ import {
 	FlexProps,
 	TextProps,
 } from '@chakra-ui/react';
-import { Icon, THEME, radius } from '../';
+import { Icon, MenuIconContainer, THEME, radius } from '../';
 import ModalContentContainer from '../modals/modal-components/ModalContentContainer';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SidebarItemType } from '../config/lib/sidebar/types';
 
-const SearchMenu = ({ sidebarData }: { sidebarData: SidebarItemType[] }) => {
+const SearchMenu = ({
+	sidebarData,
+	iconSize,
+}: {
+	sidebarData: SidebarItemType[];
+	iconSize?: number;
+}) => {
 	const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
 	const [search, setSearch] = useState('');
 
@@ -115,11 +121,13 @@ const SearchMenu = ({ sidebarData }: { sidebarData: SidebarItemType[] }) => {
 			<Flex
 				onClick={onOpen}
 				cursor='pointer'>
-				<Icon
-					name='search'
-					size={24}
-					color={THEME == 'basic' ? 'inherit' : 'white'}
-				/>
+				<MenuIconContainer>
+					<Icon
+						name='search'
+						size={iconSize || 16}
+						color={THEME == 'basic' ? 'inherit' : 'white'}
+					/>
+				</MenuIconContainer>
 			</Flex>
 
 			<Modal

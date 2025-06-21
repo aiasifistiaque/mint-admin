@@ -2,11 +2,18 @@
 
 import { Center, useColorMode } from '@chakra-ui/react';
 import { IoSunnyOutline, IoMoonOutline } from 'react-icons/io5';
+import { MenuIconContainer } from '../../menu';
 
-const ColorMode = ({ position, size }: { position?: 'navbar' | 'absolute'; size?: string }) => {
+const ColorMode = ({
+	position,
+	size,
+}: {
+	position?: 'navbar' | 'absolute';
+	size?: string | number;
+}) => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
-	const SIZE = size || '24px';
+	const SIZE = size || '14px';
 
 	const icon =
 		colorMode === 'light' ? <IoMoonOutline size={SIZE} /> : <IoSunnyOutline size={SIZE} />;
@@ -16,11 +23,9 @@ const ColorMode = ({ position, size }: { position?: 'navbar' | 'absolute'; size?
 	if (!position) return null;
 
 	return (
-		<Center
-			sx={style}
-			onClick={toggleColorMode}>
-			{icon}
-		</Center>
+		<MenuIconContainer onClick={toggleColorMode}>
+			<Center sx={style}>{icon}</Center>
+		</MenuIconContainer>
 	);
 };
 

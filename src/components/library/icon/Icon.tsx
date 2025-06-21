@@ -18,6 +18,7 @@ import {
 	LuAlignStartVertical,
 	LuAlignVerticalJustifyCenter,
 	LuImagePlus,
+	LuSettings2,
 } from 'react-icons/lu';
 import { DiNpm } from 'react-icons/di';
 
@@ -34,6 +35,7 @@ import {
 	FaMapMarkerAlt,
 	FaGitSquare,
 	FaFacebookSquare,
+	FaRegUser,
 } from 'react-icons/fa';
 
 import { RiSettings3Fill, RiDiscountPercentFill, RiDeleteBinLine } from 'react-icons/ri';
@@ -53,6 +55,7 @@ import {
 	CiTextAlignJustify,
 	CiTextAlignLeft,
 	CiTextAlignRight,
+	CiUser,
 } from 'react-icons/ci';
 import { GrSubtract, GrEdit } from 'react-icons/gr';
 import { SiCkeditor4, SiGoogleanalytics } from 'react-icons/si';
@@ -84,6 +87,7 @@ import {
 	IoBagOutline,
 	IoGridOutline,
 	IoSearchOutline,
+	IoLogOutOutline,
 } from 'react-icons/io5';
 
 import {
@@ -101,7 +105,7 @@ import {
 	FaIdCardClip,
 	FaFileCode,
 } from 'react-icons/fa6';
-import { GoListUnordered, GoHomeFill } from 'react-icons/go';
+import { GoListUnordered, GoHomeFill, GoArrowUpRight } from 'react-icons/go';
 import {
 	HiMiniRocketLaunch,
 	HiMiniDevicePhoneMobile,
@@ -119,8 +123,8 @@ import {
 	GiDiscussion,
 	GiAutoRepair,
 } from 'react-icons/gi';
-import { PiUserListFill, PiArticleMediumFill } from 'react-icons/pi';
-import { AiOutlineThunderbolt } from 'react-icons/ai';
+import { PiUserListFill, PiArticleMediumFill, PiEyeLight } from 'react-icons/pi';
+import { AiOutlineDelete, AiOutlineThunderbolt } from 'react-icons/ai';
 
 import {
 	BiSolidCategory,
@@ -132,7 +136,7 @@ import {
 
 import { RxSpaceBetweenHorizontally, RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import iconOptionsArrayData from './iconOptionsArrayData';
-import { FiFilter } from 'react-icons/fi';
+import { FiEdit, FiFilter, FiUser } from 'react-icons/fi';
 
 export type IconNameOptions = (typeof iconOptionsArrayData)[number];
 
@@ -158,6 +162,7 @@ const icons: any = {
 	invoice: FaFileInvoiceDollar,
 	author: FaPenAlt,
 	blog: PiArticleMediumFill,
+	logout: IoLogOutOutline,
 	views: SiGoogleanalytics,
 	analytics: SiGoogleanalytics,
 	filter: FiFilter,
@@ -188,6 +193,9 @@ const icons: any = {
 	dashboard: MdSpaceDashboard,
 	date: BsCalendar2Date,
 	delete: MdDelete,
+	'view-outline': PiEyeLight,
+	'arrow-angle': GoArrowUpRight,
+	'delete-outline': AiOutlineDelete,
 	'delete-builder': RiDeleteBinLine,
 	delivery: TbTruckDelivery,
 	'delivery-fill': FaTruck,
@@ -197,6 +205,7 @@ const icons: any = {
 	dots: BsThreeDots,
 	download: TbDownload,
 	edit: MdOutlineEdit,
+	'edit-outline': FiEdit,
 	'edit-builder': GrEdit,
 	envelope: FaRegEnvelope,
 	expense: FaMoneyCheckDollar,
@@ -226,6 +235,7 @@ const icons: any = {
 	'rating-fill': IoIosStar,
 	'rating-outline': CiStar,
 	redo: HiArrowUturnRight,
+	'user-outline': FiUser,
 	report: BiSolidReport,
 	return: GiReturnArrow,
 	role: FaUnlockKeyhole,
@@ -233,6 +243,7 @@ const icons: any = {
 	select: TbSelector,
 	settings: TbSettings,
 	'settings-fill': RiSettings3Fill,
+	config: LuSettings2,
 	shop: IoStorefront,
 	staff: FaPeopleGroup,
 	store: IoStorefront,

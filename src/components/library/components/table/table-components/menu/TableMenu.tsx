@@ -99,23 +99,26 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 							return (
 								<CreateModal
 									{...commonProps}
+									isMenu
+									icon='edit-outline'
 									data={item?.dataModel}
 									title='Edit'
 									type='update'
-									trigger={<MenuItem>{item?.title}</MenuItem>}
 									layout={item?.layout}
-									item={item}
-								/>
+									item={item}>
+									{item?.title}
+								</CreateModal>
 							);
 
 						case 'edit-server-modal':
 							return (
 								<CreateModal
 									{...commonProps}
+									isMenu
 									data={schemaData?.form}
 									title='Update'
 									type='update'
-									trigger={<MenuItem>{item?.title}</MenuItem>}
+									trigger={item?.title}
 									layout={item?.layout}
 									item={item}
 								/>
@@ -124,20 +127,20 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 						case 'view':
 							return (
 								<Link
-									style={{ backgroundColor: 'inherit' }}
+									as={MenuItem as any}
 									key={i}
 									href={`/${path}/${id}`}>
-									<MenuItem>{item?.title}</MenuItem>
+									{item?.title}
 								</Link>
 							);
 						case 'view-item':
 							return (
-								<Link
-									style={{ backgroundColor: 'inherit' }}
+								<MenuItem
+									icon='arrow-angle'
 									key={i}
 									href={`/view/${path}/${id}`}>
-									<MenuItem>{item?.title}</MenuItem>
-								</Link>
+									{item?.title}
+								</MenuItem>
 							);
 
 						case 'delete':

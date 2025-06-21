@@ -2,36 +2,39 @@
 import {
 	Menu,
 	MenuButton,
-	IconButton,
 	MenuGroup,
 	Heading,
 	Tag,
 	MenuItem,
 	MenuDivider,
+	Center,
+	useColorModeValue,
 } from '@chakra-ui/react';
 import CustomMenuItem from './CustomMenuItem';
+import { MenuIconContainer } from '.';
 
 import { Icon, useAppDispatch, MenuContainer, THEME, logout, useGetSelfQuery } from '..';
 
-const SelfMenu = () => {
+const SelfMenu = ({ iconSize }: { iconSize?: number }) => {
 	const { data, isFetching, isError, error, isSuccess } = useGetSelfQuery({});
 	const dispatch = useAppDispatch();
 	const handleLogout = () => {
 		dispatch(logout());
 	};
+	const red = useColorModeValue('red.500', 'red.300');
 	return (
 		<Menu>
-			<MenuButton
-				as={IconButton}
-				{...menuBtnCss}
-				icon={
+			{/* <MenuButton as={MenuIconContainer}> */}
+			<MenuIconContainer as={MenuButton}>
+				<Center>
 					<Icon
 						color='inherit'
-						name='settings'
-						size={24}
+						name='user-outline'
+						size={iconSize || 16}
 					/>
-				}
-			/>
+				</Center>
+			</MenuIconContainer>
+			{/* </MenuButton> */}
 
 			<MenuContainer>
 				<MenuGroup>
@@ -45,11 +48,21 @@ const SelfMenu = () => {
 					</MenuItem>
 				</MenuGroup>
 				<MenuDivider />
-				<CustomMenuItem href='/settings'>Settings</CustomMenuItem>
-				<MenuDivider />
-				<MenuGroup>
-					<CustomMenuItem onClick={handleLogout}>Logout</CustomMenuItem>
-				</MenuGroup>
+				<CustomMenuItem
+					icon='config'
+					href='/settings'>
+					Settings
+				</CustomMenuItem>
+				{/* <MenuDivider /> */}
+				{/* <MenuGroup> */}
+				<CustomMenuItem
+					color={red}
+					_dark={{ color: 'red.300' }}
+					icon='logout'
+					onClick={handleLogout}>
+					Logout
+				</CustomMenuItem>
+				{/* </MenuGroup> */}
 			</MenuContainer>
 		</Menu>
 	);

@@ -9,7 +9,9 @@ type MenuContainerProps = MenuListProps & {
 const MenuContainer: FC<MenuContainerProps> = ({ children, ...props }) => {
 	return (
 		<MenuList
-			boxShadow='xl'
+			boxShadow='md'
+			p={1.5}
+			gap={2}
 			borderRadius={radius?.MENU}
 			bg='menu.light'
 			borderColor='container.borderLight'

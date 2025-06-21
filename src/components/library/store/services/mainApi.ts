@@ -16,6 +16,10 @@ const tags = [
 	'subscriptions',
 	'newsletters',
 	'auth',
+	'/sidebar/crm/page',
+	'schema',
+	'self',
+	'config',
 ];
 
 export const mainApi = createApi({

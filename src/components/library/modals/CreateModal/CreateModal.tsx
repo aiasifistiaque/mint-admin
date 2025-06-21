@@ -21,6 +21,7 @@ import {
 	useGetSchemaQuery,
 	convertToFormFields,
 	createFormFields,
+	MenuItem,
 } from '../..';
 
 import CreateModalProps from './types';
@@ -33,12 +34,14 @@ const CreateModal = (props: CreateModalProps) => {
 		title,
 		type,
 		id,
+		isMenu,
 		invalidate,
 		children,
 		doc,
 		prompt,
 		populate,
 		layout,
+		icon,
 	} = props;
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -180,7 +183,15 @@ const CreateModal = (props: CreateModalProps) => {
 
 	return (
 		<>
-			<Flex onClick={onModalOpen}>{children || trigger || title || path}</Flex>
+			{isMenu ? (
+				<MenuItem
+					icon={icon}
+					onClick={onModalOpen}>
+					{children || trigger || title || path}
+				</MenuItem>
+			) : (
+				<Flex onClick={onModalOpen}>{children || trigger || title || path}</Flex>
+			)}
 
 			<Dialog
 				isOpen={isOpen}

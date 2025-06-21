@@ -11,7 +11,7 @@ const MenuButton = () => {
 			borderWidth={1}
 			borderRadius={radius?.BUTTON}
 			_dark={{
-				borderWidth: 0,
+				borderColor: 'border.dark',
 			}}
 			_light={{
 				borderColor: 'container.borderLight',

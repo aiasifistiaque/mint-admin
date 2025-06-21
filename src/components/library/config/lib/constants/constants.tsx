@@ -22,7 +22,7 @@ export const currency = {
 	symbol: '৳',
 };
 
-const BASE_SIDEBAR_WIDTH = '240px';
+const BASE_SIDEBAR_WIDTH = '230px';
 const BASE_SIDEBAR_WIDTH_SMALL = '20PX';
 
 export const BODY_PT = '72px';
@@ -73,7 +73,9 @@ export const zIndex = {
 export const radius = {
 	CONTAINER: '4px',
 	MODAL: '8px',
-	MENU: '6px',
+	MENU: '10px',
+	MENU_INNER: '6px',
+
 	BUTTON: '4px',
 	INPUT: '4px',
 	SELECT_CONTAINER: '6px',

@@ -6,6 +6,8 @@ import {
 	AlertDialogFooter,
 	AlertDialogOverlay,
 	Button,
+	useColorMode,
+	useColorModeValue,
 	useDisclosure,
 } from '@chakra-ui/react';
 import { useEffect, FC, useRef } from 'react';
@@ -73,10 +75,14 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({ title, path, id, item }) =>
 		item?.prompt?.body ||
 		"Are you sure you want to delete this item? You can't undo this action afterwards.";
 
+	const redColor = useColorModeValue('red.500', 'red.300');
+
 	return (
 		<>
 			<MenuItem
-				color='red'
+				color={redColor}
+				_dark={{ color: 'red.300' }}
+				icon='delete-outline'
 				onClick={onOpen}>
 				{title || 'Delete'}
 			</MenuItem>

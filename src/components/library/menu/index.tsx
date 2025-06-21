@@ -9,3 +9,4 @@ export { default as ModalMenuItem } from './ModalMenuItem';
 export { default as ModalMenuTrigger } from './ModalMenuTrigger';
 
 export { default as SearchMenu } from './SearchMenu';
+export { default as MenuIconContainer } from './MenuIconContainer';

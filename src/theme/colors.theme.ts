@@ -73,7 +73,7 @@ export const colors: any = {
 		light: 'transparent',
 		//light: '#fff',
 		dark: 'transparent',
-		deepL: '#e7e7e7',
+		deepL: '#ebebeb',
 		deepD: 'transparent',
 	},
 	pos: {
@@ -109,7 +109,7 @@ export const colors: any = {
 			textLight: PRIMARY,
 			textDark: '#fafafa',
 			bgLight: '#fff',
-			bgDark: 'transparent',
+			bgDark: '#0A0A0A',
 			hoverLight: '#583D60',
 			hoverDark: '#222',
 		},
@@ -126,7 +126,7 @@ export const colors: any = {
 			dark: '#fafafa',
 		},
 		secondary: {
-			light: PRIMARY,
+			light: '#666',
 			dark: '#a1a1a1',
 		},
 		light: '#222',
@@ -151,11 +151,11 @@ export const colors: any = {
 			dark: '#0a0a0a',
 		},
 		borderBottom: {
-			light: '#e7e7e7',
+			light: '#ebebeb',
 			dark: BORDER_DARK,
 		},
 		selectedItemBorder: {
-			light: '#e7e7e7',
+			light: '#ebebeb',
 			dark: '#222',
 		},
 		selectedItemBg: {
@@ -176,7 +176,7 @@ export const colors: any = {
 		bodyText: {
 			// light: '#111',
 			// dark: '#fafafa',
-			light: '#222',
+			light: '#666',
 			dark: '#a1a1a1',
 			headingLight: '#222',
 			headingDark: '#a1a1a1',
@@ -187,7 +187,7 @@ export const colors: any = {
 		//dark: DARK,
 
 		darker: '#121212',
-		hoverLight: '#e7e7e7',
+		hoverLight: '#ebebeb',
 		hoverDark: '#141414',
 		headingBorderDark: BORDER_DARK,
 	},
@@ -214,17 +214,17 @@ export const colors: any = {
 		400: BLACK,
 		text: {
 			light: '#222',
-			dark: '#e7e7e7',
+			dark: '#ebebeb',
 		},
 		light: 'rgba(255, 255, 255, 0.4)',
 		blurLight: 'rgba(255, 255, 255, 0.4)',
 		blurDark: 'rgba(0, 0, 0, 1)',
 		dark: '#0A0A0A',
 		800: BLACK,
-		borderBottomLight: '#e7e7e7',
+		borderBottomLight: '#ebebeb',
 		borderBottomDark: BORDER_DARK,
 		border: {
-			light: '#e7e7e7',
+			light: '#ebebeb',
 			dark: '#222',
 		},
 	},
@@ -284,15 +284,15 @@ export const colors: any = {
 			dark: '#0A0A0A',
 		},
 		cardBorder: {
-			light: '#e7e7e7',
+			light: '#ebebeb',
 			dark: BORDER_DARK,
 		},
 		innerBorder: {
-			light: '#e7e7e7',
+			light: '#ebebeb',
 			dark: BORDER_DARK,
 		},
 		outerBorder: {
-			light: '#e7e7e7',
+			light: '#ebebeb',
 			dark: BORDER_DARK,
 		},
 		head: {
@@ -305,7 +305,7 @@ export const colors: any = {
 		},
 	},
 	selectBorder: {
-		light: '#e7e7e7',
+		light: '#ebebeb',
 		dark: BORDER_DARK,
 	},
 	//ecom-commers
@@ -321,7 +321,7 @@ export const colors: any = {
 		600: '#202020',
 	},
 	eborder: {
-		light: '#e7e7e7',
+		light: '#ebebeb',
 		dark: BORDER_DARK,
 	},
 };
