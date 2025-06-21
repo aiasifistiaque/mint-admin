@@ -115,6 +115,7 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 								<CreateModal
 									{...commonProps}
 									isMenu
+									icon='edit-outline'
 									data={schemaData?.form}
 									title='Update'
 									type='update'

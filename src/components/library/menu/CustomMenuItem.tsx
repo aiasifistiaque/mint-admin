@@ -44,7 +44,7 @@ const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, icon, href, ...prop
 				<Flex
 					w='full'
 					// justify='space-between'
-					gap={1.5}
+					gap={2}
 					align='center'>
 					{icon && (
 						<Icon

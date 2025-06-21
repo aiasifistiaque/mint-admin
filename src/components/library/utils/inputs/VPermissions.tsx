@@ -1,7 +1,15 @@
 'use client';
 import { FC } from 'react';
-import { InputProps, Checkbox, Grid } from '@chakra-ui/react';
-import { Column, FormControl } from '../..';
+import {
+	InputProps,
+	Checkbox,
+	Grid,
+	Flex,
+	GridProps,
+	FlexProps,
+	CheckboxProps,
+} from '@chakra-ui/react';
+import { useGetQuery } from '../..';
 
 type VDataMenuProps = InputProps & {
 	label: string;
@@ -25,10 +33,13 @@ const VPermissions: FC<VDataMenuProps> = ({
 	options,
 	...props
 }) => {
+	const { data, isFetching } = useGetQuery({ path: 'permissionlist' });
 	const addPermission = (item: string, isChecked: boolean) => {
+		const currentValue = value || [];
+
 		if (isChecked) {
-			if (value && !value.includes(item)) {
-				const newArr = [...value, item];
+			if (!currentValue.includes(item)) {
+				const newArr = [...currentValue, item];
 				if (props.onChange) {
 					const event = {
 						target: {
@@ -40,7 +51,7 @@ const VPermissions: FC<VDataMenuProps> = ({
 				}
 			}
 		} else {
-			const newArr = value && value?.length > 0 ? value?.filter((tag: string) => tag !== item) : [];
+			const newArr = currentValue.filter((tag: string) => tag !== item);
 			if (props.onChange) {
 				const event = {
 					target: {
@@ -53,34 +64,134 @@ const VPermissions: FC<VDataMenuProps> = ({
 		}
 	};
 
-	const renderMenuItems = options?.map((item: any, i: number) => (
-		<Checkbox
-			key={i}
-			defaultChecked={value?.includes(item?.value)}
-			id={item?.value}
-			onChange={(e: any) => addPermission(item?.value, e.target.checked)}
-			size='md'
-			colorScheme='brand'>
-			{item?.label}
-		</Checkbox>
-	));
+	// Handle "select all" checkbox for a permission group
+	const handleSelectAllChange = (item: any, isChecked: boolean) => {
+		const fieldValues = item.fields.map((field: any) => field.value);
+		let updatedPermissions: string[];
+		const currentValue = value || [];
+
+		if (isChecked) {
+			// Add all field values that aren't already selected
+			const newPermissions = fieldValues.filter((val: any) => !currentValue.includes(val));
+			updatedPermissions = [...currentValue, ...newPermissions];
+		} else {
+			// Remove all field values for this group
+			updatedPermissions = currentValue.filter(
+				(permission: any) => !fieldValues.includes(permission)
+			);
+		}
+		if (props?.onChange) {
+			const event = {
+				target: {
+					name: props.name,
+					value: updatedPermissions,
+				},
+			} as any;
+
+			props.onChange(event);
+		}
+	};
+
+	// Check if all fields in a group are selected
+	const areAllFieldsSelected = (item: any): boolean => {
+		return item.fields.every((field: any) => value?.includes(field.value));
+	};
+
+	// Check if some (but not all) fields in a group are selected
+	const areSomeFieldsSelected = (item: any): boolean => {
+		const selectedCount = item.fields.filter((field: any) => value?.includes(field.value)).length;
+		return selectedCount > 0 && selectedCount < item.fields.length;
+	};
 
 	return (
-		<Column>
-			<FormControl
-				isRequired={isRequired}
-				helper={helper}
-				label={label}>
-				<Grid
-					rowGap={2}
-					gridTemplateColumns='1fr 1fr 1fr 1fr'
-					w='100%'
-					overflowY='scroll'>
-					{renderMenuItems}
-				</Grid>
-			</FormControl>
-		</Column>
+		<Grid {...containerGridCss}>
+			{data &&
+				data?.map((item: any, i: number) => (
+					<Flex
+						{...sectionColumnCss}
+						key={i}>
+						<Checkbox
+							isChecked={areAllFieldsSelected(item)}
+							isIndeterminate={areSomeFieldsSelected(item)}
+							onChange={e => handleSelectAllChange(item, e.target.checked)}
+							{...titleCheckboxCss}>
+							{item?.title}
+						</Checkbox>
+						<Grid {...itemGridCss}>
+							{item?.fields?.map((field: any, j: number) => (
+								<ItemCheckbox
+									key={j}
+									isSelected={value?.includes(field?.value)}
+									id={field?.value}
+									onChange={(e: any) => addPermission(field?.value, e.target.checked)}>
+									{field?.label}
+								</ItemCheckbox>
+							))}
+						</Grid>
+					</Flex>
+				))}
+		</Grid>
 	);
+};
+
+const ItemCheckbox = ({ isSelected, children, ...props }: any) => (
+	<Checkbox
+		{...itemCheckboxCss(isSelected)}
+		isChecked={isSelected}
+		{...props}>
+		{children} {isSelected ? '(+)' : ''}
+	</Checkbox>
+);
+
+const itemCheckboxCss = (isSelected: boolean): CheckboxProps => {
+	return {
+		px: 3,
+		py: 1.5,
+		borderRadius: 'full',
+		border: '1px solid',
+		size: 'sm',
+		colorScheme: 'brand',
+		fontWeight: isSelected ? '600' : '400',
+		borderColor: isSelected ? 'brand.500' : 'border.light',
+		bg: isSelected ? 'background.light' : 'transparent',
+		_dark: {
+			borderColor: isSelected ? 'border.light' : 'border.dark',
+			bg: isSelected ? 'background.dark' : 'transparent',
+		},
+	};
+};
+
+const containerGridCss: GridProps = {
+	rowGap: 4,
+	columnGap: 4,
+	gridTemplateColumns: { base: '1fr', md: '1fr 1fr' },
+	w: '100%',
+};
+
+const sectionColumnCss: FlexProps = {
+	p: 4,
+	gap: 3,
+	flexDir: 'column',
+	border: '1px solid',
+	borderColor: 'border.light',
+	_dark: {
+		borderColor: 'border.dark',
+	},
+	borderRadius: 'md',
+};
+
+const titleCheckboxCss: CheckboxProps = {
+	colorScheme: 'brand',
+	size: 'md',
+	fontSize: '16px',
+	fontWeight: '500',
+};
+
+const itemGridCss: GridProps = {
+	gridTemplateColumns: { md: '1fr 1fr' },
+	rowGap: 2,
+	columnGap: 2,
+	w: '100%',
 };
 
 export default VPermissions;
