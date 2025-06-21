@@ -109,6 +109,10 @@ const VPermissions: FC<VDataMenuProps> = ({
 				data?.map((item: any, i: number) => (
 					<Flex
 						{...sectionColumnCss}
+						borderColor={areAllFieldsSelected(item) ? 'brand.500' : 'border.light'}
+						_dark={{
+							borderColor: areAllFieldsSelected(item) ? 'border.light' : 'border.dark',
+						}}
 						key={i}>
 						<Checkbox
 							isChecked={areAllFieldsSelected(item)}
@@ -177,7 +181,7 @@ const sectionColumnCss: FlexProps = {
 	_dark: {
 		borderColor: 'border.dark',
 	},
-	borderRadius: 'md',
+	borderRadius: 'lg',
 };
 
 const titleCheckboxCss: CheckboxProps = {
@@ -188,7 +192,7 @@ const titleCheckboxCss: CheckboxProps = {
 };
 
 const itemGridCss: GridProps = {
-	gridTemplateColumns: { md: '1fr 1fr' },
+	gridTemplateColumns: '1fr 1fr',
 	rowGap: 2,
 	columnGap: 2,
 	w: '100%',
