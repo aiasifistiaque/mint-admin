@@ -125,13 +125,16 @@
 
 // export default SettingsPage;
 
-import Layout from '@/components/layout/Layout';
-import Icon from '@/components/library/icon/Icon';
-import { useGetSelfQuery, useUpdateSelfMutation } from '@/store/services/authApi';
+import {
+	Layout,
+	Icon,
+	useGetSelfQuery,
+	useUpdateSelfMutation,
+	useCustomToast,
+	Details,
+} from '@/components/library';
 import { Button, Flex, Heading } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-
-import { useCustomToast, Details } from '@/components/library';
 
 const SettingsPage = () => {
 	const { data, isFetching } = useGetSelfQuery({});

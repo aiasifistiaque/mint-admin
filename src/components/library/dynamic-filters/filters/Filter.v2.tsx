@@ -37,7 +37,7 @@ const Filter: FC<FilterProps> = ({ children, isActive = false, onCancel, ...prop
 			{!isActive && (
 				<Icon
 					color={iconColor}
-					name='filter'
+					name='config'
 					size={14}
 				/>
 			)}

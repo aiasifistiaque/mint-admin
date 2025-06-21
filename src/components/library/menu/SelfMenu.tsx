@@ -40,11 +40,11 @@ const SelfMenu = ({ iconSize }: { iconSize?: number }) => {
 				<MenuGroup>
 					<MenuItem {...menuItemCss}>
 						<Heading
-							size='sm'
+							size='xs'
 							mb={2}>
 							{data?.name}
 						</Heading>
-						<Tag>{data?.role?.name}</Tag>
+						<Tag size='sm'>Role: {data?.role?.name}</Tag>
 					</MenuItem>
 				</MenuGroup>
 				<MenuDivider />
