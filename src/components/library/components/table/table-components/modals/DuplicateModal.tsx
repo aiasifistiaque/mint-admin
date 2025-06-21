@@ -51,7 +51,11 @@ const DuplicateModal: FC<DeleteItemModalProps> = ({ title, path, id }) => {
 
 	return (
 		<>
-			<MenuItem onClick={onOpen}>Make Copy</MenuItem>
+			<MenuItem
+				onClick={onOpen}
+				icon='duplicate'>
+				Make Copy
+			</MenuItem>
 
 			<AlertDialog
 				isOpen={isOpen}

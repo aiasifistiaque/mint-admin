@@ -29,6 +29,10 @@ const VCheckbox: FC<InputContainerProps> = ({
 				w='full'>
 				<Label>{label}</Label>
 				<Checkbox
+					size='lg'
+					fontSize='18px'
+					textTransform='capitalize'
+					fontWeight='600'
 					isChecked={value}
 					colorScheme='brand'
 					{...props}>

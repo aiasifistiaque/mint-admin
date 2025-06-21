@@ -69,7 +69,13 @@ const ViewItemModal: FC<Props> = ({ title, path, trigger, id }) => {
 		if (trigger) {
 			return <Flex onClick={onOpen}>{trigger}</Flex>;
 		} else {
-			return <MenuItem onClick={onOpen}>{title || 'View'}</MenuItem>;
+			return (
+				<MenuItem
+					icon='view-outline'
+					onClick={onOpen}>
+					{title || 'View'}
+				</MenuItem>
+			);
 		}
 	};
 

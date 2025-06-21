@@ -7,7 +7,7 @@ const InputElement = ({ ...props }: InputProps) => {
 		<Input
 			size='sm'
 			px={3}
-			borderRadius='lg'
+			borderRadius='md'
 			focusBorderColor={borderColor}
 			color='text.500'
 			_dark={{

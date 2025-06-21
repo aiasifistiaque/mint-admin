@@ -176,7 +176,7 @@ export const colors: any = {
 		bodyText: {
 			// light: '#111',
 			// dark: '#fafafa',
-			light: '#666',
+			light: '#4a4a4a',
 			dark: '#a1a1a1',
 			headingLight: '#222',
 			headingDark: '#a1a1a1',

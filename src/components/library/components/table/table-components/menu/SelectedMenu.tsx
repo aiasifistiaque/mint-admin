@@ -37,6 +37,7 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 						title: item?.title,
 						prompt: item?.prompt,
 						keyType: item?.keyType,
+						icon: item?.icon,
 					};
 
 					switch (item.type) {

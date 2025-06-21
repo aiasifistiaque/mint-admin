@@ -111,6 +111,10 @@ type OtherMenuItem = BaseItem & {
 	 * An optional value associated with the menu item.
 	 */
 	value?: any;
+	/**
+	 * An optional icon associated with the menu item.
+	 */
+	icon?: string;
 };
 
 /**

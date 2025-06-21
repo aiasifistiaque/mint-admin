@@ -19,8 +19,8 @@ const MenuButton = () => {
 			}}
 			icon={
 				<Icon
-					name={isMobile ? 'dots' : 'settings'}
-					size={isMobile ? 20 : 12}
+					name={isMobile ? 'dots' : 'config'}
+					size={isMobile ? 20 : 16}
 				/>
 			}
 			colorScheme='gray'

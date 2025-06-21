@@ -16,7 +16,7 @@ import {
 	MenuItem,
 } from '../../..';
 
-const ExportManyModal = ({ path, ids }: { path: string; ids: string[] }) => {
+const ExportManyModal = ({ path, ids, icon }: { path: string; ids: string[]; icon?: string }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { fields = [], preferences = [] } = useAppSelector(state => state.table);
 	const [selected, setSelected] = useState<string[]>([]);
@@ -72,7 +72,11 @@ const ExportManyModal = ({ path, ids }: { path: string; ids: string[] }) => {
 
 	return (
 		<>
-			<MenuItem onClick={onOpen}>Export Selected</MenuItem>
+			<MenuItem
+				onClick={onOpen}
+				icon='export-doc'>
+				Export Selected
+			</MenuItem>
 
 			<MenuModal
 				isOpen={isOpen}
@@ -93,13 +97,9 @@ const ExportManyModal = ({ path, ids }: { path: string; ids: string[] }) => {
 						<Text color='red'>Please select at least 2 fields</Text>
 					) : (
 						<>
-							<DiscardButton
-								mr={2}
-								onClick={closeModal}>
-								Discard
-							</DiscardButton>
+							<DiscardButton onClick={closeModal}>Discard</DiscardButton>
 							<Button
-								size='xs'
+								size='sm'
 								onClick={handleSubmit}
 								isLoading={result?.isLoading}>
 								Export

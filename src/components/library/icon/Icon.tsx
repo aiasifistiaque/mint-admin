@@ -3,8 +3,13 @@ import React, { FC } from 'react';
 import {
 	BsBuildingsFill,
 	BsCalendar2Date,
+	BsCardChecklist,
+	BsCart3,
 	BsCollectionFill,
+	BsEnvelopeAt,
 	BsFillUnlockFill,
+	BsShop,
+	BsTextareaT,
 	BsThreeDots,
 } from 'react-icons/bs';
 import { useColorModeValue } from '@chakra-ui/react';
@@ -38,7 +43,12 @@ import {
 	FaRegUser,
 } from 'react-icons/fa';
 
-import { RiSettings3Fill, RiDiscountPercentFill, RiDeleteBinLine } from 'react-icons/ri';
+import {
+	RiSettings3Fill,
+	RiDiscountPercentFill,
+	RiDeleteBinLine,
+	RiEditLine,
+} from 'react-icons/ri';
 import { TiPrinter } from 'react-icons/ti';
 import {
 	IoMdBarcode,
@@ -47,6 +57,7 @@ import {
 	IoIosHome,
 	IoIosAddCircleOutline,
 	IoIosStar,
+	IoIosOptions,
 } from 'react-icons/io';
 import {
 	CiMenuBurger,
@@ -76,7 +87,7 @@ import {
 	MdAlignHorizontalLeft,
 	MdAlignHorizontalRight,
 } from 'react-icons/md';
-import { HiOutlineFilter, HiUserGroup } from 'react-icons/hi';
+import { HiOutlineDocumentDuplicate, HiOutlineFilter, HiUserGroup } from 'react-icons/hi';
 // import { IoMdBarcode } from 'react-icons/io';
 
 import {
@@ -149,11 +160,11 @@ type IconProps = {
 const icons: any = {
 	// dashboard: MdSpaceDashboard,
 	// role: BsFillUnlockFill,
-	purchase: FaCartShopping,
+	purchase: BsCart3,
 	mainteinance: GiAutoRepair,
 	project: FaFileCode,
 	repo: FaGitSquare,
-	email: MdEmail,
+	email: BsEnvelopeAt,
 	facebook: FaFacebookSquare,
 	document: FaFileLines,
 	employee: FaIdCardClip,
@@ -235,16 +246,20 @@ const icons: any = {
 	'rating-fill': IoIosStar,
 	'rating-outline': CiStar,
 	redo: HiArrowUturnRight,
+	issue: BsCardChecklist,
+	'update-key': RiEditLine,
 	'user-outline': FiUser,
+	duplicate: HiOutlineDocumentDuplicate,
 	report: BiSolidReport,
 	return: GiReturnArrow,
 	role: FaUnlockKeyhole,
 	search: IoSearchOutline,
 	select: TbSelector,
 	settings: TbSettings,
+	options: IoIosOptions,
 	'settings-fill': RiSettings3Fill,
 	config: LuSettings2,
-	shop: IoStorefront,
+	shop: BsShop,
 	staff: FaPeopleGroup,
 	store: IoStorefront,
 	subtract: GrSubtract,

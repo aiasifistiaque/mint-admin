@@ -40,6 +40,7 @@ const Headers = ({ tableData, fields, selectable, isLoading, data, showMenu }: H
 			{selectable && (
 				<Title w='5px'>
 					<Checkbox
+						size='lg'
 						isChecked={checked}
 						onChange={handleSelectAll}
 						colorScheme='brand'

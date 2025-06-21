@@ -72,7 +72,7 @@ const bodyTextCss = (isSelected?: boolean): TextProps => {
 			color: isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark',
 		},
 
-		fontSize: { base: '16px', md: '15px' },
+		fontSize: { base: '16px', md: '14px' },
 		fontWeight: isSelected ? '700' : '500',
 	};
 };

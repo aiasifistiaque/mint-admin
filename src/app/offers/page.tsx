@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { NextPage } from 'next';
-import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
+import { BackendPageTable, BackendTableObjectProps } from '@/components/library';
 import { formFields, fields, tableFields } from './config';
 
 const table: BackendTableObjectProps = {
@@ -16,6 +16,11 @@ const table: BackendTableObjectProps = {
 	},
 	fields: tableFields,
 
+	select: {
+		show: true,
+		menu: [{ type: 'export', title: 'Export Selected' }],
+	},
+
 	menu: [
 		{ type: 'view-modal', title: 'View', fields },
 		{ type: 'view-item', title: 'Go To Post' },
@@ -24,6 +29,21 @@ const table: BackendTableObjectProps = {
 			type: 'edit-modal',
 			title: 'Edit',
 			layout: formFields,
+		},
+
+		{
+			type: 'update-key',
+			title: 'Update Priority',
+			keyType: 'number',
+			key: 'priority',
+			prompt: {
+				title: 'Update Priority',
+				body: 'Enter the new priority value for this item.',
+			},
+		},
+		{
+			type: 'duplicate',
+			title: 'Make Copy',
 		},
 
 		{ type: 'delete', title: 'Delete' },

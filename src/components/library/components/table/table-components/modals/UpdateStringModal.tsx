@@ -36,9 +36,10 @@ type UpdateKeyProps = {
 		prompt?: PromptType;
 	};
 	doc?: any;
+	icon?: string;
 };
 
-const UpdateStringModal: FC<UpdateKeyProps> = ({ item, doc, id, path, type }) => {
+const UpdateStringModal: FC<UpdateKeyProps> = ({ item, doc, id, path, type, icon }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { title, prompt, invalidate, dataPath, key } = item;
 
@@ -84,7 +85,11 @@ const UpdateStringModal: FC<UpdateKeyProps> = ({ item, doc, id, path, type }) =>
 
 	return (
 		<>
-			<MenuItem onClick={onModalOpen}>{title}</MenuItem>
+			<MenuItem
+				icon={'update-key'}
+				onClick={onModalOpen}>
+				{title}
+			</MenuItem>
 
 			<AlertDialog
 				isOpen={isOpen}
@@ -113,7 +118,7 @@ const UpdateStringModal: FC<UpdateKeyProps> = ({ item, doc, id, path, type }) =>
 										ref={cancelRef}
 										onClick={closeItem}
 										size='sm'
-										colorScheme='gray'>
+										variant='white'>
 										Discard
 									</Button>
 								)}

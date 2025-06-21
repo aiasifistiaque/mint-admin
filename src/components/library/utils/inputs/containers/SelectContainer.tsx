@@ -14,7 +14,7 @@ const SelectContainer: FC<InputContainerProps> = ({ children, ...props }) => {
 		<Select
 			icon={<Icon name='select' />}
 			size='sm'
-			borderRadius='lg'
+			borderRadius='md'
 			focusBorderColor={borderColor}
 			color='text.500'
 			borderColor='selectBorder.light'

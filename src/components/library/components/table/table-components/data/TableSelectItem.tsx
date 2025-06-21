@@ -36,9 +36,11 @@ const TableSelectItem: FC<TableDataPropsType> = ({ id, isMobile = false, ...prop
 				alignItems='center'
 				{...props}>
 				<Checkbox
+					size='lg'
 					isChecked={selectedItems.includes(id)}
 					onChange={handleCheck}
 					colorScheme='brand'
+					borderRadius='lg'
 				/>
 			</CustomTd>
 			{isMobile && <Flex h={0}>{null}</Flex>}
