@@ -39,6 +39,36 @@ const useCustomToast = ({
 				isClosable: IS_CLOSABLE,
 				variant: VARIANT,
 				position: POSITION,
+				render: ({ onClose }) => (
+					<Flex
+						{...errorContainer}
+						position='relative'>
+						<Flex pt={1}>
+							<Icon
+								name='check'
+								color='inherit'
+							/>
+						</Flex>
+
+						<Flex
+							gap={1}
+							flexDir='column'>
+							<Heading
+								{...textColor}
+								size='sm'>
+								'Error'
+							</Heading>
+							<Text {...textColor}>{error?.data?.message}</Text>
+						</Flex>
+						<CloseButton
+							onClick={onClose}
+							position='absolute'
+							top={2}
+							right={2}
+							zIndex={1}
+						/>
+					</Flex>
+				),
 			});
 	}, [isLoading]);
 
@@ -104,6 +134,18 @@ const successContainer = {
 	},
 	_dark: {
 		bg: '#eee',
+		color: '#222',
+	},
+};
+
+const errorContainer = {
+	...container,
+	_light: {
+		bg: 'red.500',
+		color: '#fafafa',
+	},
+	_dark: {
+		bg: 'red.300',
 		color: '#222',
 	},
 };

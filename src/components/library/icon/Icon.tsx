@@ -134,7 +134,7 @@ import {
 	GiDiscussion,
 	GiAutoRepair,
 } from 'react-icons/gi';
-import { PiUserListFill, PiArticleMediumFill, PiEyeLight } from 'react-icons/pi';
+import { PiUserListFill, PiArticleMediumFill, PiEyeLight, PiSidebarFill } from 'react-icons/pi';
 import { AiOutlineDelete, AiOutlineThunderbolt } from 'react-icons/ai';
 
 import {
@@ -148,6 +148,7 @@ import {
 import { RxSpaceBetweenHorizontally, RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import iconOptionsArrayData from './iconOptionsArrayData';
 import { FiEdit, FiFilter, FiUser } from 'react-icons/fi';
+import { TfiLayoutSidebarRight } from 'react-icons/tfi';
 
 export type IconNameOptions = (typeof iconOptionsArrayData)[number];
 
@@ -259,6 +260,8 @@ const icons: any = {
 	options: IoIosOptions,
 	'settings-fill': RiSettings3Fill,
 	config: LuSettings2,
+	sidebaritems: PiSidebarFill,
+	sidebarcategories: TfiLayoutSidebarRight,
 	shop: BsShop,
 	staff: FaPeopleGroup,
 	store: IoStorefront,
