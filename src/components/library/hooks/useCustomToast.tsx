@@ -56,7 +56,7 @@ const useCustomToast = ({
 							<Heading
 								{...textColor}
 								size='sm'>
-								'Error'
+								Error
 							</Heading>
 							<Text {...textColor}>{error?.data?.message}</Text>
 						</Flex>
