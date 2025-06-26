@@ -1,16 +1,14 @@
 'use client';
 
-import { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
-import { Button, Flex, useDisclosure } from '@chakra-ui/react';
+import React, { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
+import { Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
 
 import { useCustomToast, useIsMobile, useFormData } from '../../hooks';
 
 import {
 	ModalFormSection,
 	usePostMutation,
-	useUpdateByIdMutation,
 	FormMain,
-	useLazyGetByIdToEditQuery,
 	DiscardButton,
 	Align,
 	DialogCloseButton,
@@ -18,63 +16,88 @@ import {
 	DialogFooter,
 	Dialog,
 	DialogBody,
+	MenuItem,
+	useGetConfigQuery,
 } from '../..';
 
-import CreateModalProps from './types';
+type CreateServerModalProps = {
+	trigger?: any;
+	path: string;
+	title?: string;
+	invalidate?: any;
+	children?: any;
+	doc?: any;
+	populate?: any;
+	isMenu?: boolean;
+	item?: any;
+	icon?: string;
+	layout?: any;
+	prompt?: {
+		title?: string;
+		body?: string;
+		btnText?: string;
+		successMsg?: string;
+	};
+};
 
-const CreateModal = (props: CreateModalProps) => {
+const CreateServerModal = (props: CreateServerModalProps) => {
 	const {
-		data,
 		trigger,
 		path,
 		title,
-		type,
-		id,
+
+		isMenu,
 		invalidate,
 		children,
 		doc,
 		prompt,
 		populate,
 		layout,
+		icon,
 	} = props;
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const [fetch, { data: prevData, isFetching, isUninitialized }] = useLazyGetByIdToEditQuery();
-	const [formData, setFormData] = useFormData<any>(data, populate || prevData);
+	const { data, isFetching } = useGetConfigQuery(path);
+
+	const [formData, setFormData] = useFormData<any>(data, populate);
 	const isMobile = useIsMobile();
 
 	const [callApi, result] = usePostMutation();
-	const [updateApi, updateResult] = useUpdateByIdMutation();
+
+	const [schema, setSchema] = useState<any>([]);
 
 	const onModalOpen = () => {
 		onOpen();
 		let newFieldData = {};
 
-		data?.map(field => {
+		data?.form?.map((field: any) => {
 			if (field?.getValue) newFieldData = { ...newFieldData, [field.name]: field?.getValue(doc) };
 			if (field?.value) newFieldData = { ...newFieldData, [field.name]: field?.value };
 		});
 
 		setFormData({ ...formData, ...newFieldData });
-		if (type == 'update') {
-			if (populate) {
-				setFormData(populate);
-				return;
-			}
-			fetch({ path, id });
-		}
 	};
 
-	const { isSuccess, isLoading } = type === 'update' ? updateResult : result;
+	const { isSuccess, isLoading } = result;
 
 	const [changedData, setChangedData] = useState({});
 
-	const successText = prompt?.successMsg
-		? prompt?.successMsg
-		: type == 'update'
-		? 'Information Updated Successfully'
-		: 'Item added successfully';
+	useEffect(() => {
+		if (data) {
+			let newFieldData = {};
+			const fields = data?.form;
+			setSchema(fields);
+			fields?.map((field: any) => {
+				if (field?.getValue) newFieldData = { ...newFieldData, [field.name]: field?.getValue(doc) };
+				if (field?.value) newFieldData = { ...newFieldData, [field.name]: field?.value };
+			});
+
+			setFormData({ ...formData, ...newFieldData });
+		}
+	}, [isFetching]);
+
+	const successText = prompt?.successMsg || 'Item added successfully';
 
 	useCustomToast({
 		successText,
@@ -89,7 +112,11 @@ const CreateModal = (props: CreateModalProps) => {
 		e.preventDefault();
 		e.stopPropagation();
 
-		const findExcludedFields = data.filter((field: any) => field?.isExcluded);
+		let findExcludedFields: any = [];
+
+		const fields: any = data?.form;
+		findExcludedFields = fields.filter((field: any) => field?.isExcluded);
+
 		const toPostData = { ...formData };
 
 		// Remove excluded fields from toPostData
@@ -97,8 +124,7 @@ const CreateModal = (props: CreateModalProps) => {
 			if (field.name in toPostData) delete toPostData[field.name];
 		});
 
-		if (type === 'update') updateApi({ path, id: id || 'id', body: changedData, invalidate });
-		else callApi({ path, body: toPostData, invalidate });
+		callApi({ path, body: toPostData, invalidate });
 	};
 
 	const onModalClose = () => {
@@ -114,8 +140,7 @@ const CreateModal = (props: CreateModalProps) => {
 
 	useEffect(() => {
 		if (populate) return;
-		if (prevData) setFormData(prevData);
-	}, [prevData, isFetching]);
+	}, [isFetching]);
 
 	const footer = (
 		<>
@@ -137,7 +162,15 @@ const CreateModal = (props: CreateModalProps) => {
 
 	return (
 		<>
-			<Flex onClick={onModalOpen}>{children || trigger || title || path}</Flex>
+			{isMenu ? (
+				<MenuItem
+					icon={icon}
+					onClick={onModalOpen}>
+					{children || trigger || title || path}
+				</MenuItem>
+			) : (
+				<Flex onClick={onModalOpen}>{children || trigger || title || path}</Flex>
+			)}
 
 			<Dialog
 				isOpen={isOpen}
@@ -145,20 +178,20 @@ const CreateModal = (props: CreateModalProps) => {
 				<form
 					onSubmit={handleSubmit}
 					onKeyDown={handleKeyDown}>
-					<DialogHeader>
-						{prompt?.title || title || `${type === 'update' ? 'Update' : 'Create'} ${path}`}
-					</DialogHeader>
+					<DialogHeader>{prompt?.title || title || `Create ${path}`}</DialogHeader>
 					<DialogCloseButton />
 
 					<DialogBody>
 						<ModalFormSection>
-							<FormMain
-								fields={data}
-								formData={formData}
-								setFormData={setFormData}
-								setChangedData={setChangedData}
-								isModal={true}
-							/>
+							{!isFetching && (
+								<FormMain
+									fields={data?.form}
+									formData={formData}
+									setFormData={setFormData}
+									setChangedData={setChangedData}
+									isModal={true}
+								/>
+							)}
 						</ModalFormSection>
 						{isMobile && <Align py={5}>{footer}</Align>}
 					</DialogBody>
@@ -169,4 +202,4 @@ const CreateModal = (props: CreateModalProps) => {
 	);
 };
 
-export default CreateModal;
+export default CreateServerModal;

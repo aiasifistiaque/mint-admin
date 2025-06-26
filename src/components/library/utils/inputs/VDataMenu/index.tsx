@@ -1,6 +1,15 @@
 'use client';
 
-import { Menu, MenuGroup, Flex, Input, useDisclosure, MenuDivider, Button } from '@chakra-ui/react';
+import {
+	Menu,
+	MenuGroup,
+	Flex,
+	Input,
+	useDisclosure,
+	MenuDivider,
+	Button,
+	Text,
+} from '@chakra-ui/react';
 
 import { useState, FC, useRef, useEffect } from 'react';
 
@@ -13,6 +22,7 @@ import {
 	useGetAllQuery,
 	FormControl,
 	Scroll,
+	CreateServerModal,
 } from '../../..';
 
 import { VDataMenuProps } from './types';
@@ -20,6 +30,7 @@ import { hiddenInputCss, searchInputCss, unselectTextCss, MAX_H, WIDTH } from '.
 
 const VDataMenu: FC<VDataMenuProps> = ({
 	label,
+	item,
 	isRequired,
 	placeholder,
 	value,
@@ -87,6 +98,7 @@ const VDataMenu: FC<VDataMenuProps> = ({
 
 	const inputRef = useRef<any>(null);
 	const btnRef = useRef<any>(null);
+	const addItemRef = useRef<any>(null);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -108,6 +120,18 @@ const VDataMenu: FC<VDataMenuProps> = ({
 						</Button>
 					}
 					type='post'
+				/>
+			)}
+			{item?.addItem && (
+				<CreateServerModal
+					path={model}
+					trigger={
+						<Button
+							display='none'
+							ref={addItemRef}>
+							Add New Item
+						</Button>
+					}
 				/>
 			)}
 			<Menu onClose={closeMenu}>
@@ -135,7 +159,7 @@ const VDataMenu: FC<VDataMenuProps> = ({
 						<MenuContainer w={WIDTH}>
 							<MenuGroup>
 								<Flex
-									p={2}
+									p={1}
 									py={0.5}>
 									<Input
 										{...searchInputCss}
@@ -148,6 +172,19 @@ const VDataMenu: FC<VDataMenuProps> = ({
 							{dataModel && (
 								<>
 									<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
+									<MenuDivider
+										mt={1}
+										mb={0}
+									/>
+								</>
+							)}
+							{item?.addItem && (
+								<>
+									<MenuItem
+										fontWeight='700'
+										onClick={() => addItemRef.current.click()}>
+										(+) Add New Item
+									</MenuItem>
 									<MenuDivider
 										mt={1}
 										mb={0}

@@ -297,6 +297,7 @@ const FormInput: FC<FormInputProps> = ({
 		case 'data-menu':
 			return (
 				<VDataMenu
+					item={item}
 					menuKey={item?.menuKey}
 					menuAddOnKey={item?.menuAddOnKey}
 					dataModel={dataModel}
