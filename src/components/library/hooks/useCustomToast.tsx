@@ -1,6 +1,6 @@
 'use client';
 
-import { Flex, Heading, Text, useToast, CloseButton } from '@chakra-ui/react';
+import { Flex, Heading, Text, useToast, CloseButton, FlexProps } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { Icon } from '../icon';
 
@@ -32,42 +32,18 @@ const useCustomToast = ({
 		if (isLoading) return;
 		isError &&
 			toast({
-				title: 'Error',
-				description: error?.data?.message,
 				status: 'error',
 				duration: DURATION,
 				isClosable: IS_CLOSABLE,
 				variant: VARIANT,
 				position: POSITION,
 				render: ({ onClose }) => (
-					<Flex
+					<ToastBody
 						{...errorContainer}
-						position='relative'>
-						<Flex pt={1}>
-							<Icon
-								name='check'
-								color='inherit'
-							/>
-						</Flex>
-
-						<Flex
-							gap={1}
-							flexDir='column'>
-							<Heading
-								{...textColor}
-								size='sm'>
-								Error
-							</Heading>
-							<Text {...textColor}>{error?.data?.message}</Text>
-						</Flex>
-						<CloseButton
-							onClick={onClose}
-							position='absolute'
-							top={2}
-							right={2}
-							zIndex={1}
-						/>
-					</Flex>
+						onClose={onClose}
+						title={'Error'}>
+						{error?.data?.message}
+					</ToastBody>
 				),
 			});
 	}, [isLoading]);
@@ -81,40 +57,54 @@ const useCustomToast = ({
 				position: POSITION,
 				isClosable: IS_CLOSABLE,
 				render: ({ onClose }) => (
-					<Flex
+					<ToastBody
 						{...successContainer}
-						position='relative'>
-						<Flex pt={1}>
-							<Icon
-								name='check'
-								color='inherit'
-							/>
-						</Flex>
-
-						<Flex
-							gap={1}
-							flexDir='column'>
-							<Heading
-								{...textColor}
-								size='sm'>
-								{successTitle || 'Success'}
-							</Heading>
-							<Text {...textColor}>{successText || 'success'}</Text>
-						</Flex>
-						<CloseButton
-							onClick={onClose}
-							position='absolute'
-							top={2}
-							right={2}
-							zIndex={1}
-						/>
-					</Flex>
+						onClose={onClose}
+						title={successTitle || 'success'}>
+						{successText || 'success'}
+					</ToastBody>
 				),
 			});
 	}, [isLoading]);
 
 	return null;
 };
+
+const ToastBody = ({
+	title,
+	children,
+	onClose,
+	...props
+}: FlexProps & { title: string; children: string; onClose: any }) => (
+	<Flex
+		{...props}
+		position='relative'>
+		<Flex pt={1}>
+			<Icon
+				name='check'
+				color='inherit'
+			/>
+		</Flex>
+
+		<Flex
+			gap={1}
+			flexDir='column'>
+			<Heading
+				{...textColor}
+				size='sm'>
+				{title}
+			</Heading>
+			<Text {...textColor}>{children}</Text>
+		</Flex>
+		<CloseButton
+			onClick={onClose}
+			position='absolute'
+			top={2}
+			right={2}
+			zIndex={1}
+		/>
+	</Flex>
+);
 
 const textColor = {
 	_light: { color: 'text.dark' },
