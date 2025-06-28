@@ -19,6 +19,36 @@ const table: ServerTableObjectProps = {
 			type: 'edit-server-modal',
 		},
 		{
+			type: 'update-api',
+			title: 'Turn On Permission',
+			path: 'sidebaritems',
+			id: (data: any) => data?._id,
+			body: { permissionProtected: true },
+			renderCondition: (data: any) =>
+				data?.permissionProtected && data?.permissionProtected == false,
+			prompt: {
+				title: 'Turn On Permission',
+				body: 'This will turn on the permission protection for this item. Are you sure you want to proceed?',
+				btnText: 'Confirm',
+				successMsg: 'Permission protection turned on successfully',
+			},
+		},
+		{
+			type: 'update-api',
+			title: 'Turn Off Permission',
+			path: 'sidebaritems',
+			id: (data: any) => data?._id,
+			body: { permissionProtected: false },
+			renderCondition: (data: any) =>
+				data?.permissionProtected && data?.permissionProtected == true,
+			prompt: {
+				title: 'Turn Off Permission',
+				body: 'This will turn off the permission protection for this item. Are you sure you want to proceed?',
+				btnText: 'Confirm',
+				successMsg: 'Permission protection turned off successfully',
+			},
+		},
+		{
 			type: 'update-key',
 			title: 'Update Priority',
 			keyType: 'number',
