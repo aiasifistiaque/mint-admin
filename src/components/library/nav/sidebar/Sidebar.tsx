@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props }) => {
 	const { data } = useGetSelfQuery({});
-	const { data: sidebarData, isFetching, isError } = useGetQuery({ path: `/sidebar/crm/page` });
+	const { data: sidebarData, isFetching, isError } = useGetQuery({ path: `/sidebar/crm/generic` });
 
 	const title = data?.shop?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Admin';
 

@@ -15,6 +15,15 @@ const table: BackendTableObjectProps = {
 		layout: formFields,
 	},
 	fields: tableFields,
+	select: {
+		show: true,
+		menu: [
+			{
+				type: 'calculate',
+				title: 'Calculate Values',
+			},
+		],
+	},
 
 	menu: [
 		{ type: 'view-modal', title: 'View', fields },

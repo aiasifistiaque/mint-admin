@@ -17,3 +17,4 @@ export { default as DecisionAlert } from './Alert';
 export { default as FullScreenImage } from './modal-components/ImageModal';
 
 export { default as ViewServerModal } from './ViewServerModal';
+export { default as CalculateModal } from './CalculateModal';

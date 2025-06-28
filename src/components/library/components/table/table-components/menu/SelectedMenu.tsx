@@ -8,6 +8,7 @@ import {
 	Icon,
 	ExportManyModal,
 	SendBulkSmsModal,
+	CalculateModal,
 } from '../../../..';
 
 type TableMenuProps = {
@@ -41,6 +42,14 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 					};
 
 					switch (item.type) {
+						case 'calculate':
+							return (
+								<CalculateModal
+									{...commonProps}
+									keys={item?.key}
+									value={item?.value}
+								/>
+							);
 						case 'edit':
 							return (
 								<EditManyModal

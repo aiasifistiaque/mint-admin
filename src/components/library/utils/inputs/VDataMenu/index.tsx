@@ -124,6 +124,7 @@ const VDataMenu: FC<VDataMenuProps> = ({
 			)}
 			{item?.addItem && (
 				<CreateServerModal
+					onNewItemAdd={(item: any) => handleChange(item)}
 					path={model}
 					trigger={
 						<Button

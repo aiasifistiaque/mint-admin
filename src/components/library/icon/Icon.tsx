@@ -68,7 +68,7 @@ import {
 	CiTextAlignRight,
 	CiUser,
 } from 'react-icons/ci';
-import { GrSubtract, GrEdit } from 'react-icons/gr';
+import { GrSubtract, GrEdit, GrStatusUnknown } from 'react-icons/gr';
 import { SiCkeditor4, SiGoogleanalytics } from 'react-icons/si';
 
 import { FcFeedback } from 'react-icons/fc';
@@ -303,7 +303,7 @@ const icons: any = {
 };
 
 const Icon: FC<IconProps> = ({ name, ...props }) => {
-	const IconComponent = icons[name] || IoIosHome;
+	const IconComponent = icons[name] || GrStatusUnknown;
 	const brandColor = useColorModeValue('brand.light', 'brand.dark');
 	const defaultColor = useColorModeValue('#4a4a4a', 'white');
 	return (

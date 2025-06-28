@@ -32,6 +32,7 @@ type CreateServerModalProps = {
 	item?: any;
 	icon?: string;
 	layout?: any;
+	onNewItemAdd?: (data: any) => void;
 	prompt?: {
 		title?: string;
 		body?: string;
@@ -45,7 +46,7 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 		trigger,
 		path,
 		title,
-
+		onNewItemAdd,
 		isMenu,
 		invalidate,
 		children,
@@ -130,12 +131,18 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 	const onModalClose = () => {
 		setFormData({});
 		result.reset();
+
 		onClose();
 	};
 
 	useEffect(() => {
 		if (isLoading) return;
-		if (isSuccess) onModalClose();
+		if (isSuccess) {
+			if (onNewItemAdd) {
+				onNewItemAdd(result?.data?.doc);
+			}
+			onModalClose();
+		}
 	}, [isLoading]);
 
 	useEffect(() => {

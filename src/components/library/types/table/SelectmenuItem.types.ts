@@ -9,6 +9,7 @@ type Item =
 	| 'edit-data-select'
 	| 'export'
 	| 'update-api'
+	| 'calculate'
 	| 'marketing-sms';
 
 /**
