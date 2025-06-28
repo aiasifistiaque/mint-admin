@@ -45,12 +45,12 @@ export const formFields: FormLayout = [
 		sectionTitle: 'Items',
 		fields: ['description', 'items'],
 	},
-	{
-		sectionTitle: 'Invoice Issue & Due',
-		description: 'Date of the invoice being issues and when the invpice is due',
-		fields: [['issueDate', 'dueDate']],
-		collapsible: true,
-	},
+	// {
+	// 	sectionTitle: 'Invoice Issue & Due',
+	// 	description: 'Date of the invoice being issues and when the invpice is due',
+	// 	fields: [['issueDate', 'dueDate']],
+	// 	collapsible: true,
+	// },
 	{
 		sectionTitle: 'Price & Total',
 		fields: [['subTotal', 'tax'], 'currency', 'total'],

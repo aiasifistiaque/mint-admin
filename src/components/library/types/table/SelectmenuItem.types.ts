@@ -8,6 +8,7 @@ type Item =
 	| 'edit-select'
 	| 'edit-data-select'
 	| 'export'
+	| 'update-api'
 	| 'marketing-sms';
 
 /**
@@ -16,6 +17,7 @@ type Item =
 type Prompt = {
 	title?: string;
 	body?: string;
+	successMsg?: string;
 };
 
 /**

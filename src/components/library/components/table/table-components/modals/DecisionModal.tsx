@@ -21,6 +21,7 @@ import {
 type DecisionModalProps = {
 	itemId: string;
 	path: string;
+	icon?: string;
 	item: {
 		title?: string;
 		id?: (doc: any) => string;
@@ -28,6 +29,7 @@ type DecisionModalProps = {
 		invalidate?: string[];
 		body?: object;
 		bodyFn?: any;
+
 		prompt?: {
 			title: string;
 			body: string;
@@ -38,7 +40,7 @@ type DecisionModalProps = {
 	doc: any;
 };
 
-const DecisionModal: FC<DecisionModalProps> = ({ item, doc, path, itemId }) => {
+const DecisionModal: FC<DecisionModalProps> = ({ item, doc, path, icon, itemId }) => {
 	const { title, id, prompt, invalidate, body, bodyFn } = item;
 	const getId = id ? id(doc) : itemId;
 	const getBody = bodyFn ? bodyFn(doc) : body;
@@ -72,7 +74,11 @@ const DecisionModal: FC<DecisionModalProps> = ({ item, doc, path, itemId }) => {
 
 	return (
 		<>
-			<MenuItem onClick={onOpen}>{title || 'Alert'}</MenuItem>
+			<MenuItem
+				onClick={onOpen}
+				icon={icon}>
+				{title || 'Alert'}
+			</MenuItem>
 
 			<AlertDialog
 				isOpen={isOpen}

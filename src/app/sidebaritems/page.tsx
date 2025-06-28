@@ -11,6 +11,36 @@ const table: ServerTableObjectProps = {
 		isModal: true,
 	},
 
+	select: {
+		show: true,
+		menu: [
+			{
+				type: 'update-api',
+				title: 'Turn On Permission for Selected',
+
+				key: 'permissionProtected',
+				value: true,
+				prompt: {
+					title: 'Turn On Permission',
+					body: 'This will turn on the permission protection for this item. Are you sure you want to proceed?',
+					successMsg: 'Permission protection turned on successfully',
+				},
+			},
+			{
+				type: 'update-api',
+				title: 'Turn Off Permission for Selected',
+				key: 'permissionProtected',
+				value: false,
+
+				prompt: {
+					title: 'Turn Off Permission',
+					body: 'This will turn off the permission protection for this item. Are you sure you want to proceed?',
+					successMsg: 'Permission protection turned off successfully',
+				},
+			},
+		],
+	},
+
 	menu: [
 		{ type: 'view-server-modal', title: 'View' },
 		{ type: 'view-item', title: 'Go To Post' },
@@ -24,8 +54,7 @@ const table: ServerTableObjectProps = {
 			path: 'sidebaritems',
 			id: (data: any) => data?._id,
 			body: { permissionProtected: true },
-			renderCondition: (data: any) =>
-				data?.permissionProtected && data?.permissionProtected == false,
+			renderCondition: (data: any) => !data?.permissionProtected,
 			prompt: {
 				title: 'Turn On Permission',
 				body: 'This will turn on the permission protection for this item. Are you sure you want to proceed?',
@@ -39,8 +68,7 @@ const table: ServerTableObjectProps = {
 			path: 'sidebaritems',
 			id: (data: any) => data?._id,
 			body: { permissionProtected: false },
-			renderCondition: (data: any) =>
-				data?.permissionProtected && data?.permissionProtected == true,
+			renderCondition: (data: any) => data?.permissionProtected,
 			prompt: {
 				title: 'Turn Off Permission',
 				body: 'This will turn off the permission protection for this item. Are you sure you want to proceed?',

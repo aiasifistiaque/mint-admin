@@ -1,8 +1,17 @@
-import { Badge, BadgeProps, TableCellProps, Tooltip, useClipboard } from '@chakra-ui/react';
+import {
+	Badge,
+	BadgeProps,
+	Flex,
+	TableCellProps,
+	Text,
+	Tooltip,
+	useClipboard,
+	useColorMode,
+} from '@chakra-ui/react';
 import moment from 'moment';
 import { FC } from 'react';
 import { CustomTd } from '.';
-import { TableObjectDataProps } from '../../../..';
+import { Align, TableObjectDataProps } from '../../../..';
 import { CopyIcon } from '@chakra-ui/icons';
 
 // Define the type for the props of the TableData component
@@ -44,6 +53,7 @@ const TableData: FC<TableDataPropsType> = ({
 		return (
 			<Tooltip label={hasCopied ? 'Copied!' : 'Click to Copy'}>
 				<TableBody
+					item={item}
 					{...commonProps}
 					cursor='pointer'
 					onClick={onCopy}
@@ -55,7 +65,13 @@ const TableData: FC<TableDataPropsType> = ({
 		);
 	}
 
-	return <TableBody {...commonProps}>{children}</TableBody>;
+	return (
+		<TableBody
+			item={item}
+			{...commonProps}>
+			{children}
+		</TableBody>
+	);
 };
 
 const TableBody: FC<TableDataPropsType> = ({
@@ -71,17 +87,40 @@ const TableBody: FC<TableDataPropsType> = ({
 	colorTheme,
 	...props
 }) => {
+	const { colorMode } = useColorMode();
 	switch (type) {
 		case 'checkbox':
 			return (
 				<CustomTd>
-					<Badge
+					<Align gap={2}>
+						<Flex
+							borderRadius='full'
+							h='10px'
+							w='10px'
+							bg={
+								children?.toString() === 'true'
+									? colorMode == 'dark'
+										? '#50e3c2'
+										: '#00a843'
+									: colorMode === 'dark'
+									? '#fe5f55'
+									: '#EE0000'
+							}
+						/>
+						<Text
+							fontSize='15px'
+							textTransform='capitalize'>
+							{item?.displayValue ? item?.displayValue[children?.toString()] : children?.toString()}
+						</Text>
+					</Align>
+
+					{/* <Badge
 						colorScheme={
 							colorTheme ? colorTheme[children] : children?.toString() === 'true' ? 'green' : 'red'
 						}
 						{...badgeCss}>
-						{children?.toString()}
-					</Badge>
+						{item?.displayValue ? item?.displayValue[children?.toString()] : children?.toString()}
+					</Badge> */}
 				</CustomTd>
 			);
 

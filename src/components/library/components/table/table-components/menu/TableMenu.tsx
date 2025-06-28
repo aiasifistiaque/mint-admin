@@ -192,6 +192,7 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 							return (
 								<DecisionModal
 									item={item}
+									icon='edit'
 									path={item?.path || path}
 									key={i}
 									doc={doc}

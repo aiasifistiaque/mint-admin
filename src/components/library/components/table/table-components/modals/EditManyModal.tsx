@@ -24,6 +24,7 @@ type EditManyModalType = {
 	prompt?: {
 		title?: string;
 		body?: string;
+		successMsg?: string;
 	};
 };
 
@@ -68,14 +69,12 @@ const EditManyModal: FC<EditManyModalType> = ({
 	}, [isLoading]);
 
 	useCustomToast({
-		successText: `Batch item updated successfully`,
+		successText: prompt?.successMsg || `Batch item updated successfully`,
 		isSuccess,
 		isError,
 		isLoading,
 		error,
 	});
-
-	const orderStatus = [{}];
 
 	return (
 		<>

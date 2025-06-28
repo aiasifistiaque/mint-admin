@@ -49,6 +49,14 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 									value={item?.value}
 								/>
 							);
+						case 'update-api':
+							return (
+								<EditManyModal
+									{...commonProps}
+									keys={item?.key}
+									value={item?.value}
+								/>
+							);
 
 						case 'edit-select':
 							return (
