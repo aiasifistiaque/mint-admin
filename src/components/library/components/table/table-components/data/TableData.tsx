@@ -167,7 +167,7 @@ const TableBody: FC<TableDataPropsType> = ({
 				<CustomTd
 					{...dateCss}
 					{...props}>
-					{children ? moment(children).format('hh:mm A') : '--'}
+					{children || '--'}
 				</CustomTd>
 			);
 		case 'date-only':

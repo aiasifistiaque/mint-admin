@@ -581,6 +581,16 @@ const FormInput: FC<FormInputProps> = ({
 					value={formattedValue}
 				/>
 			);
+		case 'time':
+			return (
+				<VInput
+					type='time'
+					isRequired={isRequired}
+					helper={item?.helper}
+					{...props}
+					value={props.value}
+				/>
+			);
 		default:
 			return (
 				<VInput
