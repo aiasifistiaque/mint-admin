@@ -1,5 +1,5 @@
 import { Table, Thead, Tr, Tbody, Flex, Text, CloseButton } from '@chakra-ui/react';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 import {
 	useAppDispatch,
@@ -20,6 +20,7 @@ import {
 	selectAll,
 	TableResultContainer,
 	TableSort,
+	setCurrentPath,
 } from '../..';
 
 const CustomTable: FC<CustomTableProps> = ({
@@ -54,6 +55,10 @@ const CustomTable: FC<CustomTableProps> = ({
 
 	const dispatch = useAppDispatch();
 	const onUnselect = () => dispatch(selectAll({ ids: [], isSelected: false }));
+
+	useEffect(() => {
+		dispatch(setCurrentPath(path));
+	}, [path]);
 
 	return (
 		<>

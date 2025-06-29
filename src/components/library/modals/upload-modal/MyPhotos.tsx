@@ -1,37 +1,68 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { Box, Flex, FlexProps, Grid, Image, useColorModeValue } from '@chakra-ui/react';
+import { Button, Flex, FlexProps, Grid, Image, useColorModeValue } from '@chakra-ui/react';
 import { useIsMobile } from '../../hooks';
-import { useGetAllQuery } from '../..';
+import { Column, useGetAllQuery } from '../..';
 
 const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type?: string }) => {
-	const { data } = useGetAllQuery({
+	const [page, setPage] = useState<number>(1);
+	const [viewData, setViewData] = useState<any>([]);
+	const { data, isFetching } = useGetAllQuery({
 		path: `upload`,
-		limit: '999',
+		limit: '20',
 		type,
-		page: 1,
+		page,
 		sort: '-createdAt',
 		filters: { type: type || 'image' },
 	});
 	const [selected, setSelected] = useState<any>(null);
 
+	const onLoadMore = () => {
+		if (page < data?.totalPages) setPage(prev => prev + 1);
+	};
+
+	useEffect(() => {
+		if (isFetching) return;
+		if (data?.doc) {
+			if (page === 1) {
+				// Reset viewData for first page
+				setViewData(data.doc);
+			} else {
+				// Append for subsequent pages
+				setViewData((prev: any) => [...prev, ...data.doc]);
+			}
+		}
+	}, [data, isFetching, page]);
+
 	return (
-		<Grid
-			gridTemplateColumns={{ base: '1fr 1fr', md: 'repeat(5, 1fr)' }}
-			gap={2}>
-			{data?.doc?.map((item: any, i: number) => (
-				<ImageComponent
-					src={item?.url}
-					type={type}
-					onClick={() => {
-						setSelected(item?.url);
-						handleSelect(item?.url);
-					}}
-					selected={selected}
-					key={i}
-				/>
-			))}
-		</Grid>
+		<Column
+			gap={3}
+			pb={2}>
+			<Grid
+				minH='200px'
+				gridTemplateColumns={{ base: '1fr 1fr', md: 'repeat(5, 1fr)' }}
+				gap={2}>
+				{viewData?.map((item: any, i: number) => (
+					<ImageComponent
+						src={item?.url}
+						type={type}
+						onClick={() => {
+							setSelected(item?.url);
+							handleSelect(item?.url);
+						}}
+						selected={selected}
+						key={item?._id}
+					/>
+				))}
+			</Grid>
+
+			<Button
+				isDisabled={isFetching || data?.totalPages <= page}
+				onClick={onLoadMore}
+				variant='white'>
+				Load More
+			</Button>
+		</Column>
 	);
 };
 

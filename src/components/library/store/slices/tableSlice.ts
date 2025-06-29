@@ -18,6 +18,7 @@ type TableProps = {
 	selected?: string[]; // The selected items
 	preferences?: string[]; // The preferences
 	selectedItems: any[]; // The selected items
+	currentPath?: string; // The current path
 };
 
 // Define the type for the update properties
@@ -41,6 +42,7 @@ const initialState: TableProps = {
 	preferences: [], // Default preferences is an empty array
 	fields: [], // Default fields is an empty array
 	selectedItems: [], // Default selected is an empty array
+	currentPath: '', // Default current path is an empty string
 };
 export const tableSlice = createSlice({
 	name: 'table', // Name of the slice
@@ -60,6 +62,10 @@ export const tableSlice = createSlice({
 			state.limit = action.payload.limit || state.limit;
 			state.search = action.payload.search || state.search;
 			state.sort = action.payload.sort || state.sort;
+		},
+		setCurrentPath: (state, action: PayloadAction<string>) => {
+			// Update the current path in the state
+			state.currentPath = action.payload;
 		},
 		updateSearch: (state, action: PayloadAction<string>) => {
 			// Update the state with the new properties
@@ -139,6 +145,7 @@ export const {
 	selectItem,
 	selectAll,
 	unselectAll,
+	setCurrentPath,
 } = tableSlice.actions;
 
 // Export the reducer

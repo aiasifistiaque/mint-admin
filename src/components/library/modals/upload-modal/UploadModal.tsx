@@ -24,7 +24,7 @@ import MyPhotos from './MyPhotos';
 import UploadImage from './UploadImage';
 import { styles } from '.';
 
-import { AddImageButton, DeleteImageButton, EditImageButton } from '../..';
+import { AddImageButton, DeleteImageButton, EditImageButton, useAppSelector } from '../..';
 
 type UploadModalProps = {
 	album?: string;
@@ -55,6 +55,7 @@ const UploadModal: FC<UploadModalProps> = ({
 }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [img, setImg] = useState(null);
+	const { currentPath } = useAppSelector(state => state.table);
 
 	const handleImageSelect = (e: any) => setImg(e);
 
@@ -128,7 +129,7 @@ const UploadModal: FC<UploadModalProps> = ({
 									<UploadImage
 										fileType={fileType || 'image'}
 										handleSelect={handleUploadComplete}
-										folder={folder}
+										folder={folder || currentPath}
 									/>
 								</TabPanel>
 								<TabPanel sx={styles.panel}>

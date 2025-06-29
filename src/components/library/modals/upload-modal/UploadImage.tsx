@@ -100,7 +100,7 @@ const UploadImage = ({
 			<Text
 				textAlign='center'
 				my={1}>
-				Or
+				Or folder: {folder}
 			</Text>
 
 			<Button
