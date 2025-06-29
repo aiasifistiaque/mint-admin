@@ -1,6 +1,7 @@
 import React from 'react';
-import { useAddVideoMutation } from '@/store/services/uploadApi';
+
 import { Button, Center, Heading, Progress, Text } from '@chakra-ui/react';
+import { useAddVideoMutation } from '../../store';
 
 const UploadImage = ({
 	handleSelect,
@@ -12,6 +13,7 @@ const UploadImage = ({
 	folder?: string;
 }) => {
 	const [image, setImage] = React.useState<any>(null);
+	const [isDragOver, setIsDragOver] = React.useState(false);
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
 	const [trigger, result] = useAddVideoMutation();
@@ -20,19 +22,43 @@ const UploadImage = ({
 		inputRef.current?.click();
 	};
 
+	const handleFileUpload = (file: File) => {
+		setImage(file);
+		// Create a new FormData object
+		const formData = new FormData();
+
+		// Append the file to the FormData object
+		formData.append('image', file);
+		formData.append('folder', folder || 'uploads');
+
+		// Trigger the mutation with the FormData object
+		trigger({ body: formData, type: fileType });
+	};
+
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (file) {
-			setImage(file);
-			// Create a new FormData object
-			const formData = new FormData();
+			handleFileUpload(file);
+		}
+	};
 
-			// Append the file to the FormData object
-			formData.append('image', file);
-			formData.append('folder', folder || 'uploads');
+	const handleDragOver = (e: React.DragEvent) => {
+		e.preventDefault();
+		setIsDragOver(true);
+	};
 
-			// Trigger the mutation with the FormData object
-			trigger({ body: formData, type: fileType });
+	const handleDragLeave = (e: React.DragEvent) => {
+		e.preventDefault();
+		setIsDragOver(false);
+	};
+
+	const handleDrop = (e: React.DragEvent) => {
+		e.preventDefault();
+		setIsDragOver(false);
+
+		const files = e.dataTransfer.files;
+		if (files && files[0]) {
+			handleFileUpload(files[0]);
 		}
 	};
 
@@ -54,12 +80,12 @@ const UploadImage = ({
 				colorScheme='brand'
 				w='100%'
 				size='sm'
-				borderRadius='30px'
+				borderRadius='40px'
 				isIndeterminate
 			/>
 		</Center>
 	) : result?.isSuccess ? (
-		<Text>Success</Text>
+		<Text>Image Uploaded Successfully</Text>
 	) : result?.isError ? (
 		<Text>{JSON.stringify((result as any)?.error)}</Text>
 	) : (
@@ -70,15 +96,18 @@ const UploadImage = ({
 				style={{ display: 'none' }}
 				onChange={handleFileChange}
 			/>
-			<Heading
-				size='lg'
-				mb={2}>
-				Upload Photo Here
-			</Heading>
+			<Heading size='md'>{isDragOver ? 'Drop Image Here' : 'Drag and drop an image here'}</Heading>
+			<Text
+				textAlign='center'
+				my={1}>
+				Or
+			</Text>
+
 			<Button
 				size='sm'
+				colorScheme='gray'
 				onClick={handleUpload}>
-				Upload
+				Upload From Device
 			</Button>
 		</>
 	);
@@ -90,8 +119,14 @@ const UploadImage = ({
 			h='full'
 			py='16px'
 			w='100%'
-			border='2px dashed #ddd'
-			gap={2}>
+			borderRadius='8px'
+			border={isDragOver ? '2px dashed #4A90E2' : '2px dashed #ddd'}
+			backgroundColor={isDragOver ? 'blue.50' : 'transparent'}
+			gap={2}
+			onDragOver={handleDragOver}
+			onDragLeave={handleDragLeave}
+			onDrop={handleDrop}
+			transition='all 0.2s ease'>
 			{body}
 		</Center>
 	);

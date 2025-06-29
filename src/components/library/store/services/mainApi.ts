@@ -20,6 +20,7 @@ const tags = [
 	'schema',
 	'self',
 	'config',
+	'uploads',
 ];
 
 export const mainApi = createApi({

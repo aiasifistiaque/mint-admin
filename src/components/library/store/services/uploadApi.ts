@@ -1,5 +1,5 @@
 import mainApi from './mainApi';
-import { User, ListType, TableProps } from '../store.types';
+import { ListType } from '../store.types';
 import { BASE_LIMIT } from '../..';
 
 export const uploadApi = mainApi.injectEndpoints({
@@ -27,7 +27,7 @@ export const uploadApi = mainApi.injectEndpoints({
 				body,
 				formData: true,
 			}),
-			invalidatesTags: ['uploads'],
+			invalidatesTags: ['uploads', 'upload'],
 		}),
 		addFile: builder.mutation<any, any>({
 			query: body => ({
@@ -36,7 +36,7 @@ export const uploadApi = mainApi.injectEndpoints({
 				body,
 				formData: true,
 			}),
-			invalidatesTags: ['uploads'],
+			invalidatesTags: ['uploads', 'upload'],
 		}),
 		addVideo: builder.mutation<any, any>({
 			query: ({ body, type }) => ({
@@ -45,7 +45,7 @@ export const uploadApi = mainApi.injectEndpoints({
 				body,
 				formData: true,
 			}),
-			invalidatesTags: ['uploads'],
+			invalidatesTags: ['uploads', 'upload'],
 		}),
 	}),
 });

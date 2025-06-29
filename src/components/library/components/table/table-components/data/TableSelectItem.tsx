@@ -32,7 +32,6 @@ const TableSelectItem: FC<TableDataPropsType> = ({ id, isMobile = false, ...prop
 			<CustomTd
 				type='selectMenu'
 				mb={{ base: -4, md: 0 }}
-				w='5px'
 				alignItems='center'
 				{...props}>
 				<Checkbox
@@ -40,7 +39,6 @@ const TableSelectItem: FC<TableDataPropsType> = ({ id, isMobile = false, ...prop
 					isChecked={selectedItems.includes(id)}
 					onChange={handleCheck}
 					colorScheme='brand'
-					borderRadius='lg'
 				/>
 			</CustomTd>
 			{isMobile && <Flex h={0}>{null}</Flex>}

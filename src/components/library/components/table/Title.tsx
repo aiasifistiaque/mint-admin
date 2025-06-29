@@ -74,7 +74,7 @@ export const Title: FC<TitleProps> = ({
 			onClick={handleSort}
 			userSelect='none'>
 			<Flex
-				py={2}
+				py='5px'
 				align='center'
 				gap={2}
 				fontWeight='700'

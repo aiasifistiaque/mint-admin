@@ -4,7 +4,6 @@ import React from 'react';
 import { NextPage } from 'next';
 import {
 	convertToViewFields,
-	createFormFields,
 	BackendTableObjectProps,
 	BackendPageTable,
 } from '@/components/library';
@@ -14,7 +13,7 @@ import { fields, formFields, tableFields } from './config';
 const table: BackendTableObjectProps = {
 	title: 'Projects',
 	path: 'projects',
-
+	export: true,
 	fields: tableFields,
 	button: {
 		title: 'New Project',

@@ -6,11 +6,12 @@ import { useGetAllQuery } from '../..';
 
 const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type?: string }) => {
 	const { data } = useGetAllQuery({
-		path: `upload?type=${type || 'image'}`,
+		path: `upload`,
 		limit: '999',
 		type,
 		page: 1,
 		sort: '-createdAt',
+		filters: { type: type || 'image' },
 	});
 	const [selected, setSelected] = useState<any>(null);
 
@@ -74,6 +75,7 @@ const ImageComponent = ({
 
 	return (
 		<Flex
+			p={1}
 			borderRadius='4px'
 			cursor='pointer'
 			w='full'
@@ -82,7 +84,10 @@ const ImageComponent = ({
 			onMouseLeave={handleMouseLeave}
 			border='2px solid'
 			borderColor={selected === src ? borderColor : '#ddd'}
-			bg='whitesmoke'
+			bg='background.light'
+			_dark={{
+				bg: 'background.dark',
+			}}
 			{...props}>
 			{type == 'video' ? (
 				<video
@@ -102,6 +107,8 @@ const ImageComponent = ({
 				<Image
 					objectFit='contain'
 					src={src}
+					w='full'
+					h='auto'
 					alt={src}
 				/>
 			)}
