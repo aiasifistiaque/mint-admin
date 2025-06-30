@@ -19,6 +19,14 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 			: Text
 		: Fragment;
 
+	// Function to add word break opportunities on specific characters
+	const formatTextForBreaking = (text: any) => {
+		if (typeof text !== 'string') return text;
+
+		// Add zero-width space after specific characters to allow breaking
+		return text.replace(/([_\-/.:%@0])/g, '$1\u200B');
+	};
+
 	if (type == 'selectMenu') return <Container {...tdCss(type, heading)}>{children}</Container>;
 
 	const External = ({ children }: any) => {
@@ -50,7 +58,7 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 
 				{isMobile && heading && <Heading size='xs'>{heading}</Heading>}
 				<External>
-					<TextContainer>{text || <i>--</i>}</TextContainer>
+					<TextContainer>{formatTextForBreaking(text) || <i>--</i>}</TextContainer>
 				</External>
 			</Container>
 		</>
@@ -69,7 +77,8 @@ const tdCss = (type: any, heading: any): any => {
 		maxW: type == 'image-text' ? '240px' : '160px',
 		border: 'none',
 		whiteSpace: 'normal',
-		// wordBreak: 'break-word',
+		wordBreak: 'normal',
+		overflowWrap: 'break-word',
 		py: PADDING_Y,
 		px: {
 			base: 0,
@@ -83,6 +92,14 @@ const tdCss = (type: any, heading: any): any => {
 			base: type == 'image-text' ? '1.2rem' : '1rem',
 			md: '.9rem',
 		},
+
+		// _notLast: {
+		// 	borderRight: '1px solid',
+		// 	borderColor: 'border.light',
+		// 	_dark: {
+		// 		borderColor: 'border.dark',
+		// 	},
+		// },
 	};
 };
 
