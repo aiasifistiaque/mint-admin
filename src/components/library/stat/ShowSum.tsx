@@ -5,7 +5,7 @@ import { StatContainer, StatLabel, StatNumber } from './stat-components';
 
 type CountProps = {
 	title: string;
-	children: string | number;
+	children: any;
 	price?: boolean;
 	isLoading?: boolean;
 	isError?: boolean;
