@@ -10,6 +10,10 @@ const table: ServerTableObjectProps = {
 	menu: [
 		{ type: 'view-server-modal', title: 'View' },
 		{ type: 'view-item', title: 'Go To Post' },
+		{
+			title: 'Update Information',
+			type: 'edit-server-modal',
+		},
 
 		{ type: 'delete', title: 'Delete' },
 	],

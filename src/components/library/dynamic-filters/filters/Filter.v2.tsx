@@ -18,9 +18,9 @@ const Filter: FC<FilterProps> = ({ children, isActive = false, onCancel, ...prop
 			userSelect='none'
 			cursor='pointer'
 			bg='table.row.light'
-			borderRadius={radius?.FILTER || 'full'}
-			border='1px solid'
-			borderColor={isActive ? 'border.secondary_light' : 'border.light'}
+			borderRadius='full'
+			border={isActive ? '2px dashed' : '1px dashed'}
+			borderColor={isActive ? 'border.secondary_light' : '#bbb'}
 			color='gray.600'
 			fontWeight='600'
 			shadow={isActive ? 'none' : 'sm'}
