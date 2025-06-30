@@ -28,6 +28,24 @@ export default function UserFeedback() {
 		field: 'size',
 	});
 
+	const {
+		data: awsBillData,
+		isFetching: awsBillIsFetching,
+		isError: awsBillError,
+	} = useGetSumQuery({
+		path: 'upload',
+		field: 'awsbill',
+	});
+
+	const {
+		data: s3Data,
+		isFetching: s3IsFetching,
+		isError: s3Error,
+	} = useGetSumQuery({
+		path: 'upload',
+		field: 's3',
+	});
+
 	const convertSizeToKb = (size: number) => {
 		if (size === undefined || size === null) return '--';
 
@@ -57,16 +75,30 @@ export default function UserFeedback() {
 					path='views'
 				/>
 				<ShowSum
+					title='AWS Bill (Current Month)'
+					isLoading={awsBillIsFetching}
+					isError={awsBillError}>
+					{(awsBillData && `$${parseFloat(awsBillData?.totalCost?.blended || 0).toFixed(4)}`) ||
+						'--'}
+				</ShowSum>
+				<ShowSum
 					title='Storage Used'
 					isLoading={storageIsFetching}
 					isError={storageError}>
 					{(storageData && convertSizeToKb(storageData?.total)) || '--'}
 				</ShowSum>
 				<ShowSum
+					title='S3 Bucket Used'
+					isLoading={s3IsFetching}
+					isError={s3Error}>
+					{(s3Data && convertSizeToKb(s3Data?.total)) || '--'}
+				</ShowSum>
+
+				<ShowSum
 					title='SMS Balance'
 					isLoading={isFetching}
 					isError={isError}>
-					{data?.balance || '--'}
+					BDT. {data?.balance || '--'}
 				</ShowSum>
 
 				<Count
