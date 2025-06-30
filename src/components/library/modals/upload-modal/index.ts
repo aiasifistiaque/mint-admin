@@ -1,3 +1,5 @@
+import { border } from '@chakra-ui/react';
+
 export const styles: any = {
 	container: {
 		border: '1px solid red',
@@ -13,21 +15,24 @@ export const styles: any = {
 		zIndex: '999',
 	},
 	panel: {
-		flex: 1,
 		h: 'full',
+		py: 0,
+		flex: 1,
 		px: 0,
 	},
 	tabsCss: {
-		h: '60vh',
+		h: '63vh',
 		colorScheme: 'brand',
 		flex: 1,
 	},
 	tabPanelCss: {
-		px: 0,
+		py: 4,
 		h: 'full',
 		overflowY: 'scroll',
+		px: { base: 4, md: 6 },
 	},
 	modalContentCss: {
+		borderRadius: '10px',
 		bg: 'menu.light',
 		_dark: {
 			bg: 'menu.dark',
@@ -38,3 +43,9 @@ export const styles: any = {
 		size: 'sm',
 	},
 };
+
+export { default as ImageComponent } from './ImageComponent';
+export { default as MyFolders } from './MyFolders';
+export { default as MyPhotos } from './MyPhotos';
+export { default as UploadImage } from './UploadImage';
+export { default as InsertUrl } from './InsertUrl';

@@ -1,8 +1,8 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
-import { Button, Flex, FlexProps, Grid, Image, useColorModeValue } from '@chakra-ui/react';
-import { useIsMobile } from '../../hooks';
+import { useEffect, useState } from 'react';
+import { Button, Grid } from '@chakra-ui/react';
 import { Column, useGetAllQuery } from '../..';
+import { ImageComponent } from '.';
 
 const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type?: string }) => {
 	const [page, setPage] = useState<number>(1);
@@ -63,87 +63,6 @@ const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type?: 
 				Load More
 			</Button>
 		</Column>
-	);
-};
-
-const ImageComponent = ({
-	src,
-	type,
-	selected,
-	thumbnail,
-	...props
-}: FlexProps & {
-	src: string;
-	type: string;
-	selected: any;
-	thumbnail?: string;
-}) => {
-	const videoRef = useRef<any>(null);
-	const isMobile = useIsMobile();
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
-
-	useEffect(() => {
-		// if (isMobile) {
-		// 	videoRef?.current?.play();
-		// }
-	}, [videoRef]);
-
-	const handleMouseEnter = () => {
-		if (isMobile) return;
-		// If the type is not video, we don't need to play the video
-		if (type !== 'video') return;
-		videoRef.current?.play();
-	};
-
-	const handleMouseLeave = () => {
-		if (isMobile) return;
-
-		// If the type is not video, we don't need to play the video
-		if (type !== 'video') return;
-		videoRef.current?.pause();
-		videoRef.current.currentTime = 0;
-	};
-
-	return (
-		<Flex
-			p={1}
-			borderRadius='4px'
-			cursor='pointer'
-			w='full'
-			h='200px'
-			onMouseEnter={handleMouseEnter}
-			onMouseLeave={handleMouseLeave}
-			border='2px solid'
-			borderColor={selected === src ? borderColor : '#ddd'}
-			bg='background.light'
-			_dark={{
-				bg: 'background.dark',
-			}}
-			{...props}>
-			{type == 'video' ? (
-				<video
-					muted
-					poster={thumbnail || undefined}
-					ref={videoRef}
-					playsInline
-					loop
-					style={{ width: '100%', height: '100%', objectFit: 'contain' }}>
-					<source
-						src={src}
-						type='video/mp4'
-					/>
-					Your browser does not support the video tag.
-				</video>
-			) : (
-				<Image
-					objectFit='contain'
-					src={src}
-					w='full'
-					h='auto'
-					alt={src}
-				/>
-			)}
-		</Flex>
 	);
 };
 

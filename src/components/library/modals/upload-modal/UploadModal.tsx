@@ -19,11 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { FC, useState, ReactNode } from 'react';
 
-import InsertUrl from './InsertUrl';
-import MyPhotos from './MyPhotos';
-import UploadImage from './UploadImage';
-import { styles } from '.';
-
+import { MyFolders, styles, MyPhotos, UploadImage, InsertUrl } from '.';
 import { AddImageButton, DeleteImageButton, EditImageButton, useAppSelector } from '../..';
 
 type UploadModalProps = {
@@ -39,7 +35,7 @@ type UploadModalProps = {
 	children?: ReactNode;
 };
 
-const tabs = ['Photos', 'Upload', 'Web Address (URL)'];
+const tabs = ['All Photos', 'Browse by folder', 'Upload', 'Web Address (URL)'];
 
 const UploadModal: FC<UploadModalProps> = ({
 	album,
@@ -109,18 +105,36 @@ const UploadModal: FC<UploadModalProps> = ({
 				isCentered>
 				<ModalOverlay />
 				<ModalContent {...styles.modalContentCss}>
-					<ModalHeader>Insert Photo/File</ModalHeader>
+					<ModalHeader
+						pb={2}
+						pt={4}>
+						Insert Photo/File
+					</ModalHeader>
 					<ModalCloseButton />
-					<ModalBody minH='70vh'>
+					<ModalBody
+						minH='70vh'
+						px={0}>
 						<Tabs {...styles.tabsCss}>
-							<TabList>
+							<TabList
+								px={{ base: 4, md: 6 }}
+								gap={2}>
 								{tabs.map((label: string, i: number) => (
-									<Tab key={i}>{label}</Tab>
+									<Tab
+										px={2}
+										key={i}>
+										{label}
+									</Tab>
 								))}
 							</TabList>
 							<TabPanels {...styles.tabPanelCss}>
 								<TabPanel sx={styles.panel}>
 									<MyPhotos
+										handleSelect={handleImageSelect}
+										type={fileType || 'image'}
+									/>
+								</TabPanel>
+								<TabPanel sx={styles.panel}>
+									<MyFolders
 										handleSelect={handleImageSelect}
 										type={fileType || 'image'}
 									/>
@@ -139,23 +153,28 @@ const UploadModal: FC<UploadModalProps> = ({
 						</Tabs>
 					</ModalBody>
 
-					<ModalFooter>
-						<Flex
-							gap={2}
-							flex={1}>
-							<Button
-								size='sm'
-								isDisabled={!img}
-								onClick={handleInsert}>
-								Insert
-							</Button>
-							<Button
-								colorScheme='gray'
-								size='sm'
-								onClick={onClose}>
-								Cancel
-							</Button>
-						</Flex>
+					<ModalFooter
+						borderTopWidth={1}
+						borderTopColor='border.light'
+						borderBottomRadius='20px'
+						w='full'
+						gap={2}
+						py={2}
+						_light={{ bg: 'background.light' }}
+						_dark={{ bg: 'background.dark', borderTopColor: 'border.dark' }}
+						justifyContent='flex-end'
+						alignItems='center'>
+						<Button
+							variant='white'
+							onClick={onClose}>
+							Cancel
+						</Button>
+						<Button
+							size='sm'
+							isDisabled={!img}
+							onClick={handleInsert}>
+							Insert Media
+						</Button>
 					</ModalFooter>
 				</ModalContent>
 			</Modal>

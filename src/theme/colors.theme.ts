@@ -64,6 +64,8 @@ export const colors: any = {
 		// dark: THEME == 'basic' ? BLACK : '#121212',
 
 		light: '#fafafa',
+		cardLight: '#F5F5F5',
+		cardDark: 'black',
 		//dark: BLACK,
 		//dark: BLACK,
 		dark: 'black',

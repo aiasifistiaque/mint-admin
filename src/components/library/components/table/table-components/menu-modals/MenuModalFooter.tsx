@@ -22,7 +22,7 @@ const MenuModalFooter: FC<MenuModalBodyProps> = ({ children }) => {
 		<ModalFooter
 			w='full'
 			gap={2}
-			py={3}
+			py={2}
 			_light={{ bg: 'background.light' }}
 			justifyContent='flex-end'
 			alignItems='center'>

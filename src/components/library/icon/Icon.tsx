@@ -115,6 +115,7 @@ import {
 	FaFileLines,
 	FaIdCardClip,
 	FaFileCode,
+	FaFolder,
 } from 'react-icons/fa6';
 import { GoListUnordered, GoHomeFill, GoArrowUpRight } from 'react-icons/go';
 import {
@@ -147,7 +148,7 @@ import {
 
 import { RxSpaceBetweenHorizontally, RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import iconOptionsArrayData from './iconOptionsArrayData';
-import { FiEdit, FiFilter, FiUser } from 'react-icons/fi';
+import { FiEdit, FiFilter, FiImage, FiUser } from 'react-icons/fi';
 import { TfiLayoutSidebarRight } from 'react-icons/tfi';
 
 export type IconNameOptions = (typeof iconOptionsArrayData)[number];
@@ -300,6 +301,9 @@ const icons: any = {
 	'text-align-right': CiTextAlignRight,
 	'text-align-center': CiTextAlignCenter,
 	'text-align-justify': CiTextAlignJustify,
+
+	folder: FaFolder,
+	files: FiImage,
 };
 
 const Icon: FC<IconProps> = ({ name, ...props }) => {
