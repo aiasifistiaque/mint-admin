@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { useColorModeValue } from '@chakra-ui/react';
-import { icons } from 'lucide-react';
 
 type IconProps = {
 	size?: number;
@@ -9,7 +8,7 @@ type IconProps = {
 	name: string;
 };
 
-const LucideIcon: FC<IconProps> = ({ name, ...props }) => {
+const LucideIcon: FC<IconProps> = ({ name, color, ...props }) => {
 	const brandColor = useColorModeValue('brand.light', 'brand.dark');
 	const defaultColor = useColorModeValue('#4a4a4a', 'white');
 
@@ -31,7 +30,7 @@ const LucideIcon: FC<IconProps> = ({ name, ...props }) => {
 		<DynamicIcon
 			name={name as any}
 			size={props.size}
-			color={props.color || defaultColor}
+			color={color || defaultColor}
 			{...props}
 		/>
 	);

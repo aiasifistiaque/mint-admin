@@ -9,8 +9,14 @@ import { SidebarBody, SidebarContainer, SidebarHeading, SidebarLogo } from './si
 import Link from 'next/link';
 
 const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props }) => {
+	const sidebarType = process.env.NEXT_PUBLIC_SIDEBAR_TYPE || 'generic';
+
 	const { data } = useGetSelfQuery({});
-	const { data: sidebarData, isFetching, isError } = useGetQuery({ path: `/sidebar/crm/generic` });
+	const {
+		data: sidebarData,
+		isFetching,
+		isError,
+	} = useGetQuery({ path: `/sidebar/crm/${sidebarType}` });
 
 	const title = data?.shop?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Admin';
 

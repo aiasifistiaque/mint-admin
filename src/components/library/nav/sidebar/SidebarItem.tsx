@@ -1,6 +1,6 @@
 'use client';
 import { FC } from 'react';
-import { Flex, FlexProps, Skeleton, Text, TextProps } from '@chakra-ui/react';
+import { Flex, FlexProps, Skeleton, Text, TextProps, useColorModeValue } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 
 import {
@@ -11,6 +11,7 @@ import {
 	navigate,
 	IconNameOptions,
 	radius,
+	LucideIcon,
 } from '../..';
 
 type SidebarItemProps = {
@@ -24,6 +25,14 @@ type SidebarItemProps = {
 
 const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoading = false }) => {
 	const { selected } = useAppSelector((state: any) => state.route);
+	const sidebarType = process.env.NEXT_PUBLIC_SIDEBAR_TYPE || 'generic';
+
+	const iconColor = (isSelected: boolean) =>
+		useColorModeValue(
+			isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
+			isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark'
+		);
+
 	const dispatch = useAppDispatch();
 
 	const router = useRouter();
@@ -46,6 +55,13 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 				<Skeleton
 					isLoaded={!isLoading}
 					{...skeletonCss}
+				/>
+			) : sidebarType == 'server' ? (
+				<LucideIcon
+					// color={'red'}
+					// color={iconColor(isSelected)}
+					name={icon}
+					size={isMobile ? 20 : 16}
 				/>
 			) : (
 				<Icon
