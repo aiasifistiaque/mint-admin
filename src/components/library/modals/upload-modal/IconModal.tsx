@@ -9,7 +9,6 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	useDisclosure,
-	Text,
 	Grid,
 	Tooltip,
 	Input,
@@ -17,11 +16,10 @@ import {
 } from '@chakra-ui/react';
 import { FC, useState, ReactNode } from 'react';
 import { DynamicIcon } from 'lucide-react/dynamic';
-import ICON_LIST, { IconNameType } from './iconNames';
+import ICON_LIST from './iconNames';
 
 import { styles, MFooter } from '.';
-import { DeleteImageButton, EditImageButton } from '../..';
-import { Box } from 'lucide-react';
+import { AddImageButton, DeleteImageButton, EditImageButton } from '../..';
 
 type UploadModalProps = {
 	album?: string;
@@ -80,7 +78,12 @@ const IconModal: FC<UploadModalProps> = ({
 	};
 
 	const buttonTypes = {
-		add: <Button variant='white'>Choose Icon</Button>,
+		add: (
+			<AddImageButton
+				size='200px'
+				title={title || 'Choose Icon'}
+			/>
+		),
 		edit: <EditImageButton />,
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
@@ -136,10 +139,10 @@ const IconModal: FC<UploadModalProps> = ({
 								{list.map((icon: string) => {
 									return (
 										<Tooltip
+											key={icon}
 											label={icon}
 											placement='bottom'>
 											<Flex
-												key={icon}
 												{...iconCss}
 												bg={img === icon ? 'blue.50' : 'background.cardLight'}
 												borderColor={img === icon ? 'blue.300' : 'transparent'}
