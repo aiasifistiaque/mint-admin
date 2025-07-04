@@ -52,6 +52,8 @@ const FormMain: FC<FormMainType> = ({
 		switch (type) {
 			case 'image':
 				return (e: any) => handleImage({ e, dataKey: key || 'image', ...params });
+			case 'icon':
+				return (e: any) => handleImage({ e, dataKey: key || 'icon', ...params });
 			case 'switch':
 			case 'image-array':
 				return (e: any, type?: string) =>

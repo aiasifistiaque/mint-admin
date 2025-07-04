@@ -78,13 +78,8 @@ const IconModal: FC<UploadModalProps> = ({
 	};
 
 	const buttonTypes = {
-		add: (
-			<AddImageButton
-				size='200px'
-				title={title || 'Choose Icon'}
-			/>
-		),
-		edit: <EditImageButton />,
+		add: <Button variant='white'>Choose Icon</Button>,
+		edit: <Button variant='white'>Chance Icon</Button>,
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
 
@@ -133,7 +128,7 @@ const IconModal: FC<UploadModalProps> = ({
 						</Flex>
 
 						<Flex
-							h='70vh'
+							h={{ base: '50vh', md: '70vh' }}
 							w='full'>
 							<Grid {...gridCss}>
 								{list.map((icon: string) => {
@@ -181,7 +176,7 @@ const IconModal: FC<UploadModalProps> = ({
 };
 
 const gridCss: GridProps = {
-	gridTemplateColumns: { base: 'repeat(4, 1fr)', md: 'repeat(16, 1fr)' },
+	gridTemplateColumns: { base: 'repeat(5, 1fr)', md: 'repeat(18, 1fr)' },
 	gap: 3,
 	p: 4,
 	overflowY: 'scroll',

@@ -1,16 +1,7 @@
 import { FC } from 'react';
 
-import {
-	Center,
-	FormControl,
-	Image,
-	Stack,
-	InputProps,
-	GridProps,
-	FlexProps,
-	Text,
-} from '@chakra-ui/react';
-import { HelperText, Label, ImageContainer, IconModal } from '../..';
+import { FormControl, InputProps, GridProps, Flex } from '@chakra-ui/react';
+import { HelperText, Label, IconModal, LucideIcon } from '../..';
 
 type FormDataType = InputProps &
 	GridProps & {
@@ -30,35 +21,27 @@ const VIcon: FC<FormDataType> = ({
 	isRequired = false,
 	label,
 	helper,
-	isDisabled = false,
-	style,
 	folder,
 }) => {
 	const type = value ? 'edit' : 'add';
 
-	const imageComponent = (
-		<ImageContainer
-			w='full'
-			h='full'>
-			<Image
-				h='100%'
-				w='100%'
-				objectFit='contain'
-				src={value}
-			/>
-		</ImageContainer>
-	);
-
-	if (isDisabled) return imageComponent;
 	return (
 		<FormControl isRequired={isRequired}>
-			<Stack w='full'>
+			<Flex
+				flexDir='column'
+				gap={2}
+				w='full'>
 				<Label>{label}</Label>
 
-				<Center
-					{...imageCss}
-					w={style?.w || '200px'}
-					h={style?.h || '200px'}>
+				<Flex
+					align='center'
+					gap={4}>
+					{value && (
+						<LucideIcon
+							size={44}
+							name={value}
+						/>
+					)}
 					<IconModal
 						type={type}
 						handleImage={onChange}
@@ -66,17 +49,11 @@ const VIcon: FC<FormDataType> = ({
 						folder={folder}
 						fileType='image'
 					/>
-					{value && imageComponent}
-				</Center>
+				</Flex>
 				{helper && <HelperText>{helper}</HelperText>}
-			</Stack>
+			</Flex>
 		</FormControl>
 	);
-};
-
-const imageCss: FlexProps = {
-	bg: 'transparent',
-	position: 'relative',
 };
 
 export default VIcon;

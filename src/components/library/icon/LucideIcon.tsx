@@ -14,18 +14,18 @@ const LucideIcon: FC<IconProps> = ({ name, ...props }) => {
 	const defaultColor = useColorModeValue('#4a4a4a', 'white');
 
 	// Check if the icon exists in the icons object
-	const iconExists = name in icons;
+	// const iconExists = name in icons;
 
-	if (!iconExists) {
-		console.warn(`Icon "${name}" not found in lucide-react`);
-		return (
-			<DynamicIcon
-				name='circle-alert'
-				size={props.size}
-				color={props.color || defaultColor}
-			/>
-		);
-	}
+	// if (!iconExists) {
+	// 	console.warn(`Icon "${name}" not found in lucide-react`);
+	// 	return (
+	// 		<DynamicIcon
+	// 			name='circle-alert'
+	// 			size={props.size}
+	// 			color={props.color || defaultColor}
+	// 		/>
+	// 	);
+	// }
 
 	return (
 		<DynamicIcon
