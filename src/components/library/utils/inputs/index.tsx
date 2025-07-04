@@ -60,3 +60,5 @@ export * from './arc';
 export { default as FullEditor } from './FullEditor';
 
 export { default as VVideo } from './VVideo.new';
+
+export { default as VIcon } from './VIcon';

@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { FC, useState, ReactNode } from 'react';
 
-import { MyFolders, styles, MyPhotos, UploadImage, InsertUrl } from '.';
+import { MyFolders, styles, MyPhotos, UploadImage, InsertUrl, MFooter } from '.';
 import { AddImageButton, DeleteImageButton, EditImageButton, useAppSelector } from '../..';
 
 type UploadModalProps = {
@@ -153,17 +153,7 @@ const UploadModal: FC<UploadModalProps> = ({
 						</Tabs>
 					</ModalBody>
 
-					<ModalFooter
-						borderTopWidth={1}
-						borderTopColor='border.light'
-						borderBottomRadius='20px'
-						w='full'
-						gap={2}
-						py={2}
-						_light={{ bg: 'background.light' }}
-						_dark={{ bg: 'background.dark', borderTopColor: 'border.dark' }}
-						justifyContent='flex-end'
-						alignItems='center'>
+					<MFooter>
 						<Button
 							variant='white'
 							onClick={onClose}>
@@ -175,7 +165,7 @@ const UploadModal: FC<UploadModalProps> = ({
 							onClick={handleInsert}>
 							Insert Media
 						</Button>
-					</ModalFooter>
+					</MFooter>
 				</ModalContent>
 			</Modal>
 		</>

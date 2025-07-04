@@ -12,3 +12,4 @@ export { default as AlertContent } from './modal-components/AlertContent';
 export { default as AlertDialogContent } from './modal-components/AlertContent';
 
 export { default as ImageUploader } from './upload-modal/ImageUploader';
+export { default as IconModal } from './upload-modal/IconModal';

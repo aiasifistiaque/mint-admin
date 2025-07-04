@@ -49,3 +49,4 @@ export { default as MyFolders } from './MyFolders';
 export { default as MyPhotos } from './MyPhotos';
 export { default as UploadImage } from './UploadImage';
 export { default as InsertUrl } from './InsertUrl';
+export { default as MFooter } from './MFooter';
