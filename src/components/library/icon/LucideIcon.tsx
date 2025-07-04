@@ -1,3 +1,5 @@
+'use client';
+
 import { FC } from 'react';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { useColorModeValue } from '@chakra-ui/react';
@@ -8,7 +10,7 @@ type IconProps = {
 	name: string;
 };
 
-const LucideIcon: FC<IconProps> = ({ name, color, ...props }) => {
+const LucideIcon: FC<IconProps> = ({ name, ...props }) => {
 	const brandColor = useColorModeValue('brand.light', 'brand.dark');
 	const defaultColor = useColorModeValue('#4a4a4a', 'white');
 
@@ -30,7 +32,7 @@ const LucideIcon: FC<IconProps> = ({ name, color, ...props }) => {
 		<DynamicIcon
 			name={name as any}
 			size={props.size}
-			color={color || defaultColor}
+			color={props?.color || defaultColor}
 			{...props}
 		/>
 	);

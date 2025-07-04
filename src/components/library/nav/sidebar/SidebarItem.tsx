@@ -27,12 +27,6 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 	const { selected } = useAppSelector((state: any) => state.route);
 	const sidebarType = process.env.NEXT_PUBLIC_SIDEBAR_TYPE || 'generic';
 
-	const iconColor = (isSelected: boolean) =>
-		useColorModeValue(
-			isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
-			isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark'
-		);
-
 	const dispatch = useAppDispatch();
 
 	const router = useRouter();
@@ -47,6 +41,11 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 	const isMobile = useIsMobile();
 	const isSelected = selected === path;
 
+	const iconColor = useColorModeValue(
+		isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
+		isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark'
+	);
+
 	return (
 		<Flex
 			onClick={changeRoute}
@@ -59,7 +58,7 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 			) : sidebarType == 'server' ? (
 				<LucideIcon
 					// color={'red'}
-					// color={iconColor(isSelected)}
+					// color={'background.dark'}
 					name={icon}
 					size={isMobile ? 20 : 16}
 				/>
