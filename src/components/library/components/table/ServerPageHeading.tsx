@@ -1,4 +1,13 @@
-import { Flex, FlexProps, Heading, Button, useColorModeValue, Text } from '@chakra-ui/react';
+import {
+	Flex,
+	FlexProps,
+	Heading,
+	Button,
+	useColorModeValue,
+	Text,
+	Skeleton,
+	SkeletonText,
+} from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
 import { BackendCreateModal, Icon } from '../..';
@@ -14,6 +23,7 @@ type PageHeadingProps = FlexProps & {
 	data?: any;
 	export?: boolean;
 	table: any;
+	isLoading?: boolean;
 };
 
 const ServerPageHeading: React.FC<PageHeadingProps> = ({
@@ -24,6 +34,7 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 	path,
 	table,
 	data,
+	isLoading = false,
 	export: exportData,
 	...props
 }) => {
@@ -65,12 +76,28 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 			{...wrapperCss}
 			{...props}>
 			<Flex {...containerCss}>
-				<Heading {...headingCss}>{title}</Heading>
+				{isLoading ? (
+					<SkeletonText
+						noOfLines={3}
+						w='300px'
+						h='40px'
+					/>
+				) : (
+					<Heading {...headingCss}>{title}</Heading>
+				)}
 
-				<Flex {...buttonGroupCss}>
-					<>{Boolean(exportData) && exportButton}</>
-					<>{(Boolean(button) || isModal) && renderButton()}</>
-				</Flex>
+				{isLoading ? (
+					<Skeleton
+						w='140px'
+						h='40px'
+						borderRadius='8px'
+					/>
+				) : (
+					<Flex {...buttonGroupCss}>
+						<>{Boolean(exportData) && exportButton}</>
+						<>{(Boolean(button) || isModal) && renderButton()}</>
+					</Flex>
+				)}
 			</Flex>
 			{table?.subTitle && <Text {...subHeadingCss}>{table?.subTitle}</Text>}
 		</Flex>

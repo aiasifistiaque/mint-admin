@@ -14,6 +14,11 @@ export const userApi = mainApi.injectEndpoints({
 			providesTags: ['schema'],
 		}),
 
+		getRoute: builder.query<any, string>({
+			query: (path: string) => `${path}/get/route`,
+			providesTags: ['route'],
+		}),
+
 		getConfig: builder.query<any, string>({
 			query: (path: string) => `${path}/get/config`,
 			providesTags: ['config'],
@@ -214,4 +219,5 @@ export const {
 	useDeleteProductlistByKeyIdMutation,
 	useGetSchemaQuery,
 	useGetConfigQuery,
+	useGetRouteQuery,
 } = userApi;
