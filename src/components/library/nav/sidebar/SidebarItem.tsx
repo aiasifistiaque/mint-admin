@@ -1,6 +1,15 @@
 'use client';
 import { FC } from 'react';
-import { Flex, FlexProps, Skeleton, Text, TextProps, useColorModeValue } from '@chakra-ui/react';
+import {
+	Center,
+	Flex,
+	FlexProps,
+	Grid,
+	Skeleton,
+	Text,
+	TextProps,
+	useColorModeValue,
+} from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 
 import {
@@ -47,7 +56,7 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 	);
 
 	return (
-		<Flex
+		<Grid
 			onClick={changeRoute}
 			{...containerCss(isLoading, isSelected, href)}>
 			{isLoading ? (
@@ -56,12 +65,17 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 					{...skeletonCss}
 				/>
 			) : sidebarType == 'server' ? (
-				<LucideIcon
-					// color={'red'}
-					// color={'background.dark'}
-					name={icon}
-					size={isMobile ? 20 : 16}
-				/>
+				<Center
+					boxSize={isMobile ? 6 : 5}
+					w='full'
+					h='full'>
+					<LucideIcon
+						// color={'red'}
+						// color={'background.dark'}
+						name={icon}
+						size={isMobile ? 20 : 16}
+					/>
+				</Center>
 			) : (
 				<Icon
 					color='inherit'
@@ -76,7 +90,7 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 				borderRadius={SKELETON_BORDER_RADIUS}>
 				<Text {...bodyTextCss(isSelected)}>{children}</Text>
 			</Skeleton>
-		</Flex>
+		</Grid>
 	);
 };
 
@@ -94,9 +108,10 @@ const bodyTextCss = (isSelected?: boolean): TextProps => {
 
 const containerCss = (isLoading: boolean, isSelected: boolean, href?: string): FlexProps => {
 	return {
+		gridTemplateColumns: '1fr 6fr',
 		borderRadius: radius.CONTAINER,
 		alignItems: 'center',
-		gap: 2.5,
+		gap: 1,
 		px: 2.5,
 		transition: 'all .1s ease-in-out',
 		fontWeight: '600',
