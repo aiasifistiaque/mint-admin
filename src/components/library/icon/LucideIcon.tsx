@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { useColorModeValue } from '@chakra-ui/react';
 
@@ -38,4 +38,4 @@ const LucideIcon: FC<IconProps> = ({ name, ...props }) => {
 	);
 };
 
-export default LucideIcon;
+export default memo(LucideIcon);

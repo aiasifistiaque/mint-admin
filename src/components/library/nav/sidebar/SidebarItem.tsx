@@ -65,7 +65,8 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 					{...skeletonCss}
 				/>
 			) : sidebarType == 'server' ? (
-				<Center
+				<Flex
+					align='center'
 					boxSize={isMobile ? 6 : 5}
 					w='full'
 					h='full'>
@@ -75,7 +76,7 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 						name={icon}
 						size={isMobile ? 20 : 16}
 					/>
-				</Center>
+				</Flex>
 			) : (
 				<Icon
 					color='inherit'
