@@ -1,6 +1,18 @@
 'use client';
 
-import { Menu, MenuGroup, Flex, Input, useDisclosure, MenuDivider, Button } from '@chakra-ui/react';
+import {
+	Menu,
+	MenuGroup,
+	Flex,
+	Input,
+	useDisclosure,
+	MenuDivider,
+	Button,
+	Text,
+	Popover,
+	PopoverTrigger,
+	PopoverContent,
+} from '@chakra-ui/react';
 
 import { useState, FC, useRef, useEffect } from 'react';
 
@@ -126,78 +138,76 @@ const VDataMenu: FC<VDataMenuProps> = ({
 					}
 				/>
 			)}
-			<Menu onClose={closeMenu}>
-				{({ isOpen }) => (
-					<>
-						<FormControl
+			<Popover onClose={closeMenu}>
+				<PopoverTrigger>
+					<Button
+						value={value}
+						isActive={isOpen}>
+						{value ? getNameById(value) : `Select ${label}`}
+					</Button>
+				</PopoverTrigger>
+				<PopoverContent>
+					<FormControl
+						isRequired={isRequired}
+						label={label}
+						helper={helper}
+						w='full'>
+						<Input
+							ref={inputRef}
 							isRequired={isRequired}
-							label={label}
-							helper={helper}
-							w='full'>
-							<DataMenuButton
-								value={value}
-								isActive={isOpen}>
-								{value ? getNameById(value) : `Select ${label}`}
-							</DataMenuButton>
+							value={value}
+							{...hiddenInputCss}
+							{...props}
+						/>
+					</FormControl>
+
+					<MenuGroup>
+						<Flex
+							p={1}
+							py={0.5}>
 							<Input
-								ref={inputRef}
-								isRequired={isRequired}
-								value={value}
-								{...hiddenInputCss}
-								{...props}
+								{...searchInputCss}
+								value={search}
+								onChange={handleSearch}
 							/>
-						</FormControl>
+						</Flex>
+					</MenuGroup>
+					<MenuDivider mb={1} />
+					{dataModel && (
+						<>
+							<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
+							<MenuDivider
+								mt={1}
+								mb={0}
+							/>
+						</>
+					)}
+					{item?.addItem && (
+						<>
+							<MenuItem
+								fontWeight='700'
+								onClick={() => addItemRef.current.click()}>
+								(+) Add New Item
+							</MenuItem>
+							<MenuDivider
+								mt={1}
+								mb={0}
+							/>
+						</>
+					)}
 
-						<MenuContainer w={WIDTH}>
-							<MenuGroup>
-								<Flex
-									p={1}
-									py={0.5}>
-									<Input
-										{...searchInputCss}
-										value={search}
-										onChange={handleSearch}
-									/>
-								</Flex>
-							</MenuGroup>
-							<MenuDivider mb={1} />
-							{dataModel && (
-								<>
-									<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
-									<MenuDivider
-										mt={1}
-										mb={0}
-									/>
-								</>
-							)}
-							{item?.addItem && (
-								<>
-									<MenuItem
-										fontWeight='700'
-										onClick={() => addItemRef.current.click()}>
-										(+) Add New Item
-									</MenuItem>
-									<MenuDivider
-										mt={1}
-										mb={0}
-									/>
-								</>
-							)}
-
-							<Scroll maxH={MAX_H}>
-								{unselect && (
-									<MenuItem
-										{...unselectTextCss}
-										onClick={() => handleChange({ name: ``, _id: undefined })}>
-										<i>Unselect</i>
-									</MenuItem>
-								)}
-								{renderMenuItems}
-							</Scroll>
-						</MenuContainer>
-					</>
-				)}
-			</Menu>
+					<Scroll maxH={MAX_H}>
+						{unselect && (
+							<MenuItem
+								{...unselectTextCss}
+								onClick={() => handleChange({ name: ``, _id: undefined })}>
+								<i>Unselect</i>
+							</MenuItem>
+						)}
+						{renderMenuItems}
+					</Scroll>
+				</PopoverContent>
+			</Popover>
 		</Flex>
 	);
 };

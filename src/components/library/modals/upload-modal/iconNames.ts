@@ -165,7 +165,7 @@ const ICON_NAMES = [
 	'between-horizontal-start',
 	'between-vertical-end',
 	'between-vertical-start',
-	// 'bicycle',
+
 	'bike',
 	'binary',
 	'binoculars',
@@ -215,9 +215,7 @@ const ICON_NAMES = [
 	'boom-box',
 	'bot',
 	'bot-message-square',
-	// 'bottle',
-	// 'bottle-water',
-	// 'bow',
+
 	'box',
 	'box-select',
 	'boxes',
@@ -226,7 +224,7 @@ const ICON_NAMES = [
 	'brain',
 	'brain-circuit',
 	'brain-cog',
-	// 'bread',
+
 	'briefcase',
 	'briefcase-business',
 	'briefcase-medical',
@@ -284,7 +282,7 @@ const ICON_NAMES = [
 	'cat',
 	'cctv',
 	'check',
-	// 'check-2',
+
 	'check-check',
 	'chef-hat',
 	'cherry',
@@ -581,7 +579,7 @@ const ICON_NAMES = [
 	'file-video-2',
 	'file-volume',
 	'file-volume-2',
-	// 'file-volume-x',
+
 	'file-warning',
 	'file-x',
 	'file-x-2',
@@ -626,7 +624,7 @@ const ICON_NAMES = [
 	'folder-git',
 	'folder-git-2',
 	'folder-heart',
-	// 'folder-image',
+
 	'folder-input',
 	'folder-kanban',
 	'folder-key',
@@ -644,7 +642,7 @@ const ICON_NAMES = [
 	'folder-sync',
 	'folder-tree',
 	'folder-up',
-	// 'folder-user',
+
 	'folder-x',
 	'folders',
 	'footprints',
@@ -665,8 +663,7 @@ const ICON_NAMES = [
 	'gamepad',
 	'gamepad-2',
 	'gantt-chart',
-	// 'garage',
-	// 'garbage',
+
 	'gauge',
 	'gavel',
 	'gem',
@@ -813,7 +810,7 @@ const ICON_NAMES = [
 	'link',
 	'link-2',
 	'link-2-off',
-	// 'link-off',
+
 	'linkedin',
 	'list',
 	'list-check',
@@ -845,7 +842,7 @@ const ICON_NAMES = [
 	'log-out',
 	'lollipop',
 	'luggage',
-	// 'lungs',
+
 	'magnet',
 	'mail',
 	'mail-check',
@@ -979,7 +976,7 @@ const ICON_NAMES = [
 	'octagon-alert',
 	'octagon-minus',
 	'octagon-pause',
-	// 'octagon-stop',
+
 	'octagon-x',
 	'option',
 	'orbit',
@@ -1049,7 +1046,7 @@ const ICON_NAMES = [
 	'picture-in-picture',
 	'picture-in-picture-2',
 	'pie-chart',
-	// 'pig',
+
 	'piggy-bank',
 	'pilcrow',
 	'pilcrow-left',
@@ -1058,8 +1055,7 @@ const ICON_NAMES = [
 	'pill-bottle',
 	'pin',
 	'pin-off',
-	// 'pineapple',
-	// 'ping-pong',
+
 	'pipette',
 	'pizza',
 	'plane',
@@ -1254,7 +1250,7 @@ const ICON_NAMES = [
 	'smile',
 	'smile-plus',
 	'snail',
-	// 'snake',
+
 	'snowflake',
 	'sofa',
 	'sort-asc',
@@ -1335,7 +1331,7 @@ const ICON_NAMES = [
 	'square-x',
 	'squircle',
 	'squirrel',
-	// 'stairs',
+
 	'stamp',
 	'star',
 	'star-half',
@@ -1345,17 +1341,14 @@ const ICON_NAMES = [
 	'stethoscope',
 	'sticker',
 	'sticky-note',
-	// 'stop',
+
 	'stop-circle',
 	'store',
 	'stretch-horizontal',
 	'stretch-vertical',
 	'strikethrough',
 	'subscript',
-	// 'subscript-2',
-	// 'subtract',
-	// 'subway',
-	// 'suitcase',
+
 	'sun',
 	'sun-dim',
 	'sun-medium',
@@ -1364,7 +1357,7 @@ const ICON_NAMES = [
 	'sunrise',
 	'sunset',
 	'superscript',
-	// 'superscript-2',
+
 	'swiss-franc',
 	'switch-camera',
 	'sword',
@@ -1389,7 +1382,7 @@ const ICON_NAMES = [
 	'tally-5',
 	'tangent',
 	'target',
-	// 'taxi',
+
 	'telescope',
 	'tent',
 	'tent-tree',
@@ -1438,7 +1431,7 @@ const ICON_NAMES = [
 	'trash',
 	'trash-2',
 	'tree-deciduous',
-	// 'tree-evergreen',
+
 	'tree-palm',
 	'tree-pine',
 	'trees',
@@ -1556,4 +1549,4 @@ const ICON_NAMES = [
 export type IconNameType = (typeof ICON_NAMES)[number];
 
 export { ICON_NAMES };
-export default ICON_NAMES;
+export default [];
