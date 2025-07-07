@@ -1549,4 +1549,4 @@ const ICON_NAMES = [
 export type IconNameType = (typeof ICON_NAMES)[number];
 
 export { ICON_NAMES };
-export default [];
+export default ICON_NAMES;

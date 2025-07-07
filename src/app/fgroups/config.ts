@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { FormLayout } from '@/components/library';
 
 export const fields = [

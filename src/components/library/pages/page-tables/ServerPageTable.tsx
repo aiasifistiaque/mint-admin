@@ -3,24 +3,19 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import {
-	useAppDispatch,
-	useAppSelector,
-	CustomTable,
-	Layout,
-	Toast,
-	Headers,
-	TableRowComponent,
-	setFields,
-	setPreferences,
-	useGetAllQuery,
-	Column,
-	useGetConfigQuery,
-	ServerTableObjectProps,
-	ServerPageHeading,
-	useGetSelfQuery,
-} from '../..';
+// Direct imports instead of barrel export
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
+import CustomTable from '../../components/table/CustomTable';
+import Layout from '../../nav/Layout';
+import Toast from '../../components/toast/Toast';
+import Headers from '../../components/table/table-components/header/Headers';
+import TableRowComponent from '../../components/table/table-components/row/TableRowComponent';
+import { setFields, setPreferences } from '../../store/slices/tableSlice';
+import { useGetAllQuery, useGetConfigQuery, useGetSelfQuery, useGetRouteQuery } from '../../store';
+import Column from '../../containers/Column';
+import ServerPageHeading from '../../components/table/ServerPageHeading';
 import { Flex } from '@chakra-ui/react';
+import { ServerTableObjectProps } from '../../types';
 
 type TableProps = {
 	table: ServerTableObjectProps;

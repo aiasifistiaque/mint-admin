@@ -10,9 +10,12 @@ import {
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
-import { BackendCreateModal, Icon } from '../..';
+// import { BackendCreateModal, Icon } from '../..';
+
 import ExportModal from '../modals/export/ExportModal';
 import { buttonGroupCss, containerCss, headingCss, subHeadingCss, wrapperCss } from './style';
+import { BackendCreateModal } from '../../modals';
+import { Icon } from '../../icon';
 
 type PageHeadingProps = FlexProps & {
 	title: string;

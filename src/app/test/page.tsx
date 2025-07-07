@@ -1,6 +1,5 @@
 'use client';
 
-import VTableMenu from '@/components/library/utils/inputs/section/VTableMenu/VTableMenu';
 import { Center } from '@chakra-ui/react';
 import React from 'react';
 
@@ -12,11 +11,11 @@ const page = () => {
 			flex={1}
 			w='100vw'
 			h='100vh'>
-			<VTableMenu
+			{/* <VTableMenu
 				value={'..'}
 				name='table'
 				onChange={() => {}}
-			/>
+			/> */}
 		</Center>
 	);
 };

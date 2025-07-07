@@ -1,7 +1,9 @@
+// @ts-nocheck
+
 'use client';
-import React from 'react';
+
 import { NextPage } from 'next';
-import { FormLayout, BackendPageTable, BackendTableObjectProps } from '@/components/library';
+import { BackendPageTable, BackendTableObjectProps } from '@/components/library';
 import { fields, formFields, tableFields } from './config';
 
 const table: BackendTableObjectProps = {

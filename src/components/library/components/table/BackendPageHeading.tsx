@@ -1,9 +1,13 @@
 import { Flex, FlexProps, Heading, Button, useColorModeValue, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { FC } from 'react';
-import { BackendCreateModal, createFormFields, Icon } from '../..';
+
+// import { BackendCreateModal, createFormFields, Icon } from '../..';
 import ExportModal from '../modals/export/ExportModal';
 import { buttonGroupCss, containerCss, headingCss, subHeadingCss, wrapperCss } from './style';
+import { BackendCreateModal } from '../../modals';
+import { createFormFields } from '../../model';
+import { Icon } from '../../icon';
 
 type PageHeadingProps = FlexProps & {
 	title: string;

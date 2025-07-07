@@ -1,42 +1,42 @@
 import { InputProps, MenuProps, SelectProps, SwitchProps, TextareaProps } from '@chakra-ui/react';
 import { FC, useEffect } from 'react';
 
-import {
-	VInput,
-	VSelect,
-	VSwitch,
-	VImage,
-	VTextarea,
-	VDataSelect,
-	VCheckbox,
-	ViewOnly,
-	VTags,
-	VDataTags,
-	VDataMenu,
-	InputDataType,
-	VImageArray,
-	VCustomAttributes,
-	VSection,
-	VSlug,
-	VPermissions,
-	VCatCollectionList,
-	VCustom,
-	useGetByIdQuery,
-	VArrayString,
-	VColor,
-	VEditor,
-	VFont,
-	fontWeightOptions,
-	BLineHeight,
-	BOpacity,
-	VSlider,
-	VSectionDataArray,
-	VFontSize,
-	VAlignment,
-	VFile,
-	VVideo,
-	VIcon,
-} from '../../..';
+// Direct imports instead of barrel export
+import VInput from '../../../utils/inputs/VInput';
+import VSelect from '../../../utils/inputs/VSelect';
+import VSwitch from '../../../utils/inputs/VSwitch';
+import VImage from '../../../utils/inputs/VImage';
+import VTextarea from '../../../utils/inputs/VTextarea';
+import VDataSelect from '../../../utils/inputs/VDataSelect';
+import VCheckbox from '../../../utils/inputs/VCheckbox';
+import ViewOnly from '../../../utils/inputs/ViewOnly';
+import VTags from '../../../utils/inputs/VTags';
+import VDataTags from '../../../utils/inputs/VDataTags';
+import VDataMenu from '../../../utils/inputs/VDataMenu';
+import { InputDataType } from '../../../types';
+import VImageArray from '../../../utils/inputs/VImageArray';
+import VCustomAttributes from '../../../utils/inputs/VCustomAttributes';
+import VSection from '../../../utils/inputs/section/VSection';
+import VSlug from '../../../utils/inputs/VSlug';
+import VPermissions from '../../../utils/inputs/VPermissions';
+import VCatCollectionList from '../../../utils/inputs/VCatCollectionList';
+import VCustom from '../../../utils/inputs/section/VCustom';
+import { useGetByIdQuery } from '../../../store/services/commonApi';
+import VArrayString from '../../../utils/inputs/section/VArrayStrint';
+import VColor from '../../../utils/inputs/VColor';
+import VEditor from '../../../utils/inputs/VEditorr';
+import VFont from '../../../utils/inputs/Vfont';
+import { fontWeightOptions } from '../../../data/fonts';
+import BLineHeight from '../../../utils/inputs/sliders/BLineHeight';
+import BOpacity from '../../../utils/inputs/sliders/BOpacity';
+import VSlider from '../../../utils/inputs/sliders/BSlider';
+import VSectionDataArray from '../../../utils/inputs/section/VSectionDataArray';
+import VFontSize from '../../../utils/inputs/VFontSize';
+import VAlignment from '../../../utils/inputs/VAlign';
+import VFile from '../../../utils/inputs/VFile';
+import VVideo from '../../../utils/inputs/VVideo.new';
+import VIcon from '../../../utils/inputs/VIcon';
+
 import { flexAlignOptions, flexJustifyOptions, textAlignOptions } from './options';
 
 type Option = {

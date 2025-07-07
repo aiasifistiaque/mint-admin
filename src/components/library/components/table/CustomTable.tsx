@@ -1,27 +1,26 @@
 import { Table, Thead, Tr, Tbody, Flex, Text, CloseButton } from '@chakra-ui/react';
 import { FC, useEffect } from 'react';
 
-import {
-	useAppDispatch,
-	TableContainer,
-	TableSkeleton,
-	TableSearch,
-	ResultContainer,
-	TableRefresh,
-	Preferences,
-	SelectedItemsContainer,
-	FilterContainer,
-	TableSettingsMenuContainer,
-	TableSearchContainer,
-	TableErrorMessage,
-	DynamicFilters,
-	CustomTableProps,
-	SelectedMenu,
-	selectAll,
-	TableResultContainer,
-	TableSort,
-	setCurrentPath,
-} from '../..';
+// Direct imports instead of barrel export
+import { useAppDispatch } from '../../hooks/useReduxHooks';
+import TableContainer from './table-components/containers/TableContainer';
+import TableSkeleton from './TableSkeleton';
+import TableSearch from './table-components/tool-bar/table-toolbar/TableSearch';
+import ResultContainer from './table-components/pagination/ResultContainer';
+import TableRefresh from './table-components/tool-bar/table-toolbar/TableRefresh';
+import Preferences from './Preferences';
+import SelectedItemsContainer from './table-components/tool-bar/select-tool-bar/SelectedItemsContainer';
+import FilterContainer from './table-components/tool-bar/table-toolbar/FIlterContainer';
+import TableSettingsMenuContainer from './table-components/tool-bar/table-toolbar/TableSettingsMenuContainer';
+import TableSearchContainer from './table-components/tool-bar/table-toolbar/TableSearchContainer';
+import TableErrorMessage from './table-components/error/TableErrorMessage';
+import DynamicFilters from '../../dynamic-filters/DynamicFilters';
+import { CustomTableProps } from '../../types/components.types';
+import SelectedMenu from './table-components/menu/SelectedMenu';
+import { selectAll } from '../../store/slices/tableSlice';
+import TableResultContainer from './table-components/pagination/TableResultContainer';
+import TableSort from './MobileSort';
+import { setCurrentPath } from '../../store/slices/tableSlice';
 
 const CustomTable: FC<CustomTableProps> = ({
 	headers,

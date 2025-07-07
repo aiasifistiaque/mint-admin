@@ -1,7 +1,12 @@
 import { FC } from 'react';
 
 import { FormControl, InputProps, GridProps, Flex } from '@chakra-ui/react';
-import { HelperText, Label, IconModal, LucideIcon } from '../..';
+
+import IconModal from '../../modals/upload-modal/IconModal';
+
+import HelperText from '../../form/label/HelperText';
+import Label from '../../form/label/Label';
+import LucideIcon from '../../icon/LucideIcon';
 
 type FormDataType = InputProps &
 	GridProps & {

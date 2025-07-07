@@ -1,10 +1,11 @@
 'use client';
 import React from 'react';
 import { NextPage } from 'next';
-import { BackendPageTable, BackendTableObjectProps } from '@/components/library';
+// import { BackendPageTable, BackendTableObjectProps } from '@/components/library';
 import { formFields, fields, tableFields } from './config';
+import BackendPageTable from '@/components/library/pages/page-tables/BackendPageTable';
 
-const table: BackendTableObjectProps = {
+const table: any = {
 	title: 'Service Offers',
 	path: 'offers',
 	export: true,

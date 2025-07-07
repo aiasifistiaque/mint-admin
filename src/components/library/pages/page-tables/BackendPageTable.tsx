@@ -3,26 +3,20 @@
 import { FC, useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { useGetSelfQuery } from '../../';
-
-import {
-	useAppDispatch,
-	useAppSelector,
-	CustomTable,
-	BackendPageHeading,
-	Layout,
-	Toast,
-	Headers,
-	TableRowComponent,
-	setFields,
-	setPreferences,
-	useGetAllQuery,
-	BackendTableObjectProps,
-	useGetSchemaQuery,
-	convertToTableFields,
-	Column,
-} from '../..';
+// Direct imports instead of barrel export
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks';
+import CustomTable from '../../components/table/CustomTable';
+import Layout from '../../nav/Layout';
+import Toast from '../../components/toast/Toast';
+import Headers from '../../components/table/table-components/header/Headers';
+import TableRowComponent from '../../components/table/table-components/row/TableRowComponent';
+import { setFields, setPreferences } from '../../store/slices/tableSlice';
+import { useGetAllQuery, useGetSelfQuery, useGetSchemaQuery } from '../../store';
+import Column from '../../containers/Column';
 import { Flex } from '@chakra-ui/react';
+import { BackendTableObjectProps } from '../../types';
+import BackendPageHeading from '../../components/table/BackendPageHeading';
+import { convertToTableFields } from '../../model';
 
 type TableProps = {
 	table: BackendTableObjectProps;

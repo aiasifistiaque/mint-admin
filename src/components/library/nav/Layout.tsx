@@ -7,7 +7,6 @@ import {
 	AuthWrapper,
 	SelfMenu,
 	SpaceBetween,
-	CreateMenu,
 	padding,
 	sizes,
 	useAppDispatch,
@@ -15,9 +14,7 @@ import {
 	Body,
 	Navbar,
 	Sidebar,
-	Column,
 	LayoutWrapper,
-	THEME,
 	refresh,
 	navigate,
 	Align,
@@ -61,7 +58,9 @@ const Layout: FC<LayoutProps> = ({
 	const isMobile = useIsMobile();
 	const showMenu = isMobile || props?.type == 'pos';
 
-	const { data, isFetching, isError } = useGetQuery({ path: `/sidebar/crm/page` });
+	const sidebarType = process.env.NEXT_PUBLIC_SIDEBAR_TYPE || 'generic';
+
+	const { data, isFetching, isError } = useGetQuery({ path: `/sidebar/crm/${sidebarType}` });
 
 	const ICON_SIZE = 17;
 
