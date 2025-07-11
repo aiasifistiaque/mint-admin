@@ -16,14 +16,18 @@ import {
 import { useEffect, useState, useCallback } from 'react';
 
 import {
+	MenuModal,
 	MenuModalHeader,
 	MenuModalBody,
 	MenuModalCloseButton,
 	MenuModalFooter,
-	useUpdatePreferencesMutation,
-	formatFieldTitle,
-} from '../..';
-import { MenuModal, Icon, sizes, radius, useAppSelector, formatFieldName } from '../..';
+} from '../../components/table/table-components/menu-modals';
+
+import { useUpdatePreferencesMutation } from '../../store';
+import { useAppSelector } from '../../hooks';
+import { formatFieldTitle } from '../../functions';
+import { sizes, radius } from '../../config';
+import { Icon } from '../../icon';
 
 const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();

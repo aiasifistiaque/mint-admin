@@ -10,7 +10,9 @@ import {
 } from '@chakra-ui/react';
 import { TbSearch } from 'react-icons/tb';
 
-import { useAppDispatch, updateTable, radius, sizes } from '../../../../..';
+import { useAppDispatch } from '../../../../../hooks';
+import { radius, sizes } from '../../../../../config';
+import { updateTable } from '../../../../../store';
 
 const TableSearch = () => {
 	const [value, setValue] = useState<string>('');

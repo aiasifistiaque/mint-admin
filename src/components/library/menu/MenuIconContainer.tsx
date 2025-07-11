@@ -1,4 +1,4 @@
-import { Center, Flex, FlexProps } from '@chakra-ui/react';
+import { Center, FlexProps } from '@chakra-ui/react';
 import React from 'react';
 
 const MenuIconContainer = ({ children, ...props }: any) => {

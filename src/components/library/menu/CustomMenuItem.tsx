@@ -1,7 +1,8 @@
 import { FC, ReactNode } from 'react';
-import { MenuDivider, MenuItem, MenuItemProps, Flex } from '@chakra-ui/react';
+import { MenuDivider, MenuItem, Flex } from '@chakra-ui/react';
 import Link from 'next/link';
-import { Icon, radius } from '..';
+import { radius } from '../config';
+import { Icon } from '../icon';
 
 type CustomMenuItemProps = any & {
 	children: ReactNode;

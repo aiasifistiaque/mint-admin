@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Menu } from '@chakra-ui/react';
 import {
 	MenuButton,
@@ -21,18 +21,29 @@ type TableMenuProps = {
 	data: any;
 	id: string;
 	path: string;
-	title: any;
-	item: any;
+	title?: any;
+	item?: any;
 	doc: any;
+	children?: ReactNode;
 };
 
-const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, doc }) => {
+const TableMenu: FC<TableMenuProps> = ({
+	data,
+	id,
+	path,
+	title,
+	item: dataItem,
+	doc,
+	children,
+}) => {
 	const { data: schemaData, isFetching } = useGetConfigQuery(path);
 	return (
 		<Menu>
-			<CustomTd>
-				<MenuButton />
-			</CustomTd>
+			{children || (
+				<CustomTd>
+					<MenuButton />
+				</CustomTd>
+			)}
 
 			<MenuContainer>
 				{data?.map((item: any, i: number) => {
@@ -229,7 +240,7 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 								<item.modal
 									{...commonProps}
 									title={item?.title}
-									data={dataItem}
+									data={doc}
 									doc={doc}
 								/>
 							);
@@ -237,7 +248,7 @@ const TableMenu: FC<TableMenuProps> = ({ data, id, path, title, item: dataItem, 
 							return (
 								<item.modal
 									{...commonProps}
-									data={dataItem}
+									data={doc}
 									title={item?.title}
 								/>
 							);

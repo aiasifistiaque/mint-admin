@@ -263,6 +263,13 @@ export const colors: any = {
 		800: 'black', //initial bg color of the load of colormode
 		900: 'green',
 	},
+	image: {
+		50: '#ececec', //Primary For Light Mode
+		100: '#ddd', //Primary Hover For Light Mode
+		200: '#ccc', //Hover For Light Mode
+		800: '#444',
+		900: '#111', //Primary For Dark Mode
+	},
 
 	result: {
 		bg: {

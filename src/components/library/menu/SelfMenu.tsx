@@ -10,13 +10,15 @@ import {
 	Center,
 	useColorModeValue,
 } from '@chakra-ui/react';
-import CustomMenuItem from './CustomMenuItem';
-import { MenuIconContainer } from '.';
 
-import { Icon, useAppDispatch, MenuContainer, THEME, logout, useGetSelfQuery } from '..';
+import CustomMenuItem from './CustomMenuItem';
+import { MenuIconContainer, MenuContainer } from '.';
+import { Icon } from '../icon';
+import { useGetSelfQuery, logout } from '../store';
+import { useAppDispatch } from '../hooks';
 
 const SelfMenu = ({ iconSize }: { iconSize?: number }) => {
-	const { data, isFetching, isError, error, isSuccess } = useGetSelfQuery({});
+	const { data } = useGetSelfQuery({});
 	const dispatch = useAppDispatch();
 	const handleLogout = () => {
 		dispatch(logout());

@@ -2,7 +2,8 @@ import { FC } from 'react';
 import { Flex, FlexProps, Text } from '@chakra-ui/react';
 
 import { useIsMobile, useAppSelector } from '../../../../hooks';
-import { sizes, Pagination, THEME, styles as style } from '../../../..';
+import { sizes, THEME, styles as style } from '../../../../config';
+import Pagination from '../../../../components/pagination/Pagination';
 
 type ResultContainerProps = FlexProps & {
 	data: any;

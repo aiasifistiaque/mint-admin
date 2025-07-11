@@ -4,7 +4,8 @@ import { FlexProps } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { FC, useEffect, ReactNode } from 'react';
 
-import { useAppDispatch, useAuth, clearFilters } from '..';
+import { useAppDispatch, useAuth } from '../hooks';
+import { clearFilters } from '../store';
 
 export type FlexPropsType = FlexProps & {
 	children?: ReactNode;

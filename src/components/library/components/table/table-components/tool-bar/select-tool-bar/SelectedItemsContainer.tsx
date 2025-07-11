@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Flex } from '@chakra-ui/react';
-import { radius, shadow, SpaceBetween } from '../../../../..';
+import { radius, shadow } from '../../../../../config';
+import { SpaceBetween } from '../../../../../containers';
 
 const SelectedItemsContainer = ({ children }: { children: ReactNode }) => {
 	return (

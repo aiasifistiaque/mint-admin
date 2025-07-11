@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Flex, Text } from '@chakra-ui/react';
-import { useAppSelector, hasActiveFilters, formatFilterKeys } from '../../../../..';
+import { hasActiveFilters, formatFilterKeys } from '../../../../../functions';
+import { useAppSelector } from '../../../../../hooks';
 
 const FIlterContainer = ({ children }: { children: ReactNode }) => {
 	const { filters } = useAppSelector((state: any) => state.table);

@@ -16,22 +16,18 @@ import {
 import { useEffect, useState } from 'react';
 import { TbArrowUp, TbArrowDown, TbArrowsDownUp } from 'react-icons/tb';
 
+import { radius, sizes } from '../../config';
+import { useIsMobile, useAppDispatch, useAppSelector } from '../../hooks';
+import { Icon } from '../../icon';
 import {
-	Icon,
-	useAppSelector,
 	MenuModal,
 	MenuModalHeader,
 	MenuModalBody,
 	MenuModalCloseButton,
-	radius,
-	formatFieldName,
-	sizes,
-	useAppDispatch,
-	updateTable,
-	useIsMobile,
-} from '../..';
+} from '../../components/table/table-components/menu-modals';
+import { updateTable } from '../../store';
 
-const MobileSort = ({ tableData }: { tableData: any }) => {
+const MobileSort = ({ tableData, show = false }: { tableData: any; show?: boolean }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { fields = [], preferences = [], sort: val } = useAppSelector(state => state.table);
 	const [selected, setSelected] = useState<string[]>([]);
@@ -54,7 +50,7 @@ const MobileSort = ({ tableData }: { tableData: any }) => {
 		setSelected(preferences);
 	}, [preferences]);
 
-	if (!isMobile) return null;
+	if (!isMobile && !show) return null;
 
 	// const checkboxes = <Text>{JSON.stringify(tableData)}</Text>;
 

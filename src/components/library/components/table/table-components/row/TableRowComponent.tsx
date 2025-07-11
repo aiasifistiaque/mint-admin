@@ -1,27 +1,13 @@
 import { FC, Fragment } from 'react';
 
 import { format } from 'date-fns';
-import {
-	GridItem,
-	Heading,
-	StackProps,
-	TableRowProps,
-	useClipboard,
-	Flex,
-	Tooltip,
-	Icon,
-} from '@chakra-ui/react';
-import {
-	useIsMobile,
-	formatDataKey,
-	TableRow,
-	Column,
-	EditableTableData,
-	TableData,
-	TableMenu,
-	formatFieldTitle,
-} from '../../../..';
-import { CopyIcon } from '@chakra-ui/icons';
+import { GridItem, Heading, StackProps, TableRowProps, Flex } from '@chakra-ui/react';
+import { TableRow, EditableTableData, TableData, TableMenu } from '../../../..';
+
+import { useIsMobile } from '../../../../hooks';
+
+import { formatDataKey, formatFieldTitle } from '../../../../functions';
+import { Column } from '../../../../containers';
 
 type TableProps = StackProps &
 	TableRowProps & {
@@ -88,7 +74,6 @@ const TableRowComponent: FC<TableProps> = ({
 					else
 						return (
 							<TableMenu
-								item={item}
 								path={path}
 								data={menu}
 								id={item?._id}

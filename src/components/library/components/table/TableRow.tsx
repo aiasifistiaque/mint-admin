@@ -1,7 +1,8 @@
 'use client';
 
 import { ReactNode, FC } from 'react';
-import { RowContainerBase, RowContainerMd, useIsMobile, TableSelectItem } from '../..';
+import { RowContainerBase, RowContainerMd, TableSelectItem } from '../../components/table';
+import { useIsMobile } from '../../hooks';
 
 type TableRowProps = {
 	children: ReactNode;

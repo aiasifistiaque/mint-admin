@@ -11,7 +11,11 @@ import {
 	FlexProps,
 	TextProps,
 } from '@chakra-ui/react';
-import { Icon, MenuIconContainer, THEME, radius } from '../';
+
+import { MenuIconContainer } from '.';
+import { Icon } from '../icon';
+import { THEME, radius } from '../config';
+
 import ModalContentContainer from '../modals/modal-components/ModalContentContainer';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

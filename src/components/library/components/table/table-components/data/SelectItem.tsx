@@ -1,8 +1,8 @@
 'use client';
 
-import { TableCellProps, Checkbox, Flex } from '@chakra-ui/react';
+import { TableCellProps, Checkbox } from '@chakra-ui/react';
 import { useState, FC, useEffect, ChangeEvent } from 'react';
-import { CustomTd } from '.';
+
 import { selectItem } from '../../../../store';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 
@@ -12,7 +12,7 @@ type TableDataPropsType = TableCellProps & {
 	isMobile?: boolean;
 };
 
-const TableSelectItem: FC<TableDataPropsType> = ({ id, isMobile = false, ...props }) => {
+const SelectItem: FC<TableDataPropsType> = ({ id, ...props }) => {
 	const [checked, setChecked] = useState(false);
 
 	const { selectedItems }: any = useAppSelector(state => state.table);
@@ -30,22 +30,13 @@ const TableSelectItem: FC<TableDataPropsType> = ({ id, isMobile = false, ...prop
 	}, [selectedItems]);
 
 	return (
-		<>
-			<CustomTd
-				type='selectMenu'
-				mb={{ base: -4, md: 0 }}
-				alignItems='center'
-				{...props}>
-				<Checkbox
-					size='lg'
-					isChecked={selectedItems.includes(id)}
-					onChange={handleCheck}
-					colorScheme='brand'
-				/>
-			</CustomTd>
-			{isMobile && <Flex h={0}>{null}</Flex>}
-		</>
+		<Checkbox
+			size={'lg'}
+			isChecked={selectedItems.includes(id)}
+			onChange={handleCheck}
+			colorScheme='brand'
+		/>
 	);
 };
 
-export default TableSelectItem;
+export default SelectItem;

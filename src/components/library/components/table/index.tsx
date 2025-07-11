@@ -32,6 +32,7 @@ export {
 	TableData,
 	TableDateData,
 	TableSelectItem,
+	SelectItem,
 	EditableTableData,
 	RenderTag,
 } from './table-components/data';

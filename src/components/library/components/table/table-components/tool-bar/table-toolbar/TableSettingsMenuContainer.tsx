@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react';
-import { SpaceBetween } from '../../../../..';
+import { SpaceBetween } from '../../../../../containers';
 import { ReactNode } from 'react';
 
 const TableSettingsMenuContainer = ({ children }: { children: ReactNode }) => {

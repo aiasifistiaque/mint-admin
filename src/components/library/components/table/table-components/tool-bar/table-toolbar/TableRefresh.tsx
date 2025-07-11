@@ -1,6 +1,8 @@
-import { Button, IconButton, Tooltip } from '@chakra-ui/react';
+import { IconButton, Tooltip } from '@chakra-ui/react';
 import { TbRefresh } from 'react-icons/tb';
-import { useAppDispatch, refresh, radius, sizes } from '../../../../..';
+import { radius, sizes } from '../../../../../config';
+import { refresh } from '../../../../../store';
+import { useAppDispatch } from '../../../../../hooks';
 
 const TableRefresh = () => {
 	const dispatch = useAppDispatch();

@@ -3,18 +3,19 @@
 import { Button, useDisclosure, Text, Checkbox, Grid } from '@chakra-ui/react';
 import { useEffect, useState, useCallback } from 'react';
 
+import { MenuItem } from '../../../menu';
+import { useExportManyMutation } from '../../../store';
+import { useAppSelector } from '../../../hooks';
+import { formatFieldName } from '../../../functions';
+import { DiscardButton } from '../../../components/buttons';
+
 import {
-	formatFieldName,
-	useAppSelector,
 	MenuModal,
 	MenuModalHeader,
 	MenuModalBody,
 	MenuModalCloseButton,
 	MenuModalFooter,
-	DiscardButton,
-	useExportManyMutation,
-	MenuItem,
-} from '../../..';
+} from '../../../components/table/table-components/menu-modals';
 
 const ExportManyModal = ({ path, ids, icon }: { path: string; ids: string[]; icon?: string }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();

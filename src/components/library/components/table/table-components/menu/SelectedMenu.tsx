@@ -1,15 +1,17 @@
 import { FC } from 'react';
 import { Menu, MenuButton, Button } from '@chakra-ui/react';
+
 import {
-	MenuContainer,
 	EditManyModal,
-	EditManySelectModal,
-	EditDataSelectModal,
-	Icon,
 	ExportManyModal,
 	SendBulkSmsModal,
 	CalculateModal,
-} from '../../../..';
+	EditManySelectModal,
+	EditDataSelectModal,
+} from '../../table-components/modals';
+
+import { Icon } from '../../../../icon';
+import { MenuContainer } from '../../../../menu';
 
 type TableMenuProps = {
 	path: string;

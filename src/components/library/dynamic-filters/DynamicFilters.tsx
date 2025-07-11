@@ -7,15 +7,13 @@ import {
 	DateFilter,
 	MultiSelectFilter,
 	RangeFilter,
-	useAppDispatch,
-	clearFilters,
 	TextFilter,
 	SelectFilter,
-	useGetFiltersQuery,
-	useAppSelector,
-	hasActiveFilters,
-} from '..';
+} from './filters';
 import { FilterSectionContainer } from './filter-components';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { clearFilters, useGetFiltersQuery } from '../store';
+import { hasActiveFilters } from '../functions';
 
 type FilterItemType = {
 	field: any;

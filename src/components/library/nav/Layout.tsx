@@ -2,25 +2,15 @@
 
 import { FC, useEffect, ReactNode } from 'react';
 import { Flex, Heading, useMediaQuery, FlexProps, HeadingProps } from '@chakra-ui/react';
-import {
-	useIsMobile,
-	AuthWrapper,
-	SelfMenu,
-	SpaceBetween,
-	padding,
-	sizes,
-	useAppDispatch,
-	ColorMode,
-	Body,
-	Navbar,
-	Sidebar,
-	LayoutWrapper,
-	refresh,
-	navigate,
-	Align,
-	SearchMenu,
-	useGetQuery,
-} from '..';
+
+import { SelfMenu, SearchMenu } from '../menu';
+import { AuthWrapper } from '../wrappers';
+import ColorMode from '../components/color-mode/ColorMode';
+import { LayoutWrapper, Navbar, Sidebar, Body } from '../nav';
+import { Align, SpaceBetween } from '../containers';
+import { useIsMobile, useAppDispatch } from '../hooks';
+import { refresh, useGetQuery, navigate } from '../store';
+import { padding, sizes } from '../config';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 
