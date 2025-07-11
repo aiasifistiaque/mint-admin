@@ -31,6 +31,7 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 				leftIcon={<Icon name='action-menu' />}>
 				Menu
 			</MenuButton>
+
 			<MenuContainer>
 				{data?.map((item: any, i: number) => {
 					const commonProps = {

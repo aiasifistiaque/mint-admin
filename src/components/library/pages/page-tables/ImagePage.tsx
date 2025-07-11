@@ -35,6 +35,19 @@ type TableProps = {
 	route: string;
 };
 
+const menu = [
+	{
+		title: 'Move To Folder',
+		type: 'edit-data-select',
+		dataPath: 'folders',
+		key: 'fileFolder',
+		prompt: {
+			title: 'Move to Folder',
+			body: 'Select a folder to move the selected items to.',
+		},
+	},
+];
+
 // Define the PageTable component
 const ImagePage: FC<TableProps> = ({ route }) => {
 	const path = route;
@@ -111,7 +124,7 @@ const ImagePage: FC<TableProps> = ({ route }) => {
 								items={selectedItems}
 								hide={false}
 								path={path}
-								data={[]}
+								data={menu}
 							/>
 						</SelectedItemsContainer>
 					) : (

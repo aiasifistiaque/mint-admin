@@ -10,12 +10,13 @@ import {
 	MenuButton,
 	Tooltip,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import LucideIcon from '../../../icon/LucideIcon';
 import { Caption } from '../../../texts';
 import { TableMenu, SelectItem } from '../../../components/table';
-import { useAppSelector } from '../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
+import { selectAll } from '../../../store';
 
 const menu = [
 	{
@@ -33,6 +34,19 @@ const menu = [
 		},
 	},
 	{
+		type: 'update-key',
+		title: 'Move To Folder',
+		keyType: 'data-menu',
+		dataPath: 'folders',
+		path: 'images',
+		invalidate: ['images', 'files'],
+		key: 'fileFolder',
+		prompt: {
+			title: 'Move to Folder',
+			body: 'Select a folder to move this item to.',
+		},
+	},
+	{
 		label: 'Make Copy',
 		type: 'duplicate',
 	},
@@ -45,6 +59,30 @@ const menu = [
 const ImageGridData = ({ data }: { data: any }) => {
 	const [index, setIndex] = useState(-1);
 	const { selectedItems }: any = useAppSelector(state => state.table);
+	const dispatch = useAppDispatch();
+
+	const handleSelectAll = (isSelected: boolean) => {
+		const ids = data?.map((item: any) => item?._id);
+		dispatch(selectAll({ ids, isSelected }));
+	};
+	// Add keyboard event listener for Cmd+A / Ctrl+A
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			// Check for Cmd+A (Mac) or Ctrl+A (Windows/Linux)
+			if ((e.metaKey || e.ctrlKey) && e.key === 'a') {
+				e.preventDefault(); // Prevent default browser select all
+				handleSelectAll(true);
+			}
+		};
+
+		// Add event listener
+		window.addEventListener('keydown', handleKeyDown);
+
+		// Cleanup event listener on unmount
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown);
+		};
+	}, [data]); // Re-run effect when data changes
 
 	return (
 		<Grid
@@ -58,7 +96,6 @@ const ImageGridData = ({ data }: { data: any }) => {
 					key={i}>
 					<Flex
 						{...imageBoxCss}
-						border='2px solid'
 						borderColor={selectedItems.includes(item?.id) ? 'brand.500' : 'transparent'}
 						_dark={{
 							borderColor: selectedItems.includes(item?._id) ? 'brand.200' : 'transparent',
@@ -72,7 +109,7 @@ const ImageGridData = ({ data }: { data: any }) => {
 						/>
 
 						<Center
-							display={selectedItems?.length > 0 ? 'flex' : 'none'}
+							display={selectedItems?.length > 0 ? 'none' : 'flex'}
 							// display={index == i ? 'flex' : 'none'}
 							{...iconBoxCss}>
 							<TableMenu
@@ -87,11 +124,7 @@ const ImageGridData = ({ data }: { data: any }) => {
 								/>
 							</TableMenu>
 						</Center>
-						<Flex
-							_dark={{ bg: 'background.dark' }}
-							position='absolute'
-							top={3}
-							left={3}>
+						<Flex {...selectBoxCss}>
 							<SelectItem id={item?._id} />
 						</Flex>
 					</Flex>
@@ -105,6 +138,14 @@ const ImageGridData = ({ data }: { data: any }) => {
 			))}
 		</Grid>
 	);
+};
+
+const selectBoxCss: FlexProps = {
+	bg: 'white',
+	_dark: { bg: 'background.dark' },
+	position: 'absolute',
+	top: 3,
+	left: 3,
 };
 
 const contentCss: FlexProps = {
@@ -130,6 +171,7 @@ const menuButtonCss: any = {
 const imageBoxCss: FlexProps = {
 	position: 'relative',
 	cursor: 'pointer',
+	border: '2px solid',
 	transition: '.2s',
 	bg: 'image.50',
 	_hover: { bg: 'image.100' },
