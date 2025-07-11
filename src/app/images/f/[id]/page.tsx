@@ -2,13 +2,16 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { ImagePage } from '@/components/library';
+import { use } from 'react';
 
-const FilePage: NextPage<any> = () => {
+const FilePage: NextPage<any> = ({ params }) => {
+	const resolvedParams: any = use(params);
+
 	return (
 		<ImagePage
 			route='images'
 			title='All Media'
-			// folder='687135fde09e2a40a979761b'
+			folder={resolvedParams.id}
 		/>
 	);
 };

@@ -20,9 +20,11 @@ import ImageGridData from './components/ImageGridData';
 import { CloseButton, Flex, Text } from '@chakra-ui/react';
 import {
 	FilterContainer,
+	ImagePageHeading,
 	ResultContainer,
 	SelectedItemsContainer,
 	SelectedMenu,
+	TableErrorMessage,
 	TableRefresh,
 	TableSearch,
 	TableSearchContainer,
@@ -30,9 +32,12 @@ import {
 	TableSort,
 } from '../../components/table';
 import DynamicFilters from '../../dynamic-filters/DynamicFilters';
+import FolderGrid from './components/FolderGrid';
 
 type TableProps = {
 	route: string;
+	title?: string;
+	folder?: string;
 };
 
 const menu = [
@@ -49,7 +54,7 @@ const menu = [
 ];
 
 // Define the PageTable component
-const ImagePage: FC<TableProps> = ({ route }) => {
+const ImagePage: FC<TableProps> = ({ route, title, folder }) => {
 	const path = route;
 	const { page, limit, search, sort, filters, selectedItems }: any = useAppSelector(
 		(state: any) => state.table
@@ -72,7 +77,6 @@ const ImagePage: FC<TableProps> = ({ route }) => {
 		}
 	}, [schemaData, schemaLoading]);
 
-	const selectable = table?.select?.show ? true : false;
 	const tableFilters = table?.filters !== undefined ? table?.filters : true;
 	const onUnselect = () => dispatch(selectAll({ ids: [], isSelected: false }));
 	// Get the table state from the redux store
@@ -82,7 +86,14 @@ const ImagePage: FC<TableProps> = ({ route }) => {
 			limit: table?.limit || limit,
 			search,
 			sort,
-			filters: table?.preFilters ?? (tableFilters ? filters : null),
+			filters:
+				table?.preFilters ??
+				(tableFilters
+					? {
+							...(folder ? { fileFolder: folder } : {}),
+							...filters,
+					  }
+					: null),
 			path: route,
 		},
 		{ skip: !table }
@@ -93,14 +104,15 @@ const ImagePage: FC<TableProps> = ({ route }) => {
 		<>
 			<Layout
 				pb='32px'
-				title={table?.title}
+				title={title || table?.title}
 				path={route}>
 				<Column gap={2}>
-					<ServerPageHeading
+					<ImagePageHeading
+						folder={folder}
 						isLoading={!table}
 						data={schemaData?.form}
 						table={table}
-						title={table?.title} //Heading of the page
+						title={title || table?.title} //Heading of the page
 						button={table?.button?.title} //Button Title
 						href={table?.button?.path} //Page where button would redirect to
 						isModal={table?.button?.isModal || table?.isModal} //If create page should be modal
@@ -144,7 +156,16 @@ const ImagePage: FC<TableProps> = ({ route }) => {
 							</TableSearchContainer>
 						</TableSettingsMenuContainer>
 					)}
+					<FolderGrid
+						parent={folder}
+						path='folders'
+					/>
 					{data?.doc && <ImageGridData data={data?.doc} />}
+					{data?.docsInPage == 0 && (
+						<TableErrorMessage title='No results found.'>
+							There {`aren't`} any results for that query. Try using different filters.
+						</TableErrorMessage>
+					)}
 				</Column>
 				<ResultContainer data={data} />
 			</Layout>

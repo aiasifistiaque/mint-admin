@@ -2,6 +2,7 @@ export { default as CustomTable } from './CustomTable';
 export { default as Headers } from './table-components/header/Headers';
 export { default as PageHeading } from './PageHeading';
 export { default as ServerPageHeading } from './ServerPageHeading';
+export { default as ImagePageHeading } from './ImagePageHeading';
 export { default as BackendPageHeading } from './BackendPageHeading';
 export { default as TableRowComponent } from './table-components/row/TableRowComponent';
 export { default as TableHead } from './TableHead';
