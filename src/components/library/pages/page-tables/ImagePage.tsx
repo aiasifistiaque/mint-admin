@@ -80,7 +80,7 @@ const ImagePage: FC<TableProps> = ({ route, title, folder }) => {
 	const tableFilters = table?.filters !== undefined ? table?.filters : true;
 	const onUnselect = () => dispatch(selectAll({ ids: [], isSelected: false }));
 	// Get the table state from the redux store
-	const { data, isLoading, isError, error, isSuccess } = useGetAllQuery(
+	const { data, isFetching, isError, error, isSuccess, isUninitialized } = useGetAllQuery(
 		{
 			page,
 			limit: table?.limit || limit,
@@ -156,11 +156,18 @@ const ImagePage: FC<TableProps> = ({ route, title, folder }) => {
 							</TableSearchContainer>
 						</TableSettingsMenuContainer>
 					)}
+
 					<FolderGrid
 						parent={folder}
 						path='folders'
 					/>
-					{data?.doc && <ImageGridData data={data?.doc} />}
+
+					<ImageGridData
+						// isLoading={true}
+						isLoading={isFetching || isUninitialized}
+						data={data?.doc}
+					/>
+
 					{data?.docsInPage == 0 && (
 						<TableErrorMessage title='No results found.'>
 							There {`aren't`} any results for that query. Try using different filters.

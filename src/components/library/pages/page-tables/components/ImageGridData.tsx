@@ -8,6 +8,7 @@ import {
 	Image,
 	ImageProps,
 	MenuButton,
+	Skeleton,
 	Tooltip,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
@@ -56,7 +57,7 @@ const menu = [
 	},
 ];
 
-const ImageGridData = ({ data }: { data: any }) => {
+const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) => {
 	const [index, setIndex] = useState(-1);
 	const { selectedItems }: any = useAppSelector(state => state.table);
 	const dispatch = useAppDispatch();
@@ -88,54 +89,66 @@ const ImageGridData = ({ data }: { data: any }) => {
 		<Grid
 			gridTemplateColumns={{ base: '1fr 1fr', md: '1fr 1fr 1fr 1fr' }}
 			gap={{ base: 3, md: 6 }}>
-			{data?.map((item: any, i: number) => (
-				<Flex
-					onMouseEnter={() => setIndex(i)}
-					onMouseLeave={() => setIndex(-1)}
-					{...contentCss}
-					key={i}>
-					<Flex
-						{...imageBoxCss}
-						borderColor={selectedItems.includes(item?.id) ? 'brand.500' : 'transparent'}
-						_dark={{
-							borderColor: selectedItems.includes(item?._id) ? 'brand.200' : 'transparent',
-							bg: 'image.900',
-							_hover: { bg: 'image.800' },
-						}}>
-						<Image
-							{...imageCss}
-							src={item?.url}
-							alt={item?.name || `Image ${i + 1}`}
-						/>
-
-						<Center
-							display={selectedItems?.length > 0 ? 'none' : 'flex'}
-							// display={index == i ? 'flex' : 'none'}
-							{...iconBoxCss}>
-							<TableMenu
-								data={menu}
-								doc={item}
-								id={item?._id}
-								path='files'>
-								<MenuButton
-									as={IconButton}
-									{...menuButtonCss}
-									icon={<LucideIcon name='ellipsis' />}
-								/>
-							</TableMenu>
-						</Center>
-						<Flex {...selectBoxCss}>
-							<SelectItem id={item?._id} />
+			{isLoading
+				? [...Array(12)].map((y, j) => (
+						<Flex
+							{...contentCss}
+							key={j}>
+							<Skeleton
+								{...imageBoxCss}
+								w={{ base: '150px', md: '240px' }}
+								h={{ base: '120px', md: '160px' }}
+							/>
 						</Flex>
-					</Flex>
+				  ))
+				: data?.map((item: any, i: number) => (
+						<Flex
+							onMouseEnter={() => setIndex(i)}
+							onMouseLeave={() => setIndex(-1)}
+							{...contentCss}
+							key={i}>
+							<Flex
+								{...imageBoxCss}
+								borderColor={selectedItems.includes(item?.id) ? 'brand.500' : 'transparent'}
+								_dark={{
+									borderColor: selectedItems.includes(item?._id) ? 'brand.200' : 'transparent',
+									bg: 'image.900',
+									_hover: { bg: 'image.800' },
+								}}>
+								<Image
+									{...imageCss}
+									src={item?.url}
+									alt={item?.name || `Image ${i + 1}`}
+								/>
 
-					<Tooltip
-						label={item?.name || `Image ${i + 1}`}
-						placement='top'>
-						<Caption mr={2}>{item?.name || `Image ${i + 1}`}</Caption>
-					</Tooltip>
-				</Flex>
-			))}
+								<Center
+									display={selectedItems?.length > 0 ? 'none' : 'flex'}
+									// display={index == i ? 'flex' : 'none'}
+									{...iconBoxCss}>
+									<TableMenu
+										data={menu}
+										doc={item}
+										id={item?._id}
+										path='files'>
+										<MenuButton
+											as={IconButton}
+											{...menuButtonCss}
+											icon={<LucideIcon name='ellipsis' />}
+										/>
+									</TableMenu>
+								</Center>
+								<Flex {...selectBoxCss}>
+									<SelectItem id={item?._id} />
+								</Flex>
+							</Flex>
+
+							<Tooltip
+								label={item?.name || `Image ${i + 1}`}
+								placement='top'>
+								<Caption mr={2}>{item?.name || `Image ${i + 1}`}</Caption>
+							</Tooltip>
+						</Flex>
+				  ))}
 		</Grid>
 	);
 };

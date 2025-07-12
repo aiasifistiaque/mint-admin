@@ -8,7 +8,7 @@ const FolderGrid = ({ path, parent }: { path: string; parent?: string }) => {
 	const { data, isFetching } = useGetAllQuery({ path: path, limit: '9999', filters: { parent } });
 	return (
 		<Grid
-			mb={6}
+			mb={data?.docsInPage > 0 ? 4 : 0}
 			gridTemplateColumns={{ base: '1fr 1fr', md: 'repeat(4, 1fr)' }}
 			gap={2}>
 			{data?.doc?.map((item: any, i: number) => (
