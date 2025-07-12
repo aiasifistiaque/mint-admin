@@ -11,6 +11,7 @@ import {
 	BsShop,
 	BsTextareaT,
 	BsThreeDots,
+	BsThreeDotsVertical,
 } from 'react-icons/bs';
 import { useColorModeValue } from '@chakra-ui/react';
 import { TbArrowForward, TbDownload, TbSettings, TbSelector } from 'react-icons/tb';
@@ -216,6 +217,7 @@ const icons: any = {
 	desktop: FaDesktop,
 	discount: RiDiscountPercentFill,
 	dots: BsThreeDots,
+	'vertical-dots': BsThreeDotsVertical,
 	download: TbDownload,
 	edit: MdOutlineEdit,
 	'edit-outline': FiEdit,

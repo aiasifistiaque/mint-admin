@@ -80,7 +80,7 @@ const ImagePage: FC<TableProps> = ({ route, title, folder }) => {
 	const tableFilters = table?.filters !== undefined ? table?.filters : true;
 	const onUnselect = () => dispatch(selectAll({ ids: [], isSelected: false }));
 	// Get the table state from the redux store
-	const { data, isFetching, isError, error, isSuccess, isUninitialized } = useGetAllQuery(
+	const { data, isLoading, isError, error, isSuccess, isUninitialized } = useGetAllQuery(
 		{
 			page,
 			limit: table?.limit || limit,
@@ -164,7 +164,7 @@ const ImagePage: FC<TableProps> = ({ route, title, folder }) => {
 
 					<ImageGridData
 						// isLoading={true}
-						isLoading={isFetching || isUninitialized}
+						isLoading={isLoading || isUninitialized}
 						data={data?.doc}
 					/>
 

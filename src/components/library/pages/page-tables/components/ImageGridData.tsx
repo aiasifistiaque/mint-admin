@@ -17,7 +17,7 @@ import LucideIcon from '../../../icon/LucideIcon';
 import { Caption } from '../../../texts';
 import { TableMenu, SelectItem } from '../../../components/table';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { selectAll } from '../../../store';
+import { selectAll, selectItem } from '../../../store';
 
 const menu = [
 	{
@@ -59,12 +59,43 @@ const menu = [
 
 const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) => {
 	const [index, setIndex] = useState(-1);
+	const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+	const [isLongPress, setIsLongPress] = useState(false);
 	const { selectedItems }: any = useAppSelector(state => state.table);
 	const dispatch = useAppDispatch();
 
 	const handleSelectAll = (isSelected: boolean) => {
 		const ids = data?.map((item: any) => item?._id);
 		dispatch(selectAll({ ids, isSelected }));
+	};
+
+	const handleLongPress = (item: any) => {
+		// TODO: Implement long press functionality
+		console.log('Long press detected for item:', item);
+	};
+
+	const startLongPress = (item: any) => {
+		setIsLongPress(false);
+		const timer = setTimeout(() => {
+			setIsLongPress(true);
+			handleLongPress(item);
+		}, 500); // 500ms for long press detection
+		setLongPressTimer(timer);
+	};
+
+	const endLongPress = () => {
+		if (longPressTimer) {
+			clearTimeout(longPressTimer);
+			setLongPressTimer(null);
+		}
+		setTimeout(() => setIsLongPress(false), 100);
+	};
+
+	const handleClick = (item: any, e: React.MouseEvent) => {
+		if (selectedItems?.length > 0) {
+			const isSelected = selectedItems.includes(item?._id);
+			dispatch(selectItem({ id: item?._id, isSelected: true }));
+		}
 	};
 	// Add keyboard event listener for Cmd+A / Ctrl+A
 	useEffect(() => {
@@ -84,6 +115,15 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 			window.removeEventListener('keydown', handleKeyDown);
 		};
 	}, [data]); // Re-run effect when data changes
+
+	// Cleanup timer on unmount
+	useEffect(() => {
+		return () => {
+			if (longPressTimer) {
+				clearTimeout(longPressTimer);
+			}
+		};
+	}, [longPressTimer]);
 
 	return (
 		<Grid
@@ -114,31 +154,46 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 									borderColor: selectedItems.includes(item?._id) ? 'brand.200' : 'transparent',
 									bg: 'image.900',
 									_hover: { bg: 'image.800' },
-								}}>
-								<Image
-									{...imageCss}
-									src={item?.url}
-									alt={item?.name || `Image ${i + 1}`}
-								/>
+								}}
+								// Long press event handlers
+								// onMouseDown={() => startLongPress(item)}
+								// onMouseUp={endLongPress}
+								// 	onMouseLeave={endLongPress}
+								// 	onTouchStart={() => startLongPress(item)}
+								// 	onTouchEnd={endLongPress}
+								// 	onTouchCancel={endLongPress}
+								onClick={(e: any) => handleClick(item, e)}>
+								<Flex
+									bgImage={item?.url}
+									w='full'
+									bgPosition='center'
+									bgSize='contain'
+									bgRepeat='no-repeat'
+									h={{ base: '120px', md: '160px' }}>
+									<Flex
+										onClick={(e: any) => e.stopPropagation()}
+										justify='space-between'
+										w='full'>
+										<Flex {...selectBoxCss}>
+											<SelectItem id={item?._id} />
+										</Flex>
 
-								<Center
-									display={selectedItems?.length > 0 ? 'none' : 'flex'}
-									// display={index == i ? 'flex' : 'none'}
-									{...iconBoxCss}>
-									<TableMenu
-										data={menu}
-										doc={item}
-										id={item?._id}
-										path='files'>
-										<MenuButton
-											as={IconButton}
-											{...menuButtonCss}
-											icon={<LucideIcon name='ellipsis' />}
-										/>
-									</TableMenu>
-								</Center>
-								<Flex {...selectBoxCss}>
-									<SelectItem id={item?._id} />
+										<Center
+											display={selectedItems?.length > 0 ? 'none' : 'flex'}
+											{...iconBoxCss}>
+											<TableMenu
+												data={menu}
+												doc={item}
+												id={item?._id}
+												path='files'>
+												<MenuButton
+													as={IconButton}
+													{...menuButtonCss}
+													icon={<LucideIcon name='ellipsis' />}
+												/>
+											</TableMenu>
+										</Center>
+									</Flex>
 								</Flex>
 							</Flex>
 
@@ -156,9 +211,7 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 const selectBoxCss: FlexProps = {
 	bg: 'white',
 	_dark: { bg: 'background.dark' },
-	position: 'absolute',
-	top: 3,
-	left: 3,
+	h: '20px',
 };
 
 const contentCss: FlexProps = {
@@ -182,7 +235,6 @@ const menuButtonCss: any = {
 	},
 };
 const imageBoxCss: FlexProps = {
-	position: 'relative',
 	cursor: 'pointer',
 	border: '2px solid',
 	transition: '.2s',
@@ -190,7 +242,7 @@ const imageBoxCss: FlexProps = {
 	_hover: { bg: 'image.100' },
 	_dark: { bg: 'image.900', _hover: { bg: 'image.800' } },
 	w: 'full',
-	p: 4,
+	p: 2,
 	borderRadius: '8px',
 };
 
@@ -206,7 +258,7 @@ const iconBoxCss: CenterProps = {
 	w: '34px',
 	boxShadow: 'md',
 	borderRadius: '6px',
-	position: 'absolute',
+
 	top: '8px',
 	p: '1px',
 	right: '8px',
