@@ -51,14 +51,19 @@ const BackendPageTable: FC<TableProps> = ({ table, layoutPath, children }) => {
 	const selectable = table?.select?.show ? true : false;
 	const tableFilters = table?.filters !== undefined ? table?.filters : true;
 	// Get the table state from the redux store
-	const { data, isLoading, isError, error, isSuccess } = useGetAllQuery({
-		page,
-		limit: table?.limit || limit,
-		search,
-		sort,
-		filters: table?.preFilters ?? (tableFilters ? filters : null),
-		path: table?.path,
-	});
+	const { data, isLoading, isError, error, isSuccess } = useGetAllQuery(
+		{
+			page,
+			limit: table?.limit || limit,
+			search,
+			sort,
+			filters: table?.preFilters ?? (tableFilters ? filters : null),
+			path: table?.path,
+		},
+		{
+			pollingInterval: 10000, // Poll every 10 seconds (set your desired interval in ms)
+		}
+	);
 
 	const { data: userData } = useGetSelfQuery({});
 

@@ -56,7 +56,10 @@ const ServerPage: FC<TableProps> = ({ route }) => {
 			filters: table?.preFilters ?? (tableFilters ? filters : null),
 			path: route,
 		},
-		{ skip: !table }
+		{
+			skip: !table,
+			pollingInterval: 10000, // Poll every 10 seconds (set your desired interval in ms)
+		}
 	);
 
 	const { data: userData } = useGetSelfQuery({});
