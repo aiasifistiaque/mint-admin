@@ -41,21 +41,23 @@ export const formFields = [
 	{
 		sectionTitle: 'Basic Information',
 		fields: [
-			['name', 'email', 'phone'],
-			['businessName', 'businessAddress'],
-			['city', 'status'],
+			['name', 'businessName'],
+			['email', 'phone'],
+			['facebook', 'instagram'],
+			['category', 'status'],
+			['businessAddress', 'city'],
 			['source', 'leadType'],
-			['category', 'priority'],
+			'priority',
 		],
 	},
 	{
 		sectionTitle: 'Requirements',
 		fields: ['requirements', 'interestedIn', 'estimatedBudget'],
 	},
-	{
-		sectionTitle: 'Social Media',
-		fields: ['facebook', 'instagram'],
-	},
+	// {
+	// 	sectionTitle: 'Social Media',
+	// 	fields: ['facebook', 'instagram'],
+	// },
 	{
 		sectionTitle: 'Website',
 		fields: ['hasWebsite', 'websiteUrl'],
