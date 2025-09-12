@@ -422,6 +422,15 @@ const FormInput: FC<FormInputProps> = ({
 					{...props}
 				/>
 			);
+		case 'case-tag':
+			return (
+				<VTags
+					type={type}
+					helper={item?.helper}
+					isRequired={isRequired}
+					{...props}
+				/>
+			);
 		case 'custom-attribute':
 			return (
 				<VCustomAttributes
