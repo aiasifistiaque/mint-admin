@@ -25,6 +25,7 @@ type InputContainerProps = InputProps & {
 	value: string[];
 	placeholder?: any;
 	lowercase?: boolean;
+	section?: boolean;
 };
 
 const VTags: FC<InputContainerProps> = ({
@@ -34,18 +35,23 @@ const VTags: FC<InputContainerProps> = ({
 	value,
 	helper,
 	lowercase = true,
+	section = false,
 	...props
 }) => {
 	const borderColor = useColorModeValue('brand.500', 'brand.200');
 	const [tag, setTag] = useState<string>('');
 
 	const handleChange = useCallback((e: any) => {
-		if (lowercase) {
-			const lowerCaseValue = e.target.value.toLowerCase().replace(/\s/g, '-');
-			setTag(lowerCaseValue);
-		} else {
-			const lowerCaseValue = e.target.value.replace(/\s/g, '-');
+		if (section) {
 			setTag(e.target.value);
+		} else {
+			if (lowercase) {
+				const lowerCaseValue = e.target.value.toLowerCase().replace(/\s/g, '-');
+				setTag(lowerCaseValue);
+			} else {
+				const lowerCaseValue = e.target.value.replace(/\s/g, '-');
+				setTag(e.target.value);
+			}
 		}
 	}, []);
 
