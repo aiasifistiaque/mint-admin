@@ -50,7 +50,7 @@ const VTags: FC<InputContainerProps> = ({
 				setTag(lowerCaseValue);
 			} else {
 				const lowerCaseValue = e.target.value.replace(/\s/g, '-');
-				setTag(e.target.value);
+				setTag(lowerCaseValue);
 			}
 		}
 	}, []);
