@@ -186,6 +186,7 @@ const VModelFields: FC<InputContainerProps> = ({
 				<Label>{label}</Label>
 				{data?.map((item: string[], i: number) => (
 					<Checkbox
+						key={i}
 						isChecked={areAllFieldsSelected(item)}
 						isIndeterminate={areSomeFieldsSelected(item)}
 						onChange={e => handleSelectAllChange(item, e.target.checked)}
