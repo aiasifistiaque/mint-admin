@@ -38,6 +38,7 @@ import VVideo from '../../../utils/inputs/VVideo.new';
 import VIcon from '../../../utils/inputs/VIcon';
 
 import { flexAlignOptions, flexJustifyOptions, textAlignOptions } from './options';
+import VModelFields from '@/components/library/utils/inputs/VModelFields';
 
 type Option = {
 	label: string;
@@ -294,6 +295,8 @@ const FormInput: FC<FormInputProps> = ({
 					isRequired={isRequired}
 					model={props?.model || ''}
 					helper={item?.helper}
+					labelKey={item?.labelKey || 'name'}
+					valueKey={item?.valueKey || '_id'}
 					{...props}
 				/>
 			);
@@ -429,6 +432,15 @@ const FormInput: FC<FormInputProps> = ({
 					helper={item?.helper}
 					isRequired={isRequired}
 					lowercase={false}
+					{...props}
+				/>
+			);
+		case 'model-fields':
+			return (
+				<VModelFields
+					type={type}
+					helper={item?.helper}
+					isRequired={isRequired}
 					{...props}
 				/>
 			);

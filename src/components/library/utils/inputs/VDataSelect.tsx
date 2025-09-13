@@ -10,6 +10,8 @@ type InputContainerProps = SelectProps & {
 	value: any;
 	model: string;
 	placeholder?: any;
+	valueKey?: string;
+	labelKey?: string;
 };
 
 const VDataSelect: FC<InputContainerProps> = ({
@@ -19,6 +21,8 @@ const VDataSelect: FC<InputContainerProps> = ({
 	value,
 	helper,
 	model,
+	valueKey = '_id',
+	labelKey = 'name',
 	...props
 }) => {
 	const { data } = useGetSelectDataQuery(model);
@@ -35,8 +39,8 @@ const VDataSelect: FC<InputContainerProps> = ({
 				{data?.doc?.map((item: any, i: number) => (
 					<option
 						key={i}
-						value={item?._id}>
-						{item?.name}
+						value={item?.[valueKey]}>
+						{item?.[labelKey]}
 					</option>
 				))}
 			</SelectContainer>
