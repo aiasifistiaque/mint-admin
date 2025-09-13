@@ -46,17 +46,6 @@ const VModelFields: FC<InputContainerProps> = ({
 
 	const { data, isFetching, isError } = useGetByIdQuery({ path: `model/${model}`, id: 'keys' });
 
-	// Check if all fields in a group are selected
-	const areAllFieldsSelected = (item: any): boolean => {
-		return data?.every((field: any) => value?.includes(field.value));
-	};
-
-	// Check if some (but not all) fields in a group are selected
-	const areSomeFieldsSelected = (item: any): boolean => {
-		const selectedCount = item.fields.filter((field: any) => value?.includes(field.value)).length;
-		return selectedCount > 0 && selectedCount < item.fields.length;
-	};
-
 	const handleChange = useCallback((e: any) => {
 		if (section) {
 			setTag(e.target.value);
@@ -184,12 +173,11 @@ const VModelFields: FC<InputContainerProps> = ({
 					helper='Please Choose the model for fetching fields'
 				/>
 				<Label>{label}</Label>
-				{data?.map((item: string[], i: number) => (
+				{data?.map((item: string, i: number) => (
 					<Checkbox
 						key={i}
-						isChecked={areAllFieldsSelected(item)}
-						isIndeterminate={areSomeFieldsSelected(item)}
-						onChange={e => handleSelectAllChange(item, e.target.checked)}
+						isChecked={() => value?.includes(item)}
+						onChange={e => (value?.includes(item) ? addTag(item) : deleteTag(item))}
 						{...titleCheckboxCss}>
 						{item}
 					</Checkbox>
