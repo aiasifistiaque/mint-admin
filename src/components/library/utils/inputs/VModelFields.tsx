@@ -14,6 +14,7 @@ import {
 	WrapItem,
 	TagLabel,
 	TagCloseButton,
+	Checkbox,
 } from '@chakra-ui/react';
 
 import { Label, Icon, HelperText, VDataSelect, useGetQuery, useGetByIdQuery } from '../..';
@@ -43,7 +44,18 @@ const VModelFields: FC<InputContainerProps> = ({
 
 	const [model, setModel] = useState<string>('');
 
-	const { data, isFetching, isError } = useGetByIdQuery({ path: model, id: 'keys' });
+	const { data, isFetching, isError } = useGetByIdQuery({ path: `model/${model}`, id: 'keys' });
+
+	// Check if all fields in a group are selected
+	const areAllFieldsSelected = (item: any): boolean => {
+		return data?.every((field: any) => value?.includes(field.value));
+	};
+
+	// Check if some (but not all) fields in a group are selected
+	const areSomeFieldsSelected = (item: any): boolean => {
+		const selectedCount = item.fields.filter((field: any) => value?.includes(field.value)).length;
+		return selectedCount > 0 && selectedCount < item.fields.length;
+	};
 
 	const handleChange = useCallback((e: any) => {
 		if (section) {
@@ -59,7 +71,37 @@ const VModelFields: FC<InputContainerProps> = ({
 		}
 	}, []);
 
-	const addTag = useCallback(() => {
+	const addItem = (item: string, isChecked: boolean) => {
+		const currentValue = value || [];
+
+		if (isChecked) {
+			if (!currentValue.includes(item)) {
+				const newArr = [...currentValue, item];
+				if (props.onChange) {
+					const event = {
+						target: {
+							name: props.name,
+							value: newArr,
+						},
+					} as any;
+					props.onChange(event); // Call onChange with the synthetic event
+				}
+			}
+		} else {
+			const newArr = currentValue.filter((tag: string) => tag !== item);
+			if (props.onChange) {
+				const event = {
+					target: {
+						name: props.name,
+						value: newArr,
+					},
+				} as any;
+				props.onChange(event); // Call onChange with the synthetic event
+			}
+		}
+	};
+
+	const addTag = (tag: string) => {
 		if (tag && tag.length > 0 && !value?.includes(tag)) {
 			// const newArr = [...value, tag];
 			let newArr = [];
@@ -77,7 +119,35 @@ const VModelFields: FC<InputContainerProps> = ({
 			}
 		}
 		setTag('');
-	}, [tag, props.onChange]); // Add props.onChange to the dependency array
+	}; // Add props.onChange to the dependency array
+
+	// Handle "select all" checkbox for a permission group
+	const handleSelectAllChange = (item: any, isChecked: boolean) => {
+		const fieldValues = item.fields.map((field: any) => field.value);
+		let updatedPermissions: string[];
+		const currentValue = value || [];
+
+		if (isChecked) {
+			// Add all field values that aren't already selected
+			const newPermissions = fieldValues.filter((val: any) => !currentValue.includes(val));
+			updatedPermissions = [...currentValue, ...newPermissions];
+		} else {
+			// Remove all field values for this group
+			updatedPermissions = currentValue.filter(
+				(permission: any) => !fieldValues.includes(permission)
+			);
+		}
+		if (props?.onChange) {
+			const event = {
+				target: {
+					name: props.name,
+					value: updatedPermissions,
+				},
+			} as any;
+
+			props.onChange(event);
+		}
+	};
 
 	const deleteTag = useCallback(
 		(tagToDelete: string) => {
@@ -107,7 +177,7 @@ const VModelFields: FC<InputContainerProps> = ({
 					onChange={(e: any) => setModel(e.target.value)}
 					name='model'
 					label='Model'
-					labelKey='ModelName'
+					labelKey='modelName'
 					valueKey='modelName'
 					placeholder='Select Model'
 					model='models'
@@ -115,12 +185,13 @@ const VModelFields: FC<InputContainerProps> = ({
 				/>
 				<Label>{label}</Label>
 				{data?.map((item: string[], i: number) => (
-					<Tag
-						key={i}
-						variant='subtle'
-						m={1}>
-						<TagLabel>{item}</TagLabel>
-					</Tag>
+					<Checkbox
+						isChecked={areAllFieldsSelected(item)}
+						isIndeterminate={areSomeFieldsSelected(item)}
+						onChange={e => handleSelectAllChange(item, e.target.checked)}
+						{...titleCheckboxCss}>
+						{item}
+					</Checkbox>
 				))}
 
 				<Stack
@@ -144,13 +215,13 @@ const VModelFields: FC<InputContainerProps> = ({
 						<InputRightElement
 							h='32px'
 							p={0}>
-							<IconButton
+							{/* <IconButton
 								onClick={addTag}
 								size='xs'
 								colorScheme='gray'
 								aria-label='add tag'
 								icon={<Icon name='add' />}
-							/>
+							/> */}
 						</InputRightElement>
 					</InputGroup>
 
@@ -171,6 +242,13 @@ const VModelFields: FC<InputContainerProps> = ({
 			</Stack>
 		</FormControl>
 	);
+};
+
+const titleCheckboxCss: any = {
+	colorScheme: 'brand',
+	size: 'md',
+	fontSize: '16px',
+	fontWeight: '500',
 };
 
 export default VModelFields;

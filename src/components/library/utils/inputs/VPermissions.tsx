@@ -34,6 +34,7 @@ const VPermissions: FC<VDataMenuProps> = ({
 	...props
 }) => {
 	const { data, isFetching } = useGetQuery({ path: 'permissionlist' });
+
 	const addPermission = (item: string, isChecked: boolean) => {
 		const currentValue = value || [];
 
