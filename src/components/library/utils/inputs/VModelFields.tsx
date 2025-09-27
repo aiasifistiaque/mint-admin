@@ -12,6 +12,7 @@ import {
 	TagLabel,
 	TagCloseButton,
 	Checkbox,
+	Box,
 } from '@chakra-ui/react';
 
 import { Label, Icon, HelperText, VDataSelect, useGetQuery, useGetByIdQuery } from '../..';
@@ -38,7 +39,7 @@ const VModelFields: FC<InputContainerProps> = ({
 }) => {
 	const borderColor = useColorModeValue('brand.500', 'brand.200');
 	const [tag, setTag] = useState<string>('');
-
+	const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 	const [model, setModel] = useState<string>('');
 
 	const { data, isFetching, isError } = useGetByIdQuery({ path: `model/${model}`, id: 'keys' });
@@ -118,6 +119,50 @@ const VModelFields: FC<InputContainerProps> = ({
 		}
 	};
 
+	const handleDragStart = (e: React.DragEvent, index: number) => {
+		setDraggedIndex(index);
+		e.dataTransfer.effectAllowed = 'move';
+		e.dataTransfer.setData('text/html', e.currentTarget.outerHTML);
+	};
+
+	const handleDragOver = (e: React.DragEvent) => {
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'move';
+	};
+
+	const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+		e.preventDefault();
+
+		if (draggedIndex === null || draggedIndex === dropIndex) {
+			setDraggedIndex(null);
+			return;
+		}
+
+		const newArr = [...value];
+		const draggedItem = newArr[draggedIndex];
+
+		// Remove the dragged item
+		newArr.splice(draggedIndex, 1);
+		// Insert it at the new position
+		newArr.splice(dropIndex, 0, draggedItem);
+
+		if (props.onChange) {
+			const event = {
+				target: {
+					name: props.name,
+					value: newArr,
+				},
+			} as any;
+			props.onChange(event);
+		}
+
+		setDraggedIndex(null);
+	};
+
+	const handleDragEnd = () => {
+		setDraggedIndex(null);
+	};
+
 	return (
 		<FormControl
 			isRequired={isRequired}
@@ -144,10 +189,23 @@ const VModelFields: FC<InputContainerProps> = ({
 					pt={2}>
 					{value?.map((item: string, i: number) => (
 						<WrapItem key={i}>
-							<Tag variant='subtle'>
-								<TagLabel>{item}</TagLabel>
-								<TagCloseButton onClick={() => deleteTag(item)} />
-							</Tag>
+							<Box
+								draggable
+								onDragStart={e => handleDragStart(e, i)}
+								onDragOver={handleDragOver}
+								onDrop={e => handleDrop(e, i)}
+								onDragEnd={handleDragEnd}
+								cursor='move'
+								opacity={draggedIndex === i ? 0.5 : 1}
+								transition='opacity 0.2s'
+								_hover={{ transform: 'scale(1.02)' }}>
+								<Tag
+									variant='subtle'
+									userSelect='none'>
+									<TagLabel>{item}</TagLabel>
+									<TagCloseButton onClick={() => deleteTag(item)} />
+								</Tag>
+							</Box>
 						</WrapItem>
 					))}
 				</Wrap>
