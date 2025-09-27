@@ -1,13 +1,10 @@
 'use client';
 import { useCallback, useState, FC } from 'react';
 import {
-	Input,
 	InputProps,
 	FormControl,
 	Stack,
 	useColorModeValue,
-	InputGroup,
-	InputRightElement,
 	Grid,
 	Tag,
 	Wrap,
@@ -133,10 +130,10 @@ const VModelFields: FC<InputContainerProps> = ({
 					onChange={(e: any) => setModel(e.target.value)}
 					name='model'
 					label='Model'
-					labelKey='modelName'
-					valueKey='modelName'
+					labelKey='name'
+					valueKey='name'
 					placeholder='Select Model'
-					model='models'
+					model='mongoose/list'
 					helper='Please Choose the model for fetching fields'
 				/>
 				<Label>{label}</Label>
