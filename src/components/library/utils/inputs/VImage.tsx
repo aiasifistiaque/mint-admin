@@ -40,6 +40,7 @@ const VImage: FC<FormDataType> = ({
 			w='full'
 			h='full'>
 			<Image
+				alt={`image_${value}`}
 				h='100%'
 				w='100%'
 				objectFit='contain'

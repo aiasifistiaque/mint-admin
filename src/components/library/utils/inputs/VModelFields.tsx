@@ -1,10 +1,9 @@
 'use client';
-import { useCallback, useState, FC } from 'react';
+import { useState, FC, useEffect } from 'react';
 import {
 	InputProps,
 	FormControl,
 	Stack,
-	useColorModeValue,
 	Grid,
 	Tag,
 	Wrap,
@@ -15,7 +14,7 @@ import {
 	Box,
 } from '@chakra-ui/react';
 
-import { Label, Icon, HelperText, VDataSelect, useGetQuery, useGetByIdQuery } from '../..';
+import { Label, VDataSelect, useGetByIdQuery } from '../..';
 
 type InputContainerProps = InputProps & {
 	label: string;
@@ -25,6 +24,7 @@ type InputContainerProps = InputProps & {
 	placeholder?: any;
 	lowercase?: boolean;
 	section?: boolean;
+	form?: any;
 };
 
 const VModelFields: FC<InputContainerProps> = ({
@@ -33,60 +33,28 @@ const VModelFields: FC<InputContainerProps> = ({
 	placeholder,
 	value,
 	helper,
+	form,
 	lowercase = true,
 	section = false,
 	...props
 }) => {
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
-	const [tag, setTag] = useState<string>('');
 	const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-	const [model, setModel] = useState<string>('');
+	const [schema, setSchema] = useState<any>();
 
-	const { data, isFetching, isError } = useGetByIdQuery({ path: `model/${model}`, id: 'keys' });
-
-	const handleChange = useCallback((e: any) => {
-		if (section) {
-			setTag(e.target.value);
-		} else {
-			if (lowercase) {
-				const lowerCaseValue = e.target.value.toLowerCase().replace(/\s/g, '-');
-				setTag(lowerCaseValue);
-			} else {
-				const lowerCaseValue = e.target.value.replace(/\s/g, '-');
-				setTag(lowerCaseValue);
+	useEffect(() => {
+		if (form?.sch) {
+			try {
+				setSchema(form?.sch);
+			} catch (error) {
+				console.error('Error parsing schema JSON:', error);
 			}
 		}
-	}, []);
+	}, [form?.sch]);
 
-	const addItem = (item: string, isChecked: boolean) => {
-		const currentValue = value || [];
-
-		if (isChecked) {
-			if (!currentValue.includes(item)) {
-				const newArr = [...currentValue, item];
-				if (props.onChange) {
-					const event = {
-						target: {
-							name: props.name,
-							value: newArr,
-						},
-					} as any;
-					props.onChange(event); // Call onChange with the synthetic event
-				}
-			}
-		} else {
-			const newArr = currentValue.filter((tag: string) => tag !== item);
-			if (props.onChange) {
-				const event = {
-					target: {
-						name: props.name,
-						value: newArr,
-					},
-				} as any;
-				props.onChange(event); // Call onChange with the synthetic event
-			}
-		}
-	};
+	const { data, isFetching, isError } = useGetByIdQuery(
+		{ path: `model/${schema}`, id: 'keys' },
+		{ skip: !schema }
+	);
 
 	const addTag = (tag: string) => {
 		if (!value?.includes(tag)) {
@@ -170,17 +138,6 @@ const VModelFields: FC<InputContainerProps> = ({
 			<Stack
 				spacing={2}
 				w='full'>
-				<VDataSelect
-					value={model}
-					onChange={(e: any) => setModel(e.target.value)}
-					name='model'
-					label='Model'
-					labelKey='name'
-					valueKey='name'
-					placeholder='Select Model'
-					model='mongoose/list'
-					helper='Please Choose the model for fetching fields'
-				/>
 				<Label>{label}</Label>
 
 				<Wrap

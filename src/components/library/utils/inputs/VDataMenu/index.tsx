@@ -63,7 +63,7 @@ const VDataMenu: FC<VDataMenuProps> = ({
 			const event = {
 				target: {
 					name: props.name,
-					value: type == 'object' ? e : e?._id,
+					value: type == 'object' ? e : e?.[dataKey],
 				},
 			} as any;
 			props.onChange(event);

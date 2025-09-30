@@ -9,7 +9,7 @@ const SpaceBetween: FC<FlexPropsType> = ({ children, ...props }) => {
 	return (
 		<Flex
 			w='100%'
-			alignItems='center'
+			alignItems='flex-start'
 			justifyContent='space-between'
 			gap={2}
 			{...props}>

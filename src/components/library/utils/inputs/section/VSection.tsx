@@ -38,6 +38,7 @@ const VSection: FC<FormDataType> = ({
 			<Image
 				h='100%'
 				w='100%'
+				alt={`image_${label}'}`}
 				objectFit='contain'
 				src={value}
 			/>
