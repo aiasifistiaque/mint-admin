@@ -134,7 +134,6 @@ const FormMain: FC<FormMainType> = ({
 		const condition = item?.renderIf;
 		if (!condition) return false;
 		const { field, operator, value } = condition;
-
 		switch (operator) {
 			case 'eq':
 				return formData[field] !== value;

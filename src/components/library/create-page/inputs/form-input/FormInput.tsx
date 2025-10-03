@@ -39,7 +39,7 @@ import VIcon from '../../../utils/inputs/VIcon';
 
 import { flexAlignOptions, flexJustifyOptions, textAlignOptions } from './options';
 import VModelFields from '@/components/library/utils/inputs/VModelFields';
-import { VFormFields } from '@/components/library/utils/inputs';
+import { VFormFields, VSettings } from '@/components/library/utils/inputs';
 
 type Option = {
 	label: string;
@@ -449,6 +449,17 @@ const FormInput: FC<FormInputProps> = ({
 		case 'form-fields':
 			return (
 				<VFormFields
+					form={formData}
+					type={type}
+					helper={item?.helper}
+					isRequired={isRequired}
+					onChange={props.onChange}
+					{...props}
+				/>
+			);
+		case 'settings':
+			return (
+				<VSettings
 					form={formData}
 					type={type}
 					helper={item?.helper}

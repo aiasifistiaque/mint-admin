@@ -10,6 +10,7 @@ type InputContainerProps = SelectProps & {
 	value: string | boolean | number;
 	children: ReactNode;
 	placeholder?: any;
+	defaultDisabled?: boolean;
 };
 
 const VSelect: FC<InputContainerProps> = ({
@@ -19,6 +20,7 @@ const VSelect: FC<InputContainerProps> = ({
 	value,
 	helper,
 	children,
+	defaultDisabled,
 	...props
 }) => {
 	return (
@@ -29,6 +31,13 @@ const VSelect: FC<InputContainerProps> = ({
 			<SelectContainer
 				value={value}
 				{...props}>
+				{defaultDisabled && (
+					<option
+						value=''
+						disabled>
+						{placeholder || `Select an option`}
+					</option>
+				)}
 				{children}
 			</SelectContainer>
 		</FormControl>

@@ -64,3 +64,5 @@ export { default as VVideo } from './VVideo.new';
 export { default as VIcon } from './VIcon';
 
 export { default as VFormFields } from './VFormFields';
+
+export { default as VSettings } from './VSettings';
