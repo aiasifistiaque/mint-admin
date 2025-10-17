@@ -111,11 +111,14 @@ const OrderDelivery = ({ id, order }: { id: string; order: string }) => {
 							<Item title='Tracking ID:'>{data?.trackingId}</Item>
 							<Item title='Tracking URL:'>{data?.trackingUrl}</Item>
 							<Item title='Status:'>{data?.status}</Item>
+							<Item title='Delivery Message:'>{data?.trackingMessage}</Item>
 
 							{/* <Item title='Address:'>{convertAddress(data?.address)}</Item> */}
 						</Sec>
 						<Sec>
 							<Item title='Receivable:'>{data?.receiveAmount}</Item>
+							<Item title='Amount Received:'>{data?.amountReceived}</Item>
+							<Item title='Delivery Charge:'>{data?.deliveryCharge}</Item>
 							<Item title='Note:'>{data?.note}</Item>
 							<Item title='Est. Delivery date:'>
 								{data?.estimatedDeliveryDate

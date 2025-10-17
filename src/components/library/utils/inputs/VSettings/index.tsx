@@ -47,6 +47,10 @@ const VFormFields: FC<InputContainerProps> = ({
 		{ skip: !schema }
 	);
 
+	const fieldCheck = (val: string) => {
+		return !!form?.fields?.[val];
+	};
+
 	return (
 		<FormControl
 			isRequired={isRequired}
@@ -54,29 +58,35 @@ const VFormFields: FC<InputContainerProps> = ({
 			<Stack
 				spacing={2}
 				w='full'>
-				{/* <SpaceBetween>
-					<Label>{label}</Label>
-					<TagButton onClick={() => setIsJsonView(!isJsonView)}>
-						{isJsonView ? 'Form View' : 'Json View'}
-					</TagButton>
-				</SpaceBetween> */}
-
 				<Column
-					gap={2}
-					py={2}>
+					gap={4}
+					py={4}>
 					{data &&
 						data?.map((item: any, i: number) => (
-							<Column
+							<SpaceBetween
 								key={i}
-								gap={2}>
-								<Text fontSize='sm'>{`• ${item}`}</Text>
-								<SettingSectionModal
-									value={value}
-									handleDataChange={onChange}
-									name={props?.name || 'fields'}
-									sectionKey={item}
-								/>
-							</Column>
+								{...viewCardsCss}>
+								{fieldCheck(item) ? (
+									<Column gap={4}>
+										<Text
+											fontWeight='600'
+											fontSize='sm'>{`• ${item}: `}</Text>
+										<JsonView data={{ data: form.fields[item] }} />
+									</Column>
+								) : (
+									<SpaceBetween gap={6}>
+										<Text fontSize='sm'>{`• ${item}`}</Text>
+										<SettingSectionModal
+											value={value}
+											type='add'
+											handleDataChange={onChange}
+											name={props?.name || 'fields'}
+											sectionKey={item}
+											availableFields={data || []}
+										/>
+									</SpaceBetween>
+								)}
+							</SpaceBetween>
 						))}
 					<JsonView data={{ data: form }} />
 				</Column>

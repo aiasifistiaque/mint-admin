@@ -27,7 +27,8 @@
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
-		"src/components/library/modals/upload-modal/iconNames.js"
+		"src/components/library/modals/upload-modal/iconNames.js",
+		"../../dd/dd-admin/src/components/library/utils/texts/JsonView.tsx"
 	],
 	"exclude": ["node_modules"]
 }

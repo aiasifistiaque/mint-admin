@@ -6,6 +6,7 @@ import {
 	AlertDialogFooter,
 	AlertDialogOverlay,
 	Button,
+	Flex,
 	useColorMode,
 	useColorModeValue,
 	useDisclosure,
@@ -27,9 +28,10 @@ type DeleteItemModalProps = {
 	id: string;
 	path: string;
 	item: any;
+	children?: React.ReactNode;
 };
 
-const DeleteItemModal: FC<DeleteItemModalProps> = ({ title, path, id, item }) => {
+const DeleteItemModal: FC<DeleteItemModalProps> = ({ title, path, id, item, children }) => {
 	const { page, limit, search, sort, filters, preferences, selectedItems }: any = useAppSelector(
 		(state: any) => state.table
 	);
@@ -79,13 +81,17 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({ title, path, id, item }) =>
 
 	return (
 		<>
-			<MenuItem
-				color={redColor}
-				_dark={{ color: 'red.300' }}
-				icon='delete-outline'
-				onClick={onOpen}>
-				{title || 'Delete'}
-			</MenuItem>
+			{children ? (
+				<Flex onClick={onOpen}>{children}</Flex>
+			) : (
+				<MenuItem
+					color={redColor}
+					_dark={{ color: 'red.300' }}
+					icon='delete-outline'
+					onClick={onOpen}>
+					{title || 'Delete'}
+				</MenuItem>
+			)}
 
 			<AlertDialog
 				isOpen={isOpen}

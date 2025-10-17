@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useState, FC } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
 	InputProps,
 	FormControl,
@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 
 import { useGetSelectDataQuery } from '../../';
-import { Label, SelectContainer, HelperText, Icon } from '../..';
+import { Label, SelectContainer, HelperText, Icon, JsonView } from '../..';
 
 type InputContainerProps = InputProps &
 	SelectProps & {
@@ -27,9 +27,11 @@ type InputContainerProps = InputProps &
 		model: string;
 		placeholder?: any;
 		item?: any;
+		valKey?: string;
+		labelKey?: string;
 	};
 
-const VDataTags: FC<InputContainerProps> = ({
+const VDataTags: React.FC<InputContainerProps> = ({
 	label,
 	isRequired,
 	placeholder,
@@ -37,15 +39,15 @@ const VDataTags: FC<InputContainerProps> = ({
 	helper,
 	model,
 	item,
+	// valKey = '_id',
+	// labelKey = 'name',
 	...props
 }) => {
 	const [tag, setTag] = useState<string>('');
 	const { data } = useGetSelectDataQuery(model);
 
-	const handleChange = useCallback((e: any) => {
-		// const lowerCaseValue = e.target.value.toLowerCase().replace(/\s/g, '-');
-		setTag(e.target.value);
-	}, []);
+	const valKey = item?.valKey || '_id';
+	const labelKey = item?.labelKey || 'name';
 
 	const addTag = useCallback(() => {
 		if (tag && tag?.length > 0 && !value?.includes(tag)) {
@@ -66,6 +68,11 @@ const VDataTags: FC<InputContainerProps> = ({
 		setTag('');
 	}, [tag, props.onChange]); // Add props.onChange to the dependency array
 
+	const handleChange = useCallback((e: any) => {
+		// const lowerCaseValue = e.target.value.toLowerCase().replace(/\s/g, '-');
+		setTag(e.target.value);
+	}, []);
+
 	const deleteTag = useCallback(
 		(tagToDelete: string) => {
 			const newArr = value.filter(tag => tag !== tagToDelete);
@@ -83,9 +90,13 @@ const VDataTags: FC<InputContainerProps> = ({
 	); // Add value and props.onChange to the dependency array
 
 	const getNameById = (id: string) => {
-		const ite = data?.doc?.find((item: any) => item._id === id);
+		const ite = data?.doc?.find((item: any) => item[valKey] === id);
+		const addOnValue = item?.modelAddOn && ite?.[item?.modelAddOn];
+		const addOnText = addOnValue ? `(${addOnValue})` : '';
 
-		return `${ite?.name} ${item?.modelAddOn && `(${ite?.[item?.modelAddOn]})`}` || id;
+		const displayValue = valKey == '_id' ? ite?.[labelKey] : id;
+
+		return `${displayValue}${addOnText}` || id;
 	};
 
 	return (
@@ -96,6 +107,7 @@ const VDataTags: FC<InputContainerProps> = ({
 				spacing={2}
 				w='full'>
 				<Label>{label}</Label>
+				{/* <JsonView data={item} /> */}
 
 				<Stack
 					spacing={1}
@@ -110,9 +122,10 @@ const VDataTags: FC<InputContainerProps> = ({
 							{data &&
 								data?.doc?.map((ite: any, i: number) => (
 									<option
+										disabled={value?.includes(ite[valKey])}
 										key={i}
-										value={ite?._id}>
-										{ite?.name} {item?.modelAddOn && `(${ite?.[item?.modelAddOn]})`}
+										value={ite[valKey]}>
+										{ite[labelKey]}
 									</option>
 								))}
 						</SelectContainer>

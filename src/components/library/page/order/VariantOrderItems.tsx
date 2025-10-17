@@ -8,9 +8,10 @@ import {
 	Grid,
 	Flex,
 	GridItem,
+	useGetByIdQuery,
 } from '../..';
 
-const OrderItems = ({ data }: { data: any }) => {
+const VariantOrderItems = ({ data }: { data: any }) => {
 	return (
 		<>
 			<OrderRightSectionContainer>
@@ -23,21 +24,11 @@ const OrderItems = ({ data }: { data: any }) => {
 			</OrderRightSectionContainer>
 			<OrderItemsContainer>
 				{data?.items?.map((item: any, i: number) => (
-					<Grid
-						gridTemplateColumns='2fr 1fr 1fr 1fr'
-						key={i}>
-						<OrderItemText fontWeight='600'>
-							{i + 1}. {item?.name} {item?.variantName && `- ${item?.variantName}`}
-						</OrderItemText>
-						<GridItem textAlign='center'>{item?.unitPrice?.toFixed(2)?.toLocaleString()}</GridItem>
-						<GridItem textAlign='center'>{item?.qty - item?.returnQty}</GridItem>
-						<GridItem textAlign='center'>{item?.size}</GridItem>
-						<GridItem textAlign='center'>{item?.color}</GridItem>
-						<GridItem textAlign='right'>
-							{currency.symbol}
-							{(item?.unitPrice * item?.qty).toFixed(2)?.toLocaleString()}
-						</GridItem>
-					</Grid>
+					<SingleOrderItem
+						key={i}
+						item={item}
+						index={i}
+					/>
 				))}
 			</OrderItemsContainer>
 			<Flex
@@ -56,4 +47,23 @@ const OrderItems = ({ data }: { data: any }) => {
 	);
 };
 
-export default OrderItems;
+const SingleOrderItem = ({ item, index }: { item: any; index: number }) => {
+	const { data } = useGetByIdQuery({ path: 'products', id: item?._id });
+	return (
+		<Grid gridTemplateColumns='2fr 1fr 1fr 1fr'>
+			<OrderItemText fontWeight='600'>
+				{index + 1}. {item?.name}, {item?.variantName} {`(SKU: ${data?.sku || 'N/A'})`}
+			</OrderItemText>
+			<GridItem textAlign='center'>{item?.unitPrice?.toFixed(2)?.toLocaleString()}</GridItem>
+			<GridItem textAlign='center'>{item?.qty - item?.returnQty}</GridItem>
+			{/* <GridItem textAlign='center'>{item?.size}</GridItem>
+			<GridItem textAlign='center'>{item?.color}</GridItem> */}
+			<GridItem textAlign='right'>
+				{currency.symbol}
+				{(item?.unitPrice * item?.qty)?.toFixed(2)?.toLocaleString()}
+			</GridItem>
+		</Grid>
+	);
+};
+
+export default VariantOrderItems;

@@ -5,11 +5,12 @@ import { Grid } from '@chakra-ui/react';
 const BasicDetails = ({ data }: { data: any }) => {
 	const convertAddress = (address: any) => {
 		if (!address) return 'Walk-in Customer';
+		const add = address?.address ? `${address?.address}, ` : '';
 		const street = address?.street ? `${address?.street}, ` : '';
 		const city = address?.city ? `${address?.city}, ` : '';
 		const postalCode = address?.postalCode ? `${address?.postalCode}, ` : '';
 		const country = address?.country ? `${address?.country}` : '';
-		return `${street}${city}${postalCode}${country}`;
+		return `${add}${street}${city}${postalCode}${country}`;
 	};
 	return (
 		<Grid
