@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { ModalFooter, ModalFooterProps } from '@chakra-ui/react';
+import { Dialog } from '@chakra-ui/react';
 
-const InsertModalFooter = ({ children, ...props }: ModalFooterProps & { children: ReactNode }) => {
-	return <ModalFooter {...props}>{children}</ModalFooter>;
+const InsertModalFooter = ({ children, ...props }: { children: ReactNode; [key: string]: any }) => {
+	return <Dialog.Footer {...props}>{children}</Dialog.Footer>;
 };
 
 export default InsertModalFooter;

@@ -1,18 +1,7 @@
-import {
-	Modal,
-	ModalOverlay,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalCloseButton,
-	useDisclosure,
-	Flex,
-	Image,
-	Center,
-} from '@chakra-ui/react';
+import { Dialog, useDisclosure, Flex, Image } from '@chakra-ui/react';
 
 const FullScreenImage = ({ src, children }: any) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	return (
 		<>
 			<Flex
@@ -21,37 +10,36 @@ const FullScreenImage = ({ src, children }: any) => {
 				{children}
 			</Flex>
 
-			<Modal
-				isCentered
-				scrollBehavior='inside'
+			<Dialog.Root
+				open={isOpen}
+				onOpenChange={e => !e.open && onClose()}
 				size='full'
-				isOpen={isOpen}
-				onClose={onClose}>
-				<ModalOverlay />
-				<ModalContent bg='black'>
-					<ModalHeader color='whitesmoke'></ModalHeader>
-					<ModalCloseButton
-						color='whitesmoke'
-						// size='xl'
-					/>
-					<ModalBody
-						px={0}
-						flex={1}
-						w='full'
-						alignItems={'center'}
-						justifyContent={'center'}>
-						<Image
-							my={4}
+				placement='center'
+				scrollBehavior='inside'>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content bg='black'>
+						<Dialog.Header color='whitesmoke'></Dialog.Header>
+						<Dialog.CloseTrigger color='whitesmoke' />
+						<Dialog.Body
+							px={0}
+							flex={1}
 							w='full'
-							h='auto'
-							maxH='80vh'
-							objectFit='contain'
-							src={src}
-							alt={src}
-						/>
-					</ModalBody>
-				</ModalContent>
-			</Modal>
+							alignItems={'center'}
+							justifyContent={'center'}>
+							<Image
+								my={4}
+								w='full'
+								h='auto'
+								maxH='80vh'
+								objectFit='contain'
+								src={src}
+								alt={src}
+							/>
+						</Dialog.Body>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };

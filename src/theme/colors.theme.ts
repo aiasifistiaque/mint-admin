@@ -18,6 +18,11 @@ const THIRSTLE = '#D0C4DF';
 const BLACK = '#171717';
 
 export const colors: any = {
+	fg: {
+		value: { base: '#171717', _dark: '{colors.text.dark}' },
+	},
+	// ... other tokens
+
 	brand: {
 		// 100: 'red',
 		// light: '#635BFF',
@@ -126,6 +131,10 @@ export const colors: any = {
 		heading: {
 			light: PRIMARY,
 			dark: '#fafafa',
+		},
+		inputPlaceholder: {
+			light: '#666',
+			dark: '#a1a1a1',
 		},
 		secondary: {
 			light: '#666',
@@ -257,11 +266,11 @@ export const colors: any = {
 		200: BORDER_LIGHT, //input borders
 		300: PRIMARY,
 		400: PRIMARY,
-		500: '#E0DCE5',
+		500: '#222',
 		600: PRIMARY,
 		700: PRIMARY,
 		800: 'black', //initial bg color of the load of colormode
-		900: 'green',
+		900: 'black',
 	},
 	image: {
 		50: '#ececec', //Primary For Light Mode
@@ -281,6 +290,9 @@ export const colors: any = {
 			dark: 'transparent',
 		},
 	},
+
+	'table.innerBorder.light': '#ebebeb',
+	'table.innerBorder.dark': BORDER_DARK,
 
 	table: {
 		light: THEME == 'basic' ? 'transparent' : '#fff',
@@ -320,6 +332,7 @@ export const colors: any = {
 	//ecom-commers
 	white: {
 		200: '#f5f5f5',
+		500: '#ffffff',
 		600: '#202020',
 	},
 	eblack: {

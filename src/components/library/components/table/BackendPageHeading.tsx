@@ -1,6 +1,7 @@
-import { Flex, FlexProps, Heading, Button, useColorModeValue, Text } from '@chakra-ui/react';
+import { Flex, FlexProps, Heading, Button, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { FC } from 'react';
+import { useColorMode } from '@/components/ui/color-mode';
 
 // import { BackendCreateModal, createFormFields, Icon } from '../..';
 import ExportModal from '../modals/export/ExportModal';
@@ -35,18 +36,17 @@ const BackendPageHeading: FC<PageHeadingProps> = ({
 	export: exportData,
 	...props
 }) => {
-	const iconColor = useColorModeValue('#fafafa', '#171717');
+	const { colorMode } = useColorMode();
+	const iconColor = colorMode === 'light' ? '#fafafa' : '#171717';
 	const btn = (
 		<Button
 			size='sm'
-			pl={3}
-			leftIcon={
-				<Icon
-					size={18}
-					name='add'
-					color={iconColor}
-				/>
-			}>
+			px={3}>
+			<Icon
+				size={18}
+				name='add'
+				color={iconColor}
+			/>
 			{button}
 		</Button>
 	);

@@ -45,21 +45,21 @@ const schema: SchemaProps = {
 		label: 'Is Active',
 		type: 'checkbox',
 		displayInTable: true,
-		colorScheme: (isActive: boolean) => (isActive ? 'green' : 'red'),
+		colorPalette: (isActive: boolean) => (isActive ? 'green' : 'red'),
 	},
 	isFeatured: {
 		label: 'Is Featured',
 		type: 'checkbox',
 		default: true,
 		displayInTable: true,
-		colorScheme: (isActive: boolean) => (isActive ? 'green' : 'red'),
+		colorPalette: (isActive: boolean) => (isActive ? 'green' : 'red'),
 	},
 
 	displayInHomePage: {
 		label: 'Display In Home Page',
 		type: 'checkbox',
 		displayInTable: true,
-		colorScheme: (isActive: boolean) => (isActive ? 'green' : 'red'),
+		colorPalette: (isActive: boolean) => (isActive ? 'green' : 'red'),
 	},
 
 	displayInMenu: {
@@ -67,7 +67,7 @@ const schema: SchemaProps = {
 		type: 'checkbox',
 		displayInTable: true,
 		default: true,
-		colorScheme: (isActive: boolean) => (isActive ? 'green' : 'red'),
+		colorPalette: (isActive: boolean) => (isActive ? 'green' : 'red'),
 	},
 	createdAt: {
 		label: 'Created At',

@@ -38,7 +38,7 @@ const CreateModal = (props: CreateModalProps) => {
 		layout,
 	} = props;
 
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const [fetch, { data: prevData, isFetching, isUninitialized }] = useLazyGetByIdToEditQuery();
 	const [formData, setFormData] = useFormData<any>(data, populate || prevData);
@@ -121,7 +121,7 @@ const CreateModal = (props: CreateModalProps) => {
 		<>
 			{!isMobile && (
 				<DiscardButton
-					isDisabled={isLoading}
+					disabled={isLoading}
 					onClick={onModalClose}>
 					Discard
 				</DiscardButton>

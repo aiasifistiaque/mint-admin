@@ -12,7 +12,7 @@ export const styles = {
 	},
 };
 
-export type HInputProps = InputProps & {
+export type HInputProps = any & {
 	label?: string;
 	placeholder?: string;
 	required?: boolean;

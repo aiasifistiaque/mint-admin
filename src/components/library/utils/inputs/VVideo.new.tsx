@@ -1,7 +1,7 @@
 import React, { FC, useRef } from 'react';
 
-import { Center, FormControl, Stack, InputProps, GridProps } from '@chakra-ui/react';
-import { UploadModal, HelperText, Label, ImageContainer, useIsMobile } from '../..';
+import { Center, Stack, InputProps, GridProps } from '@chakra-ui/react';
+import { UploadModal, HelperText, Label, ImageContainer, useIsMobile, FormControl } from '../..';
 
 type FormDataType = InputProps &
 	GridProps & {
@@ -63,7 +63,7 @@ const VVideo: FC<FormDataType> = ({
 		<FormControl isRequired={isRequired}>
 			<Stack w='full'>
 				<Label>{label}</Label>
-				<Center sx={styles.container}>
+				<Center css={styles.container}>
 					<UploadModal
 						title='Insert Video'
 						type={type}

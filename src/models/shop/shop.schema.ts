@@ -130,7 +130,7 @@ const schema: Schema = {
 		label: 'Trial',
 		sort: true,
 		isRequired: true,
-		colorScheme: (data: any) => (data?.trial ? 'purple' : 'green'),
+		colorPalette: (data: any) => (data?.trial ? 'purple' : 'green'),
 	},
 	phone: {
 		type: 'text',
@@ -142,7 +142,7 @@ const schema: Schema = {
 		type: 'tag',
 		label: 'Deleted',
 		sort: true,
-		colorScheme: (data: any) => (data?.isDeleted ? 'red' : 'green'),
+		colorPalette: (data: any) => (data?.isDeleted ? 'red' : 'green'),
 	},
 	isActive: {
 		type: 'tag',
@@ -150,14 +150,14 @@ const schema: Schema = {
 		sort: true,
 		isRequired: true,
 		displayInTable: true,
-		colorScheme: (data: any) => (data?.isActive ? 'green' : 'red'),
+		colorPalette: (data: any) => (data?.isActive ? 'green' : 'red'),
 	},
 	isExpired: {
 		type: 'tag',
 		label: 'Expired',
 		sort: true,
 		displayInTable: true,
-		colorScheme: (data: any) => (data?.isExpired == true ? 'red' : 'green'),
+		colorPalette: (data: any) => (data?.isExpired == true ? 'red' : 'green'),
 	},
 	createdAt: {
 		type: 'date',

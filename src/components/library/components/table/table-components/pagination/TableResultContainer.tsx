@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Flex, FlexProps, Text, useColorModeValue } from '@chakra-ui/react';
+import { Flex, FlexProps, Text } from '@chakra-ui/react';
 
 import { useIsMobile, useAppSelector, Pagination, THEME, SpaceBetween } from '../../../..';
 
@@ -7,13 +7,11 @@ type ResultContainerProps = FlexProps & {
 	data: any;
 };
 
+//Migration checked
+
 const TableResultContainer: FC<ResultContainerProps> = ({ data, ...props }) => {
 	const { selectedItems } = useAppSelector(state => state.table);
 	const isMobile = useIsMobile();
-
-	const bg = useColorModeValue('container.light', 'container.dark');
-	const borderColor = useColorModeValue('stroke.deepL', 'stroke.deepD');
-	const sidebarColor = useColorModeValue('sidebar.light', 'sidebar.dark');
 
 	if (selectedItems.length > 0) {
 		return null;
@@ -21,9 +19,12 @@ const TableResultContainer: FC<ResultContainerProps> = ({ data, ...props }) => {
 
 	return (
 		<Flex
-			bg={sidebarColor}
+			bg='sidebar.light'
+			_dark={{
+				bg: 'sidebar.dark',
+			}}
 			pl={{ base: 0, md: THEME == 'basic' ? 0 : 4 }}
-			sx={{
+			css={{
 				...styles.container,
 				pb: isMobile ? 4 : 0,
 				...props,

@@ -1,13 +1,4 @@
-import {
-	Drawer,
-	DrawerOverlay,
-	Popover,
-	useColorModeValue,
-	PopoverArrow,
-	Button,
-	DrawerFooter,
-	Flex,
-} from '@chakra-ui/react';
+import { Drawer, Popover, Button, Flex } from '@chakra-ui/react';
 
 import { FC, ReactNode } from 'react';
 import { Column, FilterButton } from '../../../..';
@@ -32,60 +23,64 @@ const PopModal: FC<MenuModalProps> = ({
 	isMobile,
 	handleClick,
 }) => {
-	const arrow = useColorModeValue('menu.light', 'menu.dark');
-
 	if (isMobile) {
 		return (
 			<>
 				{trigger}
-				<Drawer
-					isFullHeight={false}
+				<Drawer.Root
 					placement='bottom'
-					onClose={onClose}
-					isOpen={isOpen}>
-					<DrawerOverlay />
-					<DrawerContentContainer>
-						{children}
-						<DrawerFooter
-							pt={2}
-							px={4}>
-							<Button
-								w='full'
-								size='md'
-								onClick={handleClick}>
-								Apply
-							</Button>
-						</DrawerFooter>
-					</DrawerContentContainer>
-				</Drawer>
+					onOpenChange={e => !e.open && onClose()}
+					open={isOpen}>
+					<Drawer.Backdrop />
+					<Drawer.Positioner>
+						<DrawerContentContainer>
+							{children}
+							<Drawer.Footer
+								pt={2}
+								px={4}>
+								<Button
+									w='full'
+									size='md'
+									onClick={handleClick}>
+									Apply
+								</Button>
+							</Drawer.Footer>
+						</DrawerContentContainer>
+					</Drawer.Positioner>
+				</Drawer.Root>
 			</>
 		);
 	}
 
 	return (
-		<Popover
-			onOpen={onOpen}
-			onClose={onClose}
-			isOpen={isOpen}>
-			<span> {trigger}</span>
-			<PopoverContentContainer>
-				<PopoverArrow bg={arrow} />
-				<Column gap={0}>
-					{children}
-					<Flex
-						px={3}
-						pt={1}
-						pb={2}
-						w='full'>
-						<FilterButton
-							w='full'
-							onClick={handleClick}>
-							Apply
-						</FilterButton>
-					</Flex>
-				</Column>
-			</PopoverContentContainer>
-		</Popover>
+		<Popover.Root
+			onOpenChange={e => {
+				if (e.open) onOpen();
+				else onClose();
+			}}
+			open={isOpen}>
+			<Popover.Trigger asChild>
+				<span>{trigger}</span>
+			</Popover.Trigger>
+			<Popover.Positioner>
+				<PopoverContentContainer>
+					<Popover.Arrow />
+					<Column gap={0}>
+						{children}
+						<Flex
+							pt={3}
+							pb={2}
+							w='full'>
+							<FilterButton
+								w='full'
+								onClick={handleClick}>
+								Apply
+							</FilterButton>
+						</Flex>
+					</Column>
+				</PopoverContentContainer>
+			</Popover.Positioner>
+		</Popover.Root>
 	);
 };
 

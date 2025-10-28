@@ -1,15 +1,15 @@
 import { FC, ReactNode } from 'react';
-import { DrawerBody, Flex, PopoverBody } from '@chakra-ui/react';
+import { Drawer, Flex, Popover } from '@chakra-ui/react';
 
-type MenuModalBodyProps = {
+type PopModalBodyProps = {
 	children: ReactNode;
 	isMobile: boolean;
 };
 
-const PopModalBody: FC<MenuModalBodyProps> = ({ children, isMobile }) => {
+const PopModalBody: FC<PopModalBodyProps> = ({ children, isMobile }) => {
 	if (isMobile) {
 		return (
-			<DrawerBody
+			<Drawer.Body
 				gap={3}
 				px={4}>
 				<Flex
@@ -19,18 +19,18 @@ const PopModalBody: FC<MenuModalBodyProps> = ({ children, isMobile }) => {
 					pb={1}>
 					{children}
 				</Flex>
-			</DrawerBody>
+			</Drawer.Body>
 		);
 	}
 
 	return (
-		<PopoverBody>
+		<Popover.Body>
 			<Flex
 				flexDir='column'
 				gap={3}>
 				{children}
 			</Flex>
-		</PopoverBody>
+		</Popover.Body>
 	);
 };
 

@@ -1,21 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
-import {
-	Modal,
-	ModalOverlay,
-	ModalHeader,
-	ModalBody,
-	ModalCloseButton,
-	useDisclosure,
-	Flex,
-	Heading,
-	useColorModeValue,
-	Drawer,
-	DrawerOverlay,
-	DrawerCloseButton,
-	DrawerHeader,
-	DrawerBody,
-} from '@chakra-ui/react';
+import { useDisclosure, Flex, Heading, Drawer } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 
 import PosInput from './PosInput';
 
@@ -31,6 +17,9 @@ import {
 	useIsMobile,
 	OrderItems,
 	OrderListGrid,
+	GenericModal,
+	GenericModalHeader,
+	GenericModalBody,
 } from '..';
 import { OrderAddress, OrderButton, OrderCustomer } from './pos-card/odder';
 
@@ -39,7 +28,7 @@ const ViewOrderModal = ({ id }: { id: string }) => {
 		id: id,
 		path: 'orders',
 	});
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [status, setStatus] = useState();
 
 	const [trigger, result] = useUpdateByIdMutation();
@@ -58,7 +47,8 @@ const ViewOrderModal = ({ id }: { id: string }) => {
 		if (!isFetching && isSuccess) setStatus(data?.status);
 	}, [isFetching]);
 
-	const borderColor = useColorModeValue('#bbb', 'stroke.deepD');
+	const { colorMode } = useColorMode();
+	const borderColor = colorMode === 'light' ? '#bbb' : 'stroke.deepD';
 
 	const onUpdate = () => {
 		trigger({ id: id, body: { status }, path: 'orders' });
@@ -88,16 +78,16 @@ const ViewOrderModal = ({ id }: { id: string }) => {
 				valueType='price'
 				value={data?.dueAmount}
 				label='Total Due'
-				isDisabled
+				disabled
 			/>
 			<PosInput
 				value={data?.paidAmount}
-				isDisabled
+				disabled
 				label='Paid Amount'
 				valueType='price'
 			/>
 			<PosInput
-				isDisabled
+				disabled
 				value={data?.paymentMethod}
 				valueType='text'
 				label='Payment Method'
@@ -119,7 +109,7 @@ const ViewOrderModal = ({ id }: { id: string }) => {
 			/>
 			<VTextarea
 				value={data?.note}
-				isDisabled
+				disabled
 				label='Note'
 			/>
 		</>
@@ -127,56 +117,96 @@ const ViewOrderModal = ({ id }: { id: string }) => {
 
 	const isSmallScreen = useIsMobile();
 
-	const Container = isSmallScreen ? Drawer : Modal;
-	const Overlay = isSmallScreen ? DrawerOverlay : ModalOverlay;
-	const CloseButton = isSmallScreen ? DrawerCloseButton : ModalCloseButton;
-	const Header = isSmallScreen ? DrawerHeader : ModalHeader;
-	const Body = isSmallScreen ? DrawerBody : ModalBody;
+	const modalContent = (
+		<>
+			<GenericModalHeader>
+				Order Details
+				{data?.customer && <OrderCustomer data={data?.customer} />}
+				{data?.address && <OrderAddress address={data?.address} />}
+			</GenericModalHeader>
+			{data && (
+				<GenericModalBody>
+					<OrderListGrid>
+						<Flex flexDirection='column'>{renderLeftSection}</Flex>
+						<Column
+							flex={1}
+							gap={4}>
+							<Column
+								gap={2}
+								flex={1}>
+								{renderRightSection}
+							</Column>
+
+							<OrderButton
+								loading={result?.isLoading}
+								onClick={onUpdate}
+								disabled={!data || status == data?.status}>
+								Update Order
+							</OrderButton>
+						</Column>
+					</OrderListGrid>
+				</GenericModalBody>
+			)}
+		</>
+	);
+
+	const drawerContent = (
+		<>
+			<Drawer.Header>
+				Order Details
+				{data?.customer && <OrderCustomer data={data?.customer} />}
+				{data?.address && <OrderAddress address={data?.address} />}
+				<Drawer.CloseTrigger />
+			</Drawer.Header>
+			{data && (
+				<Drawer.Body>
+					<OrderListGrid>
+						<Flex flexDirection='column'>{renderLeftSection}</Flex>
+						<Column
+							flex={1}
+							gap={4}>
+							<Column
+								gap={2}
+								flex={1}>
+								{renderRightSection}
+							</Column>
+
+							<OrderButton
+								loading={result?.isLoading}
+								onClick={onUpdate}
+								disabled={!data || status == data?.status}>
+								Update Order
+							</OrderButton>
+						</Column>
+					</OrderListGrid>
+				</Drawer.Body>
+			)}
+		</>
+	);
 
 	return (
 		<>
 			<MenuItem onClick={onModalOpen}>View Order</MenuItem>
 
-			<Container
-				{...(!isSmallScreen && { isCentered: true })}
-				{...(isSmallScreen && { placement: 'bottom' })}
-				closeOnOverlayClick={false}
-				size='5xl'
-				isOpen={isOpen}
-				onClose={onModalClose}>
-				<Overlay />
-				<ModalContainer isSmallScreen={isSmallScreen}>
-					<Header>
-						Order Details
-						{data?.customer && <OrderCustomer data={data?.customer} />}
-						{data?.address && <OrderAddress address={data?.address} />}
-					</Header>
-					<CloseButton />
-					{data && (
-						<Body>
-							<OrderListGrid>
-								<Flex flexDirection='column'>{renderLeftSection}</Flex>
-								<Column
-									flex={1}
-									gap={4}>
-									<Column
-										gap={2}
-										flex={1}>
-										{renderRightSection}
-									</Column>
-
-									<OrderButton
-										isLoading={result?.isLoading}
-										onClick={onUpdate}
-										isDisabled={!data || status == data?.status}>
-										Update Order
-									</OrderButton>
-								</Column>
-							</OrderListGrid>
-						</Body>
-					)}
-				</ModalContainer>
-			</Container>
+			{isSmallScreen ? (
+				<Drawer.Root
+					open={isOpen}
+					placement='bottom'
+					onOpenChange={e => (e.open ? onOpen() : onModalClose())}>
+					<Drawer.Backdrop />
+					<Drawer.Positioner>
+						<Drawer.Content>{drawerContent}</Drawer.Content>
+					</Drawer.Positioner>
+				</Drawer.Root>
+			) : (
+				<GenericModal
+					isOpen={isOpen}
+					onClose={onModalClose}
+					size='full'
+					closeOnOverlayClick={false}>
+					{modalContent}
+				</GenericModal>
+			)}
 		</>
 	);
 };

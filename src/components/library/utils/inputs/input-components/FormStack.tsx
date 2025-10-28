@@ -1,31 +1,50 @@
-import { FormControlProps, Stack, StackProps, FormControl } from '@chakra-ui/react';
+import { Field, Stack, StackProps, Text } from '@chakra-ui/react';
 import { ReactNode, FC } from 'react';
-import { Label, HelperText } from '../../..';
 
-type FormStackProps = StackProps &
-	FormControlProps & {
-		children: ReactNode;
-		label: string;
-		helper?: string;
-	};
+type FormStackProps = StackProps & {
+	children: ReactNode;
+	label?: string;
+	helper?: string;
+	isRequired?: boolean;
+};
 
-const FormStack: FC<FormStackProps> = ({ children, label, helper, ...props }) => {
+const FONT_SIZE = '.85rem';
+const FONT_WEIGHT = '600';
+const M = 0;
+
+const FormStack: FC<FormStackProps> = ({ children, label, isRequired, helper, ...props }) => {
 	return (
-		<FormControl
+		<Stack
 			gap={4}
 			{...props}>
-			<Stack
-				spacing={2}
-				w='full'>
-				<Label>{label}</Label>
-				<Stack
-					spacing={0}
-					w='full'>
-					{children}
-					{helper && <HelperText>{helper}</HelperText>}
-				</Stack>
-			</Stack>
-		</FormControl>
+			<Field.Root
+				gap={2}
+				w='full'
+				required={isRequired}>
+				{label && (
+					<Field.Label
+						color='text.formLabel.light'
+						_dark={{ color: 'text.formLabel.dark' }}
+						userSelect='none'
+						m={M}
+						fontSize={FONT_SIZE}
+						fontWeight={FONT_WEIGHT}>
+						{label} {isRequired && <Field.RequiredIndicator />}
+					</Field.Label>
+				)}
+				{children}
+				{helper && (
+					<Field.HelperText
+						color='#444'
+						_dark={{ color: '#f5f5f5' }}
+						px={1}
+						fontStyle='italic'
+						fontSize='.8rem'>
+						{helper}
+					</Field.HelperText>
+				)}
+			</Field.Root>
+		</Stack>
 	);
 };
 

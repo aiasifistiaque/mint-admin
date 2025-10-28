@@ -51,19 +51,21 @@ const VAlignment: FC<InputContainerProps> = ({
 				align='center'
 				gap={1}>
 				{options.map((item: any, i: number) => (
-					<AlignBox
-						key={i}
-						onClick={() => onChange(item.value)}
-						isSelected={value === item.value}>
-						<Tooltip label={item.value}>
-							<span>
+					<Tooltip.Root key={i}>
+						<Tooltip.Trigger asChild>
+							<AlignBox
+								onClick={() => onChange(item.value)}
+								isSelected={value === item.value}>
 								<Icon
 									name={item.label}
 									size={size}
 								/>
-							</span>
-						</Tooltip>
-					</AlignBox>
+							</AlignBox>
+						</Tooltip.Trigger>
+						<Tooltip.Positioner>
+							<Tooltip.Content>{item.value}</Tooltip.Content>
+						</Tooltip.Positioner>
+					</Tooltip.Root>
 				))}
 			</Flex>
 		</FormControl>

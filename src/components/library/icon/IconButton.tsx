@@ -11,26 +11,27 @@ const IconButton = ({
 	const Container = ({ children }: any) => {
 		if (tooltip)
 			return (
-				<Tooltip
-					label={tooltip}
-					aria-label={tooltip}>
-					{children}
-				</Tooltip>
+				<Tooltip.Root
+					openDelay={200}
+					closeDelay={100}
+					positioning={{ placement: 'top' }}>
+					<Tooltip.Trigger asChild>{children}</Tooltip.Trigger>
+					<Tooltip.Positioner>
+						<Tooltip.Content>{tooltip}</Tooltip.Content>
+					</Tooltip.Positioner>
+				</Tooltip.Root>
 			);
 		return <>{children}</>;
 	};
 	return (
 		<Container>
-			<IButton
-				icon={
-					<Icon
-						name={iconName}
-						color={color || 'inherit'}
-						size={iconSize}
-					/>
-				}
-				{...props}
-			/>
+			<IButton {...props}>
+				<Icon
+					name={iconName}
+					color={color || 'inherit'}
+					size={iconSize}
+				/>
+			</IButton>
 		</Container>
 	);
 };

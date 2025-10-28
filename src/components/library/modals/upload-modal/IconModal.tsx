@@ -2,12 +2,6 @@ import {
 	Button,
 	Flex,
 	FlexProps,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalHeader,
-	ModalOverlay,
 	useDisclosure,
 	Grid,
 	Tooltip,
@@ -20,6 +14,13 @@ import ICON_LIST from './iconNames';
 
 import { styles, MFooter } from '.';
 import { AddImageButton, DeleteImageButton, EditImageButton } from '../..';
+import {
+	GenericModal,
+	GenericModalHeader,
+	GenericModalCloseButton,
+	GenericModalBody,
+	GenericModalContent,
+} from '../..';
 
 type UploadModalProps = {
 	album?: string;
@@ -43,7 +44,7 @@ const IconModal: FC<UploadModalProps> = ({
 	children,
 	type = 'add',
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [img, setImg] = useState<string | null>(null);
 	const [list, setList] = useState<string[]>(ICON_LIST);
 
@@ -78,8 +79,8 @@ const IconModal: FC<UploadModalProps> = ({
 	};
 
 	const buttonTypes = {
-		add: <Button variant='white'>Choose Icon</Button>,
-		edit: <Button variant='white'>Chance Icon</Button>,
+		add: <Button variant='outline'>Choose Icon</Button>,
+		edit: <Button variant='outline'>Chance Icon</Button>,
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
 
@@ -104,20 +105,19 @@ const IconModal: FC<UploadModalProps> = ({
 					{children || triggerButton}
 				</Flex>
 			)}
-			<Modal
+			<GenericModal
 				isOpen={isOpen}
 				onClose={onModalClose}
-				size='6xl'
+				size='full'
 				isCentered>
-				<ModalOverlay />
-				<ModalContent {...styles.modalContentCss}>
-					<ModalHeader
+				<GenericModalContent {...styles.modalContentCss}>
+					<GenericModalHeader
 						pb={2}
 						pt={4}>
 						Select Icon
-					</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody
+					</GenericModalHeader>
+					<GenericModalCloseButton />
+					<GenericModalBody
 						minH='70vh'
 						px={0}>
 						<Flex px={4}>
@@ -133,44 +133,49 @@ const IconModal: FC<UploadModalProps> = ({
 							<Grid {...gridCss}>
 								{list.map((icon: string) => {
 									return (
-										<Tooltip
+										<Tooltip.Root
 											key={icon}
-											label={icon}
-											placement='bottom'>
-											<Flex
-												{...iconCss}
-												bg={img === icon ? 'blue.50' : 'background.cardLight'}
-												borderColor={img === icon ? 'blue.300' : 'transparent'}
-												onClick={() => handleImageSelect(icon)}>
-												<span>
-													<DynamicIcon
-														name={icon as any}
-														size={26}
-													/>
-												</span>
-											</Flex>
-										</Tooltip>
+											positioning={{ placement: 'bottom' }}
+											openDelay={200}>
+											<Tooltip.Trigger asChild>
+												<Flex
+													{...iconCss}
+													bg={img === icon ? 'blue.50' : 'background.cardLight'}
+													borderColor={img === icon ? 'blue.300' : 'transparent'}
+													onClick={() => handleImageSelect(icon)}>
+													<span>
+														<DynamicIcon
+															name={icon as any}
+															size={26}
+														/>
+													</span>
+												</Flex>
+											</Tooltip.Trigger>
+											<Tooltip.Positioner>
+												<Tooltip.Content>{icon}</Tooltip.Content>
+											</Tooltip.Positioner>
+										</Tooltip.Root>
 									);
 								})}
 							</Grid>
 						</Flex>
-					</ModalBody>
+					</GenericModalBody>
 
 					<MFooter>
 						<Button
-							variant='white'
+							variant='outline'
 							onClick={onModalClose}>
 							Cancel
 						</Button>
 						<Button
 							size='sm'
-							isDisabled={!img}
+							disabled={!img}
 							onClick={handleInsert}>
 							Insert Icon
 						</Button>
 					</MFooter>
-				</ModalContent>
-			</Modal>
+				</GenericModalContent>
+			</GenericModal>
 		</>
 	);
 };
@@ -193,10 +198,7 @@ const iconCss: FlexProps = {
 	borderColor: 'gray.200',
 	borderRadius: '6px',
 	cursor: 'pointer',
-	bg: 'teal',
-	_dark: {
-		bg: 'background.dark',
-	},
+	bg: { base: 'teal', _dark: 'background.dark' },
 	_hover: { bg: 'gray.50' },
 
 	w: '56x',

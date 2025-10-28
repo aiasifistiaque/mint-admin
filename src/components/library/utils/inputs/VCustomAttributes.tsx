@@ -1,18 +1,7 @@
 'use client';
 import { useCallback, useState, FC, ChangeEvent } from 'react';
-import {
-	InputProps,
-	FormControl,
-	Stack,
-	IconButton,
-	Tag,
-	Wrap,
-	WrapItem,
-	TagLabel,
-	TagCloseButton,
-	Flex,
-} from '@chakra-ui/react';
-import { Label, Icon, HelperText, Column } from '../..';
+import { InputProps, IconButton, Flex } from '@chakra-ui/react';
+import { Label, Icon, HelperText, FormControl } from '../..';
 import { Input } from '.';
 
 type InputContainerProps = InputProps & {
@@ -77,13 +66,15 @@ const VCustomAttributes: FC<InputContainerProps> = ({
 		<FormControl
 			isRequired={isRequired}
 			gap={4}>
-			<Stack
-				spacing={2}
+			<Flex
+				flexDir='column'
+				gap={2}
 				w='full'>
 				<Label>{label}</Label>
 
-				<Stack
-					spacing={1}
+				<Flex
+					flexDir='column'
+					gap={1}
 					w='full'>
 					<Flex gap={2}>
 						<Input
@@ -102,33 +93,46 @@ const VCustomAttributes: FC<InputContainerProps> = ({
 						<IconButton
 							onClick={addTag}
 							size='sm'
-							colorScheme='gray'
-							aria-label='add tag'
-							icon={<Icon name='add' />}
-						/>
+							colorPalette='gray'
+							aria-label='add tag'>
+							<Icon name='add' />
+						</IconButton>
 					</Flex>
 
 					{helper && <HelperText>{helper}</HelperText>}
-				</Stack>
+				</Flex>
 
-				<Wrap
+				<Flex
+					flexWrap='wrap'
 					gap={2}
 					pt={2}>
 					{value?.map((item: any, i: number) => (
-						<WrapItem key={i}>
-							<Tag
-								size='lg'
-								colorScheme='gray'
-								borderRadius='md'>
-								<TagLabel>
+						<Flex key={i}>
+							<Flex
+								colorPalette='gray'
+								borderRadius='md'
+								px={3}
+								py={1.5}
+								bg='gray.100'
+								alignItems='center'
+								gap={2}>
+								<Flex as='span'>
 									{item?.label}: {item?.value}
-								</TagLabel>
-								<TagCloseButton onClick={() => deleteTag(item)} />
-							</Tag>
-						</WrapItem>
+								</Flex>
+								<Flex
+									as='button'
+									onClick={() => deleteTag(item)}
+									cursor='pointer'
+									fontSize='lg'
+									opacity={0.7}
+									_hover={{ opacity: 1 }}>
+									×
+								</Flex>
+							</Flex>
+						</Flex>
 					))}
-				</Wrap>
-			</Stack>
+				</Flex>
+			</Flex>
 		</FormControl>
 	);
 };

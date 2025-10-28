@@ -25,7 +25,7 @@ type ListInventoryModalProps = {
 };
 
 const ListTransferModal: FC<ListInventoryModalProps> = ({ key, id, path, data, doc }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [trigger, result] = useUpdateByIdMutation();
 
 	const handleTrigger = () => {
@@ -102,7 +102,7 @@ const ListTransferModal: FC<ListInventoryModalProps> = ({ key, id, path, data, d
 								mx={4}
 								loadingText='Processing'
 								spinnerPlacement='start'
-								isLoading={result?.isLoading}
+								loading={result?.isLoading}
 								onClick={handleTrigger}>
 								Mark As Received
 							</Button>

@@ -1,15 +1,6 @@
 'use client';
 
-import {
-	Menu,
-	Flex,
-	Input,
-	MenuDivider,
-	FormControl,
-	Stack,
-	InputProps,
-	Button,
-} from '@chakra-ui/react';
+import { Menu, Flex, Input, InputProps, Button } from '@chakra-ui/react';
 
 import { useState, FC, useRef, useEffect } from 'react';
 
@@ -22,6 +13,7 @@ import {
 	MenuContainer,
 	MenuItem,
 	ItemOfDataMenu,
+	FormControl,
 } from '../..';
 
 import { useGetAllQuery } from '../../store';
@@ -44,11 +36,10 @@ const EditDataSelect: FC<VDataMenuProps> = ({
 	dataModel,
 	...props
 }) => {
-	// const { onOpen, onClose, isOpen } = useDisclosure();
+	// const { onOpen, onClose, open:isOpen } = useDisclosure();
 
 	const menuClose = () => {
 		setSearch('');
-		// onClose();
 	};
 
 	const [title, setTitle] = useState<string>(`Select option`);
@@ -67,19 +58,16 @@ const EditDataSelect: FC<VDataMenuProps> = ({
 
 	const handleChange = (e: any) => {
 		if (props.onChange) {
-			if (props.onChange) {
-				const event = {
-					target: {
-						name: props.name,
-						value: e._id,
-					},
-				} as any;
+			const event = {
+				target: {
+					name: props.name,
+					value: e._id,
+				},
+			} as any;
 
-				props.onChange(event);
-			}
+			props.onChange(event);
 		}
 		setTitle(e?.name);
-		// onClose();
 	};
 
 	const renderMenuItems = data?.doc?.map((item: any, i: number) => (
@@ -128,80 +116,73 @@ const EditDataSelect: FC<VDataMenuProps> = ({
 					type='post'
 				/>
 			)}
-			<Menu onClose={menuClose}>
-				{({ isOpen }) => {
-					setIsMenuOpen(isOpen);
+			<Menu.Root
+				onOpenChange={e => {
+					setIsMenuOpen(e.open);
+					if (!e.open) menuClose();
+				}}>
+				<FormControl
+					isRequired={isRequired}
+					gap={4}>
+					<Flex
+						flexDir='column'
+						gap={2}
+						w='full'>
+						<Flex
+							flexDir='column'
+							gap={1}
+							w='full'>
+							<DataMenuButton value={value}>
+								{value ? getNameById(value) : `Select option`}
+							</DataMenuButton>
+							<Input
+								ref={inputRef}
+								required={isRequired}
+								value={value}
+								{...hiddenInputCss}
+								{...props}
+							/>
+						</Flex>
 
-					return (
+						{helper && <HelperText>{helper}</HelperText>}
+					</Flex>
+				</FormControl>
+
+				<MenuContainer
+					w={WIDTH}
+					py={0}>
+					<Input
+						{...searchInputCss}
+						ref={searchInputRef}
+						value={search}
+						onChange={handleSearch}
+					/>
+
+					<Menu.Separator
+						py={0}
+						my={0}
+					/>
+					{dataModel && (
 						<>
-							<FormControl
-								isRequired={isRequired}
-								gap={4}>
-								<Stack
-									spacing={2}
-									w='full'>
-									<Stack
-										spacing={1}
-										w='full'>
-										<DataMenuButton
-											value={value}
-											isActive={isOpen}>
-											{value ? getNameById(value) : `Select option`}
-										</DataMenuButton>
-										<Input
-											ref={inputRef}
-											isRequired={isRequired}
-											value={value}
-											{...hiddenInputCss}
-											{...props}
-										/>
-									</Stack>
-
-									{helper && <HelperText>{helper}</HelperText>}
-								</Stack>
-							</FormControl>
-
-							<MenuContainer
-								w={WIDTH}
-								py={0}>
-								{/* <MenuGroup py={0}> */}
-
-								<Input
-									{...searchInputCss}
-									ref={searchInputRef}
-									value={search}
-									onChange={handleSearch}
-								/>
-
-								{/* </MenuGroup> */}
-								<MenuDivider
-									py={0}
-									my={0}
-								/>
-								{dataModel && (
-									<>
-										<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
-										<MenuDivider mb={0} />
-									</>
-								)}
-								<Flex
-									flexDir='column'
-									w='100%'
-									maxH={MAX_H}
-									overflowY='scroll'>
-									<MenuItem
-										{...unselectTextCss}
-										w={WIDTH}
-										onClick={() => handleChange({ name: ``, _id: undefined })}>
-										Unselect
-									</MenuItem>
-									{renderMenuItems}
-								</Flex>
-							</MenuContainer>
+							<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
+							<Menu.Separator mb={0} />
 						</>
-					);
-				}}
-			</Menu>
+					)}
+					<Flex
+						flexDir='column'
+						w='100%'
+						maxH={MAX_H}
+						overflowY='scroll'>
+						<MenuItem
+							{...unselectTextCss}
+							w={WIDTH}
+							onClick={() => handleChange({ name: ``, _id: undefined })}>
+							Unselect
+						</MenuItem>
+						{renderMenuItems}
+					</Flex>
+				</MenuContainer>
+			</Menu.Root>
 		</>
 	);
 };

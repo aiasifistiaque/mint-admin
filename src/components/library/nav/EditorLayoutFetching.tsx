@@ -48,7 +48,7 @@ const Layout: FC<LayoutProps> = ({
 		dispatch(refresh());
 	}, []);
 
-	const [isLargerThan800] = useMediaQuery('(min-width: 800px)');
+	const [isLargerThan800] = useMediaQuery(['(min-width: 800px)']);
 
 	const type = isLargerThan800 ? (props?.type == 'pos' ? 'pos' : 'default') : 'pos';
 

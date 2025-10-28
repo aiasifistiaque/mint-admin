@@ -55,7 +55,7 @@ const Leave: FC<LeaveProps> = ({
 						mt={6}
 						w='full'
 						borderRadius='full'
-						isLoading={isLoading}
+						loading={isLoading}
 						size='sm'
 						type='submit'>
 						Submit

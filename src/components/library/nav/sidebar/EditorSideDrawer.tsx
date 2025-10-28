@@ -1,59 +1,46 @@
 'use client';
 
-import {
-	Drawer,
-	DrawerOverlay,
-	DrawerContent,
-	DrawerCloseButton,
-	useDisclosure,
-	Flex,
-	Heading,
-	IconButton,
-} from '@chakra-ui/react';
+import { useDisclosure, Flex, Heading, IconButton } from '@chakra-ui/react';
+import { DrawerRoot, DrawerBackdrop, DrawerContent, DrawerCloseTrigger } from '@chakra-ui/react';
 import Sidebar from './Sidebar';
 
 import { EditorSidebar, Icon, useGetSelfQuery } from '../..';
 
 const EditorSideDrawer = ({ sidebarData, doc }: { sidebarData: any; doc: any }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const { data } = useGetSelfQuery({});
 
 	return (
 		<>
 			<Flex
-				sx={styles.container}
+				css={styles.container}
 				onClick={onOpen}>
 				<IconButton
 					aria-label='menu'
-					icon={
-						<Icon
-							name='menu'
-							size={20}
-						/>
-					}
 					size='xs'
-					variant='ghost'
-				/>
+					variant='ghost'>
+					<Icon
+						name='menu'
+						size={20}
+					/>
+				</IconButton>
 				<Heading size='md'>{data?.store?.name}</Heading>
 			</Flex>
 
-			<Drawer
-				isOpen={isOpen}
-				placement='left'
-				onClose={onClose}>
-				<DrawerOverlay />
-
+			<DrawerRoot
+				open={isOpen}
+				placement='start'
+				onOpenChange={(e: any) => (e.open ? onOpen() : onClose())}>
+				<DrawerBackdrop />
 				<DrawerContent>
-					{/* <DrawerBody> */}
+					<DrawerCloseTrigger />
 					<EditorSidebar
 						doc={doc}
 						data={sidebarData}
-						closeBtn={<DrawerCloseButton />}
 					/>
-					{/* </DrawerBody> */}
 				</DrawerContent>
-			</Drawer>
+			</DrawerRoot>
 		</>
 	);
 };

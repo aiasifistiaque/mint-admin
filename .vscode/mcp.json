@@ -1,0 +1,20 @@
+{
+	"servers": {
+		"chakra-ui": {
+			"command": "npx",
+			"args": ["-y", "@chakra-ui/react-mcp"]
+		},
+		"next-devtools": {
+			"command": "npx",
+			"args": ["-y", "next-devtools-mcp@latest"]
+		},
+		"mongodb-mongoose": {
+			"command": "npx",
+			"args": ["-y", "mongo-mongoose-mcp"],
+			"env": {
+				"MONGODB_URI": "<your mongodb uri>",
+				"SCHEMA_PATH": "<path to the root folder of all your mongoose schema objects>"
+			}
+		}
+	}
+}

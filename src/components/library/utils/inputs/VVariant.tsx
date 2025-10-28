@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 
-import { FormControl, Image, Stack, Flex, Heading, Input } from '@chakra-ui/react';
-import { HelperText, Label, ImageContainer, Column, radius } from '../../';
-import { Table, Tr, Th, Td, TableContainer, Tbody, Thead } from '@chakra-ui/react';
+import { Flex, Heading, Input } from '@chakra-ui/react';
+import { HelperText, Label, radius, FormControl } from '../../';
+import { Table } from '@chakra-ui/react';
 
 type FormDataType = {
 	value: any;
@@ -100,73 +100,79 @@ const VVariant: FC<FormDataType> = ({
 
 	return (
 		<FormControl isRequired={isRequired}>
-			<Stack w='full'>
+			<Flex
+				flexDir='column'
+				w='full'
+				gap={2}>
 				<Label fontSize='22px'>{label}</Label>
-				<Column
+				<Flex
+					flexDir='column'
 					gap={4}
 					my={4}>
 					<Flex
 						w='full'
 						align='center'
 						gap={6}>
-						<Column
+						<Flex
+							flexDir='column'
 							gap={4}
 							w='full'>
 							<Heading size='sm'>Manage Product Variations</Heading>
 							<Flex gap={1}>
-								<TableContainer>
-									<Table
-										variant='simple'
+								<Flex
+									overflowX='auto'
+									w='full'>
+									<Table.Root
 										borderRadius={radius?.MODAL}
 										borderWidth={1}>
-										<Thead>
-											<Tr>
-												<Th>Name</Th>
-												<Th isNumeric>Cost Price</Th>
-												<Th isNumeric>Sell Price</Th>
-												<Th isNumeric>Stock</Th>
-											</Tr>
-										</Thead>
-										<Tbody>
+										<Table.Header>
+											<Table.Row>
+												<Table.ColumnHeader>Name</Table.ColumnHeader>
+												<Table.ColumnHeader textAlign='right'>Cost Price</Table.ColumnHeader>
+												<Table.ColumnHeader textAlign='right'>Sell Price</Table.ColumnHeader>
+												<Table.ColumnHeader textAlign='right'>Stock</Table.ColumnHeader>
+											</Table.Row>
+										</Table.Header>
+										<Table.Body>
 											{value?.map((item: any, i: number) => (
-												<Tr key={i}>
-													<Td fontWeight='600'>{item?.name}:</Td>
-													<Td isNumeric>
+												<Table.Row key={i}>
+													<Table.Cell fontWeight='600'>{item?.name}:</Table.Cell>
+													<Table.Cell textAlign='right'>
 														<Input
 															size='sm'
 															value={item?.cost}
 															name='cost'
 															onChange={e => onVariantValueChange(i, 'cost', e.target.value)}
 														/>
-													</Td>
-													<Td isNumeric>
+													</Table.Cell>
+													<Table.Cell textAlign='right'>
 														<Input
 															size='sm'
 															value={item?.price}
 															name='price'
 															onChange={e => onVariantValueChange(i, 'price', e.target.value)}
 														/>
-													</Td>
-													<Td isNumeric>
+													</Table.Cell>
+													<Table.Cell textAlign='right'>
 														<Input
 															size='sm'
 															value={item?.stock}
 															name='stock'
 															onChange={e => onVariantValueChange(i, 'stock', e.target.value)}
 														/>
-													</Td>
-												</Tr>
+													</Table.Cell>
+												</Table.Row>
 											))}
-										</Tbody>
-									</Table>
-								</TableContainer>
+										</Table.Body>
+									</Table.Root>
+								</Flex>
 							</Flex>
-						</Column>
+						</Flex>
 					</Flex>
-				</Column>
+				</Flex>
 
 				{helper && <HelperText>{helper}</HelperText>}
-			</Stack>
+			</Flex>
 		</FormControl>
 	);
 };

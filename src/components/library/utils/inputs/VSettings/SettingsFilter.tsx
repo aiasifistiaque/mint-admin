@@ -86,7 +86,7 @@ const SettingsFilter = ({
 						isRequired
 						label='Filter Name'
 						name='name'
-						isDisabled
+						disabled
 						value={formData.name}
 						onChange={() => {}}
 					/>

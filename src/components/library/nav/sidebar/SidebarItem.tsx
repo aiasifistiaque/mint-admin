@@ -1,15 +1,7 @@
 'use client';
 import { FC } from 'react';
-import {
-	Center,
-	Flex,
-	FlexProps,
-	Grid,
-	Skeleton,
-	Text,
-	TextProps,
-	useColorModeValue,
-} from '@chakra-ui/react';
+import { Center, Flex, FlexProps, Grid, Skeleton, Text, TextProps } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 import { useRouter } from 'next/navigation';
 
 import {
@@ -35,6 +27,7 @@ type SidebarItemProps = {
 const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoading = false }) => {
 	const { selected } = useAppSelector((state: any) => state.route);
 	const sidebarType = process.env.NEXT_PUBLIC_SIDEBAR_TYPE || 'generic';
+	const { colorMode } = useColorMode();
 
 	const dispatch = useAppDispatch();
 
@@ -50,20 +43,21 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 	const isMobile = useIsMobile();
 	const isSelected = selected === path;
 
-	const iconColor = useColorModeValue(
-		isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
-		isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark'
-	);
+	const iconColor =
+		colorMode === 'light'
+			? isSelected
+				? 'sidebar.bodyText.selectedLight'
+				: 'sidebar.bodyText.light'
+			: isSelected
+			? 'sidebar.bodyText.selectedDark'
+			: 'sidebar.bodyText.dark';
 
 	return (
 		<Grid
 			onClick={changeRoute}
 			{...containerCss(isLoading, isSelected, href)}>
 			{isLoading ? (
-				<Skeleton
-					isLoaded={!isLoading}
-					{...skeletonCss}
-				/>
+				<Skeleton {...skeletonCss} />
 			) : sidebarType == 'server' ? (
 				<Flex
 					align='center'
@@ -85,12 +79,14 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 				/>
 			)}
 
-			<Skeleton
-				height={isLoading ? 2 : 5}
-				isLoaded={!isLoading}
-				borderRadius={SKELETON_BORDER_RADIUS}>
+			{isLoading ? (
+				<Skeleton
+					height={2}
+					borderRadius={SKELETON_BORDER_RADIUS}
+				/>
+			) : (
 				<Text {...bodyTextCss(isSelected)}>{children}</Text>
-			</Skeleton>
+			)}
 		</Grid>
 	);
 };
@@ -107,7 +103,7 @@ const bodyTextCss = (isSelected?: boolean): TextProps => {
 	};
 };
 
-const containerCss = (isLoading: boolean, isSelected: boolean, href?: string): FlexProps => {
+const containerCss = (isLoading: boolean, isSelected: boolean, href?: string): any => {
 	return {
 		gridTemplateColumns: '1fr 6fr',
 		borderRadius: radius.CONTAINER,

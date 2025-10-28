@@ -1,15 +1,7 @@
 'use client';
 
-import {
-	Drawer,
-	DrawerOverlay,
-	DrawerContent,
-	DrawerCloseButton,
-	useDisclosure,
-	Flex,
-	Heading,
-	IconButton,
-} from '@chakra-ui/react';
+import { useDisclosure, Flex, Heading, IconButton, Portal } from '@chakra-ui/react';
+import { Drawer, CloseButton } from '@chakra-ui/react';
 import Sidebar from './Sidebar';
 
 import { useGetSelfQuery } from '../../';
@@ -17,44 +9,42 @@ import { useGetSelfQuery } from '../../';
 import { Icon, styles } from '../..';
 
 const SideDrawer = () => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const { data } = useGetSelfQuery({});
 
 	return (
-		<>
-			<Flex
-				{...style.container}
-				onClick={onOpen}>
-				<IconButton
-					aria-label='menu'
-					size='xs'
-					variant='ghost'
-					icon={
+		<Drawer.Root
+			open={isOpen}
+			placement='start'
+			onOpenChange={(e: any) => (e.open ? onOpen() : onClose())}>
+			<Drawer.Trigger>
+				<Flex
+					onClick={onOpen}
+					{...style.container}>
+					<IconButton
+						aria-label='menu'
+						size='xs'
+						variant='ghost'>
 						<Icon
 							name='menu'
 							size={20}
 						/>
-					}
-				/>
-				<Heading size='md'>{data?.store?.name}</Heading>
-			</Flex>
-
-			<Drawer
-				isOpen={isOpen}
-				placement='left'
-				onClose={onClose}>
-				{/* <DrawerOverlay _light={{ bg: styles.color.MODAL_OVERLAY.LIGHT }} /> */}
-
-				<DrawerContent>
-					{/* <DrawerBody> */}
-					<Sidebar
-						w='320px'
-						closeBtn={<DrawerCloseButton />}
-					/>
-					{/* </DrawerBody> */}
-				</DrawerContent>
-			</Drawer>
-		</>
+					</IconButton>
+					<Heading size='md'>{data?.store?.name}</Heading>
+				</Flex>
+			</Drawer.Trigger>
+			<Portal>
+				<Drawer.Backdrop />
+				<Drawer.Positioner>
+					<Drawer.Content>
+						<Drawer.CloseTrigger asChild>
+							<CloseButton size='sm' />
+						</Drawer.CloseTrigger>
+						<Sidebar w='320px' />
+					</Drawer.Content>
+				</Drawer.Positioner>
+			</Portal>
+		</Drawer.Root>
 	);
 };
 

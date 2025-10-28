@@ -1,21 +1,23 @@
 import { ReactNode } from 'react';
-import { ModalFooter, ModalFooterProps } from '@chakra-ui/react';
+import { Dialog } from '@chakra-ui/react';
+import { styles } from '../../config';
 
-const MFooter = ({ children, ...props }: ModalFooterProps & { children: ReactNode }) => {
+const MFooter = ({ children, ...props }: { children: ReactNode; [key: string]: any }) => {
 	return (
-		<ModalFooter
+		<Dialog.Footer
 			borderTopWidth={1}
 			borderTopColor='border.light'
-			borderBottomRadius='20px'
+			borderBottomRadius={styles.MODAL.borderRadius}
 			w='full'
 			gap={2}
 			py={2}
 			_light={{ bg: 'background.light' }}
 			_dark={{ bg: 'background.dark', borderTopColor: 'border.dark' }}
 			justifyContent='flex-end'
-			alignItems='center'>
+			alignItems='center'
+			{...props}>
 			{children}
-		</ModalFooter>
+		</Dialog.Footer>
 	);
 };
 

@@ -64,7 +64,7 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 				<Heading
 					color='sidebar.headerText.light'
 					_dark={{ color: 'sidebar.headerText.dark' }}
-					size='md'
+					size='lg'
 					fontFamily='Bebas Neue'>
 					{title}
 				</Heading>

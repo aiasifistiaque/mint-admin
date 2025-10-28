@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Checkbox } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector, useIsMobile, Title, selectAll } from '../../../..';
@@ -19,10 +19,10 @@ const Headers = ({ tableData, fields, selectable, isLoading, data, showMenu }: H
 	const dispatch = useAppDispatch();
 	const { selectedItems } = useAppSelector(state => state.table);
 
-	const handleSelectAll = (e: ChangeEvent<HTMLInputElement>) => {
-		setChecked(e.target.checked);
+	const handleSelectAll = (e: any) => {
+		setChecked(e.checked);
 		const ids = data?.map((item: any) => item?._id);
-		dispatch(selectAll({ ids, isSelected: e.target.checked }));
+		dispatch(selectAll({ ids, isSelected: e.checked }));
 	};
 
 	useEffect(() => {
@@ -39,16 +39,19 @@ const Headers = ({ tableData, fields, selectable, isLoading, data, showMenu }: H
 		<>
 			{selectable && (
 				<Title w='5px'>
-					<Checkbox
+					<Checkbox.Root
 						size='lg'
-						isChecked={checked}
-						onChange={handleSelectAll}
-						colorScheme='brand'
-						disabled={isLoading}
-					/>
+						checked={checked}
+						onCheckedChange={handleSelectAll}
+						colorPalette='brand'
+						disabled={isLoading}>
+						<Checkbox.HiddenInput />
+						<Checkbox.Control>
+							<Checkbox.Indicator />
+						</Checkbox.Control>
+					</Checkbox.Root>
 				</Title>
-			)}
-
+			)}{' '}
 			{tableData?.map((item: any, i: number) => {
 				const { title, sort, dataKey, type, tooltip } = item;
 				if (!fields?.includes(dataKey) && type !== 'menu') return null;

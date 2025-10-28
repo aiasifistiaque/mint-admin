@@ -1,28 +1,13 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
-import {
-	useDisclosure,
-	Modal,
-	ModalBody,
-	ModalOverlay,
-	ModalCloseButton,
-	Drawer,
-	DrawerOverlay,
-	DrawerCloseButton,
-	DrawerBody,
-	Flex,
-} from '@chakra-ui/react';
+import { useDisclosure, Dialog, Flex } from '@chakra-ui/react';
 import {
 	Column,
-	ModalContent,
-	ModalHeader,
 	useIsMobile,
-	DrawerHeader,
 	useGetByIdQuery,
 	MenuItem,
 	getValue,
-	DrawerContentContainer,
 	ViewItem,
 	useGetConfigQuery,
 } from '../../../..';
@@ -35,7 +20,7 @@ type Props = {
 };
 
 const ViewItemModal: FC<Props> = ({ title, path, trigger, id }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [schema, setSchema] = useState<any>([]);
 
 	const { data: schemaData, isFetching: schemaLoading } = useGetConfigQuery(path, {
@@ -58,19 +43,13 @@ const ViewItemModal: FC<Props> = ({ title, path, trigger, id }) => {
 
 	const isMobile = useIsMobile();
 
-	const Container = isMobile ? Drawer : Modal;
-	const Overlay = isMobile ? DrawerOverlay : ModalOverlay;
-	const Content = isMobile ? DrawerContentContainer : ModalContent;
-	const Header = isMobile ? DrawerHeader : ModalHeader;
-	const CloseButton = isMobile ? DrawerCloseButton : ModalCloseButton;
-	const Body = isMobile ? DrawerBody : ModalBody;
-
 	const renderTrigger = () => {
 		if (trigger) {
 			return <Flex onClick={onOpen}>{trigger}</Flex>;
 		} else {
 			return (
 				<MenuItem
+					closeOnSelect={false}
 					icon='view-outline'
 					onClick={onOpen}>
 					{title || 'View'}
@@ -82,42 +61,45 @@ const ViewItemModal: FC<Props> = ({ title, path, trigger, id }) => {
 	return (
 		<>
 			{renderTrigger()}
-			<Container
-				isCentered
-				{...(isMobile && { placement: 'bottom' })}
-				{...(isMobile && { isFullHeight: false })}
-				isOpen={isOpen}
-				size='2xl'
-				onClose={onClose}>
-				<Overlay />
-				<Content>
-					<Header>{title || 'Item Details'}</Header>
-					<CloseButton />
+			<Dialog.Root
+				open={isOpen}
+				onOpenChange={e => !e.open && onClose()}
+				size='xl'
+				placement={isMobile ? 'bottom' : 'center'}
+				motionPreset={isMobile ? 'slide-in-bottom' : 'scale'}>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content>
+						<Dialog.Header>
+							<Dialog.Title>{title || 'Item Details'}</Dialog.Title>
+						</Dialog.Header>
+						<Dialog.CloseTrigger />
 
-					<Body px={0}>
-						<Column
-							gap={4}
-							pt={2}>
-							{schema?.map((item: any, i: number) => {
-								const { title, dataKey, type, colorScheme, path, copy, model } = item;
+						<Dialog.Body px={0}>
+							<Column
+								gap={4}
+								pt={2}>
+								{schema?.map((item: any, i: number) => {
+									const { title, dataKey, type, colorPalette, path, copy, model } = item;
 
-								return (
-									<ViewItem
-										copy={copy}
-										isLoading={isFetching}
-										title={title}
-										type={type}
-										colorScheme={colorScheme}
-										path={model || path}
-										key={i}>
-										{data && getValue({ dataKey, type, data })}
-									</ViewItem>
-								);
-							})}
-						</Column>
-					</Body>
-				</Content>
-			</Container>
+									return (
+										<ViewItem
+											copy={copy}
+											isLoading={isFetching}
+											title={title}
+											type={type}
+											colorPalette={colorPalette}
+											path={model || path}
+											key={i}>
+											{data && getValue({ dataKey, type, data })}
+										</ViewItem>
+									);
+								})}
+							</Column>
+						</Dialog.Body>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };

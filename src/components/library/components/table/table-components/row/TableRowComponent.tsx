@@ -56,7 +56,7 @@ const TableRowComponent: FC<TableProps> = ({
 					style,
 					tagType,
 					displayValue,
-					colorScheme,
+					colorPalette,
 					colorTheme,
 					copy,
 				} = val;
@@ -125,7 +125,7 @@ const TableRowComponent: FC<TableProps> = ({
 							colorTheme={colorTheme}
 							copy={copy}
 							toLocaleStr={toLocaleStr}
-							colorScheme={colorScheme}
+							colorPalette={colorPalette}
 							key={dataKey}
 							type={type}
 							item={val}

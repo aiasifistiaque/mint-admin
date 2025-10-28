@@ -26,7 +26,7 @@ const viewCustomerDataFields: ViewModalDataModelProps[] = [
 		title: 'Is Registered Online',
 		dataKey: 'isRegisteredOnline',
 		type: 'tag',
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 
 	{
@@ -34,7 +34,7 @@ const viewCustomerDataFields: ViewModalDataModelProps[] = [
 		dataKey: 'isActive',
 		type: 'tag',
 
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 
 	{ title: 'Created', dataKey: 'createdAt', type: 'date' },

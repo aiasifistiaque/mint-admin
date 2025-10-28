@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, MenuGroup, Flex, Input, useDisclosure, MenuDivider, Button } from '@chakra-ui/react';
+import { Menu, Flex, Input, useDisclosure, Button } from '@chakra-ui/react';
 
 import { useState, FC, useRef, useEffect } from 'react';
 
@@ -37,7 +37,7 @@ const VDataMenu: FC<VDataMenuProps> = ({
 	unselect = true,
 	...props
 }) => {
-	const { onOpen, onClose, isOpen } = useDisclosure();
+	const { onOpen, onClose, open: isOpen } = useDisclosure();
 
 	const closeMenu = () => {
 		setSearch('');
@@ -126,78 +126,70 @@ const VDataMenu: FC<VDataMenuProps> = ({
 					}
 				/>
 			)}
-			<Menu onClose={closeMenu}>
-				{({ isOpen }) => (
-					<>
-						<FormControl
-							isRequired={isRequired}
-							label={label}
-							helper={helper}
-							w='full'>
-							<DataMenuButton
-								value={value}
-								isActive={isOpen}>
-								{value ? getNameById(value) : `Select ${label}`}
-							</DataMenuButton>
-							<Input
-								ref={inputRef}
-								isRequired={isRequired}
-								value={value}
-								{...hiddenInputCss}
-								{...props}
+			<Menu.Root onOpenChange={e => (e.open ? onOpen() : closeMenu())}>
+				<FormControl
+					isRequired={isRequired}
+					label={label}
+					helper={helper}
+					w='full'>
+					<DataMenuButton value={value}>
+						{value ? getNameById(value) : `Select ${label}`}
+					</DataMenuButton>
+					<Input
+						ref={inputRef}
+						required={isRequired}
+						value={value}
+						{...hiddenInputCss}
+						{...props}
+					/>
+				</FormControl>
+
+				<MenuContainer w={WIDTH}>
+					<Flex
+						p={1}
+						py={0.5}>
+						<Input
+							{...searchInputCss}
+							value={search}
+							onChange={handleSearch}
+						/>
+					</Flex>
+					<Menu.Separator mb={1} />
+					{dataModel && (
+						<>
+							<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
+							<Menu.Separator
+								mt={1}
+								mb={0}
 							/>
-						</FormControl>
+						</>
+					)}
+					{item?.addItem && (
+						<>
+							<MenuItem
+								fontWeight='700'
+								onClick={() => addItemRef.current.click()}>
+								(+) Add New Item
+							</MenuItem>
+							<Menu.Separator
+								mt={1}
+								mb={0}
+							/>
+						</>
+					)}
 
-						<MenuContainer w={WIDTH}>
-							<MenuGroup>
-								<Flex
-									p={1}
-									py={0.5}>
-									<Input
-										{...searchInputCss}
-										value={search}
-										onChange={handleSearch}
-									/>
-								</Flex>
-							</MenuGroup>
-							<MenuDivider mb={1} />
-							{dataModel && (
-								<>
-									<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
-									<MenuDivider
-										mt={1}
-										mb={0}
-									/>
-								</>
-							)}
-							{item?.addItem && (
-								<>
-									<MenuItem
-										fontWeight='700'
-										onClick={() => addItemRef.current.click()}>
-										(+) Add New Item
-									</MenuItem>
-									<MenuDivider
-										mt={1}
-										mb={0}
-									/>
-								</>
-							)}
-
-							<Scroll maxH={MAX_H}>
-								{unselect && (
-									<MenuItem
-										{...unselectTextCss}
-										onClick={() => handleChange({ name: ``, _id: undefined })}>
-										<i>Unselect</i>
-									</MenuItem>
-								)}
-								{renderMenuItems}
-							</Scroll>
-						</MenuContainer>
-					</>
-				)}
-			</Menu>
+					<Scroll maxH={MAX_H}>
+						{unselect && (
+							<MenuItem
+								{...unselectTextCss}
+								onClick={() => handleChange({ name: ``, _id: undefined })}>
+								<i>Unselect</i>
+							</MenuItem>
+						)}
+						{renderMenuItems}
+					</Scroll>
+				</MenuContainer>
+			</Menu.Root>
 		</Flex>
 	);
 };

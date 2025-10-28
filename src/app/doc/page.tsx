@@ -9,7 +9,7 @@ const DocPage = () => {
 	const [id, setId] = React.useState<string>('keys');
 	const [trigger, result] = useLazyGetByIdQuery();
 
-	const { onCopy, value, setValue, hasCopied } = useClipboard(JSON.stringify(result?.data));
+	const { copy: onCopy, value, setValue, copied: hasCopied } = useClipboard();
 
 	const onApply = () => {
 		trigger({ path: `model/${path}`, id: id });
@@ -34,7 +34,7 @@ const DocPage = () => {
 			</VSelect>
 			<Button
 				onClick={onApply}
-				isLoading={result?.isLoading}>
+				loading={result?.isLoading}>
 				Apply
 			</Button>
 			{result?.data && (
@@ -45,8 +45,8 @@ const DocPage = () => {
 						<Button
 							onClick={onCopy}
 							size='xs'
-							leftIcon={<Icon name='copy' />}
-							colorScheme='gray'>
+							// leftIcon={<Icon name='copy' />}
+							colorPalette='gray'>
 							{hasCopied ? 'Copied' : 'Copy'}
 						</Button>
 					</Flex>

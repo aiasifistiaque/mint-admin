@@ -1,5 +1,5 @@
 'use client';
-import { Button, filter, Flex, FlexProps, IconButton, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, FlexProps, IconButton, useDisclosure } from '@chakra-ui/react';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
 import {
@@ -44,7 +44,7 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 	sectionKey,
 	availableFields,
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [formData, setFormData] = useState<any>({
 		title: '',
 		type: 'string',
@@ -161,7 +161,7 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 		add: (
 			<Button
 				size='sm'
-				variant='white'>
+				colorPalette='white'>
 				{section?.addBtnText || 'Add Setting'}
 			</Button>
 		),
@@ -170,9 +170,9 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 				variant='outline'
 				aria-label='edit-section'
 				size='xs'
-				colorScheme='brand'
-				icon={<Icon name='edit' />}
-			/>
+				colorPalette='brand'>
+				<Icon name='edit' />
+			</IconButton>
 		),
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
@@ -187,7 +187,7 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 				<Flex onClick={openModal}>{triggerButton}</Flex>
 			)}
 			<InsertModal
-				size='3xl'
+				size='xl'
 				isOpen={isOpen}
 				onClose={closeModal}>
 				<InsertModalOverlay />
@@ -207,7 +207,7 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 							/>
 							<Flex {...footerCss}>
 								<Button
-									variant='white'
+									colorPalette='white'
 									size='sm'
 									onClick={closeModal}>
 									Discard

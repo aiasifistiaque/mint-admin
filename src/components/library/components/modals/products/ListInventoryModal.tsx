@@ -22,7 +22,7 @@ type ListInventoryModalProps = {
 };
 
 const ListInventoryModal: FC<ListInventoryModalProps> = ({ key, id, path, data, doc }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const closeModal = () => {
 		onClose();

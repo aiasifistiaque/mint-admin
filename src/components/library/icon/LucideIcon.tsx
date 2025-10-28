@@ -2,7 +2,7 @@
 
 import { FC, memo } from 'react';
 import { DynamicIcon } from 'lucide-react/dynamic';
-import { useColorModeValue } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 
 type IconProps = {
 	size?: number;
@@ -11,8 +11,9 @@ type IconProps = {
 };
 
 const LucideIcon: FC<IconProps> = ({ name, ...props }) => {
-	const brandColor = useColorModeValue('brand.light', 'brand.dark');
-	const defaultColor = useColorModeValue('#4a4a4a', 'white');
+	const { colorMode } = useColorMode();
+	const brandColor = colorMode === 'light' ? 'brand.light' : 'brand.dark';
+	const defaultColor = colorMode === 'light' ? '#4a4a4a' : 'white';
 
 	// Check if the icon exists in the icons object
 	// const iconExists = name in icons;

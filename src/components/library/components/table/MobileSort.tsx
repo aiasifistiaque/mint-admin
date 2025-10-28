@@ -9,7 +9,6 @@ import {
 	GridProps,
 	IconButtonProps,
 	Tooltip,
-	CheckboxProps,
 	Flex,
 	FlexProps,
 } from '@chakra-ui/react';
@@ -28,7 +27,7 @@ import {
 import { updateTable } from '../../store';
 
 const MobileSort = ({ tableData, show = false }: { tableData: any; show?: boolean }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open, onOpen, onClose } = useDisclosure();
 	const { fields = [], preferences = [], sort: val } = useAppSelector(state => state.table);
 	const [selected, setSelected] = useState<string[]>([]);
 	const dispatch = useAppDispatch();
@@ -80,25 +79,24 @@ const MobileSort = ({ tableData, show = false }: { tableData: any; show?: boolea
 
 	return (
 		<>
-			<Tooltip
-				placement='bottom'
-				label='Sort results by'>
-				<span>
+			<Tooltip.Root positioning={{ placement: 'bottom' }}>
+				<Tooltip.Trigger asChild>
 					<IconButton
 						onClick={onOpen}
-						{...style.iconButton}
-						icon={
-							<Icon
-								name='sort'
-								size={16}
-							/>
-						}
-					/>
-				</span>
-			</Tooltip>
+						{...style.iconButton}>
+						<Icon
+							name='sort'
+							size={14}
+						/>
+					</IconButton>
+				</Tooltip.Trigger>
+				<Tooltip.Positioner>
+					<Tooltip.Content>Sort results by</Tooltip.Content>
+				</Tooltip.Positioner>
+			</Tooltip.Root>
 
 			<MenuModal
-				isOpen={isOpen}
+				isOpen={open}
 				onClose={closeModal}>
 				{/* <MenuModalOverlay />
 				<MenuModalContent> */}
@@ -121,7 +119,7 @@ type Style = {
 	checkboxGrid: GridProps;
 	errorText: TextProps;
 	iconButton: IconButtonProps;
-	checkbox: CheckboxProps;
+	checkbox: any;
 };
 
 const sortItemsCss: FlexProps = {
@@ -148,7 +146,7 @@ const style: Style = {
 	checkbox: {
 		size: 'md',
 		fontWeight: '500',
-		colorScheme: 'brand',
+		colorPalette: 'brand',
 	},
 	errorText: {
 		color: 'red',
@@ -156,7 +154,7 @@ const style: Style = {
 	},
 	iconButton: {
 		'aria-label': 'Select Table Fields',
-		colorScheme: 'gray',
+		colorPalette: 'gray',
 		size: 'md',
 		borderWidth: 1,
 		h: sizes?.SEARCH_BAR_HEIGHT,

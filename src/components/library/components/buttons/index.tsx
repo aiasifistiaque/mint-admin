@@ -10,6 +10,7 @@ export { default as DiscardButton } from './modal/DiscardButton';
 export { default as ModalSubmitButton } from './modal/ModalSubmitButton';
 export { default as AddSectionButton } from './AddSectionButton';
 export { default as Button } from './Button';
+export { default as ConfirmButton } from './modal/ConfirmButton';
 
 //
 export { default as AlertSubmitButton } from './modal/AlertSubmitButton';

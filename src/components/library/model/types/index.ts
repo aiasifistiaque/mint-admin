@@ -38,7 +38,7 @@ type TableTypes = 'checkbox' | 'date' | 'image-text' | 'string' | 'tag' | 'text'
 
 type SchemaField = {
 	type: Types;
-	colorScheme?: (data: any) => string;
+	colorPalette?: (data: any) => string;
 	dataModel?: any;
 	default?: boolean;
 	displayInTable?: boolean;

@@ -1,14 +1,6 @@
 'use client';
 
-import {
-	Menu,
-	MenuGroup,
-	Flex,
-	Input,
-	useDisclosure,
-	MenuDivider,
-	InputProps,
-} from '@chakra-ui/react';
+import { Menu, Flex, Input, useDisclosure, InputProps } from '@chakra-ui/react';
 
 import { ReactNode, useState, FC, useRef } from 'react';
 
@@ -45,7 +37,7 @@ const VFont: FC<VDataMenuProps> = ({
 	unselect = true,
 	...props
 }) => {
-	const { onOpen, onClose, isOpen } = useDisclosure();
+	const { onOpen, onClose, open: isOpen } = useDisclosure();
 
 	const [title, setTitle] = useState<string>(`Select ${label}`);
 	const [search, setSearch] = useState<string>('');
@@ -98,67 +90,60 @@ const VFont: FC<VDataMenuProps> = ({
 
 	return (
 		<Flex w='full'>
-			<Menu onClose={closeMenu}>
-				{({ isOpen }) => (
-					<>
-						<FormControl
-							isRequired={isRequired}
-							label={label}
-							helper={helper}
-							w='full'>
-							<DataMenuButton
-								isFont
-								{...(value && { fontFamily: value })}
-								value={value}
-								isActive={isOpen}>
-								{value ? value : `Select ${label}`}
-							</DataMenuButton>
-							<Input
-								ref={inputRef}
-								isRequired={isRequired}
-								value={value}
-								{...selectInputCSS}
-								{...props}
-							/>
-						</FormControl>
+			<Menu.Root onOpenChange={e => (e.open ? onOpen() : closeMenu())}>
+				<FormControl
+					isRequired={isRequired}
+					label={label}
+					helper={helper}
+					w='full'>
+					<DataMenuButton
+						isFont
+						{...(value && { fontFamily: value })}
+						value={value}>
+						{value ? value : `Select ${label}`}
+					</DataMenuButton>
+					<Input
+						ref={inputRef}
+						required={isRequired}
+						value={value}
+						{...selectInputCSS}
+						{...props}
+					/>
+				</FormControl>
 
-						<MenuContainer w={WIDTH}>
-							<MenuGroup>
-								<Flex
-									p={2}
-									py={0.5}>
-									<Input
-										{...searchInputCSS}
-										value={search}
-										onChange={handleSearch}
-									/>
-								</Flex>
-							</MenuGroup>
-							<MenuDivider mb={1} />
+				<MenuContainer w={WIDTH}>
+					<Flex
+						p={2}
+						py={0.5}>
+						<Input
+							{...searchInputCSS}
+							value={search}
+							onChange={handleSearch}
+						/>
+					</Flex>
+					<Menu.Separator mb={1} />
 
-							<MenuDivider
-								mt={1}
-								mb={0}
-							/>
-							<MenuItemScrollContainer>
-								{unselect && (
-									<MenuItem
-										w={WIDTH}
-										onClick={() => handleChange({ label: ``, value: undefined })}>
-										Unselect
-									</MenuItem>
-								)}
-								{renderMenuItems}
-							</MenuItemScrollContainer>
-						</MenuContainer>
-					</>
-				)}
-			</Menu>
+					<Menu.Separator
+						mt={1}
+						mb={0}
+					/>
+					<MenuItemScrollContainer>
+						{unselect && (
+							<MenuItem
+								w={WIDTH}
+								onClick={() => handleChange({ label: ``, value: undefined })}>
+								Unselect
+							</MenuItem>
+						)}
+						{renderMenuItems}
+					</MenuItemScrollContainer>
+				</MenuContainer>
+			</Menu.Root>
 		</Flex>
 	);
 };
 
-const searchInputCSS = {
+const searchInputCSS: any = {
 	borderRadius: 6,
 	size: 'sm',
 	placeholder: 'Search',

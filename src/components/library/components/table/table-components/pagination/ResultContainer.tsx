@@ -5,6 +5,8 @@ import { useIsMobile, useAppSelector } from '../../../../hooks';
 import { sizes, THEME, styles as style } from '../../../../config';
 import Pagination from '../../../../components/pagination/Pagination';
 
+//Migration checked
+
 type ResultContainerProps = FlexProps & {
 	data: any;
 };
@@ -19,7 +21,7 @@ const ResultContainer: FC<ResultContainerProps> = ({ data, ...props }) => {
 
 	return (
 		<Flex
-			sx={{
+			css={{
 				...styles.container,
 				left: isMobile ? 0 : sizes.HOME_NAV_LEFT,
 				w: isMobile ? '100vw' : sizes.HOME_NAV_MAX_WIDTH,

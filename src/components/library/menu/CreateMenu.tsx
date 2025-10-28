@@ -1,44 +1,43 @@
-import {
-	Menu,
-	MenuButton,
-	MenuGroup,
-	IconButton,
-	Tooltip,
-	useColorModeValue,
-} from '@chakra-ui/react';
+import { Menu, IconButton, Tooltip } from '@chakra-ui/react';
 import CustomMenuItem from './CustomMenuItem';
 import MenuContainer from './MenuContainer';
 
 import { Icon } from '..';
+import { useColorMode } from '@/components/ui/color-mode';
 
 const CreateMenu = () => {
-	const color = useColorModeValue('white', '#111');
+	const { colorMode } = useColorMode();
+	const color = colorMode === 'light' ? 'white' : '#111';
 	return (
-		<Menu>
-			<Tooltip
-				placement='bottom'
-				label='Create'
-				borderRadius='md'>
-				<MenuButton
-					as={IconButton}
-					size='xs'
-					borderRadius='full'
-					icon={
-						<Icon
-							name='add'
-							size={20}
-							color={color}
-						/>
-					}
-				/>
-			</Tooltip>
+		<Menu.Root>
+			<Tooltip.Root
+				openDelay={200}
+				closeDelay={100}
+				positioning={{ placement: 'bottom' }}>
+				<Tooltip.Trigger asChild>
+					<Menu.Trigger asChild>
+						<IconButton
+							size='xs'
+							borderRadius='full'>
+							<Icon
+								name='add'
+								size={20}
+								color={color}
+							/>
+						</IconButton>
+					</Menu.Trigger>
+				</Tooltip.Trigger>
+				<Tooltip.Positioner>
+					<Tooltip.Content>Create</Tooltip.Content>
+				</Tooltip.Positioner>
+			</Tooltip.Root>
 
 			<MenuContainer>
-				<MenuGroup title='Create'>
+				<Menu.ItemGroup title='Create'>
 					<CustomMenuItem href='/products/create'>Create Product</CustomMenuItem>
-				</MenuGroup>
+				</Menu.ItemGroup>
 			</MenuContainer>
-		</Menu>
+		</Menu.Root>
 	);
 };
 

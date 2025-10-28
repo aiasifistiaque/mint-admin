@@ -35,7 +35,7 @@ const SingleFieldButtons: FC<SingleFieldButtonsProps> = ({
 					↓
 				</TagButton>
 				<TagButton
-					colorScheme='red'
+					colorPalette='red'
 					onClick={removeField}
 					_hover={{ bg: 'red.500' }}>
 					×

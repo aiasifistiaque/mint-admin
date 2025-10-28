@@ -1,15 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 import {
-	Modal,
-	ModalOverlay,
-	ModalHeader,
-	ModalBody,
+	Dialog,
 	useDisclosure,
 	Flex,
 	Input,
 	Text,
 	FlexProps,
 	TextProps,
+	Portal,
 } from '@chakra-ui/react';
 
 import { MenuIconContainer } from '.';
@@ -28,7 +26,7 @@ const SearchMenu = ({
 	sidebarData: SidebarItemType[];
 	iconSize?: number;
 }) => {
-	const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
+	const { open: isOpen, onOpen, onClose: closeModal } = useDisclosure();
 	const [search, setSearch] = useState('');
 
 	const initialRef = useRef(null);
@@ -122,62 +120,79 @@ const SearchMenu = ({
 
 	return (
 		<>
-			<Flex
-				onClick={onOpen}
-				cursor='pointer'>
-				<MenuIconContainer>
-					<Icon
-						name='search'
-						size={iconSize || 16}
-						color={THEME == 'basic' ? 'inherit' : 'white'}
-					/>
-				</MenuIconContainer>
-			</Flex>
-
-			<Modal
-				initialFocusRef={initialRef}
-				finalFocusRef={finalRef}
+			<Dialog.Root
+				trapFocus
+				preventScroll
+				placement='center'
+				initialFocusEl={() => initialRef.current}
+				finalFocusEl={() => finalRef.current}
 				scrollBehavior='inside'
-				size='xl'
-				isOpen={isOpen}
-				onClose={onClose}>
-				<ModalOverlay />
-				<ModalContentContainer
-					borderRadius={radius.MODAL}
-					px={0}
-					gap={0}>
-					<ModalHeader px={4}>
-						<Input
-							variant='unstyled'
-							size='lg'
-							value={search}
-							onChange={(e: any) => setSearch(e.target.value)}
-							placeholder='Search the docs'
-							_placeholder={{ fontSize: '15px', fontWeight: '600' }}
-						/>
-					</ModalHeader>
-					<ModalBody {...modalBodyCss}>
-						<Flex {...bodyCss}>
-							{data?.map((item: any, i: number) => (
-								<Link
-									key={i}
-									href={item?.href}>
-									<Flex
-										{...itemContainerCss}
-										bg={selectedIndex === i ? 'whitesmoke' : 'transparent'}
-										_dark={{
-											bg: selectedIndex === i ? 'container.dark' : 'transparent',
-										}}
-										onMouseEnter={() => setSelectedIndex(i)}>
-										<Text {...titleCss}>{item?.sectionTitle}</Text>
-										<Text {...textCss}>{item?.title}</Text>
-									</Flex>
-								</Link>
-							))}
-						</Flex>
-					</ModalBody>
-				</ModalContentContainer>
-			</Modal>
+				size='lg'
+				open={isOpen}
+				onOpenChange={({ open }) => (open ? {} : onClose())}>
+				<Dialog.Trigger asChild>
+					<Flex
+						onClick={onOpen}
+						cursor='pointer'>
+						<MenuIconContainer>
+							<Icon
+								name='search'
+								size={iconSize || 16}
+								color={THEME == 'basic' ? 'inherit' : 'white'}
+							/>
+						</MenuIconContainer>
+					</Flex>
+				</Dialog.Trigger>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<ModalContentContainer
+							borderRadius={radius.MODAL}
+							px={0}
+							gap={0}>
+							<Dialog.Header px={4}>
+								<Input
+									variant='flushed'
+									size='lg'
+									_focus={{
+										borderColor: 'transparent',
+									}}
+									value={search}
+									onChange={(e: any) => setSearch(e.target.value)}
+									placeholder='Search the docs'
+									css={{
+										'&::placeholder': {
+											fontSize: '15px',
+											fontWeight: '600',
+										},
+										'--focus-color': 'transparent',
+									}}
+								/>
+							</Dialog.Header>
+							<Dialog.Body {...modalBodyCss}>
+								<Flex {...bodyCss}>
+									{data?.map((item: any, i: number) => (
+										<Link
+											key={i}
+											href={item?.href}>
+											<Flex
+												{...itemContainerCss}
+												bg={{
+													base: selectedIndex === i ? 'whitesmoke' : 'transparent',
+													_dark: selectedIndex === i ? 'container.dark' : 'transparent',
+												}}
+												onMouseEnter={() => setSelectedIndex(i)}>
+												<Text {...titleCss}>{item?.sectionTitle}</Text>
+												<Text {...textCss}>{item?.title}</Text>
+											</Flex>
+										</Link>
+									))}
+								</Flex>
+							</Dialog.Body>
+						</ModalContentContainer>
+					</Dialog.Positioner>
+				</Portal>
+			</Dialog.Root>
 		</>
 	);
 };
@@ -193,10 +208,7 @@ const modalBodyCss: any = {
 const bodyCss: FlexProps = {
 	py: 2,
 	borderTopWidth: 1,
-	borderTopColor: 'gray.200',
-	_dark: {
-		borderTopColor: 'black',
-	},
+	borderTopColor: { base: 'gray.200', _dark: 'black' },
 	flexDir: 'column',
 };
 

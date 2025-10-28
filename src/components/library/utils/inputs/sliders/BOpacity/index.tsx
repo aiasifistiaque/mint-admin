@@ -1,6 +1,6 @@
 'use client';
 
-import { Slider, SliderTrack, SliderFilledTrack, SliderThumb, SliderMark } from '@chakra-ui/react';
+import { Slider, Box, Text } from '@chakra-ui/react';
 import { FC } from 'react';
 import { FormControl } from '../../../..';
 import { labelStyle, variables, SliderProps, toolTipStyle } from '../styles';
@@ -33,32 +33,42 @@ const BLineHeight: FC<SliderProps> = ({
 			label={label}
 			helper={helper}
 			h={variables?.height}>
-			<Slider
+			<Slider.Root
 				min={0}
 				max={1000}
-				value={value ? value * 1000 : 1000}
+				value={[value ? value * 1000 : 1000]}
 				step={10}
-				onChange={handleChange}>
-				{values.map(value => (
-					<SliderMark
-						key={value}
-						value={value * 1000}
+				onValueChange={details => handleChange(details.value[0])}>
+				{values.map(val => (
+					<Slider.Marker
+						key={val}
+						value={val * 1000}
 						{...labelStyle}>
-						{value / 1000}
-					</SliderMark>
+						<Slider.MarkerIndicator>
+							<Text fontSize='sm'>{val / 1000}</Text>
+						</Slider.MarkerIndicator>
+					</Slider.Marker>
 				))}
 
-				<SliderMark
-					value={value * 100}
-					{...toolTipStyle}>
+				<Slider.Label
+					{...toolTipStyle}
+					position='absolute'
+					top='-30px'
+					left='50%'
+					transform='translateX(-50%)'>
 					{value}
-				</SliderMark>
+				</Slider.Label>
 
-				<SliderTrack bg={variables?.track}>
-					<SliderFilledTrack bg={variables?.filledTrack} />
-				</SliderTrack>
-				<SliderThumb boxSize={variables?.boxSize} />
-			</Slider>
+				<Slider.Control>
+					<Slider.Track bg={variables?.track}>
+						<Slider.Range bg={variables?.filledTrack} />
+					</Slider.Track>
+					<Slider.Thumb
+						index={0}
+						boxSize={variables?.boxSize}
+					/>
+				</Slider.Control>
+			</Slider.Root>
 		</FormControl>
 	);
 };

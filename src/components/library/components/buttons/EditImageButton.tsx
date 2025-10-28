@@ -1,5 +1,6 @@
-import { Button, Flex, IconButton, useColorModeValue } from '@chakra-ui/react';
+import { Button, Flex, IconButton } from '@chakra-ui/react';
 import { Icon } from '../..';
+import { useColorMode } from '@/components/ui/color-mode';
 
 const buttonStyle = {
 	position: 'absolute',
@@ -8,23 +9,20 @@ const buttonStyle = {
 };
 
 const EditImageButton = ({ onDelete }: { onDelete?: any }) => {
-	const color = useColorModeValue('white', 'black');
+	const { colorMode } = useColorMode();
+	const color = colorMode === 'light' ? 'white' : 'black';
 
 	return (
 		<Flex
 			gap={1}
-			sx={buttonStyle}>
-			<Button
-				size='xs'
-				as={IconButton}
-				icon={
-					<Icon
-						name='edit'
-						color={color}
-						size={12}
-					/>
-				}
-			/>
+			css={buttonStyle}>
+			<IconButton size='xs'>
+				<Icon
+					name='edit'
+					color={color}
+					size={12}
+				/>
+			</IconButton>
 		</Flex>
 	);
 };

@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { Tr, TextProps } from '@chakra-ui/react';
+import { Table, TextProps } from '@chakra-ui/react';
 
 type RowContainerMdProps = TextProps & {
 	children: ReactNode;
@@ -7,7 +7,7 @@ type RowContainerMdProps = TextProps & {
 
 const RowContainerMd: FC<RowContainerMdProps> = ({ children, ...props }) => {
 	return (
-		<Tr
+		<Table.Row
 			h='60px'
 			bg='table.row.light'
 			_dark={{
@@ -17,10 +17,13 @@ const RowContainerMd: FC<RowContainerMdProps> = ({ children, ...props }) => {
 			_notLast={{
 				borderBottom: '1px solid',
 				borderBottomColor: 'table.innerBorder.light',
+				_dark: {
+					borderBottomColor: 'table.innerBorder.dark',
+				},
 			}}
 			{...props}>
 			{children}
-		</Tr>
+		</Table.Row>
 	);
 };
 

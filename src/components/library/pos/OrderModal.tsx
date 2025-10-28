@@ -1,23 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
-import {
-	Modal,
-	ModalOverlay,
-	ModalHeader,
-	ModalBody,
-	ModalCloseButton,
-	Button,
-	useDisclosure,
-	Grid,
-	Flex,
-	Heading,
-	Drawer,
-	DrawerOverlay,
-	DrawerCloseButton,
-	DrawerHeader,
-	DrawerBody,
-	useColorModeValue,
-} from '@chakra-ui/react';
+import { Button, useDisclosure, Grid, Flex, Heading, Drawer } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 
 import PosInput from './PosInput';
 import OrderPriceDetails from './pos-card/OrderPriceDetails/OrderPriceDetails';
@@ -35,6 +19,9 @@ import {
 	useIsMobile,
 	SpaceBetween,
 	VCheckbox,
+	GenericModal,
+	GenericModalHeader,
+	GenericModalBody,
 } from '../';
 import {
 	OrderAddress,
@@ -48,7 +35,7 @@ import {
 import { useRouter } from 'next/navigation';
 
 const OrderModal = () => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const { cartItems, total, user, subTotal, discount, vat, shipping, address, isAddressSet } =
 		useAppSelector(state => state.cart);
 	const dispatch = useAppDispatch();
@@ -114,7 +101,8 @@ const OrderModal = () => {
 		}
 	}, [isLoading]);
 
-	const borderColor = useColorModeValue('#bbb', 'stroke.deepD');
+	const { colorMode } = useColorMode();
+	const borderColor = colorMode === 'light' ? '#bbb' : 'stroke.deepD';
 
 	const renderLeftSection = (
 		<>
@@ -213,7 +201,7 @@ const OrderModal = () => {
 				]}
 			/>
 			<VCheckbox
-				isChecked={emailReceipt}
+				// checked={emailReceipt}
 				onChange={(e: any) => setEmailReceipt(e.target.checked)}
 				label='Email Receipt'
 			/>
@@ -227,11 +215,82 @@ const OrderModal = () => {
 
 	const isSmallScreen = useIsMobile();
 
-	const Container = isSmallScreen ? Drawer : Modal;
-	const Overlay = isSmallScreen ? DrawerOverlay : ModalOverlay;
-	const CloseButton = isSmallScreen ? DrawerCloseButton : ModalCloseButton;
-	const Header = isSmallScreen ? DrawerHeader : ModalHeader;
-	const Body = isSmallScreen ? DrawerBody : ModalBody;
+	const modalContent = (
+		<>
+			<GenericModalHeader>
+				Order Details
+				{isAddressSet && (
+					<OrderCustomer
+						data={{ name: address?.name, email: address?.email, phone: address?.phone }}
+					/>
+				)}
+				{isAddressSet && <OrderAddress address={{ ...address }} />}
+			</GenericModalHeader>
+			<GenericModalBody>
+				<Grid
+					display={{ base: 'flex', md: 'grid' }}
+					flexDir={{ base: 'column', md: 'row' }}
+					gridTemplateColumns={{ base: '1fr', md: '3fr 2fr' }}
+					gap={10}>
+					<Flex flexDirection='column'>{renderLeftSection}</Flex>
+					<Column
+						flex={1}
+						gap={4}>
+						<Column
+							flex={1}
+							gap={1}>
+							{renderRightSection}
+						</Column>
+
+						<OrderButton
+							onClick={handleCreateOrder}
+							loading={createOrderResult?.isLoading}>
+							Confirm & Pay
+						</OrderButton>
+					</Column>
+				</Grid>
+			</GenericModalBody>
+		</>
+	);
+
+	const drawerContent = (
+		<>
+			<Drawer.Header>
+				Order Details
+				{isAddressSet && (
+					<OrderCustomer
+						data={{ name: address?.name, email: address?.email, phone: address?.phone }}
+					/>
+				)}
+				{isAddressSet && <OrderAddress address={{ ...address }} />}
+				<Drawer.CloseTrigger />
+			</Drawer.Header>
+			<Drawer.Body>
+				<Grid
+					display={{ base: 'flex', md: 'grid' }}
+					flexDir={{ base: 'column', md: 'row' }}
+					gridTemplateColumns={{ base: '1fr', md: '3fr 2fr' }}
+					gap={10}>
+					<Flex flexDirection='column'>{renderLeftSection}</Flex>
+					<Column
+						flex={1}
+						gap={4}>
+						<Column
+							flex={1}
+							gap={1}>
+							{renderRightSection}
+						</Column>
+
+						<OrderButton
+							onClick={handleCreateOrder}
+							loading={createOrderResult?.isLoading}>
+							Confirm & Pay
+						</OrderButton>
+					</Column>
+				</Grid>
+			</Drawer.Body>
+		</>
+	);
 
 	return (
 		<>
@@ -243,51 +302,25 @@ const OrderModal = () => {
 				Confirm Order
 			</Button>
 
-			<Container
-				{...(!isSmallScreen && { isCentered: true })}
-				{...(isSmallScreen && { placement: 'bottom' })}
-				closeOnOverlayClick={false}
-				size='5xl'
-				isOpen={isOpen}
-				onClose={onModalClose}>
-				<Overlay />
-				<ModalContainer isSmallScreen={isSmallScreen}>
-					<Header>
-						Order Details
-						{isAddressSet && (
-							<OrderCustomer
-								data={{ name: address?.name, email: address?.email, phone: address?.phone }}
-							/>
-						)}
-						{isAddressSet && <OrderAddress address={{ ...address }} />}
-					</Header>
-					<CloseButton />
-					<Body>
-						<Grid
-							display={{ base: 'flex', md: 'grid' }}
-							flexDir={{ base: 'column', md: 'row' }}
-							gridTemplateColumns={{ base: '1fr', md: '3fr 2fr' }}
-							gap={10}>
-							<Flex flexDirection='column'>{renderLeftSection}</Flex>
-							<Column
-								flex={1}
-								gap={4}>
-								<Column
-									flex={1}
-									gap={1}>
-									{renderRightSection}
-								</Column>
-
-								<OrderButton
-									onClick={handleCreateOrder}
-									isLoading={createOrderResult?.isLoading}>
-									Confirm & Pay
-								</OrderButton>
-							</Column>
-						</Grid>
-					</Body>
-				</ModalContainer>
-			</Container>
+			{isSmallScreen ? (
+				<Drawer.Root
+					open={isOpen}
+					placement='bottom'
+					onOpenChange={e => (e.open ? onOpen() : onModalClose())}>
+					<Drawer.Backdrop />
+					<Drawer.Positioner>
+						<Drawer.Content>{drawerContent}</Drawer.Content>
+					</Drawer.Positioner>
+				</Drawer.Root>
+			) : (
+				<GenericModal
+					isOpen={isOpen}
+					onClose={onModalClose}
+					size='full'
+					closeOnOverlayClick={false}>
+					{modalContent}
+				</GenericModal>
+			)}
 		</>
 	);
 };

@@ -19,7 +19,7 @@ const schema: SchemaProps = {
 		sort: true,
 		type: 'checkbox',
 		displayInTable: true,
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 	permissions: {
 		title: 'Permissions',

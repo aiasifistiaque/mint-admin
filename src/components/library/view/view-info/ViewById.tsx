@@ -32,13 +32,13 @@ const ViewById: FC<ViewByIdProps> = ({ path, id, schema, heading, ...props }) =>
 				</Flex>
 			)}
 			{viewFields.map((item: ViewModalDataModelProps, i: number) => {
-				const { title, dataKey, type, colorScheme, path } = item;
+				const { title, dataKey, type, colorPalette, path } = item;
 				return (
 					<ViewItem
 						isLoading={isFetching}
 						title={title}
 						type={type}
-						colorScheme={colorScheme}
+						colorPalette={colorPalette}
 						path={path}
 						key={i}>
 						{data && getValue({ dataKey, type, data })}

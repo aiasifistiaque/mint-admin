@@ -1,47 +1,36 @@
 'use client';
 import { FC, ReactNode } from 'react';
-import {
-	DrawerContent,
-	DrawerContentProps,
-	MenuListProps,
-	ModalContent,
-	ModalContentProps,
-} from '@chakra-ui/react';
+import { Drawer, Dialog } from '@chakra-ui/react';
 import { radius } from '../config';
+import { useColorMode } from '@/components/ui/color-mode';
 
-type MenuContainerProps = ModalContentProps &
-	DrawerContentProps &
-	MenuListProps & {
-		children: ReactNode;
-		isSmallScreen?: boolean;
-	};
+type MenuContainerProps = any & {
+	children: ReactNode;
+	isSmallScreen?: boolean;
+};
 
 const ModalContainer: FC<MenuContainerProps> = ({ children, isSmallScreen, ...props }) => {
+	const { colorMode } = useColorMode();
+
 	if (isSmallScreen)
 		return (
-			<DrawerContent
+			<Drawer.Content
 				borderTopRadius='2xl'
 				h='85vh'
-				bg='menu.light'
-				_dark={{
-					bg: 'menu.dark',
-				}}
+				bg={colorMode === 'dark' ? 'menu.dark' : 'menu.light'}
 				{...props}>
 				{children}
-			</DrawerContent>
+			</Drawer.Content>
 		);
 	else
 		return (
-			<ModalContent
+			<Dialog.Content
 				boxShadow='lg'
 				borderRadius={radius.MODAL}
-				bg='background.light'
-				_dark={{
-					bg: 'menu.dark',
-				}}
+				bg={colorMode === 'dark' ? 'menu.dark' : 'background.light'}
 				{...props}>
 				{children}
-			</ModalContent>
+			</Dialog.Content>
 		);
 };
 

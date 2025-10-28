@@ -32,13 +32,13 @@ type ViewItemProps = GridProps & {
 	title: string;
 	type?: string;
 	children?: ReactNode;
-	colorScheme?: any;
+	colorPalette?: any;
 	path?: string;
 	isLoading?: boolean;
 	copy?: boolean;
 };
 
-const renderContent = ({ type, children, colorScheme, path }: any) => {
+const renderContent = ({ type, children, colorPalette, path }: any) => {
 	switch (type) {
 		case 'section-data-array':
 			return (
@@ -96,7 +96,7 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 					gap={2}>
 					{children?.map((item: any, i: number) => (
 						<Badge
-							colorScheme='purple'
+							colorPalette='purple'
 							variant='subtle'
 							key={i}>
 							{item?.toString()}
@@ -111,7 +111,7 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 					<Link
 						cursor='pointer'
 						href={children || '#'}
-						isExternal={children ? true : false}>
+						{...(children ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
 						<Flex
 							align='center'
 							gap={2}>
@@ -135,16 +135,16 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 					<Link
 						cursor='pointer'
 						href={children || '#'}
-						isExternal={children ? true : false}>
-						<Tag
+						{...(children ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+						<Tag.Root
 							size='md'
-							colorScheme='gray'>
-							<TagLabel mr={1}>Download File</TagLabel>
+							colorPalette='gray'>
+							<Tag.Label mr={1}>Download File</Tag.Label>
 							<Icon
 								name='download'
 								size={16}
 							/>
-						</Tag>
+						</Tag.Root>
 					</Link>
 				</Flex>
 			);
@@ -173,14 +173,14 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 					{Array.isArray(children)
 						? children.map((item: any, i: number) => (
 								<Badge
-									colorScheme='purple'
+									colorPalette='purple'
 									variant='subtle'
 									key={i}>
 									{item?.toString()}
 								</Badge>
 						  ))
 						: children && (
-								<Badge colorScheme={colorScheme ? colorScheme(children) : 'gray'}>
+								<Badge colorPalette={colorPalette ? colorPalette(children) : 'gray'}>
 									{children?.toString()}
 								</Badge>
 						  )}
@@ -190,7 +190,7 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 			return (
 				<Box alignItems='center'>
 					{children && (
-						<Badge colorScheme={colorScheme ? colorScheme(children) : 'gray'}>
+						<Badge colorPalette={colorPalette ? colorPalette(children) : 'gray'}>
 							{children?.toString()}
 						</Badge>
 					)}
@@ -274,13 +274,13 @@ const ViewItem: FC<ViewItemProps> = ({
 	title,
 	type,
 	children,
-	colorScheme,
+	colorPalette,
 	path,
 	copy,
 	isLoading = false,
 	...props
 }) => {
-	const { onCopy, value, setValue, hasCopied } = useClipboard('');
+	const { copy: onCopy, value, setValue, copied: hasCopied } = useClipboard();
 
 	useEffect(() => {
 		if (children && copy) {
@@ -311,17 +311,20 @@ const ViewItem: FC<ViewItemProps> = ({
 					align='center'>
 					{!isLoading &&
 						children &&
-						renderContent({ type, children, colorScheme, path, isLoading })}
+						renderContent({ type, children, colorPalette, path, isLoading })}
 					{copy && children && children != 'n/a' && (
-						<Tooltip
-							label={hasCopied ? 'Copied!' : 'Copy'}
-							aria-label='Copy'>
-							<Flex
-								onClick={onCopy}
-								cursor='pointer'>
-								<Icon name='copy' />
-							</Flex>
-						</Tooltip>
+						<Tooltip.Root>
+							<Tooltip.Trigger asChild>
+								<Flex
+									onClick={onCopy}
+									cursor='pointer'>
+									<Icon name='copy' />
+								</Flex>
+							</Tooltip.Trigger>
+							<Tooltip.Positioner>
+								<Tooltip.Content>{hasCopied ? 'Copied!' : 'Copy'}</Tooltip.Content>
+							</Tooltip.Positioner>
+						</Tooltip.Root>
 					)}
 				</Flex>
 			</SkeletonContent>
@@ -347,7 +350,7 @@ const GridContainer = ({ children, ...props }: GridProps & { children: ReactNode
 
 const SkeletonContent = ({ isLoading, children }: { isLoading: boolean; children: ReactNode }) => (
 	<Skeleton
-		isLoaded={!isLoading}
+		loading={isLoading}
 		height={isLoading ? '20px' : 'auto'}
 		width={isLoading ? '100px' : 'full'}>
 		{children}

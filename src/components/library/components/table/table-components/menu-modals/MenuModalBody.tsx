@@ -1,31 +1,32 @@
 import { FC, ReactNode } from 'react';
 import { useIsMobile } from '../../../..';
-import { DrawerBody, DrawerContentProps, ModalBody, ModalBodyProps } from '@chakra-ui/react';
+import { Drawer, Dialog } from '@chakra-ui/react';
 
-type MenuModalBodyProps = ModalBodyProps &
-	DrawerContentProps & {
-		children: ReactNode;
-	};
+type MenuModalBodyProps = {
+	children: ReactNode;
+	[key: string]: any;
+};
 
 const MenuModalBody: FC<MenuModalBodyProps> = ({ children, ...props }) => {
 	const isMobile = useIsMobile();
 	if (isMobile) {
 		return (
-			<DrawerBody
-				px={{ base: 4, md: 6 }}
+			<Drawer.Body
+				p={{ base: 4, md: 6 }}
 				overflowY='scroll'
 				{...props}>
 				{children}
-			</DrawerBody>
+			</Drawer.Body>
 		);
 	}
 
 	return (
-		<ModalBody
-			px={{ base: 4, md: 6 }}
+		<Dialog.Body
+			p={{ base: 4, md: 6 }}
+			pt={{ base: 2, md: 2 }}
 			{...props}>
 			{children}
-		</ModalBody>
+		</Dialog.Body>
 	);
 };
 

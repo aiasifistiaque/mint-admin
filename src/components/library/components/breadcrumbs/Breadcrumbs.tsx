@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Breadcrumb, BreadcrumbItem } from '@chakra-ui/react';
+import { Breadcrumb } from '@chakra-ui/react';
 import Link from 'next/link';
 
 type BreadcrumbsProps = {
@@ -11,16 +11,16 @@ type BreadcrumbsProps = {
 
 const Breadcrumbs: FC<BreadcrumbsProps> = ({ data }) => {
 	return (
-		<Breadcrumb>
+		<Breadcrumb.Root>
 			{data?.map((item: any, i: number) => (
-				<BreadcrumbItem
+				<Breadcrumb.Item
 					{...crumbCss}
 					key={i}
 					isCurrentPage={i === data.length - 1}>
 					<Link href={item?.href}>{item?.title}</Link>
-				</BreadcrumbItem>
+				</Breadcrumb.Item>
 			))}
-		</Breadcrumb>
+		</Breadcrumb.Root>
 	);
 };
 

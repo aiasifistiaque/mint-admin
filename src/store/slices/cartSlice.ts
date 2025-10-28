@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { CART_NAME } from '../..';
+
+const CART_NAME = 'MINT_CAFE_CART_V2';
 
 export type CartItem = {
 	id: string;

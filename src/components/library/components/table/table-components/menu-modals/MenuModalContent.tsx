@@ -1,13 +1,8 @@
 import { FC, ReactNode } from 'react';
 import { useIsMobile } from '../../../..';
-import {
-	DrawerContent,
-	DrawerContentProps,
-	ModalContent,
-	ModalContentProps,
-} from '@chakra-ui/react';
+import { DrawerContent, DrawerContentProps, Dialog } from '@chakra-ui/react';
 
-type Props = ModalContentProps &
+type Props = any &
 	DrawerContentProps & {
 		children: ReactNode;
 	};
@@ -31,7 +26,7 @@ const MenuModalContent: FC<Props> = ({ children, ...props }) => {
 	}
 
 	return (
-		<ModalContent
+		<Dialog.Content
 			boxShadow='lg'
 			borderRadius='2xl'
 			bg='menu.light'
@@ -40,7 +35,7 @@ const MenuModalContent: FC<Props> = ({ children, ...props }) => {
 			}}
 			{...props}>
 			{children}
-		</ModalContent>
+		</Dialog.Content>
 	);
 };
 

@@ -1,19 +1,8 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogContent,
-	AlertDialogOverlay,
-	Button,
-	useDisclosure,
-	Checkbox,
-	Grid,
-	Flex,
-} from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Checkbox, Grid, Flex } from '@chakra-ui/react';
 import { useEffect, useRef, FC, useState } from 'react';
-import { useCustomToast, MenuItem, AlertDialogHeader } from '../../../..';
+import { useCustomToast, MenuItem } from '../../../..';
 import {
 	useGetConfigQuery,
 	useGetSchemaQuery,
@@ -46,7 +35,7 @@ const CalculateModal: FC<any> = ({
 	keyType = 'string',
 	value,
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = useRef<any>(undefined);
 
 	const [trigger, result] = useUpdateManyMutation();
@@ -72,8 +61,8 @@ const CalculateModal: FC<any> = ({
 		}
 	}, [isFetching]);
 
-	const handleCheckboxChange = (e: any, field: any) => {
-		if (e.target.checked) {
+	const handleCheckboxChange = (details: any, field: any) => {
+		if (details.checked) {
 			setSelected((prevSelected: any) => [...prevSelected, field]);
 		} else {
 			setSelected((prevSelected: any) => prevSelected.filter((item: any) => item !== field));
@@ -81,13 +70,17 @@ const CalculateModal: FC<any> = ({
 	};
 
 	const checkboxes = fields.map((field: any, i: number) => (
-		<Checkbox
+		<Checkbox.Root
 			{...checkboxCss}
 			key={i}
-			isChecked={selected?.includes(field)}
-			onChange={e => handleCheckboxChange(e, field)}>
-			{field.label}
-		</Checkbox>
+			checked={selected?.includes(field)}
+			onCheckedChange={(e: any) => handleCheckboxChange(e, field)}>
+			<Checkbox.HiddenInput />
+			<Checkbox.Control>
+				<Checkbox.Indicator />
+			</Checkbox.Control>
+			<Checkbox.Label>{field.label}</Checkbox.Label>
+		</Checkbox.Root>
 	));
 
 	const closeItem = () => {
@@ -114,21 +107,23 @@ const CalculateModal: FC<any> = ({
 		<>
 			<MenuItem onClick={onOpen}>{title}</MenuItem>
 
-			<AlertDialog
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
-					<AlertDialogContent
+			<Dialog.Root
+				open={isOpen}
+				onOpenChange={(e: any) => !e.open && closeItem()}>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content
 						boxShadow='lg'
 						borderRadius='xl'
 						bg='menu.light'
 						_dark={{
 							bg: 'menu.dark',
 						}}>
-						<AlertDialogHeader>Get Total Values</AlertDialogHeader>
+						<Dialog.Header>
+							<Dialog.Title>Get Total Values</Dialog.Title>
+						</Dialog.Header>
 
-						<AlertDialogBody pt={4}>
+						<Dialog.Body pt={4}>
 							<Grid
 								templateColumns='repeat(2, 1fr)'
 								gap={4}>
@@ -159,20 +154,22 @@ const CalculateModal: FC<any> = ({
 									))}
 								</Flex>
 							)}
-						</AlertDialogBody>
+						</Dialog.Body>
 
-						<AlertDialogFooter>
-							<Button
-								ref={cancelRef}
-								onClick={closeItem}
-								size='sm'
-								colorScheme='brand'>
-								Close
-							</Button>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
+						<Dialog.Footer>
+							<Dialog.CloseTrigger asChild>
+								<Button
+									ref={cancelRef}
+									onClick={closeItem}
+									size='sm'
+									colorPalette='brand'>
+									Close
+								</Button>
+							</Dialog.CloseTrigger>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };
@@ -194,7 +191,7 @@ const ShowValue = ({ path, field, ids, filters }: any) => {
 const checkboxCss: any = {
 	size: 'md',
 	fontWeight: '500',
-	colorScheme: 'brand',
+	colorPalette: 'brand',
 };
 
 export default CalculateModal;

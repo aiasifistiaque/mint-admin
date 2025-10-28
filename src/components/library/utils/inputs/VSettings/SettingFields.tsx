@@ -51,13 +51,13 @@ const SettingFields: FC<SettingFieldsProps> = ({
 				<VCheckbox
 					label='Is required'
 					name='required'
-					isChecked={formData.required}
+					value={formData.required}
 					onChange={onChange}
 				/>
 				<VCheckbox
 					label='Editable'
 					name='edit'
-					isChecked={formData.edit}
+					value={formData.edit}
 					onChange={onChange}
 				/>
 			</Grid>
@@ -65,13 +65,13 @@ const SettingFields: FC<SettingFieldsProps> = ({
 				<VCheckbox
 					label='Is Unique'
 					name='unique'
-					isChecked={formData.unique}
+					value={formData.unique}
 					onChange={onChange}
 				/>
 				<VCheckbox
 					label='Is Filter Allowed'
 					name='sort'
-					isChecked={formData.sort}
+					value={formData.sort}
 					onChange={onChange}
 				/>
 			</Grid>
@@ -80,13 +80,13 @@ const SettingFields: FC<SettingFieldsProps> = ({
 					<VCheckbox
 						label='Is Searchable'
 						name='search'
-						isChecked={formData.search}
+						value={formData.search}
 						onChange={onChange}
 					/>
 					<VCheckbox
 						label='Trim String value'
 						name='trim'
-						isChecked={formData.trim}
+						value={formData.trim}
 						onChange={onChange}
 					/>
 				</Grid>

@@ -28,7 +28,7 @@ type DateFilterProps = {
 };
 
 const DateFilter: FC<DateFilterProps> = ({ title, field, label }) => {
-	const { onOpen, onClose, isOpen } = useDisclosure();
+	const { onOpen, onClose, open: isOpen } = useDisclosure();
 	const dispatch = useAppDispatch();
 	const { filters } = useAppSelector((state: any) => state.table);
 

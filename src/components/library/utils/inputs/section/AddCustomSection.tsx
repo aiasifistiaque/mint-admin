@@ -44,7 +44,7 @@ const AddCustomSection: FC<UploadModalProps> = ({
 	index = 0,
 	dataModel,
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [formData, setFormData] = useFormData<any>(dataModel, prevVal);
 	const [changedData, setChangedData] = useState({});
 
@@ -118,7 +118,7 @@ const AddCustomSection: FC<UploadModalProps> = ({
 		add: (
 			<Button
 				size='sm'
-				colorScheme='brand'>
+				colorPalette='brand'>
 				Add Section
 			</Button>
 		),
@@ -127,9 +127,9 @@ const AddCustomSection: FC<UploadModalProps> = ({
 				variant='outline'
 				aria-label='edit-section'
 				size='xs'
-				colorScheme='brand'
-				icon={<Icon name='edit' />}
-			/>
+				colorPalette='brand'>
+				<Icon name='edit' />
+			</IconButton>
 		),
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
@@ -187,7 +187,7 @@ const AddCustomSection: FC<UploadModalProps> = ({
 								{type == 'add' ? 'Insert' : 'Update'} Section
 							</Button>
 							<Button
-								colorScheme='gray'
+								colorPalette='gray'
 								size='sm'
 								onClick={onClose}>
 								Cancel

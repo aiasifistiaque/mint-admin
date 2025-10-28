@@ -8,7 +8,6 @@ import {
 	Box,
 	Textarea,
 	TextareaProps,
-	useColorModeValue,
 	Image,
 } from '@chakra-ui/react';
 import UpdatePasswordModal from '../modals/update-password/UpdatePasswordModal';
@@ -90,13 +89,14 @@ const Details: FC<DetailProps> = ({
 		</Box>
 	);
 
-	const inputTextColor = useColorModeValue('text.500', 'gray.300');
+	// const inputTextColor = useColorModeValue('text.500', 'gray.300');
 
 	const styleProps = {
 		borderRadius: 'lg',
-		color: inputTextColor,
+		color: 'text.500',
 		size: 'sm',
 		w: { base: '100%', md: '400px' },
+		_dark: { color: 'gray.300' },
 	};
 
 	const inputBox =

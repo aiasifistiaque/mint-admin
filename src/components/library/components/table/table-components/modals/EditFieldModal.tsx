@@ -1,16 +1,8 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogContent,
-	AlertDialogOverlay,
-	Button,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure } from '@chakra-ui/react';
 import { useEffect, useRef, FC } from 'react';
-import { useCustomToast, MenuItem, AlertDialogHeader } from '../../../..';
+import { useCustomToast, MenuItem } from '../../../..';
 import { useGetByIdToEditQuery, useUpdateManyMutation } from '../../../../store';
 
 type EditManyModalType = {
@@ -36,7 +28,7 @@ const EditFieldModal: FC<EditManyModalType> = ({
 	keyType = 'string',
 	value,
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = useRef<any>(undefined);
 
 	const { data, isFetching } = useGetByIdToEditQuery({ path, id: item });
@@ -81,46 +73,51 @@ const EditFieldModal: FC<EditManyModalType> = ({
 		<>
 			<MenuItem onClick={onOpen}>{title}</MenuItem>
 
-			<AlertDialog
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
-					<AlertDialogContent
+			<Dialog.Root
+				open={isOpen}
+				onOpenChange={(e: any) => !e.open && closeItem()}
+				role='alertdialog'>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content
 						boxShadow='lg'
 						borderRadius='xl'
 						bg='menu.light'
 						_dark={{
 							bg: 'menu.dark',
 						}}>
-						<AlertDialogHeader>{prompt?.title || `Edit ${title}`}</AlertDialogHeader>
+						<Dialog.Header>
+							<Dialog.Title>{prompt?.title || `Edit ${title}`}</Dialog.Title>
+						</Dialog.Header>
 
-						<AlertDialogBody pt={4}>
+						<Dialog.Body pt={4}>
 							{prompt?.body || 'Are you sure you want to edit these items?'}
-						</AlertDialogBody>
+						</Dialog.Body>
 
-						<AlertDialogFooter>
+						<Dialog.Footer>
 							{!isLoading && (
-								<Button
-									ref={cancelRef}
-									onClick={closeItem}
-									size='sm'
-									colorScheme='gray'>
-									Discard
-								</Button>
+								<Dialog.CloseTrigger asChild>
+									<Button
+										ref={cancelRef}
+										onClick={closeItem}
+										size='sm'
+										colorPalette='white'>
+										Discard
+									</Button>
+								</Dialog.CloseTrigger>
 							)}
 							<Button
-								isLoading={isLoading}
-								colorScheme='brand'
+								loading={isLoading}
+								colorPalette='brand'
 								onClick={handleSubmit}
 								ml={2}
 								size='sm'>
 								Edit
 							</Button>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };

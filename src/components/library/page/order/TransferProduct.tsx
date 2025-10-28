@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import { useState } from 'react';
 
 import { CustomTd as Td, RowContainerBase, Icon, currency } from '../..';
-import { Box, Tr, Td as TD, InputProps } from '@chakra-ui/react';
+import { Box, Table, InputProps } from '@chakra-ui/react';
 import InputElement from '../../utils/inputs/input-components/InputElement';
 
 type PurchaseProductProps = {
@@ -57,37 +57,33 @@ const TransferProduct: FC<PurchaseProductProps> = ({ item, i, setItem, isMobile,
 				<Td heading='Unit Price'>
 					{currency.code} {item?.price?.toLocaleString()}
 				</Td>
-				<Td
-					isNumeric
-					heading='SubTotal'>
-					{item?.price * qty}
-				</Td>
+				<Td heading='SubTotal'>{item?.price * qty}</Td>
 
 				<Td>{icon}</Td>
 			</RowContainerBase>
 		);
 	return (
-		<Tr h='2.5rem'>
-			<TD>{i + 1}</TD>
-			<TD>{item?.name}</TD>
+		<Table.Row h='2.5rem'>
+			<Table.Cell>{i + 1}</Table.Cell>
+			<Table.Cell>{item?.name}</Table.Cell>
 
-			<TD>
+			<Table.Cell>
 				<InputElement
 					{...inputStyle}
 					value={qty}
 					onChange={handleReturnQty}
 				/>
-			</TD>
+			</Table.Cell>
 
-			<TD>
+			<Table.Cell>
 				{currency.symbol} {item?.price?.toLocaleString()}
-			</TD>
-			<TD isNumeric>
+			</Table.Cell>
+			<Table.Cell>
 				{currency.symbol} {(item?.price * qty).toLocaleString()}
-			</TD>
+			</Table.Cell>
 
-			<TD>{icon}</TD>
-		</Tr>
+			<Table.Cell>{icon}</Table.Cell>
+		</Table.Row>
 	);
 };
 

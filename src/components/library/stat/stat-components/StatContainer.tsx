@@ -1,9 +1,9 @@
-import { StatProps, Stat } from '@chakra-ui/react';
+import { Stat } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 import { shadow, radius } from '../..';
 import Link from 'next/link';
 
-type StatContainerProps = StatProps & {
+type StatContainerProps = any & {
 	/** Optional href for making the stat container clickable */
 	href?: string;
 	/** Content to be rendered inside the stat container */
@@ -22,12 +22,12 @@ const StatContainer: FC<StatContainerProps> = ({ children, href, ...props }) => 
 	// Conditionally add link props only when href is provided
 	const linkProps = href ? { as: Link, href, cursor: 'pointer' } : {};
 	return (
-		<Stat
+		<Stat.Root
 			{...linkProps}
 			{...containerStyles}
 			{...props}>
 			{children}
-		</Stat>
+		</Stat.Root>
 	);
 };
 
@@ -35,9 +35,9 @@ const StatContainer: FC<StatContainerProps> = ({ children, href, ...props }) => 
  * Styling configuration for the stat container
  * Provides consistent design across light and dark modes
  */
-const containerStyles: StatProps = {
+const containerStyles: any = {
 	borderRadius: radius.CONTAINER,
-	alignItems: 'center',
+	// alignItems: 'center',
 	w: 'full',
 	p: 4,
 	bg: 'container.newLight',

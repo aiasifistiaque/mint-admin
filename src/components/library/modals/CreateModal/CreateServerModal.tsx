@@ -57,7 +57,7 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 		icon,
 	} = props;
 
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const { data, isFetching } = useGetConfigQuery(path);
 
@@ -153,7 +153,7 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 		<>
 			{!isMobile && (
 				<DiscardButton
-					isDisabled={isLoading}
+					disabled={isLoading}
 					onClick={onModalClose}>
 					Discard
 				</DiscardButton>

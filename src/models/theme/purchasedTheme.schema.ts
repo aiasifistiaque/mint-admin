@@ -49,7 +49,7 @@ const schema: SchemaType<ModelType> = {
 		label: 'Is Activated',
 		type: 'checkbox',
 		displayInTable: true,
-		colorScheme: (value: boolean) => (value ? 'green' : 'red'),
+		colorPalette: (value: boolean) => (value ? 'green' : 'red'),
 	},
 	activatedAt: {
 		label: 'Activated At',

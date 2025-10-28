@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { Flex, Grid, Text, MenuButton } from '@chakra-ui/react';
+import { Flex, Grid, Text, Menu } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 import { useGetAllQuery } from '../../../store';
 import { Icon } from '../../../icon';
 import Link from 'next/link';
@@ -31,6 +32,7 @@ const FolderGrid = ({ path, parent }: { path: string; parent?: string }) => {
 	const { data, isFetching } = useGetAllQuery({ path: path, limit: '9999', filters: { parent } });
 	const menuRef = useRef(null);
 	const router = useRouter();
+	const { colorMode } = useColorMode();
 	const handleClick = ({ id }: any) => {
 		router.push(`/folders/f/${id}`);
 	};
@@ -45,17 +47,28 @@ const FolderGrid = ({ path, parent }: { path: string; parent?: string }) => {
 				// 	href={`/images/f/${item._id}`}>
 				<Flex
 					key={i}
-					{...styles.folderCardCss}>
-					<Flex
-						as={Link}
-						href={`/images/f/${item._id}`}
-						{...styles.folderCardName}>
-						<Icon
-							name='folder'
-							size={26}
-						/>
-						<Text fontWeight='600'>{item?.name}</Text>
-					</Flex>
+					justify='space-between'
+					borderRadius='8px'
+					align='center'
+					h='50px'
+					border='1px solid'
+					borderColor='border.light'
+					bg={colorMode === 'dark' ? 'background.cardDark' : 'background.cardLight'}
+					gap={0.5}>
+					<Link href={`/images/f/${item._id}`}>
+						<Flex
+							h='full'
+							pl={4}
+							flex={1}
+							alignItems='center'
+							gap={3}>
+							<Icon
+								name='folder'
+								size={26}
+							/>
+							<Text fontWeight='600'>{item?.name}</Text>
+						</Flex>
+					</Link>
 
 					<Flex onClick={(e: any) => e.stopPropagation()}>
 						<TableMenu
@@ -64,8 +77,11 @@ const FolderGrid = ({ path, parent }: { path: string; parent?: string }) => {
 							id={item?._id}
 							path={path}>
 							<Flex
-								{...styles.icon}
-								as={MenuButton}>
+								h='full'
+								cursor='pointer'
+								p={2}
+								borderRadius='full'
+								as={Menu.Trigger}>
 								<Icon
 									name='vertical-dots'
 									size={18}
@@ -78,37 +94,6 @@ const FolderGrid = ({ path, parent }: { path: string; parent?: string }) => {
 			))}
 		</Grid>
 	);
-};
-
-const styles = {
-	folderCardCss: {
-		justify: 'space-between',
-		borderRadius: '8px',
-		align: 'center',
-
-		h: '50px',
-
-		border: '1px solid border.light',
-		bg: 'background.cardLight',
-		_dark: {
-			bg: 'background.cardDark',
-		},
-		gap: 0.5,
-	},
-	folderCardName: {
-		h: 'full',
-		pl: 4,
-
-		flex: 1,
-		alignItems: 'center',
-		gap: 3,
-	},
-	icon: {
-		h: 'full',
-		cursor: 'pointer',
-		p: 2,
-		borderRadius: 'full',
-	},
 };
 
 export default FolderGrid;

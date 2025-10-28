@@ -213,13 +213,13 @@ const SettingsPage = () => {
 							<Button
 								mr={2}
 								size='xs'
-								colorScheme='gray'
+								colorPalette='gray'
 								onClick={closeEdit}>
 								Discard
 							</Button>
 							<Button
 								size='xs'
-								isLoading={result?.isLoading}
+								loading={result?.isLoading}
 								type='submit'>
 								Confirm
 							</Button>
@@ -227,7 +227,7 @@ const SettingsPage = () => {
 					) : (
 						<Button
 							size='xs'
-							rightIcon={<Icon name='edit' />}
+							// rightIcon={<Icon name='edit' />}
 							onClick={openEdit}>
 							Edit
 						</Button>

@@ -11,7 +11,7 @@ const textCss: TextProps & LinkProps = {
 	overflow: 'hidden',
 };
 
-const renderContent = ({ type, children, colorScheme, path }: any) => {
+const renderContent = ({ type, children, colorPalette, path }: any) => {
 	switch (type) {
 		case 'section-data-array':
 			return (
@@ -69,7 +69,7 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 					gap={2}>
 					{children?.map((item: any, i: number) => (
 						<Badge
-							colorScheme='purple'
+							colorPalette='purple'
 							variant='subtle'
 							key={i}>
 							{item?.toString()}
@@ -84,7 +84,7 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 					<Link
 						cursor='pointer'
 						href={children || '#'}
-						isExternal={children ? true : false}>
+						{...(children ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
 						<Flex
 							align='center'
 							gap={2}>
@@ -108,16 +108,16 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 					<Link
 						cursor='pointer'
 						href={children || '#'}
-						isExternal={children ? true : false}>
-						<Tag
+						{...(children ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+						<Tag.Root
 							size='md'
-							colorScheme='gray'>
-							<TagLabel mr={1}>Download File</TagLabel>
+							colorPalette='gray'>
+							<Tag.Label mr={1}>Download File</Tag.Label>
 							<Icon
 								name='download'
 								size={16}
 							/>
-						</Tag>
+						</Tag.Root>
 					</Link>
 				</Flex>
 			);
@@ -146,14 +146,14 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 					{Array.isArray(children)
 						? children.map((item: any, i: number) => (
 								<Badge
-									colorScheme='purple'
+									colorPalette='purple'
 									variant='subtle'
 									key={i}>
 									{item?.toString()}
 								</Badge>
 						  ))
 						: children && (
-								<Badge colorScheme={colorScheme ? colorScheme(children) : 'gray'}>
+								<Badge colorPalette={colorPalette ? colorPalette(children) : 'gray'}>
 									{children?.toString()}
 								</Badge>
 						  )}
@@ -163,7 +163,7 @@ const renderContent = ({ type, children, colorScheme, path }: any) => {
 			return (
 				<Box alignItems='center'>
 					{children && (
-						<Badge colorScheme={colorScheme ? colorScheme(children) : 'gray'}>
+						<Badge colorPalette={colorPalette ? colorPalette(children) : 'gray'}>
 							{children?.toString()}
 						</Badge>
 					)}

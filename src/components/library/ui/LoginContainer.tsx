@@ -48,7 +48,7 @@ const Attendance: FC<AttendanceProps> = ({
 					{children}
 					<Button
 						{...submitButtonCss}
-						isLoading={isLoading}>
+						loading={isLoading}>
 						Submit
 					</Button>
 				</Center>
@@ -57,7 +57,7 @@ const Attendance: FC<AttendanceProps> = ({
 	);
 };
 
-const containerCss: CenterProps = {
+const containerCss: any = {
 	w: '100vw',
 	flex: 1,
 	h: '100vh',

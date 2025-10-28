@@ -1,6 +1,7 @@
 import mainApi from './mainApi';
 import { ListType } from '../store.types';
-import { BASE_LIMIT } from '../..';
+
+const BASE_LIMIT = 16;
 
 export const uploadApi = mainApi.injectEndpoints({
 	overrideExisting: true,

@@ -1,7 +1,6 @@
-import { Flex, FlexProps, Text, SkeletonText } from '@chakra-ui/react';
+import { Flex, FlexProps, Text, Skeleton, Breadcrumb } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
-import { Breadcrumb, BreadcrumbItem } from '@chakra-ui/react';
 
 import { containerCss, subHeadingCss, wrapperCss } from './style';
 import { useGetByIdQuery } from '../../store';
@@ -40,33 +39,52 @@ const ImagePageHeading: React.FC<PageHeadingProps> = ({
 			{...props}>
 			<Flex {...containerCss}>
 				{isLoading ? (
-					<SkeletonText
-						noOfLines={3}
-						w='300px'
-						h='40px'
+					<Skeleton
+						height='40px'
+						width='300px'
 					/>
 				) : (
-					<Breadcrumb>
-						<BreadcrumbItem {...headingCss}>
-							<Link href={folder ? '/images' : '#'}>{title}</Link>
-						</BreadcrumbItem>
-						{folderData?.parent && (
-							<BreadcrumbItem
-								{...headingCss}
-								isCurrentPage={!folder}>
-								<Link href={`/images/f/${folderData?.parent?._id}`}>
-									{folderData?.parent?.name}
-								</Link>
-							</BreadcrumbItem>
-						)}
-						{folderData && (
-							<BreadcrumbItem
-								isCurrentPage={true}
-								{...headingCss}>
-								<Link href='#'>{folderData?.name}</Link>
-							</BreadcrumbItem>
-						)}
-					</Breadcrumb>
+					<Breadcrumb.Root>
+						<Breadcrumb.List>
+							<Breadcrumb.Item>
+								<Breadcrumb.Link
+									asChild
+									{...headingCss}>
+									<Link href={folder ? '/images' : '#'}>{title}</Link>
+								</Breadcrumb.Link>
+							</Breadcrumb.Item>
+
+							{folderData?.parent && (
+								<>
+									<Breadcrumb.Separator />
+									<Breadcrumb.Item>
+										<Breadcrumb.Link
+											asChild
+											{...headingCss}
+											{...(!folder && { 'aria-current': 'page' })}>
+											<Link href={`/images/f/${folderData?.parent?._id}`}>
+												{folderData?.parent?.name}
+											</Link>
+										</Breadcrumb.Link>
+									</Breadcrumb.Item>
+								</>
+							)}
+
+							{folderData && (
+								<>
+									<Breadcrumb.Separator />
+									<Breadcrumb.Item>
+										<Breadcrumb.Link
+											asChild
+											{...headingCss}
+											aria-current='page'>
+											<Link href='#'>{folderData?.name}</Link>
+										</Breadcrumb.Link>
+									</Breadcrumb.Item>
+								</>
+							)}
+						</Breadcrumb.List>
+					</Breadcrumb.Root>
 				)}
 			</Flex>
 		</Flex>

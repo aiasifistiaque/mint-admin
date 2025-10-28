@@ -70,7 +70,7 @@ const EditorLayout: FC<LayoutProps> = ({
 	}, []);
 
 	const { history, next, display } = useAppSelector(state => state.builder);
-	const [isLargerThan800] = useMediaQuery('(min-width: 800px)');
+	const [isLargerThan800] = useMediaQuery(['(min-width: 800px)']);
 	const type = isLargerThan800 ? (props?.type == 'pos' ? 'pos' : 'default') : 'pos';
 
 	const isMobile = useIsMobile();
@@ -113,10 +113,10 @@ const EditorLayout: FC<LayoutProps> = ({
 
 	const iconStyle = {
 		borderColor: 'transparent',
-		variant: 'white',
+		colorPalette: 'white',
 		h: '32px',
 		w: '44px',
-		size: 'lg',
+		// size: 'lg',
 		borderRadius: 4,
 		_hover: { bg: 'white' },
 		_dark: {
@@ -136,11 +136,12 @@ const EditorLayout: FC<LayoutProps> = ({
 							gap={2}
 							align='center'>
 							<Button
-								isLoading={result.isLoading}
+								loading={result.isLoading}
 								onClick={handleUndo}
-								isDisabled={history?.length < 1}
-								variant='white'
-								leftIcon={<Icon name='undo' />}>
+								disabled={history?.length < 1}
+								colorPalette='white'
+								// leftIcon={<Icon name='undo' />}
+							>
 								Undo
 							</Button>
 							<Flex {...iconContainer}>
@@ -152,9 +153,9 @@ const EditorLayout: FC<LayoutProps> = ({
 									_dark={{
 										bg: display == 'lg' ? 'black' : '#333',
 									}}
-									borderRightRadius={0}
-									icon={<Icon name='desktop' />}
-								/>
+									borderRightRadius={0}>
+									<Icon name='desktop' />
+								</IconButton>
 								<IconButton
 									{...iconStyle}
 									aria-label='small display'
@@ -163,9 +164,9 @@ const EditorLayout: FC<LayoutProps> = ({
 									_dark={{
 										bg: display == 'sm' ? 'black' : '#333',
 									}}
-									borderLeftRadius={0}
-									icon={<Icon name='mobile' />}
-								/>
+									borderLeftRadius={0}>
+									<Icon name='mobile' />
+								</IconButton>
 							</Flex>
 
 							{/* <Button

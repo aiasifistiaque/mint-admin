@@ -15,7 +15,7 @@ const textCss: TextProps = {
 	wordBreak: 'break-all',
 	fontSize: '.83rem',
 	fontWeight: '600',
-	noOfLines: 1,
+	lineClamp: 1,
 };
 
 export default Caption;

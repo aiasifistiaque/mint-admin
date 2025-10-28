@@ -1,8 +1,8 @@
 import { ReactNode, FC } from 'react';
-import { Center, FlexProps, Heading } from '@chakra-ui/react';
+import { Center, CenterProps, Heading } from '@chakra-ui/react';
 import { Icon } from '../..';
 
-type AddImageButtonProps = FlexProps & {
+type AddImageButtonProps = CenterProps & {
 	children?: ReactNode;
 	size?: string;
 };

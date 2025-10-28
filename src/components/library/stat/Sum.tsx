@@ -20,7 +20,7 @@ const Sum: FC<CountProps> = ({ title, path, field, price, tooltip, href, filters
 		<StatContainer href={href}>
 			<Align>
 				<StatLabel>{title}</StatLabel>
-				{tooltip && (
+				{/* {tooltip && (
 					<Tooltip
 						label={tooltip}
 						borderRadius='md'>
@@ -28,22 +28,22 @@ const Sum: FC<CountProps> = ({ title, path, field, price, tooltip, href, filters
 							<Icon name='info' />
 						</span>
 					</Tooltip>
-				)}
+				)} */}
 			</Align>
 
-			<Skeleton
-				isLoaded={!isFetching}
-				w={!isFetching ? '100%' : '100px'}>
-				<StatNumber>
-					{isError
-						? '--'
-						: isFetching
-						? '--'
-						: price
-						? `${currency.symbol}${data?.total.toLocaleString()}`
-						: data?.total}
-				</StatNumber>
-			</Skeleton>
+			{/* <Skeleton
+				loading={isFetching}
+				w={!isFetching ? '100%' : '100px'}> */}
+			<StatNumber>
+				{isError
+					? '--'
+					: isFetching
+					? '--'
+					: price
+					? `${currency.symbol}${data?.total.toLocaleString()}`
+					: data?.total}
+			</StatNumber>
+			{/* </Skeleton> */}
 		</StatContainer>
 	);
 };

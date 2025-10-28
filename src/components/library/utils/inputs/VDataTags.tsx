@@ -1,35 +1,21 @@
 'use client';
 import React, { useCallback, useState } from 'react';
-import {
-	InputProps,
-	FormControl,
-	Stack,
-	useColorModeValue,
-	IconButton,
-	Tag,
-	Wrap,
-	WrapItem,
-	TagLabel,
-	TagCloseButton,
-	SelectProps,
-	Flex,
-} from '@chakra-ui/react';
+import { InputProps, IconButton, Flex } from '@chakra-ui/react';
 
-import { useGetSelectDataQuery } from '../../';
-import { Label, SelectContainer, HelperText, Icon, JsonView } from '../..';
+import { useGetSelectDataQuery, FormControl } from '../../';
+import { Label, SelectContainer, HelperText, Icon } from '../..';
 
-type InputContainerProps = InputProps &
-	SelectProps & {
-		label: string;
-		isRequired?: boolean;
-		helper?: string;
-		value: string[];
-		model: string;
-		placeholder?: any;
-		item?: any;
-		valKey?: string;
-		labelKey?: string;
-	};
+type InputContainerProps = InputProps & {
+	label: string;
+	isRequired?: boolean;
+	helper?: string;
+	value: string[];
+	model: string;
+	placeholder?: any;
+	item?: any;
+	valKey?: string;
+	labelKey?: string;
+};
 
 const VDataTags: React.FC<InputContainerProps> = ({
 	label,
@@ -103,14 +89,15 @@ const VDataTags: React.FC<InputContainerProps> = ({
 		<FormControl
 			isRequired={isRequired}
 			gap={4}>
-			<Stack
-				spacing={2}
+			<Flex
+				flexDir='column'
+				gap={2}
 				w='full'>
 				<Label>{label}</Label>
-				{/* <JsonView data={item} /> */}
 
-				<Stack
-					spacing={1}
+				<Flex
+					flexDir='column'
+					gap={1}
 					w='full'>
 					<Flex
 						align='center'
@@ -133,35 +120,53 @@ const VDataTags: React.FC<InputContainerProps> = ({
 						<IconButton
 							onClick={addTag}
 							size='sm'
-							colorScheme='gray'
-							aria-label='add tag'
-							icon={
-								<Icon
-									name='add'
-									size={20}
-								/>
-							}
-						/>
+							variant='outline'
+							// colorPalette='gray'
+							aria-label='add tag'>
+							<Icon
+								name='add'
+								size={20}
+							/>
+						</IconButton>
 					</Flex>
 
 					{helper && <HelperText>{helper}</HelperText>}
-				</Stack>
-				<Wrap
+				</Flex>
+				<Flex
+					flexWrap='wrap'
 					gap={1}
 					pt={2}>
 					{value?.map((item: string, i: number) => (
-						<WrapItem key={i}>
-							<Tag
-								size='md'
-								variant='subtle'
-								colorScheme='gray'>
-								<TagLabel>{getNameById(item)}</TagLabel>
-								<TagCloseButton onClick={() => deleteTag(item)} />
-							</Tag>
-						</WrapItem>
+						<Flex key={i}>
+							<Flex
+								colorPalette='gray'
+								px={2.5}
+								py={1}
+								bg='gray.100'
+								borderRadius='md'
+								alignItems='center'
+								gap={2}>
+								<Flex
+									as='span'
+									fontSize='sm'>
+									{getNameById(item)}
+								</Flex>
+								<Flex
+									color='black'
+									_dark={{ color: 'white' }}
+									as='button'
+									onClick={() => deleteTag(item)}
+									cursor='pointer'
+									fontSize='lg'
+									opacity={0.7}
+									_hover={{ opacity: 1 }}>
+									×
+								</Flex>
+							</Flex>
+						</Flex>
 					))}
-				</Wrap>
-			</Stack>
+				</Flex>
+			</Flex>
 		</FormControl>
 	);
 };

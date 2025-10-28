@@ -1,32 +1,30 @@
 'use client';
 import { FC, ReactNode } from 'react';
-import { Select, SelectProps, useColorModeValue } from '@chakra-ui/react';
-import { Icon } from '../../..';
+import { NativeSelect, NativeSelectFieldProps } from '@chakra-ui/react';
+import { Icon, inputContainerCss } from '../../..';
 
-type InputContainerProps = SelectProps & {
+type InputContainerProps = NativeSelectFieldProps & {
 	children: ReactNode;
 };
 
 const SelectContainer: FC<InputContainerProps> = ({ children, ...props }) => {
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
-
 	return (
-		<Select
-			icon={<Icon name='select' />}
-			size='sm'
-			borderRadius='md'
-			focusBorderColor={borderColor}
-			color='text.500'
-			borderColor='selectBorder.light'
-			_dark={{
-				color: 'gray.300',
-				borderColor: 'selectBorder.dark',
-			}}
-			boxShadow='sm'
-			_placeholder={{ fontSize: 14, fontWeight: '500' }}
-			{...props}>
-			{children}
-		</Select>
+		<NativeSelect.Root size='sm'>
+			<NativeSelect.Field
+				{...inputContainerCss}
+				borderColor='selectBorder.light'
+				_dark={{
+					color: 'gray.300',
+					borderColor: 'selectBorder.dark',
+				}}
+				boxShadow='sm'
+				{...props}>
+				{children}
+			</NativeSelect.Field>
+			<NativeSelect.Indicator>
+				<Icon name='select' />
+			</NativeSelect.Indicator>
+		</NativeSelect.Root>
 	);
 };
 

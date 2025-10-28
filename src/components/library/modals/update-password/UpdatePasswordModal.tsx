@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import {
-	Flex,
-	useDisclosure,
-	Modal,
-	ModalOverlay,
-	ModalHeader,
-	ModalCloseButton,
-	ModalBody,
-	ModalFooter,
-	Button,
-} from '@chakra-ui/react';
+import { Flex, useDisclosure, Button } from '@chakra-ui/react';
 import ModalContainer from '../../menu/ModalContainer';
 
-import { useCustomToast, ModalFormSection, VInput, useUpdatePasswordMutation } from '../..';
+import {
+	useCustomToast,
+	ModalFormSection,
+	VInput,
+	useUpdatePasswordMutation,
+	GenericModal,
+	GenericModalHeader,
+	GenericModalCloseButton,
+	GenericModalBody,
+	GenericModalFooter,
+} from '../..';
 
 const UpdatePasswordModal = ({ trigger, path }: { trigger?: any; path?: any }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [formData, setFormData] = useState<any>({
 		oldPassword: '',
 		password: '',
@@ -57,17 +57,16 @@ const UpdatePasswordModal = ({ trigger, path }: { trigger?: any; path?: any }) =
 	return (
 		<>
 			<Flex onClick={onOpen}>{trigger || path}</Flex>
-			<Modal
-				size='2xl'
+			<GenericModal
+				size='xl'
 				isOpen={isOpen}
 				onClose={onModalClose}
 				closeOnOverlayClick={false}>
-				<ModalOverlay />
 				<ModalContainer>
-					<ModalHeader>Update Password</ModalHeader>
-					<ModalCloseButton />
+					<GenericModalHeader>Update Password</GenericModalHeader>
+					<GenericModalCloseButton />
 					<form onSubmit={handleSubmit}>
-						<ModalBody>
+						<GenericModalBody>
 							<ModalFormSection>
 								<VInput
 									label='Old Password'
@@ -94,25 +93,25 @@ const UpdatePasswordModal = ({ trigger, path }: { trigger?: any; path?: any }) =
 									isRequired
 								/>
 							</ModalFormSection>
-						</ModalBody>
-						<ModalFooter py={4}>
+						</GenericModalBody>
+						<GenericModalFooter py={4}>
 							<Button
 								mr={2}
 								size='sm'
-								variant='white'
+								variant='outline'
 								onClick={onModalClose}>
 								Discard
 							</Button>
 							<Button
 								size='sm'
 								type='submit'
-								isLoading={result.isLoading}>
+								loading={result.isLoading}>
 								Update
 							</Button>
-						</ModalFooter>
+						</GenericModalFooter>
 					</form>
 				</ModalContainer>
-			</Modal>
+			</GenericModal>
 		</>
 	);
 };

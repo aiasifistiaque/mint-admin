@@ -1,5 +1,5 @@
 import { Center, Flex } from '@chakra-ui/react';
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { HiArrowUturnLeft, HiArrowUturnRight } from 'react-icons/hi2';
@@ -8,6 +8,8 @@ import { useIsMobile, useAppDispatch, useAppSelector } from '../../hooks';
 import { SquareButton, TableHeading, updateTable } from '../..';
 import { SHOW_PER_PAGE_OPTIONS } from '../..';
 import { SelectInput, CurrentPage } from './_components';
+
+//Migration Checked
 
 type PaginationProps = {
 	data: any;
@@ -37,6 +39,9 @@ const Pagination: FC<PaginationProps> = ({ data, showPerPage = true }) => {
 		<>
 			{!isMobile && <TableHeading>SHOWING RESULTS</TableHeading>}
 			<SelectInput
+				size='xs'
+				px={3}
+				defaultValue={limit}
 				value={limit}
 				onChange={(e: any) => update({ setLimit: e.target.value })}>
 				{SHOW_PER_PAGE_OPTIONS.map(({ value, label }) => (

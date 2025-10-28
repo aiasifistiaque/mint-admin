@@ -1,7 +1,7 @@
-import { TableProps } from '@chakra-ui/react';
+// import { TableProps } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
-export type CustomTableProps = TableProps & {
+export type CustomTableProps = any & {
 	children: ReactNode;
 	header?: ReactNode;
 	data: any;

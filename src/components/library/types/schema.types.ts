@@ -18,7 +18,7 @@ type CommonProps = {
 	objectKey?: string;
 	options?: { label: string; value: string }[];
 	placeholder?: string;
-	colorScheme?: any;
+	colorPalette?: any;
 	renderCondition?: any; // Condition to render the field
 	tableKey?: string; // Key for table if different from model key specially for nested objects
 	viewKey?: string; // Key for view if different from model key specially for nested objects

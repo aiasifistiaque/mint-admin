@@ -1,17 +1,10 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogOverlay,
-	Button,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure } from '@chakra-ui/react';
 import { useEffect, FC, useRef } from 'react';
 
 import { useCopyItemMutation } from '../../../../store';
-import { useCustomToast, MenuItem, AlertDialogContent, AlertDialogHeader } from '../../../..';
+import { useCustomToast, MenuItem } from '../../../..';
 
 type DeleteItemModalProps = {
 	title?: string;
@@ -20,7 +13,7 @@ type DeleteItemModalProps = {
 };
 
 const DuplicateModal: FC<DeleteItemModalProps> = ({ title, path, id }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = useRef<any>(undefined);
 
 	const [trigger, result] = useCopyItemMutation();
@@ -57,37 +50,42 @@ const DuplicateModal: FC<DeleteItemModalProps> = ({ title, path, id }) => {
 				Make Copy
 			</MenuItem>
 
-			<AlertDialog
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
-					<AlertDialogContent>
-						<AlertDialogHeader>Create Duplicate Entry</AlertDialogHeader>
+			<Dialog.Root
+				open={isOpen}
+				onOpenChange={(e: any) => !e.open && closeItem()}
+				role='alertdialog'>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content>
+						<Dialog.Header>
+							<Dialog.Title>Create Duplicate Entry</Dialog.Title>
+						</Dialog.Header>
 
-						<AlertDialogBody>Are you sure you want to make a copy of this item?</AlertDialogBody>
+						<Dialog.Body>Are you sure you want to make a copy of this item?</Dialog.Body>
 
-						<AlertDialogFooter>
+						<Dialog.Footer>
 							{!result?.isLoading && (
-								<Button
-									ref={cancelRef}
-									onClick={closeItem}
-									size='sm'
-									variant='white'>
-									Discard
-								</Button>
+								<Dialog.CloseTrigger asChild>
+									<Button
+										ref={cancelRef}
+										onClick={closeItem}
+										size='sm'
+										colorPalette='white'>
+										Discard
+									</Button>
+								</Dialog.CloseTrigger>
 							)}
 							<Button
-								isLoading={result?.isLoading}
+								loading={result?.isLoading}
 								onClick={handleSubmit}
 								ml={2}
 								size='sm'>
 								Proceed
 							</Button>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };

@@ -1,17 +1,9 @@
-import { Flex, Badge, Text, Link, Tag, TagLabel, Box } from '@chakra-ui/react';
+import { Flex, Badge, Text, Link, Tag, Box } from '@chakra-ui/react';
 import { TextProps, LinkProps, Grid, Heading } from '@chakra-ui/react';
-import {
-	Column,
-	Align,
-	RenderTag,
-	Icon,
-	FullScreenImage,
-	CreateModal,
-	ViewItemModal,
-} from '../../../..';
+import { Column, Align, RenderTag, Icon, FullScreenImage, ViewItemModal } from '../../../..';
 import { PLACEHOLDER_IMAGE, ImageContainer } from '../../../..';
 import { JSONDisplay } from '../..';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
+import { ExternalLink } from 'lucide-react';
 import moment from 'moment';
 
 const textCss: TextProps & LinkProps = {
@@ -21,7 +13,7 @@ const textCss: TextProps & LinkProps = {
 	overflow: 'hidden',
 };
 
-const renderContent = ({ type, children, colorScheme, path, originalType, id }: any) => {
+const renderContent = ({ type, children, colorPalette, path, originalType, id }: any) => {
 	switch (type) {
 		case 'section-data-array':
 			return (
@@ -79,7 +71,7 @@ const renderContent = ({ type, children, colorScheme, path, originalType, id }: 
 					gap={2}>
 					{children?.map((item: any, i: number) => (
 						<Badge
-							colorScheme='purple'
+							colorPalette='purple'
 							variant='subtle'
 							key={i}>
 							{item?.toString()}
@@ -94,7 +86,7 @@ const renderContent = ({ type, children, colorScheme, path, originalType, id }: 
 					<Link
 						cursor='pointer'
 						href={children || '#'}
-						isExternal={children ? true : false}>
+						{...(children ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
 						<Flex
 							align='center'
 							gap={2}>
@@ -102,13 +94,8 @@ const renderContent = ({ type, children, colorScheme, path, originalType, id }: 
 								{...textCss}
 								color='dodgerblue'>
 								{children}
-								<ExternalLinkIcon mx='4px' />
 							</Text>
-
-							{/* <Icon
-								name='external-link'
-								size={16}
-							/> */}
+							<ExternalLink size={16} />
 						</Flex>
 					</Link>
 				</Flex>
@@ -120,16 +107,16 @@ const renderContent = ({ type, children, colorScheme, path, originalType, id }: 
 					<Link
 						cursor='pointer'
 						href={children || '#'}
-						isExternal={children ? true : false}>
-						<Tag
+						{...(children ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+						<Tag.Root
 							size='md'
-							colorScheme='gray'>
-							<TagLabel mr={1}>Download File</TagLabel>
+							colorPalette='gray'>
+							<Tag.Label mr={1}>Download File</Tag.Label>
 							<Icon
 								name='download'
 								size={16}
 							/>
-						</Tag>
+						</Tag.Root>
 					</Link>
 				</Flex>
 			);
@@ -160,14 +147,14 @@ const renderContent = ({ type, children, colorScheme, path, originalType, id }: 
 					{Array.isArray(children)
 						? children.map((item: any, i: number) => (
 								<Badge
-									colorScheme='purple'
+									colorPalette='purple'
 									variant='subtle'
 									key={i}>
 									{item?.toString()}
 								</Badge>
 						  ))
 						: children && (
-								<Badge colorScheme={colorScheme ? colorScheme(children) : 'gray'}>
+								<Badge colorPalette={colorPalette ? colorPalette(children) : 'gray'}>
 									{children?.toString()}
 								</Badge>
 						  )}
@@ -177,7 +164,7 @@ const renderContent = ({ type, children, colorScheme, path, originalType, id }: 
 			return (
 				<Box alignItems='center'>
 					{children && (
-						<Badge colorScheme={colorScheme ? colorScheme(children) : 'gray'}>
+						<Badge colorPalette={colorPalette ? colorPalette(children) : 'gray'}>
 							{children?.toString()}
 						</Badge>
 					)}

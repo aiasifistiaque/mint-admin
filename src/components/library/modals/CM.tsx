@@ -45,7 +45,7 @@ const CreateModal = (props: CreateModalProps) => {
 	const { data, trigger, path, title, type, id, invalidate, children, doc, prompt, populate } =
 		props;
 
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const [fetch, { data: prevData, isFetching, isUninitialized }] = useLazyGetByIdToEditQuery();
 	const [formData, setFormData] = useFormData<any>(data, populate || prevData);

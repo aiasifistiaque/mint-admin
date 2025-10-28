@@ -44,7 +44,7 @@ const CreateModal = (props: CreateModalProps) => {
 		icon,
 	} = props;
 
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const [fetch, { data: prevData, isFetching, isUninitialized }] = useLazyGetByIdToEditQuery();
 	const [formData, setFormData] = useFormData<any>(data, populate || prevData);
@@ -165,13 +165,15 @@ const CreateModal = (props: CreateModalProps) => {
 		<>
 			{!isMobile && (
 				<DiscardButton
-					isDisabled={isLoading}
+					px={3}
+					disabled={isLoading}
 					onClick={onModalClose}>
 					Discard
 				</DiscardButton>
 			)}
 			<Button
 				{...(isMobile && { w: 'full' })}
+				px={3}
 				type='submit'
 				size='sm'>
 				{isLoading ? 'Processing...' : prompt?.btnText || 'Confirm'}
@@ -183,6 +185,7 @@ const CreateModal = (props: CreateModalProps) => {
 		<>
 			{isMenu ? (
 				<MenuItem
+					closeOnSelect={false}
 					icon={icon}
 					onClick={onModalOpen}>
 					{children || trigger || title || path}

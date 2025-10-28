@@ -57,7 +57,7 @@ const AuthForm: FC<AuthFormProps> = ({
 						mt={6}
 						w='full'
 						borderRadius='full'
-						isLoading={isLoading}
+						loading={isLoading}
 						size='sm'
 						type='submit'>
 						Submit

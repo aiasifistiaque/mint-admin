@@ -36,7 +36,7 @@ const viewCustomerDataFields: TableObjectDataProps[] = [
 		sort: 'isSubscribedToEmail',
 		type: 'tag',
 		default: false,
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 
 	{
@@ -45,7 +45,7 @@ const viewCustomerDataFields: TableObjectDataProps[] = [
 		sort: 'isRegisteredOnline',
 		type: 'tag',
 		default: true,
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 
 	{
@@ -54,7 +54,7 @@ const viewCustomerDataFields: TableObjectDataProps[] = [
 		type: 'tag',
 		sort: 'isActive',
 		default: false,
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 
 	{ title: 'Created', dataKey: 'createdAt', type: 'date', sort: 'createdAt' },

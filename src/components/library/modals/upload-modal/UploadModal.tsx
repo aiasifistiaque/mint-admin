@@ -1,26 +1,16 @@
 'use client';
-import {
-	Button,
-	Flex,
-	FlexProps,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	ModalOverlay,
-	Tab,
-	TabList,
-	TabPanel,
-	TabPanels,
-	Tabs,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { Button, Flex, FlexProps, Tabs, useDisclosure } from '@chakra-ui/react';
 import { FC, useState, ReactNode } from 'react';
 
 import { MyFolders, styles, MyPhotos, UploadImage, InsertUrl, MFooter } from '.';
 import { AddImageButton, DeleteImageButton, EditImageButton, useAppSelector } from '../..';
+import {
+	GenericModal,
+	GenericModalHeader,
+	GenericModalCloseButton,
+	GenericModalBody,
+	GenericModalContent,
+} from '../..';
 
 type UploadModalProps = {
 	album?: string;
@@ -49,7 +39,7 @@ const UploadModal: FC<UploadModalProps> = ({
 	fileType = 'image',
 	type = 'add',
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [img, setImg] = useState(null);
 	const { currentPath } = useAppSelector(state => state.table);
 
@@ -98,76 +88,87 @@ const UploadModal: FC<UploadModalProps> = ({
 					{children || triggerButton}
 				</Flex>
 			)}
-			<Modal
+			<GenericModal
 				isOpen={isOpen}
 				onClose={onClose}
-				size='6xl'
+				size='xl'
 				isCentered>
-				<ModalOverlay />
-				<ModalContent {...styles.modalContentCss}>
-					<ModalHeader
+				<GenericModalContent {...styles.modalContentCss}>
+					<GenericModalHeader
+						px={{ base: 4, md: 6 }}
+						color='inherit'
 						pb={2}
 						pt={4}>
 						Insert Photo/File
-					</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody
-						minH='70vh'
-						px={0}>
-						<Tabs {...styles.tabsCss}>
-							<TabList
+					</GenericModalHeader>
+					<GenericModalCloseButton />
+					<GenericModalBody minH='70vh'>
+						<Tabs.Root
+							{...styles.tabsCss}
+							defaultValue='0'>
+							<Tabs.List
 								px={{ base: 4, md: 6 }}
 								gap={2}>
 								{tabs.map((label: string, i: number) => (
-									<Tab
+									<Tabs.Trigger
 										px={2}
-										key={i}>
+										key={i}
+										value={String(i)}>
 										{label}
-									</Tab>
+									</Tabs.Trigger>
 								))}
-							</TabList>
-							<TabPanels {...styles.tabPanelCss}>
-								<TabPanel sx={styles.panel}>
-									<MyPhotos
-										handleSelect={handleImageSelect}
-										type={fileType || 'image'}
-									/>
-								</TabPanel>
-								<TabPanel sx={styles.panel}>
-									<MyFolders
-										handleSelect={handleImageSelect}
-										type={fileType || 'image'}
-									/>
-								</TabPanel>
-								<TabPanel sx={styles.panel}>
-									<UploadImage
-										fileType={fileType || 'image'}
-										handleSelect={handleUploadComplete}
-										folder={folder || currentPath}
-									/>
-								</TabPanel>
-								<TabPanel sx={styles.panel}>
-									<InsertUrl handleSelect={handleImageSelect} />
-								</TabPanel>
-							</TabPanels>
-						</Tabs>
-					</ModalBody>
+							</Tabs.List>
+							<Tabs.Content
+								value='0'
+								px={{ base: 4, md: 8 }}>
+								<MyPhotos
+									handleSelect={handleImageSelect}
+									type={fileType || 'image'}
+								/>
+							</Tabs.Content>
+							<Tabs.Content
+								value='1'
+								px={{ base: 4, md: 8 }}>
+								<MyFolders
+									handleSelect={handleImageSelect}
+									type={fileType || 'image'}
+								/>
+							</Tabs.Content>
+							<Tabs.Content
+								value='2'
+								px={{ base: 4, md: 8 }}>
+								<UploadImage
+									fileType={fileType || 'image'}
+									handleSelect={handleUploadComplete}
+									folder={folder || currentPath}
+								/>
+							</Tabs.Content>
+							<Tabs.Content
+								value='3'
+								px={{ base: 4, md: 8 }}>
+								<InsertUrl handleSelect={handleImageSelect} />
+							</Tabs.Content>
+						</Tabs.Root>
+					</GenericModalBody>
 
-					<MFooter>
+					<MFooter px={{ base: 4, md: 6 }}>
 						<Button
-							variant='white'
+							px={3}
+							size='sm'
+							variant='outline'
 							onClick={onClose}>
 							Cancel
 						</Button>
 						<Button
+							px={3}
 							size='sm'
-							isDisabled={!img}
+							disabled={!img}
 							onClick={handleInsert}>
 							Insert Media
 						</Button>
 					</MFooter>
-				</ModalContent>
-			</Modal>
+				</GenericModalContent>
+			</GenericModal>
 		</>
 	);
 };

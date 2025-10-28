@@ -1,16 +1,10 @@
 'use client';
 import { ReactNode, FC, ChangeEvent, useState } from 'react';
 
-import {
-	Popover,
-	PopoverArrow,
-	PopoverBody,
-	PopoverTrigger,
-	useColorModeValue,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { Popover, useDisclosure } from '@chakra-ui/react';
 
 import { FilterButton, PopoverContainer, PopoverHeader, Column, FilterSelect } from '../..';
+import { useColorMode } from '@/components/ui/color-mode';
 
 type IsActiveFilterProps = {
 	trigger: ReactNode;
@@ -19,8 +13,8 @@ type IsActiveFilterProps = {
 };
 
 const IsActiveFilter: FC<IsActiveFilterProps> = ({ trigger, value, onChange }) => {
-	const arrow = useColorModeValue('menu.light', 'menu.dark');
-	const { onOpen, onClose, isOpen } = useDisclosure();
+	const { onOpen, onClose, open: isOpen } = useDisclosure();
+	const { colorMode } = useColorMode();
 
 	const [val, setVal] = useState<string | undefined>(value);
 
@@ -42,29 +36,30 @@ const IsActiveFilter: FC<IsActiveFilterProps> = ({ trigger, value, onChange }) =
 		popClose();
 	};
 	return (
-		<Popover
-			onOpen={open}
-			onClose={close}
-			isOpen={isOpen}>
-			<PopoverTrigger>{trigger}</PopoverTrigger>
-			<PopoverContainer>
-				<PopoverArrow bg={arrow} />
-				<PopoverHeader>Filter by status</PopoverHeader>
-				<PopoverBody>
-					<Column
-						gap={3}
-						pb={1}>
-						<FilterSelect
-							value={val}
-							onChange={handleChange}>
-							<option value='true'>True</option>
-							<option value='false'>False</option>
-						</FilterSelect>
-						<FilterButton onClick={handleClick}>Apply</FilterButton>
-					</Column>
-				</PopoverBody>
-			</PopoverContainer>
-		</Popover>
+		<Popover.Root
+			onOpenChange={({ open }) => (open ? onOpen() : onClose())}
+			open={isOpen}>
+			<Popover.Trigger asChild>{trigger}</Popover.Trigger>
+			<Popover.Positioner>
+				<PopoverContainer>
+					<Popover.Arrow bg={colorMode === 'dark' ? 'menu.dark' : 'menu.light'} />
+					<PopoverHeader>Filter by status</PopoverHeader>
+					<Popover.Body>
+						<Column
+							gap={3}
+							pb={1}>
+							<FilterSelect
+								value={val}
+								onChange={handleChange}>
+								<option value='true'>True</option>
+								<option value='false'>False</option>
+							</FilterSelect>
+							<FilterButton onClick={handleClick}>Apply</FilterButton>
+						</Column>
+					</Popover.Body>
+				</PopoverContainer>
+			</Popover.Positioner>
+		</Popover.Root>
 	);
 };
 

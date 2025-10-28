@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { Grid, useColorModeValue } from '@chakra-ui/react';
+import { Grid } from '@chakra-ui/react';
 
 const OrderRightSectionContainer = ({ children }: { children: ReactNode }) => {
-	const borderColor = useColorModeValue('#bbb', 'stroke.deepD');
+	// const borderColor = useColorModeValue('#bbb', 'stroke.deepD');
 
 	return (
 		<Grid
@@ -12,7 +12,10 @@ const OrderRightSectionContainer = ({ children }: { children: ReactNode }) => {
 			py={2}
 			borderBottom='1px dashed'
 			borderTop='1px dashed'
-			borderColor={borderColor}
+			borderColor='#BBB'
+			_dark={{
+				borderColor: 'stroke.deepD',
+			}}
 			w='100%'>
 			{children}
 		</Grid>

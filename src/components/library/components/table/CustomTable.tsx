@@ -1,4 +1,4 @@
-import { Table, Thead, Tr, Tbody, Flex, Text, CloseButton } from '@chakra-ui/react';
+import { Table, Flex, Text, CloseButton } from '@chakra-ui/react';
 import { FC, useEffect } from 'react';
 
 // Direct imports instead of barrel export
@@ -108,14 +108,14 @@ const CustomTable: FC<CustomTableProps> = ({
 			)}
 			{table?.topPagination && <TableResultContainer data={data} />}
 			<TableContainer>
-				<Table size='sm'>
-					<Thead
+				<Table.Root size='sm'>
+					<Table.Header
 						_light={{ bg: 'table.head.bgLight' }}
 						_dark={{ bg: 'table.head.bgDark' }}>
-						<Tr bg='inherit'>{header}</Tr>
-					</Thead>
-					<Tbody>{tbody}</Tbody>
-				</Table>
+						<Table.Row bg='inherit'>{header}</Table.Row>
+					</Table.Header>
+					<Table.Body>{tbody}</Table.Body>
+				</Table.Root>
 				{data?.docsInPage == 0 && (
 					<TableErrorMessage title='No results found.'>
 						There {`aren't`} any results for that query. Try using different filters.

@@ -12,15 +12,13 @@ const CartIconButton: FC<CartIconButtonProps> = ({ size, onClick, name }) => (
 	<IconButton
 		onClick={onClick}
 		aria-label={'cart'}
-		icon={
-			<Icon
-				name={name}
-				size={size}
-			/>
-		}
 		size='xs'
-		variant='ghost'
-	/>
+		variant='ghost'>
+		<Icon
+			name={name}
+			size={size}
+		/>
+	</IconButton>
 );
 
 export default CartIconButton;

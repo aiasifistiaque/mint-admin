@@ -96,7 +96,7 @@ const data: TableObjectProps = {
 			type: 'tag',
 			sort: 'isActive',
 			default: true,
-			colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+			colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 		},
 		{
 			title: 'Display In Home',
@@ -104,7 +104,7 @@ const data: TableObjectProps = {
 			type: 'tag',
 			sort: 'displayInHomePage',
 			default: true,
-			colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+			colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 		},
 		{
 			title: 'Display In Menu',
@@ -112,7 +112,7 @@ const data: TableObjectProps = {
 			type: 'tag',
 			sort: 'displayInMenu',
 			default: false,
-			colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+			colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 		},
 		{
 			title: 'Featured',
@@ -120,7 +120,7 @@ const data: TableObjectProps = {
 			type: 'tag',
 			sort: 'isFeatured',
 			default: false,
-			colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+			colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 		},
 		{ title: 'Created', dataKey: 'createdAt', type: 'date', sort: 'createdAt' },
 		{ title: '...', type: 'menu' },

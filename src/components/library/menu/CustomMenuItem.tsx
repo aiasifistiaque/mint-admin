@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { MenuDivider, MenuItem, Flex } from '@chakra-ui/react';
+import { Menu, Flex } from '@chakra-ui/react';
 import Link from 'next/link';
 import { radius } from '../config';
 import { Icon } from '../icon';
@@ -14,14 +14,16 @@ type CustomMenuItemProps = any & {
 const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, icon, href, ...props }) => {
 	return (
 		<>
-			<MenuItem
+			<Menu.Item
 				{...(href && { as: Link })}
 				{...(href && { href })}
 				borderBottomColor='border.light'
 				// borderBottomWidth={1}
 				borderRadius={radius?.MENU_INNER}
 				fontSize='14px'
+				minW='200px'
 				px={2}
+				py={1}
 				bg='inherit'
 				color='text.selected'
 				fontWeight='500'
@@ -56,8 +58,8 @@ const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, icon, href, ...prop
 					)}
 					{children}
 				</Flex>
-			</MenuItem>
-			<MenuDivider
+			</Menu.Item>
+			<Menu.Separator
 				_last={{ display: 'none' }}
 				m={1}
 			/>

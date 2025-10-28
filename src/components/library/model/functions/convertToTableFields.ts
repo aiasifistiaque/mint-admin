@@ -14,7 +14,7 @@ const createTableField = ({ key, field }: { key: string; field: any }): any => {
 			type: field?.tableType || field.type,
 		}),
 		...(field?.imageKey && { imageKey: field.imageKey }),
-		...(field?.colorScheme && { colorScheme: field.colorScheme }),
+		...(field?.colorPalette && { colorPalette: field.colorPalette }),
 		...(field?.helperText && { helperText: field.helperText }),
 		...(field?.editable && { editable: field.editable }),
 		...(field?.copy && { copy: field.copy }),

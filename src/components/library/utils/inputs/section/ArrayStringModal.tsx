@@ -40,7 +40,7 @@ const ArrayStringModal: FC<UploadModalProps> = ({
 	prevVal,
 	index = 0,
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const closeModal = () => {
 		setVal('');
@@ -99,7 +99,7 @@ const ArrayStringModal: FC<UploadModalProps> = ({
 		add: (
 			<Button
 				size='sm'
-				colorScheme='brand'>
+				colorPalette='brand'>
 				Add Section
 			</Button>
 		),
@@ -108,9 +108,9 @@ const ArrayStringModal: FC<UploadModalProps> = ({
 				variant='outline'
 				aria-label='edit-section'
 				size='xs'
-				colorScheme='brand'
-				icon={<Icon name='edit' />}
-			/>
+				colorPalette='brand'>
+				<Icon name='edit' />
+			</IconButton>
 		),
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
@@ -149,12 +149,12 @@ const ArrayStringModal: FC<UploadModalProps> = ({
 							flex={1}>
 							<Button
 								size='sm'
-								isDisabled={!val}
+								disabled={!val}
 								onClick={handleSubmit}>
 								{type == 'add' ? 'Insert' : 'Update'} Section
 							</Button>
 							<Button
-								colorScheme='gray'
+								colorPalette='gray'
 								size='sm'
 								onClick={onClose}>
 								Cancel

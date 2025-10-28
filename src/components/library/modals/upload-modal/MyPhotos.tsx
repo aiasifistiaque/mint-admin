@@ -50,8 +50,8 @@ const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type?: 
 						onChange={(e: any) => setSearch(e.target.value)}
 						placeholder='Search Image...'
 						size='xs'
-						focusBorderColor='brand.500'
-						_dark={{ focusBorderColor: 'brand.200' }}
+						// focusBorderColor='brand.500'
+						// _dark={{ focusBorderColor: 'brand.200' }}
 					/>
 				</GridItem>
 				{viewData?.map((item: any, i: number) => (
@@ -69,9 +69,8 @@ const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type?: 
 			</Grid>
 
 			<Button
-				isDisabled={isFetching || data?.totalPages <= page}
-				onClick={onLoadMore}
-				variant='white'>
+				disabled={isFetching || data?.totalPages <= page}
+				onClick={onLoadMore}>
 				Load More
 			</Button>
 		</Column>

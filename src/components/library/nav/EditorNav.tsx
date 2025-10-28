@@ -2,7 +2,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Button, Center, CloseButton, Divider, Flex, Heading } from '@chakra-ui/react';
+import { Button, Center, CloseButton, Separator, Flex, Heading } from '@chakra-ui/react';
 import { DecisionAlert, Navbar, THEME, useIsMobile } from '../index';
 
 type CreateNavProps = {
@@ -28,12 +28,12 @@ const EditorNav: React.FC<CreateNavProps> = ({ title, path, isDisabled, isLoadin
 					btnText: 'Exit',
 				}}>
 				<CloseButton
-					colorScheme='brand'
+					colorPalette='brand'
 					color='white'
 				/>
 			</DecisionAlert>
 
-			<Divider
+			<Separator
 				h={6}
 				orientation='vertical'
 			/>
@@ -49,13 +49,13 @@ const EditorNav: React.FC<CreateNavProps> = ({ title, path, isDisabled, isLoadin
 	const buttons = (
 		<>
 			<Button
-				isDisabled={isDisabled}
+				disabled={isDisabled}
 				type='submit'
 				size={{ base: 'sm', md: 'sm' }}
-				colorScheme='gray'
+				colorPalette='gray'
 				spinnerPlacement='start'
 				loadingText='Saving...'
-				isLoading={isLoading}>
+				loading={isLoading}>
 				Save
 			</Button>
 		</>

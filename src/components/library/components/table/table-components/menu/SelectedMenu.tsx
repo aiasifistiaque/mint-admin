@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Menu, MenuButton, Button } from '@chakra-ui/react';
+import { Menu, Button, Portal } from '@chakra-ui/react';
 
 import {
 	EditManyModal,
@@ -24,99 +24,100 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 	if (hide) return null;
 
 	return (
-		<Menu>
-			<MenuButton
+		<Menu.Root>
+			<Menu.Trigger
 				as={Button}
 				{...buttonCss}
 				leftIcon={<Icon name='action-menu' />}>
 				Menu
-			</MenuButton>
+			</Menu.Trigger>
+			<Portal>
+				<MenuContainer>
+					{data?.map((item: any, i: number) => {
+						const commonProps = {
+							key: i,
+							path,
+							items,
+							title: item?.title,
+							prompt: item?.prompt,
+							keyType: item?.keyType,
+							icon: item?.icon,
+						};
 
-			<MenuContainer>
-				{data?.map((item: any, i: number) => {
-					const commonProps = {
-						key: i,
-						path,
-						items,
-						title: item?.title,
-						prompt: item?.prompt,
-						keyType: item?.keyType,
-						icon: item?.icon,
-					};
+						switch (item.type) {
+							case 'calculate':
+								return (
+									<CalculateModal
+										{...commonProps}
+										keys={item?.key}
+										value={item?.value}
+									/>
+								);
+							case 'edit':
+								return (
+									<EditManyModal
+										{...commonProps}
+										keys={item?.key}
+										value={item?.value}
+									/>
+								);
+							case 'update-api':
+								return (
+									<EditManyModal
+										{...commonProps}
+										keys={item?.key}
+										value={item?.value}
+									/>
+								);
 
-					switch (item.type) {
-						case 'calculate':
-							return (
-								<CalculateModal
-									{...commonProps}
-									keys={item?.key}
-									value={item?.value}
-								/>
-							);
-						case 'edit':
-							return (
-								<EditManyModal
-									{...commonProps}
-									keys={item?.key}
-									value={item?.value}
-								/>
-							);
-						case 'update-api':
-							return (
-								<EditManyModal
-									{...commonProps}
-									keys={item?.key}
-									value={item?.value}
-								/>
-							);
-
-						case 'edit-select':
-							return (
-								<EditManySelectModal
-									{...commonProps}
-									keys={item?.key}
-									options={item?.options}
-								/>
-							);
-						case 'edit-many':
-							return (
-								<EditManySelectModal
-									{...commonProps}
-									keys={item?.key}
-									options={item?.options}
-								/>
-							);
-						case 'export':
-							return (
-								<ExportManyModal
-									key={i}
-									ids={items}
-									path={path}
-								/>
-							);
-						case 'marketing-sms':
-							return (
-								<SendBulkSmsModal
-									key={i}
-									ids={items}
-									path={path}
-								/>
-							);
-						case 'edit-data-select':
-							return (
-								<EditDataSelectModal
-									{...commonProps}
-									dataModel={item?.dataModel}
-									keys={item?.key}
-									dataPath={item?.dataPath}
-								/>
-							);
-						default:
-							return null;
-					}
-				})}
-			</MenuContainer>
-		</Menu>
+							case 'edit-select':
+								return (
+									<EditManySelectModal
+										{...commonProps}
+										keys={item?.key}
+										options={item?.options}
+									/>
+								);
+							case 'edit-many':
+								return (
+									<EditManySelectModal
+										{...commonProps}
+										keys={item?.key}
+										options={item?.options}
+									/>
+								);
+							case 'export':
+								return (
+									<ExportManyModal
+										key={i}
+										ids={items}
+										path={path}
+									/>
+								);
+							case 'marketing-sms':
+								return (
+									<SendBulkSmsModal
+										key={i}
+										ids={items}
+										path={path}
+									/>
+								);
+							case 'edit-data-select':
+								return (
+									<EditDataSelectModal
+										{...commonProps}
+										dataModel={item?.dataModel}
+										keys={item?.key}
+										dataPath={item?.dataPath}
+									/>
+								);
+							default:
+								return null;
+						}
+					})}
+				</MenuContainer>
+			</Portal>
+		</Menu.Root>
 	);
 };
 

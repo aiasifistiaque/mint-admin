@@ -28,7 +28,7 @@ const ViewPageBasicInfo: FC<ViewPageBasicInfoProps> = ({ slug, id, schema, layou
 			{...containerCss}
 			gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }}>
 			{viewFields.map((item: any, index: number) => {
-				const { title, dataKey, type, colorScheme, path, model, originalType, idKey } = item;
+				const { title, dataKey, type, colorPalette, path, model, originalType, idKey } = item;
 
 				return (
 					<GridItem
@@ -45,7 +45,7 @@ const ViewPageBasicInfo: FC<ViewPageBasicInfoProps> = ({ slug, id, schema, layou
 							isLoading={isFetching}
 							title={title}
 							type={type}
-							colorScheme={colorScheme}
+							colorPalette={colorPalette}
 							path={model || path}>
 							{data && getValue({ dataKey, type, data })}
 						</ViewPageItem>

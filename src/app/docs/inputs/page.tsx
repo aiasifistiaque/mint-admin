@@ -6,7 +6,7 @@ import {
 	getOnChangeHandler,
 	inputDataOptions,
 } from '@/components/library';
-import { Center, Flex, FlexProps, Text, TextProps } from '@chakra-ui/react';
+import { Center, CenterProps, Flex, FlexProps, Text, TextProps } from '@chakra-ui/react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
@@ -81,7 +81,7 @@ const bodyCss: FlexProps = {
 	gap: 4,
 };
 
-const iconBox: FlexProps = {
+const iconBox: CenterProps = {
 	w: { base: '100%', md: '300px' },
 	// h: '300px',
 	bg: 'white',

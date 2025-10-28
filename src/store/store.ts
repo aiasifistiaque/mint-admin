@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
-const TOKEN_NAME = process.env.NEXT_PUBLIC_TOKEN_NAME || 'MINT_CAFE_TOKEN_TWO';
+export const TOKEN_NAME = process.env.NEXT_PUBLIC_TOKEN_NAME || 'MINT_CAFE_TOKEN_TWO';
+export const REFRESH_TOKEN = process.env.NEXT_PUBLIC_REFRESH_TOKEN || 'MINT_CAFE_REFRESH_TOKEN_TWO';
 
-import { routeSlice, tableSlice, cartSlice, authSlice, builderSlice } from '../';
+import { routeSlice, tableSlice, cartSlice, authSlice, builderSlice } from '.';
 import { mainApi } from '.';
 
 export const store = configureStore({

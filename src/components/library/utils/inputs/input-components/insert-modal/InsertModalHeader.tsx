@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { ModalHeader, ModalHeaderProps } from '@chakra-ui/react';
+import { Dialog } from '@chakra-ui/react';
 
-const InsertModalHeader = ({ children, ...props }: ModalHeaderProps & { children: ReactNode }) => {
-	return <ModalHeader {...props}>{children}</ModalHeader>;
+const InsertModalHeader = ({ children, ...props }: { children: ReactNode; [key: string]: any }) => {
+	return <Dialog.Header {...props}>{children}</Dialog.Header>;
 };
 
 export default InsertModalHeader;

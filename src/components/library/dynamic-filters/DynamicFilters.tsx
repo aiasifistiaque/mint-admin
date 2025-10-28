@@ -94,7 +94,7 @@ const DynamicFilters = ({ path }: { path: any }) => {
 				<Button
 					_dark={{ color: 'text.dark' }}
 					onClick={handleClearFilter}
-					variant='link'
+					variant='plain'
 					fontWeight='600'
 					ml={2}
 					size='sm'>

@@ -1,5 +1,6 @@
-import { BASE_LIMIT } from '../..';
 import mainApi from './mainApi';
+
+const BASE_LIMIT = 16;
 
 export const userApi = mainApi.injectEndpoints({
 	overrideExisting: true,

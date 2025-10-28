@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Flex, Image, useColorModeValue, FlexProps } from '@chakra-ui/react';
+import { Flex, Image, FlexProps } from '@chakra-ui/react';
 import { useIsMobile } from '../../hooks';
 
 const ImageComponent = ({
@@ -16,7 +16,6 @@ const ImageComponent = ({
 }) => {
 	const videoRef = useRef<any>(null);
 	const isMobile = useIsMobile();
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
 
 	const handleMouseEnter = () => {
 		if (isMobile) return;
@@ -44,10 +43,11 @@ const ImageComponent = ({
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
 			border='2px solid'
-			borderColor={selected === src ? borderColor : '#ddd'}
+			borderColor={selected === src ? 'brand.500' : '#ddd'}
 			bg='background.light'
 			_dark={{
 				bg: 'background.dark',
+				borderColor: selected === src ? 'brand.200' : 'gray.600',
 			}}
 			{...props}>
 			{type == 'video' ? (

@@ -1,13 +1,16 @@
 import { FC, ReactNode } from 'react';
-import { AlertDialogHeader as AlertHeader, ModalHeaderProps } from '@chakra-ui/react';
+import { Dialog } from '@chakra-ui/react';
 
-type CustomModalHeaderProps = ModalHeaderProps & {
+type AlertDialogHeaderProps = {
 	children?: ReactNode;
+	[key: string]: any;
 };
 
-const AlertDialogHeader: FC<CustomModalHeaderProps> = ({ children, ...props }) => {
+// Note: Chakra v3 uses Dialog components for both Modal and AlertDialog
+const AlertDialogHeader: FC<AlertDialogHeaderProps> = ({ children, ...props }) => {
 	return (
-		<AlertHeader
+		<Dialog.Header
+			px={3}
 			bg='sidebar.light'
 			borderColor='border.light'
 			borderBottomWidth={1}
@@ -18,7 +21,7 @@ const AlertDialogHeader: FC<CustomModalHeaderProps> = ({ children, ...props }) =
 			maxH='54px'
 			{...props}>
 			{children}
-		</AlertHeader>
+		</Dialog.Header>
 	);
 };
 

@@ -1,34 +1,40 @@
 'use client';
 import { FC, ReactNode } from 'react';
-import { Select, SelectProps } from '@chakra-ui/react';
+import { NativeSelect } from '@chakra-ui/react';
 import { Icon } from '../../../..';
-import { useColorModeValue } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 
-type InputContainerProps = SelectProps & {
+type InputContainerProps = any & {
 	children: ReactNode;
 };
 
 const RowSelect: FC<InputContainerProps> = ({ children, ...props }) => {
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
+	const { colorMode } = useColorMode();
+	const borderColor = colorMode === 'light' ? 'brand.500' : 'brand.200';
 
 	return (
-		<Select
-			icon={<Icon name='select' />}
-			borderRadius='lg'
-			focusBorderColor={borderColor}
-			color='text.500'
-			borderColor='selectBorder.light'
-			_dark={{
-				color: 'gray.300',
-				borderColor: 'selectBorder.dark',
-			}}
-			boxShadow='md'
+		<NativeSelect.Root
 			size={{ base: 'md', md: 'sm' }}
-			minW='100px'
-			_placeholder={{ fontSize: 14, fontWeight: '500' }}
-			{...props}>
-			{children}
-		</Select>
+			minW='100px'>
+			<NativeSelect.Field
+				borderRadius='lg'
+				focusBorderColor={borderColor}
+				color={colorMode === 'dark' ? 'gray.300' : 'text.500'}
+				borderColor={colorMode === 'dark' ? 'selectBorder.dark' : 'selectBorder.light'}
+				boxShadow='md'
+				css={{
+					'&::placeholder': {
+						fontSize: '14px',
+						fontWeight: '500',
+					},
+				}}
+				{...props}>
+				{children}
+			</NativeSelect.Field>
+			<NativeSelect.Indicator>
+				<Icon name='select' />
+			</NativeSelect.Indicator>
+		</NativeSelect.Root>
 	);
 };
 

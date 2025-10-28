@@ -1,11 +1,4 @@
-import {
-	ButtonProps,
-	FlexProps,
-	GridProps,
-	SelectProps as SProps,
-	TableCellProps,
-	TextProps,
-} from '@chakra-ui/react';
+import { ButtonProps, FlexProps, GridProps, TableCellProps, TextProps } from '@chakra-ui/react';
 export type { CustomTableProps } from './components.types';
 import { SelectmenuItem } from './table';
 
@@ -66,7 +59,7 @@ type CommonProps = {
 	default?: boolean;
 	style?: any;
 	tagType?: { value?: string; color?: string }[];
-	colorScheme?: any;
+	colorPalette?: any;
 	helperText?: string;
 	toLocaleStr?: boolean;
 };
@@ -94,7 +87,7 @@ export type ViewModalDataModelProps = {
 	title: string;
 	dataKey: string;
 	type?: ViewDataType;
-	colorScheme?: any;
+	colorPalette?: any;
 	path?: string;
 	copy?: boolean;
 };
@@ -166,7 +159,7 @@ export type TextChild = TextProps & {
 	children?: ReactNode;
 };
 
-export type SelectChild = SProps & {
+export type SelectChild = any & {
 	children?: ReactNode;
 };
 

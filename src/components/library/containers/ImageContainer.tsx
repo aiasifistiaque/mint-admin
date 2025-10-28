@@ -1,14 +1,15 @@
 import { FC, ReactNode } from 'react';
-import { Center, FlexProps, Image } from '@chakra-ui/react';
+import { Center, CenterProps, FlexProps, Image } from '@chakra-ui/react';
 import { PLACEHOLDER_IMAGE } from '..';
 
-type ImageContainerProps = FlexProps & {
-	size?: number;
-	children?: ReactNode;
-	src?: string;
-	alt?: string;
-	objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
-};
+type ImageContainerProps = FlexProps &
+	CenterProps & {
+		size?: number;
+		children?: ReactNode;
+		src?: string;
+		alt?: string;
+		objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+	};
 
 const ImageContainer: FC<ImageContainerProps> = ({
 	children,

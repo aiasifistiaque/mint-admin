@@ -84,7 +84,7 @@ const schema = {
 		label: 'Is Paid',
 		type: 'checkbox',
 		displayInTable: true,
-		colorScheme: (isPaid: boolean) => (isPaid ? 'green' : 'red'),
+		colorPalette: (isPaid: boolean) => (isPaid ? 'green' : 'red'),
 	},
 	coupon: {
 		label: 'Coupon',
@@ -115,7 +115,7 @@ const schema = {
 		label: 'Delivery Status',
 		type: 'text',
 		tableType: 'tag',
-		colorScheme: (status: string) => {
+		colorPalette: (status: string) => {
 			if (status == 'pending') return 'blue';
 			else if (status == 'completed') return 'green';
 			else if (status == 'cancelled') return 'red';

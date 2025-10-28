@@ -1,13 +1,4 @@
-import {
-	Flex,
-	FlexProps,
-	Heading,
-	Button,
-	useColorModeValue,
-	Text,
-	Skeleton,
-	SkeletonText,
-} from '@chakra-ui/react';
+import { Flex, FlexProps, Heading, Button, Text, Skeleton, SkeletonText } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
 // import { BackendCreateModal, Icon } from '../..';
@@ -41,18 +32,16 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 	export: exportData,
 	...props
 }) => {
-	const iconColor = useColorModeValue('#fafafa', '#171717');
 	const btn = (
 		<Button
 			size='sm'
-			pl={3}
-			leftIcon={
-				<Icon
-					size={18}
-					name='add'
-					color={iconColor}
-				/>
-			}>
+			px={3}
+			gap={2}>
+			<Icon
+				size={18}
+				name='add'
+				color='fg.inverted'
+			/>
 			{button}
 		</Button>
 	);

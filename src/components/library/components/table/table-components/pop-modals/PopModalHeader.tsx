@@ -1,15 +1,15 @@
 import { FC, ReactNode } from 'react';
-import { DrawerHeader, PopoverHeader } from '@chakra-ui/react';
+import { Drawer, Popover } from '@chakra-ui/react';
 
-type MenuModalBodyProps = {
+type PopModalHeaderProps = {
 	children: ReactNode;
 	isMobile: boolean;
 };
 
-const PopModalHeader: FC<MenuModalBodyProps> = ({ children, isMobile }) => {
+const PopModalHeader: FC<PopModalHeaderProps> = ({ children, isMobile }) => {
 	if (isMobile) {
 		return (
-			<DrawerHeader
+			<Drawer.Header
 				px={4}
 				color='header.500'
 				_dark={{ color: 'header.200' }}
@@ -17,12 +17,12 @@ const PopModalHeader: FC<MenuModalBodyProps> = ({ children, isMobile }) => {
 				fontWeight='700'
 				border='none'>
 				{children}
-			</DrawerHeader>
+			</Drawer.Header>
 		);
 	}
 
 	return (
-		<PopoverHeader
+		<Popover.Header
 			lineHeight={1.4}
 			pb={1}
 			color='header.500'
@@ -31,7 +31,7 @@ const PopModalHeader: FC<MenuModalBodyProps> = ({ children, isMobile }) => {
 			fontWeight='700'
 			border='none'>
 			{children}
-		</PopoverHeader>
+		</Popover.Header>
 	);
 };
 

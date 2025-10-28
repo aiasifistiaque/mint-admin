@@ -1,9 +1,9 @@
 import { ReactNode, FC } from 'react';
-import { Center, FlexProps, Heading } from '@chakra-ui/react';
+import { Center, CenterProps, FlexProps, Heading } from '@chakra-ui/react';
 import { Icon } from '../..';
 import { motion } from 'framer-motion';
 
-type AddImageButtonProps = FlexProps & {
+type AddImageButtonProps = CenterProps & {
 	children?: ReactNode;
 	size?: string;
 };
@@ -13,7 +13,6 @@ const AddImageButton: FC<AddImageButtonProps> = ({ children, size, ...props }) =
 		<Center
 			as={motion.div}
 			cursor='pointer'
-			whileTap={{ scale: 0.9 }}
 			flexDir='column'
 			h={size || '100px'}
 			w={size || '100px'}

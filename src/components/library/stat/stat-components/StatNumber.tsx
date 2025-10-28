@@ -1,13 +1,15 @@
 import { ReactNode } from 'react';
-import { StatNumber as CStatNumber, StatNumberProps } from '@chakra-ui/react';
+import { Stat } from '@chakra-ui/react';
 
-const StatNumber = ({ children, ...props }: StatNumberProps & { children: ReactNode }) => {
+const StatNumber = ({ children, ...props }: any & { children: ReactNode }) => {
 	return (
-		<CStatNumber
+		<Stat.ValueText
+			color='text.light'
+			_dark={{ color: 'white' }}
 			fontSize='1.4rem'
 			{...props}>
 			{children}
-		</CStatNumber>
+		</Stat.ValueText>
 	);
 };
 

@@ -1,15 +1,8 @@
 'use client';
 
-import {
-	Button,
-	useDisclosure,
-	Text,
-	Checkbox,
-	Grid,
-	Select,
-	useColorModeValue,
-} from '@chakra-ui/react';
+import { Button, useDisclosure, Text, Checkbox, Grid, NativeSelect } from '@chakra-ui/react';
 import { useEffect, useState, useCallback } from 'react';
+import { useColorMode } from '@/components/ui/color-mode';
 
 import {
 	formatFieldName,
@@ -22,10 +15,11 @@ import {
 	DiscardButton,
 	Icon,
 	useExportMutation,
+	ConfirmButton,
 } from '../../..';
 
 const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const { fields = [], preferences = [] } = useAppSelector(state => state.table);
 	const [selected, setSelected] = useState<string[]>([]);
 
@@ -59,7 +53,7 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 	}, [result]);
 
 	const handleCheckboxChange = useCallback((e: any, field: any) => {
-		if (e.target.checked) {
+		if (e.checked) {
 			setSelected(prevSelected => [...prevSelected, field]);
 		} else {
 			setSelected(prevSelected => prevSelected.filter(item => item !== field));
@@ -67,31 +61,35 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 	}, []);
 
 	const checkboxes = fields.map((field: string, i: number) => (
-		<Checkbox
-			size='md'
-			fontWeight='500'
-			colorScheme='brand'
+		<Checkbox.Root
+			size='sm'
 			key={i}
-			isChecked={selected?.includes(field)}
-			onChange={e => handleCheckboxChange(e, field)}>
-			{formatFieldName(field)}
-		</Checkbox>
+			checked={selected?.includes(field)}
+			onCheckedChange={e => handleCheckboxChange(e, field)}>
+			<Checkbox.HiddenInput />
+			<Checkbox.Control>
+				<Checkbox.Indicator />
+			</Checkbox.Control>
+			<Checkbox.Label fontWeight='500'>{formatFieldName(field)}</Checkbox.Label>
+		</Checkbox.Root>
 	));
 
-	const iconColor = useColorModeValue('#fafafa', '#171717');
+	const { colorMode } = useColorMode();
+	const iconColor = colorMode === 'light' ? '#fafafa' : '#171717';
 
 	return (
 		<>
 			<Button
 				onClick={onOpen}
 				size='sm'
-				pl={3}
-				variant='white'
-				leftIcon={<Icon name='export-doc' />}>
+				px={3}
+				variant='outline'>
+				<Icon name='export-doc' />
 				Export
 			</Button>
 
 			<MenuModal
+				placement='center'
 				isOpen={isOpen}
 				onClose={closeModal}>
 				<MenuModalHeader>Select Export Fields</MenuModalHeader>
@@ -111,17 +109,19 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 						gap={4}
 						rowGap={4}>
 						<Text fontWeight='600'>Export As:</Text>
-						<Select
+						<NativeSelect.Root
 							_light={{
 								borderColor: 'container.borderLight',
 								bg: 'container.newLight',
 							}}
-							size='sm'
-							value={type}
-							onChange={(e: any) => setType(e.target.value)}>
-							<option value='csv'>CSV</option>
-							<option value='pdf'>Pdf</option>
-						</Select>
+							size='sm'>
+							<NativeSelect.Field
+								value={type}
+								onChange={(e: any) => setType(e.target.value)}>
+								<option value='csv'>CSV</option>
+								<option value='pdf'>Pdf</option>
+							</NativeSelect.Field>
+						</NativeSelect.Root>
 					</Grid>
 				</MenuModalBody>
 				<MenuModalFooter>
@@ -131,24 +131,17 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 						<Text color='red'>You can only export up to 5 fields to PDF</Text>
 					) : (
 						<>
-							<Button
-								variant='white'
-								onClick={closeModal}>
-								Discard
-							</Button>
-							<Button
-								leftIcon={
-									<Icon
-										name='export-doc'
-										size={14}
-										color={iconColor}
-									/>
-								}
-								size='sm'
+							<DiscardButton onClick={closeModal}>Discard</DiscardButton>
+							<ConfirmButton
 								onClick={handleSubmit}
-								isLoading={result?.isLoading}>
+								loading={result?.isLoading}>
+								<Icon
+									name='export-doc'
+									size={14}
+									color={iconColor}
+								/>
 								Export
-							</Button>
+							</ConfirmButton>
 						</>
 					)}
 				</MenuModalFooter>

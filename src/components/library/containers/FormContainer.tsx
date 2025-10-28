@@ -1,7 +1,7 @@
 import { ContainerProps, Flex } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 
-type FormContainerProps = ContainerProps & {
+type FormContainerProps = any & {
 	children: ReactNode;
 };
 
@@ -14,7 +14,7 @@ const PADDING = 8;
 const FormContainer: FC<FormContainerProps> = ({ children, ...props }) => {
 	return (
 		<Flex
-			sx={styles.container}
+			css={styles.container}
 			{...props}>
 			{children}
 		</Flex>

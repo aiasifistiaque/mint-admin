@@ -35,7 +35,7 @@ const ViewProductContainer: FC<ViewContentContainerType> = ({
 						path={path}
 						dataModel={dataModel}>
 						<Button
-							colorScheme='gray'
+							colorPalette='gray'
 							size='sm'>
 							Edit
 						</Button>

@@ -32,7 +32,7 @@ const ViewContentContainer: FC<ViewContentContainerType> = ({
 						contentType={type}
 						dataModel={dataModel}>
 						<Button
-							colorScheme='gray'
+							colorPalette='gray'
 							size='sm'>
 							Edit
 						</Button>

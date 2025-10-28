@@ -1,26 +1,19 @@
 'use client';
-import {
-	Button,
-	Flex,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	ModalOverlay,
-	Tab,
-	TabList,
-	TabPanel,
-	TabPanels,
-	Tabs,
-} from '@chakra-ui/react';
+import { Button, Flex, Tabs } from '@chakra-ui/react';
 import { FC, useState, ReactNode } from 'react';
 
 import InsertUrl from './InsertUrl';
 import MyPhotos from './MyPhotos';
 import UploadImage from './UploadImage';
 import { styles } from '.';
+import {
+	GenericModal,
+	GenericModalHeader,
+	GenericModalCloseButton,
+	GenericModalBody,
+	GenericModalFooter,
+	GenericModalContent,
+} from '../..';
 
 type UploadModalProps = {
 	album?: string;
@@ -53,7 +46,7 @@ const ImageUploader: FC<UploadModalProps> = ({
 	onOpen,
 	prompt,
 }) => {
-	// const { isOpen, onOpen, onClose } = useDisclosure();
+	// const {open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const [img, setImg] = useState(null);
 	const handleImageSelect = (e: any) => setImg(e);
@@ -71,43 +64,44 @@ const ImageUploader: FC<UploadModalProps> = ({
 
 	return (
 		<>
-			<Modal
+			<GenericModal
 				isOpen={isOpen}
 				onClose={onClose}
-				size='6xl'
+				size='full'
 				isCentered>
-				<ModalOverlay />
-				<ModalContent {...styles.modalContentCss}>
-					<ModalHeader>{prompt?.title || 'Insert Photo/File'}</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody minH='70vh'>
-						<Tabs {...styles.tabsCss}>
-							<TabList>
+				<GenericModalContent {...styles.modalContentCss}>
+					<GenericModalHeader>{prompt?.title || 'Insert Photo/File'}</GenericModalHeader>
+					<GenericModalCloseButton />
+					<GenericModalBody minH='70vh'>
+						<Tabs.Root {...styles.tabsCss}>
+							<Tabs.List>
 								{tabs.map((label: string, i: number) => (
-									<Tab key={i}>{label}</Tab>
+									<Tabs.Trigger
+										key={i}
+										value={String(i)}>
+										{label}
+									</Tabs.Trigger>
 								))}
-							</TabList>
-							<TabPanels {...styles.tabPanelCss}>
-								<TabPanel sx={styles.panel}>
-									<MyPhotos handleSelect={handleImageSelect} />
-								</TabPanel>
-								<TabPanel sx={styles.panel}>
-									<UploadImage handleSelect={handleUploadComplete} />
-								</TabPanel>
-								<TabPanel sx={styles.panel}>
-									<InsertUrl handleSelect={handleImageSelect} />
-								</TabPanel>
-							</TabPanels>
-						</Tabs>
-					</ModalBody>
+							</Tabs.List>
+							<Tabs.Content value='0'>
+								<MyPhotos handleSelect={handleImageSelect} />
+							</Tabs.Content>
+							<Tabs.Content value='1'>
+								<UploadImage handleSelect={handleUploadComplete} />
+							</Tabs.Content>
+							<Tabs.Content value='2'>
+								<InsertUrl handleSelect={handleImageSelect} />
+							</Tabs.Content>
+						</Tabs.Root>
+					</GenericModalBody>
 
-					<ModalFooter>
+					<GenericModalFooter>
 						<Flex
 							gap={2}
 							flex={1}>
 							<Button
 								size='sm'
-								isDisabled={!img}
+								disabled={!img}
 								onClick={handleInsert}>
 								{prompt?.btnText || 'Insert'}
 							</Button>
@@ -117,9 +111,9 @@ const ImageUploader: FC<UploadModalProps> = ({
 								Cancel
 							</Button>
 						</Flex>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
+					</GenericModalFooter>
+				</GenericModalContent>
+			</GenericModal>
 		</>
 	);
 };

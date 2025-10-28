@@ -22,14 +22,14 @@ const FilterInput: FC<FilterInputProps> = ({ date, ...props }) => {
 	if (date)
 		return (
 			<Input
-				sx={style}
+				css={style}
 				type='date'
 				{...props}
 			/>
 		);
 	return (
 		<Input
-			sx={style}
+			css={style}
 			{...props}
 		/>
 	);

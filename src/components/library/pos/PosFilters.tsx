@@ -1,7 +1,7 @@
 'use client';
 
 import { useGetAllQuery, useAppDispatch, MenuContainer, MenuItem, applyFilters } from '../';
-import { Menu, MenuGroup, Flex, Input, useDisclosure, MenuDivider } from '@chakra-ui/react';
+import { Menu, Flex, Input, useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
 
 import ItemOfMenu from './ItemOfMenu';
@@ -13,7 +13,7 @@ const MAX_H = '300px';
 const PosFilters = ({ path, filter }: { path: string; filter: string }) => {
 	const dispatch = useAppDispatch();
 
-	const { onOpen, onClose, isOpen } = useDisclosure();
+	const { onOpen, onClose, open: isOpen } = useDisclosure();
 
 	const close = () => {
 		setSearch('');
@@ -47,6 +47,7 @@ const PosFilters = ({ path, filter }: { path: string; filter: string }) => {
 
 	const renderMenuItems = data?.doc?.map((item: any, i: number) => (
 		<ItemOfMenu
+			value={item?._id}
 			filter={filter}
 			id={item?._id}
 			key={i}
@@ -56,47 +57,39 @@ const PosFilters = ({ path, filter }: { path: string; filter: string }) => {
 	));
 
 	return (
-		<Menu
-			isLazy
-			onClose={close}>
-			{({ isOpen }) => (
-				<>
-					<ButtonOfMenu
-						w={{ base: '100%', md: 'inherit' }}
-						bg='white'
-						_dark={{ bg: 'sidebar.dark' }}
-						isActive={isOpen}>
-						{title}
-					</ButtonOfMenu>
-					<MenuContainer w={WIDTH}>
-						<MenuGroup>
-							<Flex
-								p={2}
-								py={1}>
-								<Input
-									placeholder='Search'
-									value={search}
-									onChange={handleSearch}
-								/>
-							</Flex>
-						</MenuGroup>
-						<MenuDivider />
-						<Flex
-							flexDir='column'
-							w='100%'
-							maxH={MAX_H}
-							overflowY='scroll'>
-							<MenuItem
-								w={WIDTH}
-								onClick={() => handleChange({ name: `All ${path}`, _id: '' })}>
-								All {path}
-							</MenuItem>
-							{renderMenuItems}
-						</Flex>
-					</MenuContainer>
-				</>
-			)}
-		</Menu>
+		<Menu.Root
+			lazyMount
+			onOpenChange={e => (e.open ? null : close())}>
+			<ButtonOfMenu
+				w={{ base: '100%', md: 'inherit' }}
+				bg='white'>
+				{title}
+			</ButtonOfMenu>
+			<MenuContainer w={WIDTH}>
+				<Flex
+					p={2}
+					py={1}>
+					<Input
+						placeholder='Search'
+						value={search}
+						onChange={handleSearch}
+					/>
+				</Flex>
+				<Menu.Separator />
+				<Flex
+					flexDir='column'
+					w='100%'
+					maxH={MAX_H}
+					overflowY='scroll'>
+					<MenuItem
+						w={WIDTH}
+						onClick={() => handleChange({ name: `All ${path}`, _id: '' })}>
+						All {path}
+					</MenuItem>
+					{renderMenuItems}
+				</Flex>
+			</MenuContainer>
+		</Menu.Root>
 	);
 };
 

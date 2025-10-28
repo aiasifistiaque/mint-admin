@@ -1,7 +1,7 @@
 'use client';
 import { FC } from 'react';
-import { Skeleton, Tooltip } from '@chakra-ui/react';
-import { useGetCountQuery, Align, Icon } from '..';
+import { Skeleton } from '@chakra-ui/react';
+import { useGetCountQuery, Align } from '..';
 import { StatContainer, StatLabel, StatNumber } from './stat-components';
 
 type CountProps = {
@@ -18,7 +18,7 @@ const Count: FC<CountProps> = ({ title, path, filters = {}, tooltip, href }) => 
 		<StatContainer href={href}>
 			<Align>
 				<StatLabel>{title}</StatLabel>
-				{tooltip && (
+				{/* {tooltip && (
 					<Tooltip
 						label={tooltip}
 						borderRadius='md'>
@@ -26,13 +26,13 @@ const Count: FC<CountProps> = ({ title, path, filters = {}, tooltip, href }) => 
 							<Icon name='info' />
 						</span>
 					</Tooltip>
-				)}
+				)} */}
 			</Align>
-			<Skeleton
-				isLoaded={!isFetching}
-				w='100px'>
-				<StatNumber>{isError ? '--' : isFetching ? '--' : data}</StatNumber>
-			</Skeleton>
+			{/* <Skeleton
+				loading={isFetching}
+				w='100px'> */}
+			<StatNumber>{isError ? '--' : isFetching ? '--' : data}</StatNumber>
+			{/* </Skeleton> */}
 		</StatContainer>
 	);
 };

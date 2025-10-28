@@ -1,14 +1,14 @@
 'use client';
 
 import { FC, useState } from 'react';
-import { Input, InputGroup, InputGroupProps, InputLeftAddon } from '@chakra-ui/react';
+import { Input, Flex, Box } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 import { useAppDispatch, Icon, updateSearch, SideDrawer, Sidebar, Align } from '../';
 
-type PosSearchProps = InputGroupProps & {};
-
-const PosSearch: FC<PosSearchProps> = ({ ...props }) => {
+const PosSearch: FC = () => {
 	const [value, setValue] = useState<string>('');
 	const dispatch = useAppDispatch();
+	const { colorMode } = useColorMode();
 
 	const handleSearch = (e: any) => {
 		setValue(e.target.value);
@@ -18,21 +18,27 @@ const PosSearch: FC<PosSearchProps> = ({ ...props }) => {
 	return (
 		<Align w='100%'>
 			<SideDrawer />
-			<InputGroup {...props}>
-				<InputLeftAddon
-					bg='#ddd'
-					_dark={{ bg: 'background.dark' }}>
+			<Flex
+				align='center'
+				w='full'>
+				<Box
+					bg={colorMode === 'light' ? '#ddd' : 'background.dark'}
+					px={3}
+					py={2}
+					borderLeftRadius='lg'
+					display='flex'
+					alignItems='center'>
 					<Icon name='barcode' />
-				</InputLeftAddon>
+				</Box>
 				<Input
-					bg='white'
-					_dark={{ bg: 'sidebar.dark' }}
+					bg={colorMode === 'light' ? 'white' : 'sidebar.dark'}
+					borderLeftRadius={0}
 					borderRadius='lg'
 					placeholder='Search By Barcode/Product Name'
 					value={value}
 					onChange={handleSearch}
 				/>
-			</InputGroup>
+			</Flex>
 		</Align>
 	);
 };

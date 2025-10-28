@@ -1,20 +1,8 @@
 'use client';
 import { useState, FC, useEffect } from 'react';
-import {
-	InputProps,
-	FormControl,
-	Stack,
-	Grid,
-	Tag,
-	Wrap,
-	WrapItem,
-	TagLabel,
-	TagCloseButton,
-	Checkbox,
-	Box,
-} from '@chakra-ui/react';
+import { InputProps, Grid, Checkbox, Box, Flex } from '@chakra-ui/react';
 
-import { Label, VDataSelect, useGetByIdQuery } from '../..';
+import { Label, useGetByIdQuery, FormControl } from '../..';
 
 type InputContainerProps = InputProps & {
 	label: string;
@@ -135,17 +123,19 @@ const VModelFields: FC<InputContainerProps> = ({
 		<FormControl
 			isRequired={isRequired}
 			gap={4}>
-			<Stack
-				spacing={2}
+			<Flex
+				flexDir='column'
+				gap={2}
 				w='full'>
 				<Label>{label}</Label>
 
-				<Wrap
+				<Flex
+					flexWrap='wrap'
 					mb={2}
 					gap={1}
 					pt={2}>
 					{value?.map((item: string, i: number) => (
-						<WrapItem key={i}>
+						<Flex key={i}>
 							<Box
 								draggable
 								onDragStart={e => handleDragStart(e, i)}
@@ -156,39 +146,58 @@ const VModelFields: FC<InputContainerProps> = ({
 								opacity={draggedIndex === i ? 0.5 : 1}
 								transition='opacity 0.2s'
 								_hover={{ transform: 'scale(1.02)' }}>
-								<Tag
-									variant='subtle'
-									userSelect='none'>
-									<TagLabel>{item}</TagLabel>
-									<TagCloseButton onClick={() => deleteTag(item)} />
-								</Tag>
+								<Flex
+									px={2.5}
+									py={1}
+									bg='gray.100'
+									borderRadius='md'
+									userSelect='none'
+									alignItems='center'
+									gap={2}>
+									<Flex
+										as='span'
+										fontSize='sm'>
+										{item}
+									</Flex>
+									<Flex
+										as='button'
+										onClick={() => deleteTag(item)}
+										cursor='pointer'
+										fontSize='lg'
+										opacity={0.7}
+										_hover={{ opacity: 1 }}>
+										×
+									</Flex>
+								</Flex>
 							</Box>
-						</WrapItem>
+						</Flex>
 					))}
-				</Wrap>
+				</Flex>
 				<Grid
 					mb={2}
-					templateColumns='1fr 1fr 1fr'
+					gridTemplateColumns='1fr 1fr 1fr'
 					gap={4}
 					w='full'>
 					{!isFetching &&
 						data?.map((item: string, i: number) => (
-							<Checkbox
+							<Checkbox.Root
 								key={i}
-								isChecked={value?.includes(item)}
-								onChange={() => (!value?.includes(item) ? addTag(item) : deleteTag(item))}
+								checked={value?.includes(item)}
+								onCheckedChange={e => (!value?.includes(item) ? addTag(item) : deleteTag(item))}
 								{...titleCheckboxCss}>
-								{item}
-							</Checkbox>
+								<Checkbox.HiddenInput />
+								<Checkbox.Control />
+								<Checkbox.Label>{item}</Checkbox.Label>
+							</Checkbox.Root>
 						))}
 				</Grid>
-			</Stack>
+			</Flex>
 		</FormControl>
 	);
 };
 
 const titleCheckboxCss: any = {
-	colorScheme: 'brand',
+	colorPalette: 'brand',
 	size: 'md',
 	fontSize: '16px',
 	fontWeight: '500',

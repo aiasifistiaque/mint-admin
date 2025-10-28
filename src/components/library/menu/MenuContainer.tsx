@@ -1,27 +1,27 @@
 import { FC, ReactNode } from 'react';
-import { MenuList, MenuListProps } from '@chakra-ui/react';
+import { Menu, Portal } from '@chakra-ui/react';
 import { radius } from '../config';
 
-type MenuContainerProps = MenuListProps & {
+type MenuContainerProps = any & {
 	children: ReactNode;
 };
 
 const MenuContainer: FC<MenuContainerProps> = ({ children, ...props }) => {
 	return (
-		<MenuList
-			boxShadow='md'
-			p={1.5}
-			gap={2}
-			borderRadius={radius?.MENU}
-			bg='menu.light'
-			borderColor='container.borderLight'
-			_dark={{
-				bg: 'menu.dark',
-				borderColor: 'container.borderDark',
-			}}
-			{...props}>
-			{children}
-		</MenuList>
+		<Portal>
+			<Menu.Positioner>
+				<Menu.Content
+					boxShadow='md'
+					p={2}
+					gap={2}
+					borderRadius={radius?.MENU}
+					bg={{ base: 'menu.light', _dark: 'menu.dark' }}
+					borderColor={{ base: 'container.borderLight', _dark: 'container.borderDark' }}
+					{...props}>
+					{children}
+				</Menu.Content>
+			</Menu.Positioner>
+		</Portal>
 	);
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button, Center, Heading, Progress, Text } from '@chakra-ui/react';
+import { Button, Center, Heading, Text, Progress } from '@chakra-ui/react';
 import { useAddVideoMutation } from '../../store';
 
 const UploadImage = ({
@@ -76,13 +76,16 @@ const UploadImage = ({
 			h='full'
 			w='400px'>
 			<Heading size='md'>Uploading...</Heading>
-			<Progress
-				colorScheme='brand'
+			<Progress.Root
+				colorPalette='brand'
 				w='100%'
 				size='sm'
 				borderRadius='40px'
-				isIndeterminate
-			/>
+				value={null}>
+				<Progress.Track>
+					<Progress.Range />
+				</Progress.Track>
+			</Progress.Root>
 		</Center>
 	) : result?.isSuccess ? (
 		<Text>Image Uploaded Successfully</Text>
@@ -105,7 +108,7 @@ const UploadImage = ({
 
 			<Button
 				size='sm'
-				colorScheme='gray'
+				colorPalette='gray'
 				onClick={handleUpload}>
 				Upload From Device
 			</Button>

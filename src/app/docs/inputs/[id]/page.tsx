@@ -1,7 +1,7 @@
 'use client';
 
 import { FormInput, getFieldValue, getOnChangeHandler } from '@/components/library';
-import { Center, Flex, FlexProps, Text, TextProps } from '@chakra-ui/react';
+import { Center, CenterProps, Flex, FlexProps, Text, TextProps } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 
@@ -67,7 +67,7 @@ const bodyCss: FlexProps = {
 	gap: 4,
 };
 
-const iconBox: FlexProps = {
+const iconBox: CenterProps = {
 	w: { base: '100%', md: '600px' },
 	// h: '300px',
 	bg: 'white',

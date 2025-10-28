@@ -1,114 +1,52 @@
 'use client';
-import { defineStyle, defineStyleConfig, extendTheme, ThemeConfig } from '@chakra-ui/react';
+
+import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react';
 import colors from './colors.theme';
 
-// 2. Add color mode config
-const config: ThemeConfig = {
-	initialColorMode: 'light',
-	useSystemColorMode: false,
-};
-
-export const headingTheme = defineStyleConfig({
-	baseStyle: {
-		color: 'text.light',
-		_dark: {
-			color: 'text.dark',
-		},
-	},
-});
-
-export const textTheme = defineStyleConfig({
-	baseStyle: {
-		color: '#171717',
-		fontSize: '15px',
-		_dark: {
-			color: 'text.dark',
-		},
-	},
-});
-
-const buttonXs = defineStyle({
-	fontS4ize: 'xs',
-	h: '26px',
-	minW: '26px',
-});
-
-export const buttonTheme = defineStyleConfig({
-	baseStyle: {
-		fontWeight: '500', // change the font weight to normal
-		borderRadius: '6px', // <-- border radius is same for all variants and sizes
-		fontSize: '14px',
-		letterSpacing: '-0.4px',
-		px: 4,
-	},
-
-	variants: {
-		white: {
-			h: '36px',
-			color: '#171717',
-			border: '1px solid',
-			borderColor: '#e7e7e7',
-			bg: 'white',
-			_hover: {
-				bg: 'inherit',
+export const system = createSystem(defaultConfig, {
+	theme: {
+		tokens: {
+			colors: colors,
+			fonts: {
+				body: { value: 'system-ui, sans-serif' },
+				heading: { value: 'system-ui, sans-serif' },
 			},
-			_dark: {
-				color: '#fafafa',
-				borderColor: '#222',
-				bg: '#0A0A0A',
-				_hover: {
-					bg: 'gray.800',
+		},
+		semanticTokens: {
+			colors: {
+				brand: {
+					solid: { value: '{colors.blue.500}' },
+					contrast: { value: 'white' },
+					fg: { value: '{colors.blue.700}' },
+					muted: { value: '{colors.blue.100}' },
+					subtle: { value: '{colors.blue.50}' },
+					emphasized: { value: '{colors.blue.600}' },
+					focusRing: { value: '{colors.blue.500}' },
 				},
 			},
 		},
-	},
-	sizes: {
-		xs: buttonXs,
-		md: {
-			fontSize: '14px',
-		},
-		sm: {
-			h: '34px',
-			fontSize: '14px',
-			lineHeight: '1.5',
-			px: 4,
+		breakpoints: {
+			sm: '480px',
+			md: '768px',
+			lg: '992px',
+			xl: '1280px',
+			'2xl': '1536px',
 		},
 	},
-	defaultProps: {
-		colorScheme: 'brand',
+	globalCss: {
+		'body, p, span': {
+			color: '#171717',
+			fontSize: '15px',
+			_dark: {
+				color: '{colors.text.dark}',
+			},
+		},
 	},
 });
 
-export const tooltipTheme = defineStyleConfig({
-	baseStyle: {
-		borderRadius: 'lg',
-		bg: 'brand.500',
-		_dark: { bg: 'whitesmoke' },
-	},
-});
-
-const components = {
-	Button: buttonTheme,
-	Heading: headingTheme,
-	Tooltip: tooltipTheme,
-	Text: textTheme,
+export const config = {
+	initialColorMode: 'light' as const,
+	useSystemColorMode: false,
 };
 
-const shadows = {};
-
-// 6. Add Breakpoints
-export const breakpoints = {
-	base: '0px',
-	sm: '480px',
-	md: '768px',
-	lg: '992px',
-	xl: '1280px',
-};
-
-export const theme = extendTheme({
-	config,
-	colors,
-	components,
-	breakpoints,
-	shadows,
-});
+export { colors };

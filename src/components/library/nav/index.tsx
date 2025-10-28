@@ -17,3 +17,4 @@ export { default as EditorLayoutFetching } from './EditorLayoutFetching';
 
 export { default as EditorNavbar } from './EditorNavbar';
 export { default as EditorNav } from './EditorNav';
+export { default as MainBody } from './MainBody';

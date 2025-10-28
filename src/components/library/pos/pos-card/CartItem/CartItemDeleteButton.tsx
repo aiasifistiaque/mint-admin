@@ -17,8 +17,8 @@ const CartItemDeleteButton: FC<Props> = ({ onClick, qty, name }) => {
 			trigger={
 				<Button
 					size='xs'
-					colorScheme='red'
-					variant='link'>
+					colorPalette='red'
+					variant='plain'>
 					Remove
 				</Button>
 			}

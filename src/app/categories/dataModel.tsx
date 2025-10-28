@@ -96,7 +96,7 @@ const data: TableObjectProps = {
 			type: 'tag',
 			sort: 'isActive',
 			default: true,
-			colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+			colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 		},
 		{
 			title: 'Featured',
@@ -104,7 +104,7 @@ const data: TableObjectProps = {
 			type: 'tag',
 			sort: 'isFeatured',
 			default: true,
-			colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+			colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 		},
 		{ title: 'Created', dataKey: 'createdAt', type: 'date', sort: 'createdAt' },
 		{ title: '...', type: 'menu' },

@@ -78,13 +78,15 @@ const VFile: FC<InputContainerProps> = ({
 			label={label}
 			helper={helper}>
 			<Button
-				isDisabled={result?.isLoading}
-				isLoading={result?.isLoading}
+				px={3}
+				size='sm'
+				disabled={result?.isLoading}
+				loading={result?.isLoading}
 				loadingText='Uploading'
 				spinnerPlacement='start'
 				onClick={onRefClick}
-				variant='white'
-				leftIcon={<Icon name='copy' />}>
+				// leftIcon={<Icon name='copy' />}
+			>
 				{value ? 'Change File' : 'Upload File'}
 			</Button>
 			{value && (

@@ -1,3 +1,15 @@
+// Generic Modal Components for v3 Migration
+export { default as GenericModal } from './GenericModal';
+export type { GenericModalProps } from './GenericModal';
+export {
+	ModalHeader as GenericModalHeader,
+	ModalBody as GenericModalBody,
+	ModalFooter as GenericModalFooter,
+	ModalCloseButton as GenericModalCloseButton,
+	ModalOverlay as GenericModalOverlay,
+	ModalContent as GenericModalContent,
+} from './GenericModalComponents';
+
 export { default as UploadModal } from './upload-modal/UploadModal';
 export { default as CreateModal } from './CreateModal/CreateModal';
 export { default as BackendCreateModal } from './CreateModal/BackendCreateModal';

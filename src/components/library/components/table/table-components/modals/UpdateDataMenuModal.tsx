@@ -1,21 +1,11 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogOverlay,
-	Button,
-	useDisclosure,
-	Text,
-} from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Text } from '@chakra-ui/react';
 import { useEffect, useRef, FC, useState } from 'react';
 
 import {
 	useCustomToast,
 	MenuItem,
-	AlertDialogHeader,
-	AlertDialogContent,
 	EditDataSelect,
 	AlertSubmitButton,
 	useUpdateByIdMutation,
@@ -36,7 +26,7 @@ type UpdateKeyProps = {
 };
 
 const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const { title, path, prompt, invalidate, dataPath, key } = item;
 
 	const cancelRef = useRef<any>(undefined);
@@ -76,18 +66,25 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
 
 	return (
 		<>
-			<MenuItem onClick={onOpen}>{title}</MenuItem>
+			<MenuItem
+				onClick={onOpen}
+				closeOnSelect={false}>
+				{title}
+			</MenuItem>
 
-			<AlertDialog
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
+			<Dialog.Root
+				open={isOpen}
+				onOpenChange={e => !e.open && closeItem()}
+				role='alertdialog'>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
 					<form onSubmit={handleSubmit}>
-						<AlertDialogContent>
-							<AlertDialogHeader>{prompt?.title || `Update Item`}</AlertDialogHeader>
+						<Dialog.Content>
+							<Dialog.Header>
+								<Dialog.Title>{prompt?.title || `Update Item`}</Dialog.Title>
+							</Dialog.Header>
 
-							<AlertDialogBody py={4}>
+							<Dialog.Body py={4}>
 								<Text>{prompt?.body || 'Please select an option'}</Text>
 
 								<EditDataSelect
@@ -98,28 +95,29 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
 										setValue(e.target.value);
 									}}
 								/>
-							</AlertDialogBody>
+							</Dialog.Body>
 
-							<AlertDialogFooter>
+							<Dialog.Footer>
 								{!isLoading && (
-									<Button
-										ref={cancelRef}
-										onClick={closeItem}
-										size='sm'
-										colorScheme='gray'>
-										Discard
-									</Button>
+									<Dialog.CloseTrigger asChild>
+										<Button
+											ref={cancelRef}
+											size='sm'
+											colorPalette='gray'>
+											Discard
+										</Button>
+									</Dialog.CloseTrigger>
 								)}
 								<AlertSubmitButton
-									isDisabled={!value}
+									disabled={!value}
 									isLoading={isLoading}>
 									{prompt?.btnText || 'Update'}
 								</AlertSubmitButton>
-							</AlertDialogFooter>
-						</AlertDialogContent>
+							</Dialog.Footer>
+						</Dialog.Content>
 					</form>
-				</AlertDialogOverlay>
-			</AlertDialog>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };

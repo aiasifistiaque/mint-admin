@@ -1,8 +1,9 @@
 import React, { FC, useEffect } from 'react';
 import { useState } from 'react';
 
-import { CustomTd as Td, RowContainerBase, Icon, useGetByIdQuery } from '../..';
-import { Box, Tr, Td as TD, Select, useColorModeValue } from '@chakra-ui/react';
+import { CustomTd as Td, RowContainerBase, Icon, useGetByIdQuery, Tr } from '../..';
+import { Box, Table, NativeSelectRoot, NativeSelectField } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 import InputElement from '../../utils/inputs/input-components/InputElement';
 
 type PurchaseProductProps = {
@@ -71,14 +72,15 @@ const PurchaseVariantProduct: FC<PurchaseProductProps> = ({
 		setItem({ price, item, qty: e.target.value, variantId, variantName });
 	};
 
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
+	const { colorMode } = useColorMode();
+	const borderColor = colorMode === 'dark' ? 'brand.200' : 'brand.500';
+	const textColor = colorMode === 'dark' ? 'gray.300' : 'text.500';
 
 	if (isMobile)
 		return (
 			<RowContainerBase>
 				<Td heading='#'>{i + 1}</Td>
 				<Td heading='Product Name'>{item?.name}</Td>
-
 				<Td heading='Qty'>
 					<InputElement
 						size='xs'
@@ -88,31 +90,28 @@ const PurchaseVariantProduct: FC<PurchaseProductProps> = ({
 						w='100px'
 					/>
 				</Td>
-
 				<Td heading='Variant'>
-					<Select
-						value={variantId}
-						onChange={handleVariant}
-						placeholder='Select variant'
-						size='xs'
-						px={3}
-						borderRadius='lg'
-						focusBorderColor={borderColor}
-						color='text.500'
-						_dark={{
-							color: 'gray.300',
-						}}
-						_placeholder={{ fontSize: 14, fontWeight: '500' }}>
-						{item?.variations?.map((variant: any) => (
-							<option
-								key={variant._id}
-								value={variant?._id}>
-								{variant?.name}
-							</option>
-						))}
-					</Select>
-				</Td>
-
+					<NativeSelectRoot size='xs'>
+						<NativeSelectField
+							value={variantId}
+							onChange={handleVariant}
+							placeholder='Select variant'
+							px={3}
+							borderRadius='lg'
+							focusRing='inside'
+							color={textColor}
+							fontSize='14px'
+							fontWeight='500'>
+							{item?.variations?.map((variant: any) => (
+								<option
+									key={variant._id}
+									value={variant?._id}>
+									{variant?.name}
+								</option>
+							))}
+						</NativeSelectField>
+					</NativeSelectRoot>
+				</Td>{' '}
 				<Td heading='Unit Price'>
 					<InputElement
 						size='xs'
@@ -122,12 +121,7 @@ const PurchaseVariantProduct: FC<PurchaseProductProps> = ({
 						w='100px'
 					/>
 				</Td>
-				<Td
-					isNumeric
-					heading='SubTotal'>
-					{item?.subTotal}
-				</Td>
-
+				<Td heading='SubTotal'>{item?.subTotal}</Td>
 				<Td>
 					<Box
 						cursor='pointer'
@@ -138,11 +132,11 @@ const PurchaseVariantProduct: FC<PurchaseProductProps> = ({
 			</RowContainerBase>
 		);
 	return (
-		<Tr h='2.5rem'>
-			<TD>{i + 1}</TD>
-			<TD>{item?.name}</TD>
+		<Table.Row h='2.5rem'>
+			<Td heading='#'>{i + 1}</Td>
+			<Td heading='Product Name'>{item?.name}</Td>
 
-			<TD>
+			<Td heading='Qty'>
 				<InputElement
 					size='xs'
 					type='number'
@@ -150,33 +144,32 @@ const PurchaseVariantProduct: FC<PurchaseProductProps> = ({
 					onChange={handleReturnQty}
 					w='100px'
 				/>
-			</TD>
+			</Td>
 
-			<TD>
-				<Select
-					value={variantId}
-					onChange={handleVariant}
-					placeholder='Select variant'
-					size='xs'
-					px={3}
-					borderRadius='lg'
-					focusBorderColor={borderColor}
-					color='text.500'
-					_dark={{
-						color: 'gray.300',
-					}}
-					_placeholder={{ fontSize: 14, fontWeight: '500' }}>
-					{data?.variations?.map((variant: any) => (
-						<option
-							key={variant?._id}
-							value={variant?._id}>
-							{variant?.name}
-						</option>
-					))}
-				</Select>
-			</TD>
+			<Td heading='Variant'>
+				<NativeSelectRoot size='xs'>
+					<NativeSelectField
+						value={variantId}
+						onChange={handleVariant}
+						placeholder='Select variant'
+						px={3}
+						borderRadius='lg'
+						focusRing='inside'
+						color={textColor}
+						fontSize='14px'
+						fontWeight='500'>
+						{data?.variations?.map((variant: any) => (
+							<option
+								key={variant?._id}
+								value={variant?._id}>
+								{variant?.name}
+							</option>
+						))}
+					</NativeSelectField>
+				</NativeSelectRoot>
+			</Td>
 
-			<TD>
+			<Td heading='Unit Price'>
 				<InputElement
 					size='xs'
 					type='number'
@@ -184,17 +177,17 @@ const PurchaseVariantProduct: FC<PurchaseProductProps> = ({
 					onChange={handlePrice}
 					w='100px'
 				/>
-			</TD>
-			<TD isNumeric>{item?.subTotal}</TD>
+			</Td>
+			<Td heading='SubTotal'>{item?.subTotal}</Td>
 
-			<TD>
+			<Td heading='Actions'>
 				<Box
 					cursor='pointer'
 					onClick={() => deleteItem(item?._id)}>
 					<Icon name='delete' />
 				</Box>
-			</TD>
-		</Tr>
+			</Td>
+		</Table.Row>
 	);
 };
 

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Skeleton, Td, Tr } from '@chakra-ui/react';
+import { Skeleton, Table } from '@chakra-ui/react';
 
 type TableSkeletonProps = {
 	col: number;
@@ -8,18 +8,18 @@ type TableSkeletonProps = {
 
 const TableSkeleton: FC<TableSkeletonProps> = ({ row, col }) => {
 	return [...Array(row)].map((x, i) => (
-		<Tr key={i}>
+		<Table.Row key={i}>
 			{[...Array(col)].map((y, j) => (
-				<Td
+				<Table.Cell
 					key={j}
 					py={4}>
 					<Skeleton
 						w='100%'
 						h={5}
 					/>
-				</Td>
+				</Table.Cell>
 			))}
-		</Tr>
+		</Table.Row>
 	));
 };
 

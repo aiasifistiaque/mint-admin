@@ -1,11 +1,11 @@
 'use client';
 
-import { Slider, SliderTrack, SliderFilledTrack, SliderThumb, SliderMark } from '@chakra-ui/react';
+import { Slider } from '@chakra-ui/react';
 import { FC } from 'react';
 import { FormControl } from '../../../..';
-import { labelStyle, variables, SliderProps, toolTipStyle } from '../styles';
+import { labelStyle, variables, toolTipStyle } from '../styles';
 
-const BLineHeight: FC<SliderProps> = ({
+const BLineHeight = ({
 	label,
 	isRequired,
 	placeholder,
@@ -15,12 +15,12 @@ const BLineHeight: FC<SliderProps> = ({
 	type = 'value',
 	unselect = true,
 	...props
-}) => {
-	const handleChange = (val: any) => {
+}: any) => {
+	const handleChange = (details: any) => {
 		props?.onChange({
 			target: {
 				name: props.name,
-				value: val / 100,
+				value: details.value / 100,
 			},
 		});
 	};
@@ -33,33 +33,35 @@ const BLineHeight: FC<SliderProps> = ({
 			label={label}
 			helper={helper}
 			h={variables?.height}>
-			<Slider
+			<Slider.Root
 				min={80}
 				max={250}
-				value={value ? value * 100 : 100}
+				value={[value ? value * 100 : 100]}
 				step={5}
 				mb={2}
-				onChange={handleChange}>
-				{values.map(val => (
-					<SliderMark
-						key={value}
-						value={val}
-						{...labelStyle}>
-						{val / 100}
-					</SliderMark>
-				))}
+				onValueChange={handleChange}>
+				<Slider.Control>
+					{values.map(val => (
+						<Slider.MarkerGroup key={val}>
+							<Slider.Marker
+								value={val}
+								{...labelStyle}>
+								{val / 100}
+							</Slider.Marker>
+						</Slider.MarkerGroup>
+					))}
 
-				<SliderMark
-					value={value * 100}
-					{...toolTipStyle}>
-					{value}
-				</SliderMark>
+					<Slider.ValueText {...toolTipStyle}>{value}</Slider.ValueText>
 
-				<SliderTrack bg={variables?.track}>
-					<SliderFilledTrack bg={variables?.filledTrack} />
-				</SliderTrack>
-				<SliderThumb boxSize={variables?.boxSize} />
-			</Slider>
+					<Slider.Track bg={variables?.track}>
+						<Slider.Range bg={variables?.filledTrack} />
+					</Slider.Track>
+					<Slider.Thumb
+						index={0}
+						boxSize={variables?.boxSize}
+					/>
+				</Slider.Control>
+			</Slider.Root>
 		</FormControl>
 	);
 };

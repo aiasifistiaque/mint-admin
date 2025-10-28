@@ -85,7 +85,7 @@ const OrderPayments = ({ order, invoice }: { order: any; invoice: string }) => {
 					invalidate={['payments', 'orders']}
 					data={formDataModel}>
 					<Button
-						colorScheme='brand'
+						colorPalette='brand'
 						size='sm'>
 						Add Payment
 					</Button>

@@ -42,7 +42,7 @@ const FormSectionModal: FC<UploadModalProps> = ({
 	section,
 	availableFields,
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const [formData, setFormData] = useState<any>({});
 	const [changedData, setChangedData] = useState<any>({});
@@ -110,7 +110,7 @@ const FormSectionModal: FC<UploadModalProps> = ({
 			<Button
 				w='full'
 				size='sm'
-				variant='white'>
+				colorPalette='white'>
 				{section?.addBtnText || 'Add Item'}
 			</Button>
 		),
@@ -119,9 +119,9 @@ const FormSectionModal: FC<UploadModalProps> = ({
 				variant='outline'
 				aria-label='edit-section'
 				size='xs'
-				colorScheme='brand'
-				icon={<Icon name='edit' />}
-			/>
+				colorPalette='brand'>
+				<Icon name='edit' />
+			</IconButton>
 		),
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
@@ -136,7 +136,7 @@ const FormSectionModal: FC<UploadModalProps> = ({
 				<Flex onClick={openModal}>{triggerButton}</Flex>
 			)}
 			<InsertModal
-				size='3xl'
+				size='xl'
 				isOpen={isOpen}
 				onClose={closeModal}>
 				<InsertModalOverlay />
@@ -155,7 +155,7 @@ const FormSectionModal: FC<UploadModalProps> = ({
 							/>
 							<Flex {...footerCss}>
 								<Button
-									variant='white'
+									colorPalette='white'
 									size='sm'
 									onClick={closeModal}>
 									Discard

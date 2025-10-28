@@ -1,18 +1,6 @@
 'use client';
 
-import {
-	Menu,
-	MenuGroup,
-	Flex,
-	Input,
-	useDisclosure,
-	MenuDivider,
-	Button,
-	Text,
-	Popover,
-	PopoverTrigger,
-	PopoverContent,
-} from '@chakra-ui/react';
+import { Flex, Input, useDisclosure, Button, Popover } from '@chakra-ui/react';
 
 import { useState, FC, useRef, useEffect } from 'react';
 
@@ -49,7 +37,7 @@ const VDataMenu: FC<VDataMenuProps> = ({
 	unselect = true,
 	...props
 }) => {
-	const { onOpen, onClose, isOpen } = useDisclosure();
+	const { onOpen, onClose, open: isOpen } = useDisclosure();
 
 	const closeMenu = () => {
 		setSearch('');
@@ -138,30 +126,27 @@ const VDataMenu: FC<VDataMenuProps> = ({
 					}
 				/>
 			)}
-			<Popover onClose={closeMenu}>
-				<PopoverTrigger>
-					<Button
-						value={value}
-						isActive={isOpen}>
-						{value ? getNameById(value) : `Select ${label}`}
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent>
-					<FormControl
-						isRequired={isRequired}
-						label={label}
-						helper={helper}
-						w='full'>
-						<Input
-							ref={inputRef}
+			<Popover.Root onOpenChange={e => (e.open ? onOpen() : closeMenu())}>
+				<Popover.Trigger asChild>
+					<Button value={value}>{value ? getNameById(value) : `Select ${label}`}</Button>
+				</Popover.Trigger>
+				<Popover.Positioner>
+					<Popover.Content>
+						<Popover.Arrow />
+						<FormControl
 							isRequired={isRequired}
-							value={value}
-							{...hiddenInputCss}
-							{...props}
-						/>
-					</FormControl>
+							label={label}
+							helper={helper}
+							w='full'>
+							<Input
+								ref={inputRef}
+								required={isRequired}
+								value={value}
+								{...hiddenInputCss}
+								{...props}
+							/>
+						</FormControl>
 
-					<MenuGroup>
 						<Flex
 							p={1}
 							py={0.5}>
@@ -171,43 +156,34 @@ const VDataMenu: FC<VDataMenuProps> = ({
 								onChange={handleSearch}
 							/>
 						</Flex>
-					</MenuGroup>
-					<MenuDivider mb={1} />
-					{dataModel && (
-						<>
-							<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
-							<MenuDivider
-								mt={1}
-								mb={0}
-							/>
-						</>
-					)}
-					{item?.addItem && (
-						<>
-							<MenuItem
-								fontWeight='700'
-								onClick={() => addItemRef.current.click()}>
-								(+) Add New Item
-							</MenuItem>
-							<MenuDivider
-								mt={1}
-								mb={0}
-							/>
-						</>
-					)}
-
-					<Scroll maxH={MAX_H}>
-						{unselect && (
-							<MenuItem
-								{...unselectTextCss}
-								onClick={() => handleChange({ name: ``, _id: undefined })}>
-								<i>Unselect</i>
-							</MenuItem>
+						{dataModel && (
+							<>
+								<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
+							</>
 						)}
-						{renderMenuItems}
-					</Scroll>
-				</PopoverContent>
-			</Popover>
+						{item?.addItem && (
+							<>
+								<MenuItem
+									fontWeight='700'
+									onClick={() => addItemRef.current.click()}>
+									(+) Add New Item
+								</MenuItem>
+							</>
+						)}
+
+						<Scroll maxH={MAX_H}>
+							{unselect && (
+								<MenuItem
+									{...unselectTextCss}
+									onClick={() => handleChange({ name: ``, _id: undefined })}>
+									<i>Unselect</i>
+								</MenuItem>
+							)}
+							{renderMenuItems}
+						</Scroll>
+					</Popover.Content>
+				</Popover.Positioner>
+			</Popover.Root>
 		</Flex>
 	);
 };

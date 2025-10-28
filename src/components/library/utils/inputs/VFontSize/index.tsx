@@ -1,19 +1,25 @@
 'use client';
 
 import { FC, useRef } from 'react';
-import { InputGroup, Input, InputProps, Select, SelectProps } from '@chakra-ui/react';
+import {
+	NativeSelectRoot,
+	NativeSelectField,
+	Input,
+	InputProps,
+	Flex,
+	Box,
+} from '@chakra-ui/react';
 import { FormControl } from '..';
 import { Icon } from '../../..';
 
-type InputContainerProps = InputProps &
-	SelectProps & {
-		label: string;
-		isRequired?: boolean;
-		helper?: string;
-		value: string | number | undefined;
-		placeholder?: any;
-		options: number[];
-	};
+type InputContainerProps = InputProps & {
+	label: string;
+	isRequired?: boolean;
+	helper?: string;
+	value: string | number | undefined;
+	placeholder?: any;
+	options: number[];
+};
 
 const VFontSize: FC<InputContainerProps> = ({
 	label,
@@ -24,7 +30,7 @@ const VFontSize: FC<InputContainerProps> = ({
 	options,
 	...props
 }) => {
-	const ref = useRef<HTMLInputElement>(null);
+	const ref = useRef<HTMLSelectElement>(null);
 	const onRefClick = () => {
 		ref.current?.click();
 	};
@@ -33,7 +39,7 @@ const VFontSize: FC<InputContainerProps> = ({
 			isRequired={isRequired}
 			label={label}
 			helper={helper}>
-			<InputGroup {...inputGroupCss}>
+			<Flex {...inputGroupCss}>
 				<Input
 					onClick={onRefClick}
 					{...inputCss}
@@ -42,28 +48,33 @@ const VFontSize: FC<InputContainerProps> = ({
 					{...props}
 				/>
 
-				<Select
-					icon={<Icon name='select' />}
-					{...selectCss}
-					ref={ref}
-					isRequired={isRequired}
-					value={value}
-					{...props}>
-					<option
-						value=''
-						disabled
-						selected>
-						{value}
-					</option>
-					{options.map((option: any, i: number) => (
+				<NativeSelectRoot {...selectCss}>
+					<NativeSelectField
+						ref={ref}
+						value={value}
+						onChange={props.onChange as any}
+						name={props.name}>
 						<option
-							key={i}
-							value={option}>
-							{option}
+							value=''
+							disabled>
+							{value}
 						</option>
-					))}
-				</Select>
-			</InputGroup>
+						{options.map((option: any, i: number) => (
+							<option
+								key={i}
+								value={option}>
+								{option}
+							</option>
+						))}
+					</NativeSelectField>
+					<Box
+						position='absolute'
+						right={2}
+						pointerEvents='none'>
+						<Icon name='select' />
+					</Box>
+				</NativeSelectRoot>
+			</Flex>
 		</FormControl>
 	);
 };
@@ -71,20 +82,20 @@ const VFontSize: FC<InputContainerProps> = ({
 const inputGroupCss: any = {
 	borderRadius: 'lg',
 	size: 'sm',
+	alignItems: 'center',
 };
 
-const inputCss: InputProps = {
+const inputCss: any = {
 	px: 3,
 	borderLeftRadius: 'lg',
 	borderRightWidth: 0,
-	focusBorderColor: 'container.borderLight',
 };
 
-const selectCss: SelectProps = {
+const selectCss: any = {
 	w: '40px',
 	borderRadius: 'lg',
 	borderLeftRadius: 0,
-	focusBorderColor: 'container.borderLight',
+	position: 'relative',
 };
 
 //const options = [10, 11, 12, 13, 14, 15, 16, 18, 20, 24, 32, 36, 40, 48, 64, 96, 128];

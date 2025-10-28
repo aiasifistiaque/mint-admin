@@ -1,9 +1,9 @@
 'use client';
 import { useState, FC, useEffect } from 'react';
-import { InputProps, FormControl, Stack, Flex, Text, Center } from '@chakra-ui/react';
+import { InputProps, Stack, Flex, Text, Center } from '@chakra-ui/react';
 import DeleteSection from '../section/DeleteSection';
 import { Column, JsonView, SpaceBetween } from '../../../containers';
-import { useGetByIdQuery, radius } from '../../..';
+import { useGetByIdQuery, radius, FormControl } from '../../..';
 import SettingSectionModal from './SettingSectionModal';
 
 type InputContainerProps = InputProps & {
@@ -53,10 +53,11 @@ const VFormFields: FC<InputContainerProps> = ({
 
 	return (
 		<FormControl
+			label={label}
 			isRequired={isRequired}
 			gap={4}>
 			<Stack
-				spacing={2}
+				gap={2}
 				w='full'>
 				<Column
 					gap={4}

@@ -1,4 +1,4 @@
-import { Flex, FlexProps, Skeleton, Th, Tooltip } from '@chakra-ui/react';
+import { Flex, FlexProps, Skeleton, Table, Tooltip } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { TbArrowUp, TbArrowDown, TbArrowsDownUp } from 'react-icons/tb';
 import { BsInfoCircle } from 'react-icons/bs';
@@ -41,8 +41,7 @@ export const Title: FC<TitleProps> = ({
 			<Flex
 				as={motion.div}
 				align='center'
-				gap={1}
-				whileTap={{ scale: 0.9 }}>
+				gap={1}>
 				{children}
 				{icon}
 			</Flex>
@@ -51,19 +50,20 @@ export const Title: FC<TitleProps> = ({
 		);
 
 	const tooltip = item?.tooltip && (
-		<Tooltip
-			label={item?.tooltip}
-			hasArrow
-			placement='bottom-end'>
-			<span>
-				<BsInfoCircle />
-			</span>
-		</Tooltip>
+		<Tooltip.Root>
+			<Tooltip.Trigger asChild>
+				<span>
+					<BsInfoCircle />
+				</span>
+			</Tooltip.Trigger>
+			<Tooltip.Positioner>
+				<Tooltip.Content>{item?.tooltip}</Tooltip.Content>
+			</Tooltip.Positioner>
+		</Tooltip.Root>
 	);
 
 	return (
-		<Th
-			isNumeric={isNumeric}
+		<Table.ColumnHeader
 			bg='inherit'
 			_light={{ borderColor: 'container.borderLight' }}
 			_dark={{
@@ -74,23 +74,25 @@ export const Title: FC<TitleProps> = ({
 			onClick={handleSort}
 			userSelect='none'>
 			<Flex
-				py='5px'
+				px={{ base: 0, md: 4 }}
+				py={2}
 				align='center'
 				gap={2}
-				fontWeight='700'
+				textTransform='uppercase'
+				fontWeight='600'
 				color='text.light'
 				_dark={{
 					color: 'text.dark',
 				}}
 				{...props}>
 				<Skeleton
-					isLoaded={!isLoading}
+					loading={isLoading}
 					w='100%'>
 					{body}
 				</Skeleton>
 				{tooltip}
 			</Flex>
-		</Th>
+		</Table.ColumnHeader>
 	);
 };
 

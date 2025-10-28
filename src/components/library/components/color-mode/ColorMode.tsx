@@ -1,8 +1,9 @@
 'use client';
 
-import { Center, useColorMode } from '@chakra-ui/react';
+import { Center } from '@chakra-ui/react';
 import { IoSunnyOutline, IoMoonOutline } from 'react-icons/io5';
 import { MenuIconContainer } from '../../menu';
+import { useColorMode } from '@/components/ui/color-mode';
 
 const ColorMode = ({
 	position,
@@ -24,7 +25,7 @@ const ColorMode = ({
 
 	return (
 		<MenuIconContainer onClick={toggleColorMode}>
-			<Center sx={style}>{icon}</Center>
+			<Center css={style}>{icon}</Center>
 		</MenuIconContainer>
 	);
 };

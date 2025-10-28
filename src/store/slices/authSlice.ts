@@ -1,6 +1,6 @@
 'use client';
 
-import { REFRESH_TOKEN, TOKEN_NAME } from '../..';
+import { REFRESH_TOKEN, TOKEN_NAME } from '../';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type AuthStateType = {

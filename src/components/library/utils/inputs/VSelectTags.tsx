@@ -1,23 +1,15 @@
 'use client';
 import React, { useCallback, useState } from 'react';
 import {
-	Input,
 	InputProps,
-	FormControl,
-	Stack,
-	useColorModeValue,
-	InputGroup,
-	InputRightElement,
 	IconButton,
-	Tag,
-	Wrap,
-	WrapItem,
-	TagLabel,
-	TagCloseButton,
-	Select,
+	Flex,
+	NativeSelectRoot,
+	NativeSelectField,
 } from '@chakra-ui/react';
 
-import { Label, Icon, HelperText } from '../..';
+import { Label, Icon, HelperText, FormControl } from '../..';
+import { useColorMode } from '@/components/ui/color-mode';
 
 type InputContainerProps = InputProps & {
 	label: string;
@@ -37,7 +29,8 @@ const VSelectTags: React.FC<InputContainerProps> = ({
 	options,
 	...props
 }) => {
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
+	const { colorMode } = useColorMode();
+	const borderColor = colorMode === 'dark' ? 'brand.200' : 'brand.500';
 	const [tag, setTag] = useState<string>('');
 
 	const handleChange = useCallback((e: any) => {
@@ -85,88 +78,96 @@ const VSelectTags: React.FC<InputContainerProps> = ({
 		<FormControl
 			isRequired={isRequired}
 			gap={4}>
-			<Stack
-				spacing={2}
+			<Flex
+				flexDir='column'
+				gap={2}
 				w='full'>
 				<Label>{label}</Label>
 
-				<Stack
-					spacing={1}
+				<Flex
+					flexDir='column'
+					gap={1}
 					w='full'>
-					<InputGroup>
-						{/* <Input
-							value={tag}
-							onChange={handleChange}
-							px={3}
-							borderRadius='lg'
+					<Flex
+						position='relative'
+						alignItems='center'>
+						<NativeSelectRoot
 							size='sm'
-							focusBorderColor={borderColor}
-							color='text.500'
-							_dark={{
-								color: 'gray.300',
-							}}
-							placeholder={placeholder ? placeholder : label}
-							_placeholder={{ fontSize: 14, fontWeight: '500' }}
-						/> */}
-						<Select
-							icon={<Icon name='select' />}
-							size='sm'
-							value={tag}
 							borderRadius='lg'
-							onChange={handleChange}
-							focusBorderColor={borderColor}
-							color='text.500'
-							borderColor='selectBorder.light'
-							_dark={{
-								color: 'gray.300',
-								borderColor: 'selectBorder.dark',
-							}}
-							boxShadow='sm'
-							_placeholder={{ fontSize: 14, fontWeight: '500' }}>
-							<option
-								value=''
-								disabled
-								selected>
-								Select option
-							</option>
-							{options?.map((option: any, i: number) => (
+							borderColor={colorMode === 'dark' ? 'selectBorder.dark' : 'selectBorder.light'}
+							flex={1}>
+							<NativeSelectField
+								value={tag}
+								onChange={handleChange}
+								color='text.500'
+								_dark={{
+									color: 'gray.300',
+								}}>
 								<option
-									disabled={value?.includes(option?.value || option)}
-									//x
-									key={i}
-									value={option?.value || option}>
-									{option?.label || option?.value || option}
+									value=''
+									disabled>
+									Select option
 								</option>
-							))}
-						</Select>
-						<InputRightElement
+								{options?.map((option: any, i: number) => (
+									<option
+										disabled={value?.includes(option?.value || option)}
+										key={i}
+										value={option?.value || option}>
+										{option?.label || option?.value || option}
+									</option>
+								))}
+							</NativeSelectField>
+						</NativeSelectRoot>
+						<Flex
+							position='absolute'
+							right={2}
 							h='32px'
-							p={0}>
+							alignItems='center'>
 							<IconButton
 								onClick={addTag}
 								size='xs'
-								colorScheme='gray'
-								aria-label='add tag'
-								icon={<Icon name='add' />}
-							/>
-						</InputRightElement>
-					</InputGroup>
+								colorPalette='gray'
+								aria-label='add tag'>
+								<Icon name='add' />
+							</IconButton>
+						</Flex>
+					</Flex>
 
 					{helper && <HelperText>{helper}</HelperText>}
-				</Stack>
-				<Wrap
+				</Flex>
+				<Flex
+					flexWrap='wrap'
 					gap={1}
 					pt={2}>
 					{value?.map((item: string, i: number) => (
-						<WrapItem key={i}>
-							<Tag variant='subtle'>
-								<TagLabel> {item}</TagLabel>
-								<TagCloseButton onClick={() => deleteTag(item)} />
-							</Tag>
-						</WrapItem>
+						<Flex key={i}>
+							<Flex
+								px={2.5}
+								py={1}
+								bg='gray.100'
+								borderRadius='md'
+								alignItems='center'
+								gap={2}>
+								<Flex
+									as='span'
+									fontSize='sm'>
+									{' '}
+									{item}
+								</Flex>
+								<Flex
+									as='button'
+									onClick={() => deleteTag(item)}
+									cursor='pointer'
+									fontSize='lg'
+									opacity={0.7}
+									_hover={{ opacity: 1 }}>
+									×
+								</Flex>
+							</Flex>
+						</Flex>
 					))}
-				</Wrap>
-			</Stack>
+				</Flex>
+			</Flex>
 		</FormControl>
 	);
 };

@@ -2,7 +2,7 @@
 import { ChangeEvent, FC, useState, CSSProperties, ReactNode } from 'react';
 
 import { CustomTd } from '.';
-import { Switch, useColorModeValue } from '@chakra-ui/react';
+import { Switch } from '@chakra-ui/react';
 import { useUpdateByIdMutation } from '../../../../store';
 import { useCustomToast } from '../../../..';
 
@@ -26,7 +26,7 @@ const EditableTableData: FC<EditableTableDataProps> = props => {
 
 	const [val, setVal] = useState(value);
 	const [trigger, result] = useUpdateByIdMutation();
-	const borderColor = useColorModeValue('brand.200', 'brand.200');
+	// const borderColor = useColorModeValue('brand.200', 'brand.200');
 
 	useCustomToast({
 		isError: result?.isError,
@@ -36,9 +36,9 @@ const EditableTableData: FC<EditableTableDataProps> = props => {
 		isLoading: result?.isLoading,
 	});
 
-	const handleSwitch = (e: ChangeEvent<HTMLInputElement>) => {
-		setVal(e.target.checked);
-		trigger({ path, id, body: { [dataKey]: e.target.checked } });
+	const handleSwitch = (e: any) => {
+		setVal(e.checked);
+		trigger({ path, id, body: { [dataKey]: e.checked } });
 	};
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -47,12 +47,16 @@ const EditableTableData: FC<EditableTableDataProps> = props => {
 	};
 
 	const renderSwitch = () => (
-		<Switch
-			isChecked={val}
-			colorScheme='brand'
+		<Switch.Root
+			checked={val}
+			colorPalette='brand'
 			size={{ base: 'lg', md: 'sm' }}
-			onChange={handleSwitch}
-		/>
+			onCheckedChange={handleSwitch}>
+			<Switch.HiddenInput />
+			<Switch.Control>
+				<Switch.Thumb />
+			</Switch.Control>
+		</Switch.Root>
 	);
 
 	const renderSelect = () => (
@@ -72,9 +76,9 @@ const EditableTableData: FC<EditableTableDataProps> = props => {
 	const renderInput = () => (
 		<RowInput
 			type={editType || 'text'}
-			focusBorderColor={borderColor}
+			// focusBorderColor={borderColor}
 			value={val}
-			sx={style}
+			css={style}
 			onChange={handleChange}
 		/>
 	);

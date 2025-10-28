@@ -1,7 +1,7 @@
 'use client';
 
 import { TableCellProps, Checkbox } from '@chakra-ui/react';
-import { useState, FC, useEffect, ChangeEvent } from 'react';
+import { useState, FC, useEffect } from 'react';
 
 import { selectItem } from '../../../../store';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
@@ -18,10 +18,9 @@ const SelectItem: FC<TableDataPropsType> = ({ id, ...props }) => {
 	const { selectedItems }: any = useAppSelector(state => state.table);
 	const dispatch = useAppDispatch();
 
-	const handleCheck = (e: ChangeEvent<HTMLInputElement>) => {
-		e.preventDefault();
-		dispatch(selectItem({ id, isSelected: e.target.checked }));
-		setChecked(e.target.checked);
+	const handleCheck = (e: any) => {
+		dispatch(selectItem({ id, isSelected: e.checked }));
+		setChecked(e.checked);
 	};
 
 	useEffect(() => {
@@ -30,12 +29,16 @@ const SelectItem: FC<TableDataPropsType> = ({ id, ...props }) => {
 	}, [selectedItems]);
 
 	return (
-		<Checkbox
+		<Checkbox.Root
 			size={'lg'}
-			isChecked={selectedItems.includes(id)}
-			onChange={handleCheck}
-			colorScheme='brand'
-		/>
+			checked={selectedItems.includes(id)}
+			onCheckedChange={handleCheck}
+			colorPalette='brand'>
+			<Checkbox.HiddenInput />
+			<Checkbox.Control>
+				<Checkbox.Indicator />
+			</Checkbox.Control>
+		</Checkbox.Root>
 	);
 };
 

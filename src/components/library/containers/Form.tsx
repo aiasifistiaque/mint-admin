@@ -1,6 +1,7 @@
 'use client';
-import { Box, Button, Flex, FlexProps, ButtonProps, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, FlexProps, ButtonProps } from '@chakra-ui/react';
 import { FC, useEffect, ReactNode, FormEvent } from 'react';
+import { toaster } from '@/components/ui/toaster';
 
 type FormProps = ButtonProps &
 	FlexProps & {
@@ -27,26 +28,27 @@ const Form: FC<FormProps> = ({
 	button,
 	...props
 }) => {
-	const toast = useToast();
-
 	useEffect(() => {
 		if (isLoading) return;
-		const title = isError ? 'An error occurred.' : 'Success';
-		const description = isError
-			? error?.data?.message || 'Something went wrong.'
-			: success || 'Login successful';
-		const status = isError ? 'error' : 'success';
 
-		if (isError || isSuccess)
-			toast({
-				title,
-				description,
-				status,
+		if (isError) {
+			toaster.create({
+				title: 'An error occurred',
+				description: error?.data?.message || 'Something went wrong.',
+				type: 'error',
 				duration: 5000,
-				isClosable: true,
-				variant: 'left-accent',
 			});
-	}, [isLoading]);
+		}
+
+		if (isSuccess) {
+			toaster.create({
+				title: 'Success',
+				description: success || 'Operation completed successfully',
+				type: 'success',
+				duration: 5000,
+			});
+		}
+	}, [isLoading, isError, isSuccess, error, success]);
 
 	return (
 		<Flex
@@ -62,7 +64,7 @@ const Form: FC<FormProps> = ({
 				) : (
 					<Button
 						type='submit'
-						isLoading={isLoading}
+						loading={isLoading}
 						{...props}>
 						{buttonText}
 					</Button>

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { FormControl, Stack, Flex, Text } from '@chakra-ui/react';
+import { Stack, Flex, Text } from '@chakra-ui/react';
 import { HelperText, Label, Column } from '../../..';
 import DeleteSection from './DeleteSection';
 import ArrayStringModal from './ArrayStringModal';
@@ -26,9 +26,18 @@ const VArrayString: FC<FormDataType> = ({
 	...props
 }) => {
 	return (
-		<FormControl isRequired={isRequired}>
+		<Stack>
 			<Stack w='full'>
-				<Label fontSize='22px'>{label}</Label>
+				<Label fontSize='22px'>
+					{label}{' '}
+					{isRequired && (
+						<Text
+							as='span'
+							color='red.500'>
+							*
+						</Text>
+					)}
+				</Label>
 				<Column
 					gap={4}
 					my={4}>
@@ -71,7 +80,7 @@ const VArrayString: FC<FormDataType> = ({
 				</Flex>
 				{helper && <HelperText>{helper}</HelperText>}
 			</Stack>
-		</FormControl>
+		</Stack>
 	);
 };
 

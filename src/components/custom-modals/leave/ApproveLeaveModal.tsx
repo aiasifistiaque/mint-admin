@@ -1,16 +1,6 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogContent,
-	AlertDialogOverlay,
-	Button,
-	useDisclosure,
-	Grid,
-} from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Grid } from '@chakra-ui/react';
 import React from 'react';
 
 import { useUpdateByIdMutation } from '@/components/library/store/services/commonApi';
@@ -25,7 +15,7 @@ type DeleteItemModalProps = {
 };
 
 const ApproveLeaveModal: React.FC<DeleteItemModalProps> = ({ data, title, path, id }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = React.useRef<any>();
 
 	const [trigger, result] = useUpdateByIdMutation();
@@ -69,26 +59,27 @@ const ApproveLeaveModal: React.FC<DeleteItemModalProps> = ({ data, title, path, 
 		<>
 			<CustomMenuItem onClick={onOpen}>Action</CustomMenuItem>
 
-			<AlertDialog
-				size='2xl'
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={close}>
-				<AlertDialogOverlay>
-					<AlertDialogContent
+			<Dialog.Root
+				size='xl'
+				open={isOpen}
+				onOpenChange={e => !e.open && close()}
+				role='alertdialog'>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content
 						boxShadow='lg'
 						borderRadius='xl'
 						bg='menu.light'
 						_dark={{
 							bg: 'menu.dark',
 						}}>
-						<AlertDialogHeader
+						<Dialog.Header
 							fontSize='lg'
 							fontWeight='bold'>
-							Leave Approval
-						</AlertDialogHeader>
+							<Dialog.Title>Leave Approval</Dialog.Title>
+						</Dialog.Header>
 
-						<AlertDialogBody>
+						<Dialog.Body>
 							<Grid
 								mb={4}
 								gridTemplateColumns='1fr 1fr'
@@ -127,21 +118,21 @@ const ApproveLeaveModal: React.FC<DeleteItemModalProps> = ({ data, title, path, 
 								label='Reason'
 								value={data?.reason}
 							/>
-						</AlertDialogBody>
+						</Dialog.Body>
 
-						<AlertDialogFooter>
+						<Dialog.Footer>
 							{data?.status == 'pending' ? (
 								<>
 									<Button
 										size='sm'
-										isLoading={result?.isLoading}
+										loading={result?.isLoading}
 										onClick={handleReject}
-										colorScheme='red'>
+										colorPalette='red'>
 										Reject
 									</Button>
 
 									<Button
-										isLoading={result?.isLoading}
+										loading={result?.isLoading}
 										onClick={handleApprove}
 										ml={2}
 										size='sm'>
@@ -156,10 +147,10 @@ const ApproveLeaveModal: React.FC<DeleteItemModalProps> = ({ data, title, path, 
 									Close
 								</Button>
 							)}
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };
