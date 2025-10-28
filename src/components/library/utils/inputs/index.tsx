@@ -70,11 +70,15 @@ export { default as VSettings } from './VSettings';
 export const inputContainerCss: any = {
 	color: 'text.500',
 	borderRadius: 'md',
-	_placeholder: { fontSize: 14, fontWeight: '500', color: 'text.400' },
+	fontSize: '14px',
+	_placeholder: { fontSize: 14, color: 'text.400' },
 	borderColor: 'selectBorder.light',
 	px: 3,
 	_dark: {
 		color: 'gray.300',
 		borderColor: 'selectBorder.dark',
+		_placeholder: {
+			color: 'text.inputPlaceholder.dark',
+		},
 	},
 };

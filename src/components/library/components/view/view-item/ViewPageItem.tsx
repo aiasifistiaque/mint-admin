@@ -28,7 +28,14 @@ const ViewPageItem: FC<ViewItemProps> = ({
 	return (
 		<Column {...props}>
 			<SkeletonContent isLoading={isLoading}>
-				<Heading size='sm'>{title}:</Heading>
+				<Heading
+					size='sm'
+					color='heading.lightMuted'
+					_dark={{
+						color: 'heading.darkMuted',
+					}}>
+					{title}:
+				</Heading>
 			</SkeletonContent>
 			<SkeletonContent isLoading={isLoading}>
 				<Flex

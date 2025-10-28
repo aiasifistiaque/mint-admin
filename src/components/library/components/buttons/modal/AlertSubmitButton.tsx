@@ -10,8 +10,7 @@ const AlertSubmitButton: FC<ModalSubmitButtonProps> = ({ children, ...props }) =
 	return (
 		<Button
 			type='submit'
-			colorPalette='brand'
-			ml={2}
+			px={3}
 			size='sm'
 			{...props}>
 			{children || 'Confirm'}

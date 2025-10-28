@@ -69,7 +69,7 @@ const PopModal: FC<MenuModalProps> = ({
 						{children}
 						<Flex
 							pt={3}
-							pb={2}
+							pb={0}
 							w='full'>
 							<FilterButton
 								w='full'

@@ -8,11 +8,12 @@ const InputElement = ({ ...props }: InputProps) => {
 			size='sm'
 			px={3}
 			borderRadius='md'
-			// focusBorderColor={borderColor}
+			fontSize='14px'
 			color='text.500'
 			_dark={{
-				color: 'gray.300',
-				_placeholder: { color: 'gray.200' },
+				color: 'white',
+				borderColor: 'selectBorder.dark',
+				_placeholder: { color: 'text.inputPlaceholder.dark' },
 			}}
 			_placeholder={{ fontSize: 14, fontWeight: '500', color: 'gray.200' }}
 			{...props}

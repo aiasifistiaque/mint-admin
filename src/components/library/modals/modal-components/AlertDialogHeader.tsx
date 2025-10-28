@@ -10,17 +10,22 @@ type AlertDialogHeaderProps = {
 const AlertDialogHeader: FC<AlertDialogHeaderProps> = ({ children, ...props }) => {
 	return (
 		<Dialog.Header
-			px={3}
+			p={3}
+			px={4}
 			bg='sidebar.light'
 			borderColor='border.light'
 			borderBottomWidth={1}
-			_dark={{ bg: 'background.dark', borderColor: 'border.dark' }}
+			_dark={{ bg: 'background.dark', borderColor: 'border.dark', borderWidth: 0 }}
 			borderTopRadius='2xl'
 			fontWeight='bold'
 			fontSize='.9rem'
 			maxH='54px'
 			{...props}>
-			{children}
+			<Dialog.Title
+				color='text.light'
+				_dark={{ color: 'text.dark' }}>
+				{children}
+			</Dialog.Title>
 		</Dialog.Header>
 	);
 };

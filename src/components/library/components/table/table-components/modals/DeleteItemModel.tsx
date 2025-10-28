@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, Button, Flex, useDisclosure, Portal } from '@chakra-ui/react';
+import { Dialog, Button, Flex, useDisclosure, Portal, Text, Box } from '@chakra-ui/react';
 import { useEffect, FC, useRef } from 'react';
 
 import {
@@ -10,6 +10,9 @@ import {
 	useAppSelector,
 	useLazyGetAllQuery,
 	Align,
+	AlertDialogHeader,
+	AlertDialogContent,
+	styles,
 } from '../../../..';
 import DiscardButton from '../../../buttons/DiscardButton';
 
@@ -80,43 +83,50 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({ title, path, id, item, chil
 				</MenuItem>
 			)}
 			<Dialog.Root
+				placement='center'
 				open={isOpen}
-				onOpenChange={(e: any) => !e.open && closeItem()}
-				role='alertdialog'>
+				onOpenChange={(e: any) => !e.open && closeItem()}>
 				<Portal>
 					<Dialog.Backdrop />
 					<Dialog.Positioner>
-						<Dialog.Content>
-							<Dialog.Header px={3}>
-								<Dialog.Title>{titleText}</Dialog.Title>
-							</Dialog.Header>
-							<Dialog.Body>{bodyText}</Dialog.Body>
+						<AlertDialogContent
+							border='1px solid border.light'
+							_dark={{ bg: 'background.dark', border: '1px solid #222' }}>
+							<AlertDialogHeader>{titleText}</AlertDialogHeader>
 
-							<Dialog.Footer>
+							<Dialog.Body
+								p={4}
+								pb={8}>
+								<Text>{bodyText}</Text>
+							</Dialog.Body>
+
+							<Dialog.Footer
+								borderBottomRadius='2xl'
+								borderTop='1px solid border.light'
+								bg='menu.light'
+								_dark={{ bg: 'menu.dark', borderTop: '1px solid #222' }}>
 								<Align
 									gap={2}
-									px={3}>
-									<Dialog.CloseTrigger asChild>
-										<DiscardButton
-											disabled={isLoading}
-											onClick={closeItem}>
-											Discard
-										</DiscardButton>
-									</Dialog.CloseTrigger>
+									p={4}>
+									<DiscardButton
+										disabled={isLoading}
+										onClick={closeItem}>
+										Discard
+									</DiscardButton>
+
 									<Button
 										loadingText='Deleting...'
 										spinnerPlacement='start'
 										loading={isLoading}
 										colorPalette='red'
 										onClick={handleDelete}
-										ml={2}
 										px={3}
 										size='sm'>
 										Delete
 									</Button>
 								</Align>
 							</Dialog.Footer>
-						</Dialog.Content>
+						</AlertDialogContent>
 					</Dialog.Positioner>
 				</Portal>
 			</Dialog.Root>

@@ -42,9 +42,11 @@ const VTextarea: FC<InputContainerProps> = ({
 				color='text.500'
 				_dark={{
 					color: 'gray.400',
+					borderColor: 'selectBorder.dark',
+					_placeholder: { color: 'text.inputPlaceholder.dark' },
 				}}
 				placeholder={placeholder ? placeholder : label}
-				_placeholder={{ fontSize: 14, fontWeight: '500' }}
+				_placeholder={{ fontSize: 14 }}
 				value={value}
 				{...props}
 			/>

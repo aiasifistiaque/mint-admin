@@ -26,7 +26,12 @@ const ViewItem: FC<ViewItemProps> = ({
 			{...gridCss(type)}
 			{...props}>
 			<SkeletonContent isLoading={isLoading}>
-				<Heading size='xs'>{title}:</Heading>
+				<Heading
+					size='xs'
+					color='heading.lightMuted'
+					_dark={{ color: 'heading.darkMuted' }}>
+					{title}:
+				</Heading>
 			</SkeletonContent>
 			<SkeletonContent isLoading={isLoading}>
 				<Flex

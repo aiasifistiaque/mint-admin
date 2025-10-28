@@ -42,12 +42,13 @@ const IsActiveFilter: FC<IsActiveFilterProps> = ({ trigger, value, onChange }) =
 			<Popover.Trigger asChild>{trigger}</Popover.Trigger>
 			<Popover.Positioner>
 				<PopoverContainer>
-					<Popover.Arrow bg={colorMode === 'dark' ? 'menu.dark' : 'menu.light'} />
+					<Popover.Arrow
+						bg='menu.light'
+						_dark={{ bg: 'menu.dark' }}
+					/>
 					<PopoverHeader>Filter by status</PopoverHeader>
 					<Popover.Body>
-						<Column
-							gap={3}
-							pb={1}>
+						<Column gap={3}>
 							<FilterSelect
 								value={val}
 								onChange={handleChange}>

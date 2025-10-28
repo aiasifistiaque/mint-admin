@@ -1,18 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	experimental: {
-		turbo: {
-			rules: {
-				'*.svg': {
-					loaders: ['@svgr/webpack'],
-					as: '*.js',
-				},
+	reactStrictMode: false,
+	turbopack: {
+		root: '/Users/asifistiaque/Desktop/proj/e-mint/admin',
+		rules: {
+			'*.svg': {
+				loaders: ['@svgr/webpack'],
+				as: '*.js',
 			},
 		},
 	},
-
-	reactStrictMode: false,
-	webpack: config => {
+	webpack: (config, { webpack }) => {
 		config.cache = true;
 
 		// Handle Quill modules

@@ -61,6 +61,7 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 		} else {
 			return (
 				<MenuItem
+					asChild
 					closeOnSelect={false}
 					icon='view-outline'
 					onClick={onOpen}>
@@ -74,6 +75,7 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 		<>
 			{renderTrigger()}
 			<Dialog.Root
+				preventScroll
 				open={isOpen}
 				onOpenChange={e => !e.open && onClose()}
 				size='xl'
@@ -83,7 +85,15 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 					<Dialog.Backdrop />
 					<Dialog.Positioner>
 						<Dialog.Content>
-							<Dialog.Header>{title || 'Item Details'}</Dialog.Header>
+							<Dialog.Header
+								p={4}
+								fontWeight='600'
+								fontSize='18px'
+								px={{ base: 4, md: 6 }}
+								color='text.light'
+								_dark={{ color: 'text.dark' }}>
+								{title || 'Item Details'}
+							</Dialog.Header>
 							<Dialog.CloseTrigger />
 
 							<Dialog.Body px={0}>

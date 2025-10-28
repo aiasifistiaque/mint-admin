@@ -78,11 +78,12 @@ export const Title: FC<TitleProps> = ({
 				py={2}
 				align='center'
 				gap={2}
+				fontSize='13px'
 				textTransform='uppercase'
 				fontWeight='600'
-				color='text.light'
+				color='table.head.textLight'
 				_dark={{
-					color: 'text.dark',
+					color: 'table.head.textDark',
 				}}
 				{...props}>
 				<Skeleton

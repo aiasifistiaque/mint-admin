@@ -25,6 +25,7 @@ const BetweenDates = ({ setVal }: { setVal: (val: string) => void }) => {
 			gap={1}
 			justifyContent='space-between'>
 			<FilterInput
+				flex={1}
 				date
 				value={start}
 				onChange={handleStart}
@@ -33,6 +34,7 @@ const BetweenDates = ({ setVal }: { setVal: (val: string) => void }) => {
 			<Text>{`&`}</Text>
 			<FilterInput
 				date
+				flex={1}
 				value={end}
 				onChange={handleEnd}
 			/>

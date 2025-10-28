@@ -103,7 +103,7 @@ export const colors: any = {
 	button: {
 		primary: {
 			textLight: '#fff',
-			textDark: '#fff',
+			textDark: '#edededn',
 			bgLight: '#fafafa',
 			bgDark: PRIMARY,
 			hoverLight: '#583D60',
@@ -134,7 +134,7 @@ export const colors: any = {
 		},
 		inputPlaceholder: {
 			light: '#666',
-			dark: '#a1a1a1',
+			dark: '#444',
 		},
 		secondary: {
 			light: '#666',
@@ -319,6 +319,8 @@ export const colors: any = {
 		head: {
 			bgLight: '#fafafa',
 			bgDark: '#0A0A0A',
+			textDark: '#888',
+			textLight: '#222',
 		},
 		row: {
 			light: 'white',
@@ -341,6 +343,12 @@ export const colors: any = {
 	etext: {
 		400: '#676767',
 		600: '#202020',
+	},
+	heading: {
+		light: '#222',
+		lightMuted: '#666',
+		dark: '#ededed',
+		darkMuted: '#888',
 	},
 	eborder: {
 		light: '#ebebeb',

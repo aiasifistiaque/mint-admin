@@ -16,7 +16,7 @@ type DeleteItemModalProps = {
 
 const ApproveLeaveModal: React.FC<DeleteItemModalProps> = ({ data, title, path, id }) => {
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = React.useRef<any>();
+	const cancelRef = React.useRef<any>(null);
 
 	const [trigger, result] = useUpdateByIdMutation();
 

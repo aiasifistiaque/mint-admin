@@ -12,11 +12,6 @@ const SelectContainer: FC<InputContainerProps> = ({ children, ...props }) => {
 		<NativeSelect.Root size='sm'>
 			<NativeSelect.Field
 				{...inputContainerCss}
-				borderColor='selectBorder.light'
-				_dark={{
-					color: 'gray.300',
-					borderColor: 'selectBorder.dark',
-				}}
 				boxShadow='sm'
 				{...props}>
 				{children}

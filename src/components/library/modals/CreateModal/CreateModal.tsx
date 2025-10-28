@@ -185,6 +185,7 @@ const CreateModal = (props: CreateModalProps) => {
 		<>
 			{isMenu ? (
 				<MenuItem
+					asChild
 					closeOnSelect={false}
 					icon={icon}
 					onClick={onModalOpen}>

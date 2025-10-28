@@ -2,6 +2,7 @@ import {
 	Badge,
 	BadgeProps,
 	Flex,
+	Portal,
 	TableCellProps,
 	Text,
 	Tooltip,
@@ -69,9 +70,11 @@ const TableData: FC<TableDataPropsType> = ({
 						/>
 					</TableBody>
 				</Tooltip.Trigger>
-				<Tooltip.Positioner>
-					<Tooltip.Content>{hasCopied ? 'Copied!' : 'Click to Copy'}</Tooltip.Content>
-				</Tooltip.Positioner>
+				<Portal>
+					<Tooltip.Positioner>
+						<Tooltip.Content>{hasCopied ? 'Copied!' : 'Click to Copy'}</Tooltip.Content>
+					</Tooltip.Positioner>
+				</Portal>
 			</Tooltip.Root>
 		);
 	}

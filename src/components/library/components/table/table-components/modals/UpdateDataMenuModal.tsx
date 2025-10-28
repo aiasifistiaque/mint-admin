@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, Button, useDisclosure, Text } from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Text, Portal } from '@chakra-ui/react';
 import { useEffect, useRef, FC, useState } from 'react';
 
 import {
@@ -75,48 +75,51 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
 			<Dialog.Root
 				open={isOpen}
 				onOpenChange={e => !e.open && closeItem()}
-				role='alertdialog'>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<form onSubmit={handleSubmit}>
-						<Dialog.Content>
-							<Dialog.Header>
-								<Dialog.Title>{prompt?.title || `Update Item`}</Dialog.Title>
-							</Dialog.Header>
+				// role='alertdialog'
+			>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<form onSubmit={handleSubmit}>
+							<Dialog.Content>
+								<Dialog.Header>
+									<Dialog.Title>{prompt?.title || `Update Item`}</Dialog.Title>
+								</Dialog.Header>
 
-							<Dialog.Body py={4}>
-								<Text>{prompt?.body || 'Please select an option'}</Text>
+								<Dialog.Body py={4}>
+									<Text>{prompt?.body || 'Please select an option'}</Text>
 
-								<EditDataSelect
-									isRequired={true}
-									dataPath={dataPath || ''}
-									value={value}
-									onChange={e => {
-										setValue(e.target.value);
-									}}
-								/>
-							</Dialog.Body>
+									<EditDataSelect
+										isRequired={true}
+										dataPath={dataPath || ''}
+										value={value}
+										onChange={e => {
+											setValue(e.target.value);
+										}}
+									/>
+								</Dialog.Body>
 
-							<Dialog.Footer>
-								{!isLoading && (
-									<Dialog.CloseTrigger asChild>
-										<Button
-											ref={cancelRef}
-											size='sm'
-											colorPalette='gray'>
-											Discard
-										</Button>
-									</Dialog.CloseTrigger>
-								)}
-								<AlertSubmitButton
-									disabled={!value}
-									isLoading={isLoading}>
-									{prompt?.btnText || 'Update'}
-								</AlertSubmitButton>
-							</Dialog.Footer>
-						</Dialog.Content>
-					</form>
-				</Dialog.Positioner>
+								<Dialog.Footer>
+									{!isLoading && (
+										<Dialog.CloseTrigger asChild>
+											<Button
+												ref={cancelRef}
+												size='sm'
+												colorPalette='gray'>
+												Discard
+											</Button>
+										</Dialog.CloseTrigger>
+									)}
+									<AlertSubmitButton
+										disabled={!value}
+										isLoading={isLoading}>
+										{prompt?.btnText || 'Update'}
+									</AlertSubmitButton>
+								</Dialog.Footer>
+							</Dialog.Content>
+						</form>
+					</Dialog.Positioner>
+				</Portal>
 			</Dialog.Root>
 		</>
 	);

@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, Button, useDisclosure, Text } from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Text, Portal } from '@chakra-ui/react';
 import { useEffect, useRef, FC, useState } from 'react';
 
 import {
@@ -11,6 +11,7 @@ import {
 	PromptType,
 	Column,
 	Input,
+	AlertDialogHeader,
 } from '../../../..';
 
 type UpdateKeyProps = {
@@ -83,49 +84,55 @@ const UpdateStringModal: FC<UpdateKeyProps> = ({ item, doc, id, path, type, icon
 			</MenuItem>
 
 			<Dialog.Root
+				placement='center'
 				open={isOpen}
-				onOpenChange={e => !e.open && closeItem()}
-				role='alertdialog'>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<form onSubmit={handleSubmit}>
+				onOpenChange={e => !e.open && closeItem()}>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
 						<Dialog.Content>
-							<Dialog.Header>
-								<Dialog.Title>{prompt?.title || `Update Item`}</Dialog.Title>
-							</Dialog.Header>
+							<form onSubmit={handleSubmit}>
+								<AlertDialogHeader>
+									<Dialog.Title>{prompt?.title || `Update Item`}</Dialog.Title>
+								</AlertDialogHeader>
 
-							<Dialog.Body py={4}>
-								<Column gap={4}>
-									<Text>{prompt?.body || 'Please select an option'}</Text>
-									<Input
-										size='sm'
-										value={value}
-										onChange={e => setValue(e.target.value)}
-										type={type}
-									/>
-								</Column>
-							</Dialog.Body>
+								<Dialog.Body p={6}>
+									<Column gap={4}>
+										<Text>{prompt?.body || 'Please select an option'}</Text>
+										<Input
+											size='sm'
+											value={value}
+											onChange={e => setValue(e.target.value)}
+											type={type}
+										/>
+									</Column>
+								</Dialog.Body>
 
-							<Dialog.Footer>
-								{!isLoading && (
-									<Dialog.CloseTrigger asChild>
+								<Dialog.Footer
+									px={6}
+									py={4}>
+									{!isLoading && (
+										// <Dialog.CloseTrigger asChild>
 										<Button
+											px={3}
+											onClick={closeItem}
 											ref={cancelRef}
 											size='sm'
-											colorPalette='white'>
+											variant='outline'>
 											Discard
 										</Button>
-									</Dialog.CloseTrigger>
-								)}
-								<AlertSubmitButton
-									disabled={!value}
-									loading={isLoading}>
-									{prompt?.btnText || 'Update'}
-								</AlertSubmitButton>
-							</Dialog.Footer>
+										// </Dialog.CloseTrigger>
+									)}
+									<AlertSubmitButton
+										disabled={!value}
+										loading={isLoading}>
+										{prompt?.btnText || 'Update'}
+									</AlertSubmitButton>
+								</Dialog.Footer>
+							</form>
 						</Dialog.Content>
-					</form>
-				</Dialog.Positioner>
+					</Dialog.Positioner>
+				</Portal>
 			</Dialog.Root>
 		</>
 	);

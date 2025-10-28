@@ -1,7 +1,7 @@
 'use client';
 import { useState, ChangeEvent, FC } from 'react';
 
-import { Button, Flex, useDisclosure, PopoverTrigger } from '@chakra-ui/react';
+import { Flex, useDisclosure, PopoverTrigger } from '@chakra-ui/react';
 
 import InTheLast from './InTheLast';
 import DatePicker from './DatePicker';

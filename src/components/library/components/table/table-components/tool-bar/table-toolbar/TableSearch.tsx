@@ -74,6 +74,7 @@ const inputCss: InputProps = {
 	_dark: {
 		bg: 'transparent',
 		borderColor: 'container.borderDark',
+		color: 'text.dark',
 		_placeholder: { color: 'text.inputPlaceholder.dark' },
 	},
 	_light: {

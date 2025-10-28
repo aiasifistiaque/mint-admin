@@ -1,7 +1,6 @@
 'use client';
 
 import {
-	Button,
 	useDisclosure,
 	Text,
 	Checkbox,
@@ -87,14 +86,18 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 						onClick={onOpen}
 						aria-label='Select Table Fields'
 						colorPalette='gray'
-						size='md'
+						size='sm'
 						borderWidth={1}
 						mr={0.5}
 						h={sizes?.SEARCH_BAR_HEIGHT}
 						w={sizes?.SEARCH_BAR_HEIGHT}
 						borderRadius={radius?.BUTTON}
-						bg={colorMode === 'dark' ? 'container.dark' : 'container.newLight'}
-						borderColor={colorMode === 'light' ? 'container.borderLight' : undefined}>
+						bg='container.newLight'
+						borderColor='container.borderLight'
+						_dark={{
+							bg: 'container.dark',
+							borderColor: 'container.borderDark',
+						}}>
 						<Icon
 							name='fields'
 							size={12}

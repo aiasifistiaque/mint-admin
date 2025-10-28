@@ -43,7 +43,6 @@ const Headers = ({ tableData, fields, selectable, isLoading, data, showMenu }: H
 						size='lg'
 						checked={checked}
 						onCheckedChange={handleSelectAll}
-						colorPalette='brand'
 						disabled={isLoading}>
 						<Checkbox.HiddenInput />
 						<Checkbox.Control>
