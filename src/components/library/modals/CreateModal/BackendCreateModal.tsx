@@ -129,7 +129,8 @@ const CreateModal = (props: CreateModalProps) => {
 			<Button
 				{...(isMobile && { w: 'full' })}
 				type='submit'
-				size='sm'>
+				px={2}
+				size={{ base: 'md', md: 'sm' }}>
 				{isLoading ? 'Processing...' : prompt?.btnText || 'Confirm'}
 			</Button>
 		</>
@@ -150,7 +151,7 @@ const CreateModal = (props: CreateModalProps) => {
 					</DialogHeader>
 					<DialogCloseButton />
 
-					<DialogBody>
+					<DialogBody px={{ base: 0, md: 6 }}>
 						<ModalFormSection>
 							<FormMain
 								fields={data}
@@ -160,7 +161,7 @@ const CreateModal = (props: CreateModalProps) => {
 								isModal={true}
 							/>
 						</ModalFormSection>
-						{isMobile && <Align py={5}>{footer}</Align>}
+						{isMobile && <Align p={4}>{footer}</Align>}
 					</DialogBody>
 					{!isMobile && <DialogFooter>{footer}</DialogFooter>}
 				</form>

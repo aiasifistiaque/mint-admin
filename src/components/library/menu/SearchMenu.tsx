@@ -8,16 +8,19 @@ import {
 	FlexProps,
 	TextProps,
 	Portal,
+	Box,
+	Badge,
 } from '@chakra-ui/react';
 
 import { MenuIconContainer } from '.';
-import { Icon } from '../icon';
+import { Icon, LucideIcon } from '../icon';
 import { THEME, radius } from '../config';
 
 import ModalContentContainer from '../modals/modal-components/ModalContentContainer';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SidebarItemType } from '../config/lib/sidebar/types';
+import { Column } from '../containers';
 
 const SearchMenu = ({
 	sidebarData,
@@ -127,7 +130,7 @@ const SearchMenu = ({
 				initialFocusEl={() => initialRef.current}
 				finalFocusEl={() => finalRef.current}
 				scrollBehavior='inside'
-				size='lg'
+				size='md'
 				open={isOpen}
 				onOpenChange={({ open }) => (open ? {} : onClose())}>
 				<Dialog.Trigger asChild>
@@ -150,24 +153,60 @@ const SearchMenu = ({
 							borderRadius={radius.MODAL}
 							px={0}
 							gap={0}>
-							<Dialog.Header px={4}>
+							<Dialog.Header
+								px={4}
+								borderColor={{
+									_light: 'border.light',
+									_dark: 'border.dark',
+								}}
+								borderBottomWidth={1}>
 								<Input
+									ref={initialRef}
 									variant='flushed'
 									size='lg'
 									_focus={{
 										borderColor: 'transparent',
 									}}
 									value={search}
+									color={{
+										_light: 'text.light',
+										_dark: 'text.dark',
+									}}
 									onChange={(e: any) => setSearch(e.target.value)}
 									placeholder='Search the docs'
+									_placeholder={{
+										fontSize: '15px',
+										fontWeight: '400',
+										_dark: { color: 'text.dark' },
+									}}
 									css={{
-										'&::placeholder': {
-											fontSize: '15px',
-											fontWeight: '600',
-										},
 										'--focus-color': 'transparent',
 									}}
 								/>
+								<Flex
+									align='center'
+									gap={1}>
+									<Flex
+										border='1px solid'
+										borderColor='border.light'
+										_dark={{ borderColor: 'border.dark' }}
+										onClick={onClose}
+										px={2}
+										h='24px'
+										align='center'
+										borderRadius='sm'
+										cursor='pointer'>
+										<Text
+											color={{
+												_light: 'text.light',
+												_dark: 'text.dark',
+											}}
+											fontWeight='500'
+											fontSize='12px'>
+											Esc
+										</Text>
+									</Flex>
+								</Flex>
 							</Dialog.Header>
 							<Dialog.Body {...modalBodyCss}>
 								<Flex {...bodyCss}>
@@ -179,11 +218,25 @@ const SearchMenu = ({
 												{...itemContainerCss}
 												bg={{
 													base: selectedIndex === i ? 'whitesmoke' : 'transparent',
-													_dark: selectedIndex === i ? 'container.dark' : 'transparent',
+													_dark: selectedIndex === i ? '#181818' : 'transparent',
 												}}
 												onMouseEnter={() => setSelectedIndex(i)}>
-												<Text {...titleCss}>{item?.sectionTitle}</Text>
-												<Text {...textCss}>{item?.title}</Text>
+												<Flex
+													gap={2}
+													align='center'
+													justify='space-between'
+													w='full'>
+													<Column>
+														<Text {...titleCss}>{item?.sectionTitle}</Text>
+														<Text {...textCss}>{item?.title}</Text>
+													</Column>
+													<Box mt={1}>
+														<LucideIcon
+															name={item?.icon}
+															size={16}
+														/>
+													</Box>
+												</Flex>
 											</Flex>
 										</Link>
 									))}
@@ -207,13 +260,13 @@ const modalBodyCss: any = {
 
 const bodyCss: FlexProps = {
 	py: 2,
-	borderTopWidth: 1,
-	borderTopColor: { base: 'gray.200', _dark: 'black' },
+	// borderTopWidth: 1,
+	// borderTopColor: { base: 'gray.200', _dark: 'black' },
 	flexDir: 'column',
 };
 
 const itemContainerCss: FlexProps = {
-	borderRadius: 2,
+	borderRadius: 4,
 	cursor: 'pointer',
 	p: 2,
 	flexDir: 'column',

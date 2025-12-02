@@ -16,12 +16,14 @@ import {
 	Icon,
 	useExportMutation,
 	ConfirmButton,
+	useIsMobile,
 } from '../../..';
 
 const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const { fields = [], preferences = [] } = useAppSelector(state => state.table);
 	const [selected, setSelected] = useState<string[]>([]);
+	const isMobile = useIsMobile();
 
 	const [trigger, result] = useExportMutation();
 
@@ -62,7 +64,7 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 
 	const checkboxes = fields.map((field: string, i: number) => (
 		<Checkbox.Root
-			size='sm'
+			size={{ base: 'lg', md: 'sm' }}
 			key={i}
 			checked={selected?.includes(field)}
 			onCheckedChange={e => handleCheckboxChange(e, field)}>
@@ -85,11 +87,11 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 				px={3}
 				variant='outline'>
 				<Icon name='export-doc' />
-				Export
+				{!isMobile && 'Export'}
 			</Button>
 
 			<MenuModal
-				placement='center'
+				placement={{ base: 'bottom', md: 'center' }}
 				isOpen={isOpen}
 				onClose={closeModal}>
 				<MenuModalHeader>Select Export Fields</MenuModalHeader>

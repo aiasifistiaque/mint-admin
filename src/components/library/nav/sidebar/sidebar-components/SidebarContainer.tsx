@@ -34,6 +34,8 @@ const bodyCss: FlexProps = {
 	pl: sizes.SIDEBAR_PX,
 	mx: THEME == 'basic' ? 0 : 4,
 	zIndex: '9999',
+	borderRightWidth: 0,
+	borderRightColor: { base: 'container.borderLight', _dark: 'container.borderDark' },
 };
 
 export default SidebarContainer;

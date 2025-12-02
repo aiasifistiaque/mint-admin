@@ -175,7 +175,7 @@ const CreateModal = (props: CreateModalProps) => {
 				{...(isMobile && { w: 'full' })}
 				px={3}
 				type='submit'
-				size='sm'>
+				size={{ base: 'md', md: 'sm' }}>
 				{isLoading ? 'Processing...' : prompt?.btnText || 'Confirm'}
 			</Button>
 		</>
@@ -230,7 +230,7 @@ const CreateModal = (props: CreateModalProps) => {
 								/>
 							)}
 						</ModalFormSection>
-						{isMobile && <Align py={5}>{footer}</Align>}
+						{isMobile && <Align p={4}>{footer}</Align>}
 					</DialogBody>
 					{!isMobile && <DialogFooter>{footer}</DialogFooter>}
 				</form>
