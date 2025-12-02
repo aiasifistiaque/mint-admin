@@ -48,7 +48,7 @@ const QuillEditor = ({ value, onChange, name, isRequired, label, helper }: any) 
 	}, []);
 
 	const quillRef = useRef(null);
-	const { onOpen, isOpen, onClose } = useDisclosure();
+	const { onOpen, open: isOpen, onClose } = useDisclosure();
 
 	const handleImage = (image: string) => {
 		const quillObj: any = (quillRef as any)?.current?.getEditor();

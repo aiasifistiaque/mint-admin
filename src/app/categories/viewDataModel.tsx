@@ -15,7 +15,7 @@ const data: ViewModalDataModelProps[] = [
 		title: 'Active',
 		dataKey: 'isActive',
 		type: 'tag',
-		colorScheme: (isActive: boolean) => (isActive ? 'green' : 'red'),
+		colorPalette: (isActive: boolean) => (isActive ? 'green' : 'red'),
 	},
 	{
 		title: 'Created',

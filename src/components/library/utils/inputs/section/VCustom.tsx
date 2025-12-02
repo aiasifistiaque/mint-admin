@@ -1,15 +1,6 @@
 import { FC, useState } from 'react';
 
-import {
-	FormControl,
-	Image,
-	Stack,
-	Flex,
-	Text,
-	Heading,
-	Button,
-	IconButton,
-} from '@chakra-ui/react';
+import { Image, Stack, Flex, Text, Heading, Button, IconButton } from '@chakra-ui/react';
 import { HelperText, Label, ImageContainer, Column, Icon, AddCustomSection } from '../../..';
 import AddSectionModal from './AddSectionModal';
 import DeleteSection from './DeleteSection';
@@ -51,9 +42,18 @@ const VCustom: FC<FormDataType> = ({
 
 	if (isDisabled) return imageComponent;
 	return (
-		<FormControl isRequired={isRequired}>
+		<Stack>
 			<Stack w='full'>
-				<Label fontSize='22px'>{label}</Label>
+				<Label fontSize='22px'>
+					{label}{' '}
+					{isRequired && (
+						<Text
+							as='span'
+							color='red.500'>
+							*
+						</Text>
+					)}
+				</Label>
 				<Column
 					gap={4}
 					my={4}>
@@ -100,7 +100,7 @@ const VCustom: FC<FormDataType> = ({
 				</Flex>
 				{helper && <HelperText>{helper}</HelperText>}
 			</Stack>
-		</FormControl>
+		</Stack>
 	);
 };
 

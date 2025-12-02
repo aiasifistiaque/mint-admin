@@ -1,8 +1,8 @@
 import { ReactNode, FC } from 'react';
-import { Center, FlexProps, Heading } from '@chakra-ui/react';
+import { Center, CenterProps, Heading } from '@chakra-ui/react';
 import { Icon } from '../..';
 
-type AddImageButtonProps = FlexProps & {
+type AddImageButtonProps = CenterProps & {
 	children?: ReactNode;
 	h?: string | number;
 	w?: string | number;
@@ -31,7 +31,7 @@ const AddImageButton: FC<AddImageButtonProps> = ({ children, h, w, size, ...prop
 	);
 };
 
-const imageCss: FlexProps = {
+const imageCss: CenterProps = {
 	cursor: 'pointer',
 	flexDir: 'column',
 	border: '2px dashed',

@@ -1,29 +1,29 @@
 import { FC } from 'react';
-import { Button, MenuButton, MenuButtonProps } from '@chakra-ui/react';
+import { Button, Menu } from '@chakra-ui/react';
 import { Icon } from '../index';
 
-type ButtonOfMenuProps = MenuButtonProps & {
+type ButtonOfMenuProps = {
 	children?: any;
-	isActive: boolean;
+	isActive?: boolean;
+	[key: string]: any;
 };
 
 const WIDTH = '300px';
 
 const ButtonOfMenu: FC<ButtonOfMenuProps> = ({ children, isActive, ...props }) => {
 	return (
-		<MenuButton
-			isActive={isActive}
+		<Button
 			w={WIDTH}
 			textAlign='left'
-			as={Button}
 			borderRadius='lg'
-			colorScheme='gray'
-			placeholder={children}
 			variant='outline'
-			rightIcon={<Icon name='select' />}
-			{...props}>
-			{children}
-		</MenuButton>
+			{...props}
+			asChild>
+			<Menu.Trigger>
+				{children}
+				<Icon name='select' />
+			</Menu.Trigger>
+		</Button>
 	);
 };
 

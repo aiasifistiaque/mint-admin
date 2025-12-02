@@ -2,14 +2,11 @@
 import { useState, FC, useEffect } from 'react';
 import {
 	InputProps,
-	FormControl,
 	Stack,
 	Flex,
 	Heading,
 	Text,
 	Tag,
-	TagProps,
-	TagLabel,
 	Grid,
 	GridItem,
 	Center,
@@ -17,7 +14,7 @@ import {
 
 import DeleteSection from '../section/DeleteSection';
 import { Column, JsonView, SpaceBetween } from '../../../containers';
-import { useGetByIdQuery, Label, radius } from '../../..';
+import { useGetByIdQuery, Label, radius, FormControl } from '../../..';
 import FormSectionModal from './FormSectionModal';
 
 type InputContainerProps = InputProps & {
@@ -96,10 +93,11 @@ const VFormFields: FC<InputContainerProps> = ({
 
 	return (
 		<FormControl
+			label={label}
 			isRequired={isRequired}
 			gap={4}>
 			<Stack
-				spacing={2}
+				gap={2}
 				w='full'>
 				{/* <JsonView data={{ form }} /> */}
 				{/* <VDataSelect
@@ -114,7 +112,7 @@ const VFormFields: FC<InputContainerProps> = ({
 					helper='Please Choose the model for fetching fields'
 				/> */}
 				<SpaceBetween>
-					<Label>{label}</Label>
+					{/* <Label>{label}</Label> */}
 					<TagButton onClick={() => setIsJsonView(!isJsonView)}>
 						{isJsonView ? 'Form View' : 'Json View'}
 					</TagButton>
@@ -208,16 +206,16 @@ const VFormFields: FC<InputContainerProps> = ({
 	);
 };
 
-const TagButton = ({ children, ...props }: TagProps & { children: React.ReactNode }) => {
+const TagButton = ({ children, ...props }: any & { children: React.ReactNode }) => {
 	return (
-		<Tag
+		<Tag.Root
 			cursor='pointer'
 			size='md'
 			bg='transparent'
 			borderWidth={1}
 			{...props}>
-			<TagLabel>{children}</TagLabel>
-		</Tag>
+			<Tag.Label>{children}</Tag.Label>
+		</Tag.Root>
 	);
 };
 
@@ -231,7 +229,7 @@ const viewCardsCss: any = {
 };
 
 const titleCheckboxCss: any = {
-	colorScheme: 'brand',
+	colorPalette: 'brand',
 	size: 'md',
 	fontSize: '16px',
 	fontWeight: '500',

@@ -81,7 +81,7 @@ const PosCart = () => {
 				<IconButton
 					tooltip='Empty Cart'
 					aria-label='Empty Cart'
-					colorScheme='red'
+					colorPalette='red'
 					iconName='delete'
 					iconSize={18}
 				/>

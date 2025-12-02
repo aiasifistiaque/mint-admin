@@ -8,6 +8,8 @@ type TableHeadingProps = HeadingProps & {
 const TableHeading: FC<TableHeadingProps> = ({ children, ...props }) => {
 	return (
 		<Heading
+			color='text.light'
+			_dark={{ color: 'text.dark' }}
 			fontSize={12}
 			size='xs'
 			fontWeight='700'

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FC, useState, useEffect, useCallback } from 'react';
-import { Stack, Grid, Tag, TagLabel, Box, Flex, Text, GridItem, TagProps } from '@chakra-ui/react';
+import { Stack, Grid, Tag, TagLabel, Box, Flex, Text, GridItem } from '@chakra-ui/react';
 
 import { VInput, VSelect, VTextarea } from '..';
 import { Align, Column, JsonView, SpaceBetween } from '../../../containers';
@@ -163,7 +163,7 @@ const FormFields: FC<FormFieldsProps> = ({
 				</SpaceBetween>
 
 				{/* Render Fields */}
-				<Stack spacing={3}>
+				<Stack gap={3}>
 					{fields?.map((field: any, i: number) => (
 						<Box
 							key={i}
@@ -269,7 +269,7 @@ const FormFields: FC<FormFieldsProps> = ({
 												↓
 											</TagButton>
 											<TagButton
-												colorScheme='red'
+												colorPalette='red'
 												onClick={() => removeField(i)}
 												_hover={{ bg: 'red.500' }}>
 												×
@@ -339,16 +339,16 @@ const FormFields: FC<FormFieldsProps> = ({
 	);
 };
 
-const TagButton = ({ children, ...props }: TagProps & { children: React.ReactNode }) => {
+const TagButton = ({ children, ...props }: any & { children: React.ReactNode }) => {
 	return (
-		<Tag
+		<Tag.Root
 			size='md'
 			bg='transparent'
 			borderWidth={1}
 			cursor='pointer'
 			{...props}>
-			<TagLabel>{children}</TagLabel>
-		</Tag>
+			<Tag.Label>{children}</Tag.Label>
+		</Tag.Root>
 	);
 };
 

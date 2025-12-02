@@ -1,31 +1,19 @@
 'use client';
 
 import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogOverlay,
+	Dialog,
 	Button,
 	Flex,
 	Heading,
 	Text,
 	useDisclosure,
 	Input,
-	FormControl,
+	Field,
 	Stack,
 } from '@chakra-ui/react';
 import { ReactNode, useState, FC, useRef } from 'react';
 
-import {
-	AlertDialogHeader,
-	AlertDialogContent,
-	Column,
-	useAppDispatch,
-	addToCart,
-	Label,
-	Price,
-	useQtyInCart,
-} from '../../..';
+import { Column, useAppDispatch, addToCart, Label, Price, useQtyInCart } from '../../..';
 import CardContainer from '../../../pos/pos-card/CardContainer';
 
 type DeleteItemModalProps = {
@@ -34,7 +22,7 @@ type DeleteItemModalProps = {
 };
 
 const AddToCartModal: FC<DeleteItemModalProps> = ({ children, item }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = useRef<any>(undefined);
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -79,16 +67,19 @@ const AddToCartModal: FC<DeleteItemModalProps> = ({ children, item }) => {
 		<>
 			<CardContainer onClick={onModalOpen}>{children}</CardContainer>
 
-			<AlertDialog
-				closeOnOverlayClick={false}
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
-					<AlertDialogContent>
-						<AlertDialogHeader>Add Item To cart</AlertDialogHeader>
+			<Dialog.Root
+				closeOnInteractOutside={false}
+				open={isOpen}
+				onOpenChange={e => !e.open && closeItem()}
+				role='alertdialog'>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content>
+						<Dialog.Header>
+							<Dialog.Title>Add Item To cart</Dialog.Title>
+						</Dialog.Header>
 						<form onSubmit={handleDelete}>
-							<AlertDialogBody>
+							<Dialog.Body>
 								<Column
 									pt={4}
 									gap={2}>
@@ -107,13 +98,13 @@ const AddToCartModal: FC<DeleteItemModalProps> = ({ children, item }) => {
 										Unit Price: <Price>{item?.price}</Price>
 									</Heading>
 									<Flex pt={4}>
-										<FormControl gap={4}>
+										<Field.Root gap={4}>
 											<Stack
-												spacing={2}
+												gap={2}
 												w='full'>
-												<Label>Enter Quantity</Label>
+												<Field.Label>Enter Quantity</Field.Label>
 												<Stack
-													spacing={1}
+													gap={1}
 													w='full'>
 													<Input
 														value={qty}
@@ -123,42 +114,43 @@ const AddToCartModal: FC<DeleteItemModalProps> = ({ children, item }) => {
 													/>
 												</Stack>
 											</Stack>
-										</FormControl>
+										</Field.Root>
 									</Flex>
 								</Column>
-							</AlertDialogBody>
+							</Dialog.Body>
 
-							<AlertDialogFooter>
-								<Button
-									ref={cancelRef}
-									onClick={closeItem}
-									size='sm'
-									colorScheme='gray'>
-									Discard
-								</Button>
+							<Dialog.Footer>
+								<Dialog.CloseTrigger asChild>
+									<Button
+										ref={cancelRef}
+										size='sm'
+										colorPalette='gray'>
+										Discard
+									</Button>
+								</Dialog.CloseTrigger>
 
 								{outOfStock() ? (
 									<Button
-										colorScheme='brand'
-										isDisabled
+										colorPalette='brand'
+										disabled
 										ml={2}
 										size='sm'>
 										Out Of Stock
 									</Button>
 								) : (
 									<Button
-										colorScheme='brand'
+										colorPalette='brand'
 										type='submit'
 										ml={2}
 										size='sm'>
 										Add To Cart
 									</Button>
 								)}
-							</AlertDialogFooter>
+							</Dialog.Footer>
 						</form>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };

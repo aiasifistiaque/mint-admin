@@ -1,5 +1,5 @@
-import { useToast } from '@chakra-ui/react';
 import { useEffect, FC } from 'react';
+import { toaster } from '@/components/ui/toaster';
 
 type ToastProps = {
 	isError?: boolean;
@@ -10,31 +10,27 @@ type ToastProps = {
 };
 
 const Toast: FC<ToastProps> = ({ isError, isSuccess, error, successText, successTitle }) => {
-	const toast = useToast();
-
 	useEffect(() => {
-		isError &&
-			toast({
+		if (isError) {
+			toaster.create({
 				title: 'Error',
 				description: error?.data?.message || 'Error Loading Data',
-				status: 'error',
+				type: 'error',
 				duration: 9000,
-				isClosable: true,
-				variant: 'left-accent',
 			});
-	}, [isError]);
+		}
+	}, [isError, error]);
 
 	useEffect(() => {
-		isSuccess &&
-			toast({
+		if (isSuccess) {
+			toaster.create({
 				title: successTitle || 'Success',
 				description: successText || 'success',
-				status: 'success',
+				type: 'success',
 				duration: 9000,
-				isClosable: true,
-				variant: 'left-accent',
 			});
-	}, [isSuccess, isError]);
+		}
+	}, [isSuccess, successText, successTitle]);
 
 	return null;
 };

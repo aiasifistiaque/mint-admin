@@ -1,9 +1,9 @@
 'use client';
-import { ContainerProps, Heading, useColorModeValue } from '@chakra-ui/react';
+import { ContainerProps, Heading } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 import { Column } from '..';
 
-type FormContainerProps = ContainerProps & {
+type FormContainerProps = any & {
 	children: ReactNode;
 	title?: string;
 };
@@ -15,12 +15,12 @@ const W_LG = '50%';
 const PADDING = 12;
 
 const FormSection: FC<FormContainerProps> = ({ title, children, ...props }) => {
-	const border = useColorModeValue('gray.200', 'gray.700');
 	return (
 		<Column
 			_notLast={{
 				borderBottom: '1px solid',
-				borderColor: border,
+				borderColor: 'gray.200',
+				_dark: { borderColor: 'gray.700' },
 			}}
 			_last={{
 				pb: 32,

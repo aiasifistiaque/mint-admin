@@ -1,7 +1,7 @@
 'use client';
 import { FC } from 'react';
-import { Input, InputProps, FormControl, Stack, useColorModeValue } from '@chakra-ui/react';
-import { HelperText } from '../..';
+import { Input, InputProps, Stack } from '@chakra-ui/react';
+import { HelperText, FormControl } from '../..';
 
 type InputContainerProps = InputProps & {
 	label: string;
@@ -19,26 +19,26 @@ const UserInput: FC<InputContainerProps> = ({
 	helper,
 	...props
 }) => {
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
+	// const borderColor = useColorModeValue('brand.500', 'brand.200');
 
 	return (
 		<FormControl
 			isRequired={isRequired}
 			gap={4}>
 			<Stack
-				spacing={2}
+				gap={2}
 				w='full'>
 				{/* <Label>{label}</Label> */}
 
 				<Stack
-					spacing={1}
+					gap={1}
 					w='full'>
 					<Input
 						h='64px'
 						px={3}
 						borderColor='#ebebeb'
 						borderRadius='sm'
-						focusBorderColor={'#555'}
+						// focusBorderColor={'#555'}
 						color='text.500'
 						bg='#ebebeb'
 						_dark={{

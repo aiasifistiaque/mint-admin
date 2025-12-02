@@ -16,7 +16,7 @@ const SidebarHeading: FC<SidebarHeadingProps> = ({
 	if (!show) return null;
 	return (
 		<Skeleton
-			isLoaded={!isLoading}
+			loading={isLoading}
 			px={2}
 			mt={4}
 			h='20px'

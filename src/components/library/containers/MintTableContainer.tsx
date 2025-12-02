@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { TableContainer } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 
 import { radius, shadow } from '..';
 
@@ -16,18 +16,16 @@ import { radius, shadow } from '..';
 // );
 
 const MintTableContainer = ({ children }: { children: ReactNode }) => (
-	<TableContainer
+	<Box
 		bg={'background.light'}
-		_light={{
-			borderColor: 'container.borderLight',
-		}}
-		_dark={{ bg: { base: 'transparent', md: 'menu.dark' } }}
+		borderColor={'container.borderLight'}
 		p={{ base: 4, md: 4 }}
 		borderRadius={radius.CONTAINER}
 		boxShadow={shadow.DASH}
-		borderWidth={1}>
+		borderWidth={1}
+		overflowX='auto'>
 		{children}
-	</TableContainer>
+	</Box>
 );
 
 export default MintTableContainer;

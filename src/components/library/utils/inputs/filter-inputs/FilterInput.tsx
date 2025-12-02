@@ -12,9 +12,11 @@ const FilterInput: FC<FilterInputProps> = ({ date, ...props }) => {
 		h: { base: '42px', md: '28px' },
 		borderColor: 'gray.200',
 		px: 2,
-		fontSize: '12px',
+		fontSize: '14px',
+		color: 'text.light',
 		_dark: {
 			borderColor: 'selectBorder.dark',
+			color: 'text.dark',
 		},
 		...(date && { w: '100px' }),
 	};
@@ -22,14 +24,14 @@ const FilterInput: FC<FilterInputProps> = ({ date, ...props }) => {
 	if (date)
 		return (
 			<Input
-				sx={style}
+				css={style}
 				type='date'
 				{...props}
 			/>
 		);
 	return (
 		<Input
-			sx={style}
+			css={style}
 			{...props}
 		/>
 	);

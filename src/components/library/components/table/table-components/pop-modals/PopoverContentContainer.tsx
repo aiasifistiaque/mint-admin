@@ -12,6 +12,7 @@ const PopoverContentContainer: FC<PopoverContentContainerProps> = ({ children, .
 			boxShadow='lg'
 			borderRadius={radius.MODAL}
 			bg='menu.light'
+			p={4}
 			borderColor='container.borderLight'
 			_focusVisible={{
 				outline: 'none',

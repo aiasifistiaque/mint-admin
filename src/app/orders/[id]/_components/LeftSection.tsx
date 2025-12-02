@@ -1,16 +1,16 @@
 import React from 'react';
-import { Heading, useColorModeValue } from '@chakra-ui/react';
+import { Heading } from '@chakra-ui/react';
 import { Align, PosInput } from '@/components/library';
 
 const LeftSection = ({ data }: { data: any }) => {
-	const borderColor = useColorModeValue('#bbb', 'stroke.deepD');
+	// const borderColor = useColorModeValue('#bbb', 'stroke.deepD');
 	return (
 		<>
 			<Align
 				py={3}
 				borderBottom='1px dashed'
 				borderTop='1px dashed'
-				borderColor={borderColor}>
+				borderColor={'#bbb'}>
 				<Heading size='sm'>Billing Details</Heading>
 			</Align>
 

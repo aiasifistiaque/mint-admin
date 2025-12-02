@@ -1,14 +1,6 @@
 'use client';
 import { FC } from 'react';
-import {
-	InputProps,
-	Checkbox,
-	Grid,
-	Flex,
-	GridProps,
-	FlexProps,
-	CheckboxProps,
-} from '@chakra-ui/react';
+import { InputProps, Checkbox, Grid, Flex, GridProps, FlexProps } from '@chakra-ui/react';
 import { useGetQuery } from '../..';
 
 type VDataMenuProps = InputProps & {
@@ -115,20 +107,22 @@ const VPermissions: FC<VDataMenuProps> = ({
 							borderColor: areAllFieldsSelected(item) ? 'border.light' : 'border.dark',
 						}}
 						key={i}>
-						<Checkbox
-							isChecked={areAllFieldsSelected(item)}
-							isIndeterminate={areSomeFieldsSelected(item)}
-							onChange={e => handleSelectAllChange(item, e.target.checked)}
+						<Checkbox.Root
+							checked={areAllFieldsSelected(item)}
+							indeterminate={areSomeFieldsSelected(item)}
+							onCheckedChange={(e: any) => handleSelectAllChange(item, e.checked)}
 							{...titleCheckboxCss}>
-							{item?.title}
-						</Checkbox>
+							<Checkbox.HiddenInput />
+							<Checkbox.Control />
+							<Checkbox.Label>{item?.title}</Checkbox.Label>
+						</Checkbox.Root>
 						<Grid {...itemGridCss}>
 							{item?.fields?.map((field: any, j: number) => (
 								<ItemCheckbox
 									key={j}
 									isSelected={value?.includes(field?.value)}
 									id={field?.value}
-									onChange={(e: any) => addPermission(field?.value, e.target.checked)}>
+									onCheckedChange={(e: any) => addPermission(field?.value, e.checked)}>
 									{field?.label}
 								</ItemCheckbox>
 							))}
@@ -140,22 +134,26 @@ const VPermissions: FC<VDataMenuProps> = ({
 };
 
 const ItemCheckbox = ({ isSelected, children, ...props }: any) => (
-	<Checkbox
+	<Checkbox.Root
 		{...itemCheckboxCss(isSelected)}
-		isChecked={isSelected}
+		checked={isSelected}
 		{...props}>
-		{children} {isSelected ? '(+)' : ''}
-	</Checkbox>
+		<Checkbox.HiddenInput />
+		<Checkbox.Control />
+		<Checkbox.Label>
+			{children} {isSelected ? '(+)' : ''}
+		</Checkbox.Label>
+	</Checkbox.Root>
 );
 
-const itemCheckboxCss = (isSelected: boolean): CheckboxProps => {
+const itemCheckboxCss = (isSelected: boolean): any => {
 	return {
 		px: 3,
 		py: 1.5,
 		borderRadius: 'full',
 		border: '1px solid',
 		size: 'sm',
-		colorScheme: 'brand',
+		colorPalette: 'brand',
 		fontWeight: isSelected ? '600' : '400',
 		borderColor: isSelected ? 'brand.500' : 'border.light',
 		bg: isSelected ? 'background.light' : 'transparent',
@@ -185,8 +183,8 @@ const sectionColumnCss: FlexProps = {
 	borderRadius: 'lg',
 };
 
-const titleCheckboxCss: CheckboxProps = {
-	colorScheme: 'brand',
+const titleCheckboxCss: any = {
+	colorPalette: 'brand',
 	size: 'md',
 	fontSize: '16px',
 	fontWeight: '500',

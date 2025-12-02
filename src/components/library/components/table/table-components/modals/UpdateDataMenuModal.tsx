@@ -1,21 +1,11 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogOverlay,
-	Button,
-	useDisclosure,
-	Text,
-} from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Text, Portal } from '@chakra-ui/react';
 import { useEffect, useRef, FC, useState } from 'react';
 
 import {
 	useCustomToast,
 	MenuItem,
-	AlertDialogHeader,
-	AlertDialogContent,
 	EditDataSelect,
 	AlertSubmitButton,
 	useUpdateByIdMutation,
@@ -36,7 +26,7 @@ type UpdateKeyProps = {
 };
 
 const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const { title, path, prompt, invalidate, dataPath, key } = item;
 
 	const cancelRef = useRef<any>(undefined);
@@ -76,50 +66,59 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
 
 	return (
 		<>
-			<MenuItem onClick={onOpen}>{title}</MenuItem>
+			<MenuItem
+				onClick={onOpen}
+				closeOnSelect={false}>
+				{title}
+			</MenuItem>
 
-			<AlertDialog
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
-					<form onSubmit={handleSubmit}>
-						<AlertDialogContent>
-							<AlertDialogHeader>{prompt?.title || `Update Item`}</AlertDialogHeader>
+			<Dialog.Root
+				open={isOpen}
+				onOpenChange={e => !e.open && closeItem()}>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<form onSubmit={handleSubmit}>
+							<Dialog.Content>
+								<Dialog.Header>
+									<Dialog.Title>{prompt?.title || `Update Item`}</Dialog.Title>
+								</Dialog.Header>
 
-							<AlertDialogBody py={4}>
-								<Text>{prompt?.body || 'Please select an option'}</Text>
+								<Dialog.Body py={4}>
+									<Text>{prompt?.body || 'Please select an option'}</Text>
 
-								<EditDataSelect
-									isRequired={true}
-									dataPath={dataPath || ''}
-									value={value}
-									onChange={e => {
-										setValue(e.target.value);
-									}}
-								/>
-							</AlertDialogBody>
+									<EditDataSelect
+										isRequired={true}
+										dataPath={dataPath || ''}
+										value={value}
+										onChange={e => {
+											setValue(e.target.value);
+										}}
+									/>
+								</Dialog.Body>
 
-							<AlertDialogFooter>
-								{!isLoading && (
-									<Button
-										ref={cancelRef}
-										onClick={closeItem}
-										size='sm'
-										colorScheme='gray'>
-										Discard
-									</Button>
-								)}
-								<AlertSubmitButton
-									isDisabled={!value}
-									isLoading={isLoading}>
-									{prompt?.btnText || 'Update'}
-								</AlertSubmitButton>
-							</AlertDialogFooter>
-						</AlertDialogContent>
-					</form>
-				</AlertDialogOverlay>
-			</AlertDialog>
+								<Dialog.Footer>
+									{!isLoading && (
+										<Dialog.CloseTrigger asChild>
+											<Button
+												ref={cancelRef}
+												size='sm'
+												colorPalette='gray'>
+												Discard
+											</Button>
+										</Dialog.CloseTrigger>
+									)}
+									<AlertSubmitButton
+										disabled={!value}
+										isLoading={isLoading}>
+										{prompt?.btnText || 'Update'}
+									</AlertSubmitButton>
+								</Dialog.Footer>
+							</Dialog.Content>
+						</form>
+					</Dialog.Positioner>
+				</Portal>
+			</Dialog.Root>
 		</>
 	);
 };

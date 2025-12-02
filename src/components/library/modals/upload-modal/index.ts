@@ -1,4 +1,4 @@
-import { border } from '@chakra-ui/react';
+import { styles as stl } from '../../config';
 
 export const styles: any = {
 	container: {
@@ -22,24 +22,26 @@ export const styles: any = {
 	},
 	tabsCss: {
 		h: '63vh',
-		colorScheme: 'brand',
 		flex: 1,
 	},
 	tabPanelCss: {
 		py: 4,
 		h: 'full',
 		overflowY: 'scroll',
+
 		px: { base: 4, md: 6 },
 	},
 	modalContentCss: {
-		borderRadius: '10px',
+		borderRadius: stl.MODAL.borderRadius,
 		bg: 'menu.light',
+		border: ' 1px solid',
+		borderColor: { _light: 'border.light', _dark: 'border.dark' },
 		_dark: {
 			bg: 'menu.dark',
 		},
 	},
 	cancelBtnCss: {
-		colorScheme: 'gray',
+		colorPalette: 'gray',
 		size: 'sm',
 	},
 };

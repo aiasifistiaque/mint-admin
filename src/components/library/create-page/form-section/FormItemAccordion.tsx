@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, ReactNode } from 'react';
-import { GridItem, useColorModeValue } from '@chakra-ui/react';
+import { GridItem } from '@chakra-ui/react';
 
 type FormItemProps = {
 	item: {
@@ -21,7 +21,7 @@ const FormItemAccordion: FC<FormItemProps> = ({
 	collapsible = false,
 	isHidden = false,
 }) => {
-	const clr = useColorModeValue('gray.200', 'gray.700');
+	// const clr = useColorModeValue('gray.200', 'gray.700');
 	if (isHidden) return null;
 	return (
 		<>
@@ -29,7 +29,10 @@ const FormItemAccordion: FC<FormItemProps> = ({
 				<GridItem
 					colSpan={2}
 					borderTop='1px solid'
-					borderColor={clr}
+					borderColor='gray.200'
+					_dark={{
+						color: 'gray.700',
+					}}
 					my={2}
 				/>
 			)}

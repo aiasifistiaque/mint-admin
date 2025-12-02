@@ -38,7 +38,7 @@ const EditManySelectModal: FC<EditManyModalType> = ({
 	dataModel,
 	keyType = 'string',
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [value, setValue] = useState<any>();
 
 	const [trigger, result] = useUpdateManyMutation();
@@ -109,15 +109,15 @@ const EditManySelectModal: FC<EditManyModalType> = ({
 						{!isLoading && (
 							<Button
 								onClick={closeItem}
-								variant='white'>
+								colorPalette='white'>
 								Discard
 							</Button>
 						)}
 						<Button
 							type='submit'
-							isDisabled={!value}
-							isLoading={isLoading}
-							colorScheme='brand'
+							disabled={!value}
+							loading={isLoading}
+							colorPalette='brand'
 							size='sm'>
 							Update
 						</Button>

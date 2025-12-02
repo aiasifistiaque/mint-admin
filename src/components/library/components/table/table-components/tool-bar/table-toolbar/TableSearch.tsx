@@ -1,18 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import {
-	Button,
-	Input,
-	InputGroup,
-	InputRightAddon,
-	InputProps,
-	InputRightAddonProps,
-	InputGroupProps,
-} from '@chakra-ui/react';
-import { TbSearch } from 'react-icons/tb';
+import { Button, Input, Group, InputProps } from '@chakra-ui/react';
 
 import { useAppDispatch } from '../../../../../hooks';
 import { radius, sizes } from '../../../../../config';
-import { updateTable } from '../../../../../store';
+import { updateTable, Icon } from '../../../../..';
 
 const TableSearch = () => {
 	const [value, setValue] = useState<string>('');
@@ -43,7 +34,9 @@ const TableSearch = () => {
 	};
 
 	return (
-		<InputGroup {...inputGroupCss}>
+		<Group
+			{...inputGroupCss}
+			attached>
 			<Input
 				ref={inputRef}
 				type='text'
@@ -52,22 +45,20 @@ const TableSearch = () => {
 				onKeyDown={enterClicked}
 				onChange={e => setValue(e.target.value)}
 			/>
-			<InputRightAddon
+			<Button
 				ref={btnRef}
-				as={Button}
 				onClick={handleSearch}
-				colorScheme='gray'
-				_dark={{
-					bg: 'container.dark',
-				}}
 				{...addOnCss}>
-				<TbSearch size={16} />
-			</InputRightAddon>
-		</InputGroup>
+				<Icon
+					name='search'
+					size={14}
+				/>
+			</Button>
+		</Group>
 	);
 };
 
-const inputGroupCss: InputGroupProps = {
+const inputGroupCss: any = {
 	flex: 1,
 	size: 'sm',
 	w: { base: 'full', lg: 300 },
@@ -75,32 +66,41 @@ const inputGroupCss: InputGroupProps = {
 
 const inputCss: InputProps = {
 	outline: 'none',
-	focusBorderColor: 'transparent',
+	color: 'text.light',
+	px: 3,
+	h: sizes.SEARCH_BAR_HEIGHT,
+	borderRadius: radius.BUTTON,
+	placeholder: 'Search... (⌘ + F)',
+	_placeholder: { fontSize: '14px' },
+	_dark: {
+		bg: 'transparent',
+		borderColor: 'container.borderDark',
+		color: 'text.dark',
+		_placeholder: { color: 'text.inputPlaceholder.dark' },
+	},
+	_light: {
+		bg: 'container.newLight',
+		borderColor: 'container.borderLight',
+		_placeholder: { color: 'text.inputPlaceholder.light' },
+	},
 	_focus: {
-		borderColor: 'transparent',
 		boxShadow: 'none',
 		outline: 'none',
 		outlineOffset: 0,
 	},
-	h: sizes.SEARCH_BAR_HEIGHT,
-	borderRadius: radius.BUTTON,
-	placeholder: 'Search',
-	_light: {
-		bg: 'container.newLight',
-		borderColor: 'container.borderLight',
-	},
 };
 
-const addOnCss: InputRightAddonProps = {
+const addOnCss = {
 	h: sizes.SEARCH_BAR_HEIGHT,
 	borderRightRadius: radius.BUTTON,
+	border: '1px solid',
+	colorPalette: 'gray',
 	_dark: {
 		bg: 'container.dark',
-		borderColor: 'border.dark',
-		borderLeftColor: 'border.dark',
+		borderColor: 'container.borderDark',
 	},
 	_light: {
-		borderLeftColor: 'container.borderLight',
+		borderColor: 'container.borderLight',
 		bg: 'container.newLight',
 	},
 };

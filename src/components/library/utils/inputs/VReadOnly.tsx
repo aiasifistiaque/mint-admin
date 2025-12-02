@@ -1,9 +1,8 @@
 'use client';
 
 import { FC } from 'react';
-import { InputProps, FormControl, Stack, Text } from '@chakra-ui/react';
-import { Label, HelperText } from '../..';
-import { Input } from '.';
+import { InputProps, Stack, Text } from '@chakra-ui/react';
+import { Label, HelperText, FormControl } from '../..';
 
 type InputContainerProps = InputProps & {
 	label: string;
@@ -26,12 +25,12 @@ const VReadOnly: FC<InputContainerProps> = ({
 			isRequired={isRequired}
 			gap={4}>
 			<Stack
-				spacing={2}
+				gap={2}
 				w='full'>
 				<Label>{label}</Label>
 
 				<Stack
-					spacing={1}
+					gap={1}
 					w='full'
 					px={3}>
 					<Text>{value}</Text>

@@ -1,8 +1,9 @@
 'use client';
 
-import { Center, useColorMode } from '@chakra-ui/react';
+import { Center } from '@chakra-ui/react';
 import React from 'react';
 import { IoSunnyOutline, IoMoonOutline } from 'react-icons/io5';
+import { useColorMode } from '../ui/color-mode';
 
 const SIZE = '24px';
 
@@ -14,7 +15,7 @@ const ColorMode = () => {
 
 	return (
 		<Center
-			sx={styles.container}
+			css={styles.container}
 			onClick={toggleColorMode}>
 			{icon}
 		</Center>

@@ -1,16 +1,10 @@
 'use client';
 
 import { FC, useEffect, useRef, useState } from 'react';
-import {
-	InputProps,
-	Flex,
-	InputGroup,
-	Input,
-	InputRightElement,
-	InputLeftElement,
-} from '@chakra-ui/react';
+import { InputProps, Flex, Input, Box } from '@chakra-ui/react';
 import { FormControl } from '.';
 import { Icon } from '../../icon';
+import { useColorMode } from '@/components/ui/color-mode';
 
 type InputContainerProps = InputProps & {
 	label: string;
@@ -67,25 +61,31 @@ const VColor: FC<InputContainerProps> = ({
 	}, [value]);
 
 	const ref = useRef<any>(null);
+	const { colorMode } = useColorMode();
 
 	return (
 		<FormControl
 			isRequired={isRequired}
 			label={label}
 			helper={helper}>
-			<InputGroup
+			<Flex
 				gap={2}
-				{...inputGroupCss}>
-				<InputLeftElement
+				position='relative'
+				alignItems='center'
+				{...inputGroupCss(colorMode)}>
+				<Box
+					position='absolute'
+					left={3}
 					onClick={onEyeClick}
-					cursor='pointer'>
+					cursor='pointer'
+					zIndex={1}>
 					<Flex cursor='pointer'>
 						<Icon
 							name={value == 'transparent' ? 'eye-off' : 'eye'}
 							size={20}
 						/>
 					</Flex>
-				</InputLeftElement>
+				</Box>
 				<Input
 					{...inputCss}
 					placeholder={placeholder ? placeholder : label}
@@ -93,7 +93,12 @@ const VColor: FC<InputContainerProps> = ({
 					{...props}
 					type='text'
 				/>
-				<InputRightElement onClick={() => ref.current?.click()}>
+				<Box
+					position='absolute'
+					right={3}
+					onClick={() => ref.current?.click()}
+					cursor='pointer'
+					zIndex={1}>
 					<Flex
 						borderWidth={1}
 						borderColor='container.borderLight'
@@ -102,8 +107,8 @@ const VColor: FC<InputContainerProps> = ({
 						bgColor={value || 'transparent'}
 						borderRadius='full'
 					/>
-				</InputRightElement>
-			</InputGroup>
+				</Box>
+			</Flex>
 			<Flex
 				w='95%'
 				borderBottomRadius='lg'
@@ -125,20 +130,17 @@ const VColor: FC<InputContainerProps> = ({
 	);
 };
 
-const inputGroupCss: any = {
+const inputGroupCss = (colorMode: string): any => ({
 	borderRadius: 'lg',
-	size: 'sm',
-	borderColor: 'container.borderLight',
+	borderColor: colorMode === 'dark' ? 'brand.200' : 'container.borderLight',
 	borderWidth: 1,
-	focusBorderColor: 'brand.500',
-	_dark: {
-		borderColor: 'brand.200',
-	},
-};
+});
 
-const inputCss: InputProps = {
+const inputCss: any = {
 	h: '32px',
 	px: 3,
+	paddingLeft: 10,
+	paddingRight: 10,
 	borderLeftRadius: 'lg',
 	borderColor: 'transparent',
 };

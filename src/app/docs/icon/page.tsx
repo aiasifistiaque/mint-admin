@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon, iconOptionsArrayData as iconOptions } from '@/components/library';
-import { Center, Flex, FlexProps, Text, TextProps } from '@chakra-ui/react';
+import { Center, CenterProps, Flex, FlexProps, Text, TextProps } from '@chakra-ui/react';
 import React from 'react';
 
 const IconPage = () => {
@@ -33,7 +33,7 @@ const bodyCss: FlexProps = {
 	gap: 4,
 };
 
-const iconBox: FlexProps = {
+const iconBox: CenterProps = {
 	w: '120px',
 	h: '100px',
 	bg: 'white',

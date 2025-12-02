@@ -2,7 +2,6 @@ import { FC, useState, useRef } from 'react';
 
 import {
 	Center,
-	FormControl,
 	Image,
 	Stack,
 	InputProps,
@@ -13,7 +12,7 @@ import {
 	Box,
 } from '@chakra-ui/react';
 
-import { UploadModal, HelperText, Label, ImageContainer } from '../..';
+import { UploadModal, HelperText, Label, ImageContainer, FormControl } from '../..';
 
 type FormDataType = InputProps &
 	GridProps & {
@@ -177,7 +176,7 @@ const VImageArray: FC<FormDataType> = ({
 	);
 };
 
-const containerCSS: FlexProps = {
+const containerCSS: any = {
 	h: '200px',
 	w: '200px',
 	bg: 'transparent',

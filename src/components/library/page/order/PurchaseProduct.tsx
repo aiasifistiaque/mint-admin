@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import { useState } from 'react';
 
 import { CustomTd as Td, RowContainerBase, Icon } from '../..';
-import { Box, Tr, Td as TD } from '@chakra-ui/react';
+import { Box, Table } from '@chakra-ui/react';
 import InputElement from '../../utils/inputs/input-components/InputElement';
 
 type PurchaseProductProps = {
@@ -61,11 +61,7 @@ const PurchaseProduct: FC<PurchaseProductProps> = ({ item, i, setItem, isMobile,
 						w='100px'
 					/>
 				</Td>
-				<Td
-					isNumeric
-					heading='SubTotal'>
-					{item?.subTotal}
-				</Td>
+				<Td heading='SubTotal'>{item?.subTotal}</Td>
 
 				<Td>
 					<Box
@@ -77,11 +73,11 @@ const PurchaseProduct: FC<PurchaseProductProps> = ({ item, i, setItem, isMobile,
 			</RowContainerBase>
 		);
 	return (
-		<Tr h='2.5rem'>
-			<TD>{i + 1}</TD>
-			<TD>{item?.name}</TD>
+		<Table.Row h='2.5rem'>
+			<Table.Cell>{i + 1}</Table.Cell>
+			<Table.Cell>{item?.name}</Table.Cell>
 
-			<TD>
+			<Table.Cell>
 				<InputElement
 					size='xs'
 					type='number'
@@ -89,9 +85,9 @@ const PurchaseProduct: FC<PurchaseProductProps> = ({ item, i, setItem, isMobile,
 					onChange={handleReturnQty}
 					w='100px'
 				/>
-			</TD>
+			</Table.Cell>
 
-			<TD>
+			<Table.Cell>
 				<InputElement
 					size='xs'
 					type='number'
@@ -99,17 +95,17 @@ const PurchaseProduct: FC<PurchaseProductProps> = ({ item, i, setItem, isMobile,
 					onChange={handlePrice}
 					w='100px'
 				/>
-			</TD>
-			<TD isNumeric>{item?.subTotal}</TD>
+			</Table.Cell>
+			<Table.Cell>{item?.subTotal}</Table.Cell>
 
-			<TD>
+			<Table.Cell>
 				<Box
 					cursor='pointer'
 					onClick={() => deleteItem(item?._id)}>
 					<Icon name='delete' />
 				</Box>
-			</TD>
-		</Tr>
+			</Table.Cell>
+		</Table.Row>
 	);
 };
 

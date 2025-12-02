@@ -66,3 +66,19 @@ export { default as VIcon } from './VIcon';
 export { default as VFormFields } from './VFormFields';
 
 export { default as VSettings } from './VSettings';
+
+export const inputContainerCss: any = {
+	color: 'text.light',
+	borderRadius: 'md',
+	fontSize: '14px',
+	_placeholder: { fontSize: 14, color: 'text.inputPlaceholder.light' },
+	borderColor: 'selectBorder.light',
+	px: 3,
+	_dark: {
+		color: 'text.dark',
+		borderColor: 'selectBorder.dark',
+		_placeholder: {
+			color: 'text.inputPlaceholder.dark',
+		},
+	},
+};

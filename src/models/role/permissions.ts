@@ -1,14 +1,20 @@
 const data: any = [
+	'order',
 	'product',
 	'category',
 	'brand',
-	'order',
+	'content',
+	'attribute',
 	'user',
 	'role',
 	'customer',
 	'collection',
 	'content',
-	'expense',
+	'payment',
+	'delivery',
+	'ledger',
+	'coupon',
+	'review',
 ];
 
 const transformData = (data: any) => {

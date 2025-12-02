@@ -1,17 +1,9 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogOverlay,
-	Button,
-	IconButton,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { Button, IconButton, useDisclosure, Dialog } from '@chakra-ui/react';
 import { FC, useRef } from 'react';
 
-import { AlertDialogHeader, AlertDialogContent, Icon } from '../../..';
+import { Icon } from '../../..';
 
 type DeleteItemModalProps = {
 	idx: number;
@@ -21,7 +13,7 @@ type DeleteItemModalProps = {
 };
 
 const DeleteSection: FC<DeleteItemModalProps> = ({ value, handleDataChange, name, idx }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = useRef<any>(undefined);
 
 	const closeItem = () => {
@@ -52,49 +44,46 @@ const DeleteSection: FC<DeleteItemModalProps> = ({ value, handleDataChange, name
 				variant='outline'
 				aria-label='delete-section'
 				size='xs'
-				colorScheme='red'
-				onClick={onOpen}
-				icon={
-					<Icon
-						name='delete'
-						color='red'
-					/>
-				}
-			/>
+				colorPalette='red'
+				onClick={onOpen}>
+				<Icon
+					name='delete'
+					color='red'
+				/>
+			</IconButton>
 
-			<AlertDialog
-				isCentered
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
-					<AlertDialogContent>
-						<AlertDialogHeader>Delete Section</AlertDialogHeader>
+			<Dialog.Root
+				open={isOpen}
+				onOpenChange={e => (e.open ? onOpen() : closeItem())}
+				role='alertdialog'>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content>
+						<Dialog.Header>Delete Section</Dialog.Header>
+						<Dialog.CloseTrigger />
 
-						<AlertDialogBody>
-							Are you sure? You {`can't`} undo this action afterwards.
-						</AlertDialogBody>
+						<Dialog.Body>Are you sure? You {`can't`} undo this action afterwards.</Dialog.Body>
 
-						<AlertDialogFooter>
+						<Dialog.Footer>
 							<Button
 								ref={cancelRef}
 								onClick={closeItem}
 								size='sm'
-								colorScheme='gray'>
+								colorPalette='gray'>
 								Discard
 							</Button>
 
 							<Button
-								colorScheme='red'
+								colorPalette='red'
 								onClick={handleDelete}
 								ml={2}
 								size='sm'>
 								Delete
 							</Button>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };

@@ -1,6 +1,7 @@
 'use client';
-import { FlexProps, Heading, Stack, Flex, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { FlexProps, Heading, Stack, Flex } from '@chakra-ui/react';
 import { ReactNode, FC } from 'react';
+import { useColorMode } from '@/components/ui/color-mode';
 import SidebarItem from './SidebarItem';
 
 import { sidebarData, THEME, Icon, DecisionAlert, EditContentModal, sizes, styles } from '../..';
@@ -16,9 +17,10 @@ const EditorSidebar: FC<FlexProps & { closeBtn?: ReactNode; data?: any; doc?: an
 	...props
 }) => {
 	const router = useRouter();
+	const { colorMode } = useColorMode();
 
 	const sidebar = data || sidebarData;
-	const textColor = useColorModeValue('text.dark', 'text.light');
+	const textColor = colorMode === 'light' ? 'text.dark' : 'text.light';
 
 	const handleExit = () => router.replace('/storefront');
 
@@ -69,9 +71,6 @@ const EditorSidebar: FC<FlexProps & { closeBtn?: ReactNode; data?: any; doc?: an
 						{item?.type == 'page' ? (
 							<Link href={item?.href}>
 								<SidebarItem
-									sx={{
-										color: textColor,
-									}}
 									href={item?.href}
 									path={item?.path}
 									icon={item?.icon}>
@@ -87,9 +86,6 @@ const EditorSidebar: FC<FlexProps & { closeBtn?: ReactNode; data?: any; doc?: an
 								title={item?.title}
 								path={item?.path}>
 								<SidebarItem
-									sx={{
-										color: textColor,
-									}}
 									path={item?.path}
 									icon={item?.icon}>
 									{item?.title}

@@ -22,7 +22,7 @@ type IsActiveFilterProps = {
 };
 
 const TextFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
-	const { onOpen, onClose, isOpen } = useDisclosure();
+	const { onOpen, onClose, open: isOpen } = useDisclosure();
 	const isMobile = useIsMobile();
 
 	const dispatch = useAppDispatch();

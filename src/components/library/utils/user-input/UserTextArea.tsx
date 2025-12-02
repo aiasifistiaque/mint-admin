@@ -1,7 +1,7 @@
 'use client';
 import { FC } from 'react';
-import { FormControl, Stack, useColorModeValue, Textarea, TextareaProps } from '@chakra-ui/react';
-import { HelperText } from '../..';
+import { Stack, Textarea, TextareaProps } from '@chakra-ui/react';
+import { HelperText, FormControl } from '../..';
 
 type InputContainerProps = TextareaProps & {
 	label: string;
@@ -19,26 +19,26 @@ const UserTextArea: FC<InputContainerProps> = ({
 	helper,
 	...props
 }) => {
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
+	// const borderColor = useColorModeValue('brand.500', 'brand.200');
 
 	return (
 		<FormControl
 			isRequired={isRequired}
 			gap={4}>
 			<Stack
-				spacing={2}
+				gap={2}
 				w='full'>
 				{/* <Label>{label}</Label> */}
 
 				<Stack
-					spacing={1}
+					gap={1}
 					w='full'>
 					<Textarea
 						minH='300px'
 						px={3}
 						borderColor='#ebebeb'
 						borderRadius='sm'
-						focusBorderColor={'#555'}
+						// focusBorderColor={'#555'}
 						color='text.500'
 						bg='#ebebeb'
 						_dark={{

@@ -1,13 +1,14 @@
 import { FC, ReactNode } from 'react';
-import { ModalFooter, ModalFooterProps } from '@chakra-ui/react';
+import { Dialog } from '@chakra-ui/react';
 
-type CustomModalHeaderProps = ModalFooterProps & {
+type CustomModalFooterProps = {
 	children?: ReactNode;
+	[key: string]: any;
 };
 
-const CustomModalFooter: FC<CustomModalHeaderProps> = ({ children, ...props }) => {
+const CustomModalFooter: FC<CustomModalFooterProps> = ({ children, ...props }) => {
 	return (
-		<ModalFooter
+		<Dialog.Footer
 			borderTopWidth={1}
 			borderColor='container.borderLight'
 			_dark={{ borderColor: 'border.dark' }}
@@ -15,7 +16,7 @@ const CustomModalFooter: FC<CustomModalHeaderProps> = ({ children, ...props }) =
 			py={3}
 			{...props}>
 			{children}
-		</ModalFooter>
+		</Dialog.Footer>
 	);
 };
 

@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, useDisclosure, Text, Checkbox, Grid } from '@chakra-ui/react';
+import { Button, useDisclosure, Text, Grid } from '@chakra-ui/react';
+import { Checkbox } from '@chakra-ui/react';
 import { useEffect, useState, useCallback } from 'react';
 
 import { MenuItem } from '../../../menu';
@@ -18,7 +19,7 @@ import {
 } from '../../../components/table/table-components/menu-modals';
 
 const ExportManyModal = ({ path, ids, icon }: { path: string; ids: string[]; icon?: string }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const { fields = [], preferences = [] } = useAppSelector(state => state.table);
 	const [selected, setSelected] = useState<string[]>([]);
 
@@ -60,15 +61,17 @@ const ExportManyModal = ({ path, ids, icon }: { path: string; ids: string[]; ico
 	}, []);
 
 	const checkboxes = fields.map((field: string, i: number) => (
-		<Checkbox
+		<Checkbox.Root
 			size='md'
 			fontWeight='500'
-			colorScheme='brand'
+			colorPalette='brand'
 			key={i}
-			isChecked={selected?.includes(field)}
-			onChange={e => handleCheckboxChange(e, field)}>
-			{formatFieldName(field)}
-		</Checkbox>
+			checked={selected?.includes(field)}
+			onCheckedChange={(e: any) => handleCheckboxChange({ target: { checked: e.checked } }, field)}>
+			<Checkbox.HiddenInput />
+			<Checkbox.Control />
+			<Checkbox.Label>{formatFieldName(field)}</Checkbox.Label>
+		</Checkbox.Root>
 	));
 
 	return (
@@ -102,7 +105,7 @@ const ExportManyModal = ({ path, ids, icon }: { path: string; ids: string[]; ico
 							<Button
 								size='sm'
 								onClick={handleSubmit}
-								isLoading={result?.isLoading}>
+								loading={result?.isLoading}>
 								Export
 							</Button>
 						</>

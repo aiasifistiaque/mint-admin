@@ -7,6 +7,7 @@ import {
 	FlexProps,
 	CenterProps,
 	ButtonProps,
+	Flex,
 } from '@chakra-ui/react';
 
 type AttendanceProps = FlexProps & {
@@ -45,10 +46,16 @@ const Attendance: FC<AttendanceProps> = ({
 							alt='logo'
 						/>
 					</Center>
-					{children}
+					<Flex
+						w='full'
+						flexDir='column'
+						gap={4}>
+						{children}
+					</Flex>
+
 					<Button
 						{...submitButtonCss}
-						isLoading={isLoading}>
+						loading={isLoading}>
 						Submit
 					</Button>
 				</Center>
@@ -57,7 +64,7 @@ const Attendance: FC<AttendanceProps> = ({
 	);
 };
 
-const containerCss: CenterProps = {
+const containerCss: any = {
 	w: '100vw',
 	flex: 1,
 	h: '100vh',
@@ -74,10 +81,12 @@ const innerContainerCss: CenterProps = {
 	p: { base: 4, md: 8 },
 	flexDir: 'column',
 	gap: 3,
-	w: { base: 'full', md: '400px' },
+	w: { base: 'full', md: '450px' },
 	mx: { md: 'auto' },
 	boxShadow: 'lg',
 	borderRadius: '24px',
+	borderWidth: 1,
+	borderColor: { base: 'border.light', _dark: 'border.dark' },
 	h: { base: '80vh', md: '70vh' },
 };
 

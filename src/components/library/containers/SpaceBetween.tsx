@@ -5,6 +5,8 @@ type FlexPropsType = FlexProps & {
 	children?: ReactNode;
 };
 
+//Migration checked
+
 const SpaceBetween: FC<FlexPropsType> = ({ children, ...props }) => {
 	return (
 		<Flex

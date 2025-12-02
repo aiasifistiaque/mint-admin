@@ -44,7 +44,7 @@ const viewAllDataFields: TableObjectDataProps[] = [
 		type: 'tag',
 		sort: 'isVisible',
 		default: false,
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 
 	{
@@ -54,7 +54,7 @@ const viewAllDataFields: TableObjectDataProps[] = [
 		sort: 'isFeatured',
 		default: true,
 
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 	{
 		title: 'isActive',
@@ -63,7 +63,7 @@ const viewAllDataFields: TableObjectDataProps[] = [
 		sort: 'isActive',
 		default: true,
 
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 	{
 		title: 'Is Discount?',
@@ -72,7 +72,7 @@ const viewAllDataFields: TableObjectDataProps[] = [
 		sort: 'isDiscount',
 		default: true,
 
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 	{
 		title: 'After Discount',

@@ -1,16 +1,6 @@
 import { FC, useState } from 'react';
 
-import {
-	Center,
-	FormControl,
-	Image,
-	Stack,
-	InputProps,
-	GridProps,
-	Flex,
-	Text,
-	Heading,
-} from '@chakra-ui/react';
+import { Center, Image, Stack, InputProps, GridProps, Flex, Text, Heading } from '@chakra-ui/react';
 import { HelperText, Label, ImageContainer, Column } from '../../..';
 import AddSectionModal from './AddSectionModal';
 
@@ -49,9 +39,18 @@ const VSection: FC<FormDataType> = ({
 
 	if (isDisabled) return imageComponent;
 	return (
-		<FormControl isRequired={isRequired}>
+		<Stack>
 			<Stack w='full'>
-				<Label>{label}</Label>
+				<Label>
+					{label}{' '}
+					{isRequired && (
+						<Text
+							as='span'
+							color='red.500'>
+							*
+						</Text>
+					)}
+				</Label>
 				<Flex>
 					<AddSectionModal
 						value={value}
@@ -74,7 +73,7 @@ const VSection: FC<FormDataType> = ({
 					</Column>
 				))}
 			</Column>
-		</FormControl>
+		</Stack>
 	);
 };
 

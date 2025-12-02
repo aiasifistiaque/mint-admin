@@ -143,14 +143,14 @@ const FormMain: FC<FormMainType> = ({
 	};
 
 	return (
-		<Accordion
+		<Accordion.Root
 			gap={4}
-			allowToggle
-			defaultIndex={[0, ...Array.from({ length: sections.length - 1 }, (_, i) => i + 1)]}
-			allowMultiple>
+			multiple
+			defaultValue={sections.map((_, i) => String(i))}>
 			{sections.map((section: any, i: number) => (
 				<FormDivisionAccordion
 					title={section?.[0]?.sectionTitle || 'Section Title'}
+					value={String(i)}
 					key={i}
 					isModal={isModal}>
 					{section?.map((item: any, i: number) => (
@@ -184,7 +184,7 @@ const FormMain: FC<FormMainType> = ({
 					))}
 				</FormDivisionAccordion>
 			))}
-		</Accordion>
+		</Accordion.Root>
 	);
 };
 

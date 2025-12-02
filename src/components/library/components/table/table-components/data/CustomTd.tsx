@@ -1,6 +1,15 @@
 import { FC, Fragment } from 'react';
-import { Td, Image, Text, Heading, ImageProps, FlexProps, Center, Link } from '@chakra-ui/react';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
+import {
+	Table,
+	Image,
+	Text,
+	Heading,
+	ImageProps,
+	Center,
+	Link,
+	CenterProps,
+} from '@chakra-ui/react';
+import { ExternalLink as ExternalLinkIcon } from 'lucide-react';
 
 import { useIsMobile, Column, PLACEHOLDER_IMAGE, TableDataProps } from '../../../..';
 
@@ -9,7 +18,7 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 
 	const text = children;
 
-	const Container = isMobile ? Column : Td;
+	const Container = isMobile ? Column : Table.Cell;
 
 	const TextContainer = isMobile
 		? editable
@@ -33,9 +42,12 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 		if (text && (type == 'external-link' || type == 'file')) {
 			return (
 				<Link
-					isExternal
+					target='_blank'
 					href={text}>
-					{type == 'file' ? <b>Go to file</b> : children} <ExternalLinkIcon mx='4px' />
+					<>
+						{type == 'file' ? <b>Go to file</b> : children}{' '}
+						<ExternalLinkIcon style={{ marginLeft: '4px' }} />
+					</>
 				</Link>
 			);
 		}
@@ -58,7 +70,11 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 
 				{isMobile && heading && <Heading size='xs'>{heading}</Heading>}
 				<External>
-					<TextContainer>{formatTextForBreaking(text) || <i>--</i>}</TextContainer>
+					<TextContainer
+						color='text.light'
+						_dark={{ color: 'text.dark' }}>
+						{formatTextForBreaking(text) || <i>--</i>}
+					</TextContainer>
 				</External>
 			</Container>
 		</>
@@ -79,6 +95,8 @@ const tdCss = (type: any, heading: any): any => {
 		whiteSpace: 'normal',
 		wordBreak: 'normal',
 		overflowWrap: 'break-word',
+		color: 'text.light',
+		_dark: { color: 'text.dark' },
 		py: PADDING_Y,
 		px: {
 			base: 0,
@@ -103,7 +121,7 @@ const tdCss = (type: any, heading: any): any => {
 	};
 };
 
-const imageBoxCss: FlexProps = {
+const imageBoxCss: CenterProps = {
 	w: IMG_SIZE,
 	h: IMG_SIZE,
 	minW: IMG_SIZE,

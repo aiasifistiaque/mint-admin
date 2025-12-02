@@ -1,40 +1,18 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { setupListeners } from '@reduxjs/toolkit/query';
-import { TOKEN_NAME } from '@/components/library';
+export { default as mainApi } from './services/mainApi';
+export * from './slices/authSlice';
+export * from './slices/cartSlice';
+// export * from './slices/cartSlice';
+export * from './slices/routeSlice';
+export * from './slices/tableSlice';
+export * from './slices/builderSlice';
+// export * from './slices/tableSlice';
+//export * from './slices/authSlice';
 
-import {
-	routeSlice,
-	tableSlice,
-	cartSlice,
-	authSlice,
-	builderSlice,
-} from '@/components/library/store';
+// export * from './services/mainApi';
+export * from './services/commonApi';
 
-import mainApi from '@/components/library/store/services/mainApi';
+export * from './services/ordersApi';
+export * from './services/authApi';
+export * from './services/uploadApi';
 
-export const store = configureStore({
-	reducer: {
-		auth: authSlice.reducer,
-		route: routeSlice.reducer,
-		table: tableSlice.reducer,
-		cart: cartSlice.reducer,
-		builder: builderSlice.reducer,
-		[mainApi.reducerPath]: mainApi.reducer,
-	},
-	middleware: getDefaultMiddleware => getDefaultMiddleware().concat(mainApi.middleware),
-});
-
-store.subscribe(() => {
-	const state = store.getState();
-	if (typeof window !== 'undefined') {
-		if (state.auth.token) {
-			localStorage.setItem(TOKEN_NAME, state.auth.token);
-		} else {
-			localStorage.removeItem(TOKEN_NAME);
-		}
-	}
-});
-setupListeners(store.dispatch);
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export * from './store';

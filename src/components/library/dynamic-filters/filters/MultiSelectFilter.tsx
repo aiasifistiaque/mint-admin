@@ -1,7 +1,7 @@
 'use client';
 import { FC, useState } from 'react';
 
-import { Flex, PopoverTrigger, useColorModeValue, useDisclosure } from '@chakra-ui/react';
+import { Flex, PopoverTrigger, useDisclosure } from '@chakra-ui/react';
 import { applyFilters } from '../..';
 
 import {
@@ -31,7 +31,7 @@ type FilterProps = {
 };
 
 const MultiSelectFilter: FC<FilterProps> = ({ title, field, options, label }) => {
-	const { onOpen, onClose, isOpen } = useDisclosure();
+	const { onOpen, onClose, open: isOpen } = useDisclosure();
 	const dispatch: any = useAppDispatch();
 	const { filters } = useAppSelector((state: any) => state.table);
 
@@ -112,7 +112,7 @@ const MultiSelectFilter: FC<FilterProps> = ({ title, field, options, label }) =>
 			<Filter
 				isActive={ifFieldExists()}
 				onCancel={onFilterReset}>
-				{label} {ifFieldExists() && <span> | {getLabelsFromFilters()}</span>}
+				{label} {ifFieldExists() && `| ${getLabelsFromFilters()}`}
 			</Filter>
 		</span>
 	);

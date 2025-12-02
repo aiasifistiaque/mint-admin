@@ -17,10 +17,11 @@ const DatePicker = ({ setVal }: { setVal: (val: string) => void }) => {
 			alignItems='center'
 			gap={2}
 			px={1}
-			gridTemplateColumns='.6fr 2fr 4fr 2fr'>
+			gridTemplateColumns='.6fr 4fr '>
 			<Icon name='arrow' />
 			<FilterInput
 				date
+				flex={1}
 				value={value}
 				onChange={handleChange}
 			/>

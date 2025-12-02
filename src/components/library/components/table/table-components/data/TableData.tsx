@@ -2,24 +2,25 @@ import {
 	Badge,
 	BadgeProps,
 	Flex,
+	Portal,
 	TableCellProps,
 	Text,
 	Tooltip,
 	useClipboard,
-	useColorMode,
 } from '@chakra-ui/react';
 import moment from 'moment';
 import { FC } from 'react';
 import { CustomTd } from '.';
 import { Align, TableObjectDataProps } from '../../../..';
-import { CopyIcon } from '@chakra-ui/icons';
+import { Copy as CopyIcon } from 'lucide-react';
+import { useColorMode } from '@/components/ui/color-mode';
 
 // Define the type for the props of the TableData component
 type TableDataPropsType = TableCellProps &
 	TableObjectDataProps & {
 		children: any;
 		key: string;
-		colorScheme?: any;
+		colorPalette?: any;
 		item?: any;
 		copy?: boolean;
 		colorTheme?: any;
@@ -30,7 +31,7 @@ const TableData: FC<TableDataPropsType> = ({
 	id,
 	copy,
 	type,
-	colorScheme,
+	colorPalette,
 	toLocaleStr,
 	tagType,
 	imageKey,
@@ -38,10 +39,10 @@ const TableData: FC<TableDataPropsType> = ({
 	item,
 	...props
 }) => {
-	const { onCopy, hasCopied } = useClipboard(children);
+	const { copy: onCopy, copied: hasCopied } = useClipboard(children);
 	const commonProps = {
 		toLocaleStr,
-		colorScheme,
+		colorPalette,
 		key,
 		type,
 		tagType,
@@ -51,17 +52,30 @@ const TableData: FC<TableDataPropsType> = ({
 	if (copy) {
 		if (!children) return <TableBody {...commonProps}>--</TableBody>;
 		return (
-			<Tooltip label={hasCopied ? 'Copied!' : 'Click to Copy'}>
-				<TableBody
-					item={item}
-					{...commonProps}
-					cursor='pointer'
-					onClick={onCopy}
-					{...props}>
-					{children}
-					{<CopyIcon ml={2} />}
-				</TableBody>
-			</Tooltip>
+			<Tooltip.Root
+				openDelay={200}
+				closeDelay={100}
+				positioning={{ placement: 'top' }}>
+				<Tooltip.Trigger asChild>
+					<TableBody
+						item={item}
+						{...commonProps}
+						cursor='pointer'
+						onClick={onCopy}
+						{...props}>
+						{children}
+						<CopyIcon
+							size={16}
+							style={{ marginLeft: '8px' }}
+						/>
+					</TableBody>
+				</Tooltip.Trigger>
+				<Portal>
+					<Tooltip.Positioner>
+						<Tooltip.Content>{hasCopied ? 'Copied!' : 'Click to Copy'}</Tooltip.Content>
+					</Tooltip.Positioner>
+				</Portal>
+			</Tooltip.Root>
 		);
 	}
 
@@ -78,7 +92,7 @@ const TableBody: FC<TableDataPropsType> = ({
 	children,
 	id,
 	type,
-	colorScheme,
+	colorPalette,
 	toLocaleStr,
 	tagType,
 	imageKey,
@@ -115,7 +129,7 @@ const TableBody: FC<TableDataPropsType> = ({
 					</Align>
 
 					{/* <Badge
-						colorScheme={
+						colorPalette={
 							colorTheme ? colorTheme[children] : children?.toString() === 'true' ? 'green' : 'red'
 						}
 						{...badgeCss}>
@@ -133,11 +147,11 @@ const TableBody: FC<TableDataPropsType> = ({
 						? children.map((item: any, i: number) => (
 								<Badge
 									key={i}
-									colorScheme={
+									colorPalette={
 										item?.colorTheme
 											? item?.colorTheme[item.toLowerCase()]
-											: colorScheme
-											? colorScheme(children)
+											: colorPalette
+											? colorPalette(children)
 											: 'gray'
 									}
 									{...badgeCss}>
@@ -216,7 +230,7 @@ const dateCss: any = {
 
 const badgeCss: BadgeProps = {
 	fontSize: '12px',
-	size: '2xs',
+	size: 'xs',
 };
 
 export default TableData;

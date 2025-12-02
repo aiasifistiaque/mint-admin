@@ -1,15 +1,17 @@
 'use client';
 import { FC } from 'react';
-import { FormControl, Stack, Checkbox, CheckboxProps } from '@chakra-ui/react';
+import { Checkbox, Flex } from '@chakra-ui/react';
 
-import { Label, HelperText } from '../..';
+import { Label, HelperText, FormControl } from '../..';
 
-type InputContainerProps = CheckboxProps & {
+type InputContainerProps = {
 	label: string;
 	isRequired?: boolean;
 	helper?: string;
 	value?: boolean | undefined;
 	placeholder?: string;
+	onChange?: any;
+	name?: string;
 };
 
 const VCheckbox: FC<InputContainerProps> = ({
@@ -24,22 +26,37 @@ const VCheckbox: FC<InputContainerProps> = ({
 		<FormControl
 			isRequired={isRequired}
 			gap={4}>
-			<Stack
-				spacing={2}
+			<Flex
+				flexDir='column'
+				gap={2}
 				w='full'>
 				<Label>{label}</Label>
-				<Checkbox
+				<Checkbox.Root
 					size='lg'
-					fontSize='18px'
-					textTransform='capitalize'
-					fontWeight='600'
-					isChecked={value}
-					colorScheme='brand'
-					{...props}>
-					{placeholder || label}
-				</Checkbox>
+					checked={value}
+					// colorPalette='brand'
+					onCheckedChange={details => {
+						if (props.onChange) {
+							const event = {
+								target: {
+									name: props.name,
+									checked: details.checked,
+								},
+							} as any;
+							props.onChange(event);
+						}
+					}}>
+					<Checkbox.HiddenInput />
+					<Checkbox.Control />
+					<Checkbox.Label
+						fontSize='18px'
+						textTransform='capitalize'
+						fontWeight='600'>
+						{placeholder || label}
+					</Checkbox.Label>
+				</Checkbox.Root>
 				{helper && <HelperText>{helper}</HelperText>}
-			</Stack>
+			</Flex>
 		</FormControl>
 	);
 };

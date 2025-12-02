@@ -1,13 +1,27 @@
 import { useIsMobile } from '../../../..';
-import { DrawerCloseButton, ModalCloseButton } from '@chakra-ui/react';
+import { Drawer, Dialog, CloseButton } from '@chakra-ui/react';
 
 const MenuModalCloseButton = () => {
 	const isMobile = useIsMobile();
 	if (isMobile) {
-		return <DrawerCloseButton />;
+		return (
+			<Drawer.CloseTrigger
+				asChild
+				color='text.light'
+				_dark={{ color: 'text.dark' }}>
+				<CloseButton size='sm' />
+			</Drawer.CloseTrigger>
+		);
 	}
 
-	return <ModalCloseButton />;
+	return (
+		<Dialog.CloseTrigger
+			asChild
+			color='text.light'
+			_dark={{ color: 'text.dark' }}>
+			<CloseButton size='sm' />
+		</Dialog.CloseTrigger>
+	);
 };
 
 export default MenuModalCloseButton;

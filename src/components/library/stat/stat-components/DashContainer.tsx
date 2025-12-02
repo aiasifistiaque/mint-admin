@@ -1,6 +1,6 @@
 import { Flex, FlexProps } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { shadow, radius } from '../..';
+import { radius } from '../..';
 
 const DashContainer = ({ children, ...props }: FlexProps & { children: ReactNode }) => {
 	return (

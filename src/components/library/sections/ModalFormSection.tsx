@@ -1,9 +1,9 @@
 'use client';
-import { ContainerProps, Flex, Heading, useColorModeValue } from '@chakra-ui/react';
+import { Heading } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 import Column from '../containers/Column';
 
-type FormContainerProps = ContainerProps & {
+type FormContainerProps = any & {
 	children: ReactNode;
 	title?: string;
 };
@@ -15,12 +15,14 @@ const W_LG = '100%';
 const PADDING = 2;
 
 const ModalFormSection: FC<FormContainerProps> = ({ title, children, ...props }) => {
-	const border = useColorModeValue('gray.200', 'gray.700');
 	return (
 		<Column
 			_notLast={{
 				borderBottom: '1px solid',
-				borderColor: border,
+				borderColor: 'gray.200',
+				_dark: {
+					borderColor: 'gray.700',
+				},
 			}}
 			h='fit-content'
 			mx='auto'

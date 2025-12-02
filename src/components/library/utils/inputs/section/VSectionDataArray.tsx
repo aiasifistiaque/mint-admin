@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 
-import { FormControl, Image, Stack, Flex, Text, Heading } from '@chakra-ui/react';
+import { Image, Stack, Flex, Text, Heading } from '@chakra-ui/react';
 import { HelperText, Label, ImageContainer, Column, SpaceBetween } from '../../..';
 import DeleteSection from './DeleteSection';
 import AddSectionDataModal from './AddSectionDataModal';
@@ -43,9 +43,18 @@ const VSectionDataArray: FC<FormDataType> = ({
 
 	if (isDisabled) return imageComponent;
 	return (
-		<FormControl isRequired={isRequired}>
+		<Stack>
 			<Stack w='full'>
-				<Label fontSize='22px'>{label}</Label>
+				<Label fontSize='22px'>
+					{label}{' '}
+					{isRequired && (
+						<Text
+							as='span'
+							color='red.500'>
+							*
+						</Text>
+					)}
+				</Label>
 				<Column
 					gap={4}
 					my={4}>
@@ -88,7 +97,7 @@ const VSectionDataArray: FC<FormDataType> = ({
 									</Flex>
 								</SpaceBetween>
 
-								<Text noOfLines={6}>{item?.[section?.display?.description]}</Text>
+								<Text lineClamp={6}>{item?.[section?.display?.description]}</Text>
 							</Column>
 						</Flex>
 					))}
@@ -108,7 +117,7 @@ const VSectionDataArray: FC<FormDataType> = ({
 				)}
 				{helper && <HelperText>{helper}</HelperText>}
 			</Stack>
-		</FormControl>
+		</Stack>
 	);
 };
 

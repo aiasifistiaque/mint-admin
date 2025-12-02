@@ -9,20 +9,17 @@ const buttonStyle = {
 
 const DeleteImageButton = ({ ...props }: ButtonProps) => {
 	return (
-		<Button
-			as={IconButton}
-			sx={buttonStyle}
+		<IconButton
+			css={buttonStyle}
 			size='xs'
-			colorScheme='gray'
-			{...props}
-			icon={
-				<Icon
-					name='delete'
-					color='red'
-					size={12}
-				/>
-			}
-		/>
+			colorPalette='gray'
+			{...props}>
+			<Icon
+				name='delete'
+				color='red'
+				size={12}
+			/>
+		</IconButton>
 	);
 };
 

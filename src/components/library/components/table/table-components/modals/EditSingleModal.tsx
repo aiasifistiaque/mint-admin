@@ -1,17 +1,8 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogOverlay,
-	Button,
-	useDisclosure,
-	Text,
-	Select,
-} from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Text, NativeSelect } from '@chakra-ui/react';
 import { useEffect, useRef, FC, useState } from 'react';
-import { useCustomToast, MenuItem, AlertDialogHeader, AlertDialogContent } from '../../../..';
+import { useCustomToast, MenuItem } from '../../../..';
 import { useUpdateManyMutation } from '../../../../store';
 
 type EditManyModalType = {
@@ -41,7 +32,7 @@ const EditSelectedModal: FC<EditManyModalType> = ({
 	keyType = 'string',
 	val,
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = useRef<any>(undefined);
 	const [value, setValue] = useState<any>(val);
 
@@ -86,63 +77,67 @@ const EditSelectedModal: FC<EditManyModalType> = ({
 		<>
 			<MenuItem onClick={onOpen}>{title}</MenuItem>
 
-			<AlertDialog
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
+			<Dialog.Root
+				open={isOpen}
+				onOpenChange={e => !e.open && closeItem()}
+				role='alertdialog'>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
 					<form onSubmit={handleSubmit}>
-						<AlertDialogContent>
-							<AlertDialogHeader>{prompt?.title || `Edit Item`}</AlertDialogHeader>
+						<Dialog.Content>
+							<Dialog.Header>
+								<Dialog.Title>{prompt?.title || `Edit Item`}</Dialog.Title>
+							</Dialog.Header>
 
-							<AlertDialogBody pt={4}>
+							<Dialog.Body pt={4}>
 								<Text>{prompt?.body || 'Please select an option'}</Text>
-								<Select
-									isRequired={true}
-									borderRadius='md'
+								<NativeSelect.Root
 									size='sm'
-									mt={4}
-									value={value}
-									onChange={e => setValue(e.target.value)}>
-									<option
-										selected
-										disabled>
-										Select option
-									</option>
-									{options?.map(({ label, value }: { label: string; value: any }, i: number) => (
+									mt={4}>
+									<NativeSelect.Field
+										value={value}
+										onChange={e => setValue(e.target.value)}>
 										<option
-											key={i}
-											value={value}>
-											{label}
+											disabled
+											value=''>
+											Select option
 										</option>
-									))}
-								</Select>
-							</AlertDialogBody>
+										{options?.map(({ label, value }: { label: string; value: any }, i: number) => (
+											<option
+												key={i}
+												value={value}>
+												{label}
+											</option>
+										))}
+									</NativeSelect.Field>
+								</NativeSelect.Root>
+							</Dialog.Body>
 
-							<AlertDialogFooter>
+							<Dialog.Footer>
 								{!isLoading && (
-									<Button
-										ref={cancelRef}
-										onClick={closeItem}
-										size='sm'
-										colorScheme='gray'>
-										Discard
-									</Button>
+									<Dialog.CloseTrigger asChild>
+										<Button
+											ref={cancelRef}
+											size='sm'
+											colorPalette='gray'>
+											Discard
+										</Button>
+									</Dialog.CloseTrigger>
 								)}
 								<Button
 									type='submit'
-									isDisabled={!value}
-									isLoading={isLoading}
-									colorScheme='brand'
+									disabled={!value}
+									loading={isLoading}
+									colorPalette='brand'
 									ml={2}
 									size='sm'>
 									Edit
 								</Button>
-							</AlertDialogFooter>
-						</AlertDialogContent>
+							</Dialog.Footer>
+						</Dialog.Content>
 					</form>
-				</AlertDialogOverlay>
-			</AlertDialog>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };

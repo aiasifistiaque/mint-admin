@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { SelectProps } from '@chakra-ui/react';
+import { NativeSelectFieldProps } from '@chakra-ui/react';
 import { FormControl, SelectContainer } from '../..';
 
 type Option = {
@@ -7,7 +7,7 @@ type Option = {
 	value: string;
 };
 
-type InputContainerProps = SelectProps & {
+type InputContainerProps = NativeSelectFieldProps & {
 	label: string;
 	isRequired?: boolean;
 	helper?: string;

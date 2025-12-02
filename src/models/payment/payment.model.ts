@@ -91,7 +91,7 @@ export const adjustmentSchema: Schema = {
 		default: true,
 		displayInTable: true,
 		isRequired: true,
-		colorScheme: (data: any) => {
+		colorPalette: (data: any) => {
 			if (data === 'debit') return 'red';
 			if (data === 'credit') return 'green';
 		},

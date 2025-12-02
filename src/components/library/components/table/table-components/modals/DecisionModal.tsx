@@ -1,21 +1,16 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogOverlay,
-	Button,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { Button, useDisclosure, Portal } from '@chakra-ui/react';
 import { useEffect, FC, useRef } from 'react';
 
 import {
+	Dialog,
 	useCustomToast,
-	AlertDialogHeader,
 	MenuItem,
-	AlertDialogContent,
 	useUpdateByIdMutation,
+	DialogHeader,
+	DialogContent,
+	DialogFooter,
 } from '../../../..';
 
 type DecisionModalProps = {
@@ -45,7 +40,7 @@ const DecisionModal: FC<DecisionModalProps> = ({ item, doc, path, icon, itemId }
 	const getId = id ? id(doc) : itemId;
 	const getBody = bodyFn ? bodyFn(doc) : body;
 
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = useRef<any>(undefined);
 
 	const [trigger, result] = useUpdateByIdMutation();
@@ -75,47 +70,47 @@ const DecisionModal: FC<DecisionModalProps> = ({ item, doc, path, icon, itemId }
 	return (
 		<>
 			<MenuItem
+				closeOnSelect={false}
 				onClick={onOpen}
 				icon={icon}>
 				{title || 'Alert'}
 			</MenuItem>
 
-			<AlertDialog
+			<Dialog
+				placenemt='center'
 				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
-					<AlertDialogContent>
-						<AlertDialogHeader>{prompt?.title || 'Alert'}</AlertDialogHeader>
+				onOpenChange={(e: any) => !e.open && closeItem()}>
+				<DialogHeader>{prompt?.title || 'Alert'}</DialogHeader>
 
-						<AlertDialogBody>
-							{prompt?.body || 'Are you sure you want to take this action?'}
-						</AlertDialogBody>
+				<DialogContent>
+					{prompt?.body || 'Are you sure you want to take this action?'}
+				</DialogContent>
 
-						<AlertDialogFooter>
-							<Button
-								isDisabled={isLoading}
-								ref={cancelRef}
-								onClick={closeItem}
-								size='sm'
-								variant='white'>
-								Discard
-							</Button>
+				<DialogFooter>
+					{/* <Dialog.CloseTrigger asChild> */}
+					<Button
+						variant='outline'
+						disabled={isLoading}
+						ref={cancelRef}
+						onClick={closeItem}
+						size='sm'
+						px={2}>
+						Discard
+					</Button>
+					{/* </Dialog.CloseTrigger> */}
 
-							<Button
-								spinnerPlacement='start'
-								loadingText='Processing'
-								isLoading={isLoading}
-								colorScheme='brand'
-								onClick={handleSubmit}
-								ml={2}
-								size='sm'>
-								{prompt?.btnText || 'Proceed'}
-							</Button>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
+					<Button
+						px={2}
+						spinnerPlacement='start'
+						loadingText='Processing'
+						loading={isLoading}
+						onClick={handleSubmit}
+						ml={2}
+						size='sm'>
+						{prompt?.btnText || 'Proceed'}
+					</Button>
+				</DialogFooter>
+			</Dialog>
 		</>
 	);
 };

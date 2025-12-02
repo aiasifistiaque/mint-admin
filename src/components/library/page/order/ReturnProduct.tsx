@@ -1,23 +1,20 @@
 import { useState } from 'react';
 
 import { useIsMobile, Tr, CustomTd as Td } from '../..';
-import { useToast } from '@chakra-ui/react';
+import { toaster } from '@/components/ui/toaster';
 import InputElement from '../../utils/inputs/input-components/InputElement';
 
 const ReturnProduct = ({ item, i, setItem }: { item: any; i: number; setItem: any }) => {
 	const isMobile = useIsMobile();
 	const [returnQty, setReturnQty] = useState(0);
-	const toast = useToast();
 
 	const handleReturnQty = (e: any) => {
 		if (e.target.value > item.qty - item.returnQty) {
-			toast({
+			toaster.create({
 				title: 'Error',
 				description: 'Return quantity cannot be greater than the sold quantity',
-				status: 'error',
+				type: 'error',
 				duration: 3000,
-				variant: 'subtle',
-				isClosable: true,
 			});
 			setReturnQty(0);
 			setItem({ qty: 0, item, returnAmount: 0 });
@@ -31,19 +28,11 @@ const ReturnProduct = ({ item, i, setItem }: { item: any; i: number; setItem: an
 		<Tr>
 			<Td heading='#'>{i + 1}</Td>
 			<Td heading='Product Name'>{item?.name}</Td>
-			<Td
-				isNumeric
-				heading='Unit Price'>
-				{item?.unitPrice}
-			</Td>
-			<Td
-				isNumeric
-				heading='Sell Qty'>
-				{item?.qty - item?.returnQty}
-			</Td>
+			<Td heading='Unit Price'>{item?.unitPrice}</Td>
+			<Td heading='Sell Qty'>{item?.qty - item?.returnQty}</Td>
 
 			<Td
-				isNumeric={!isMobile && true}
+				// isNumeric={!isMobile && true}
 				heading='Return Qty'>
 				<InputElement
 					size='xs'
@@ -53,11 +42,7 @@ const ReturnProduct = ({ item, i, setItem }: { item: any; i: number; setItem: an
 					w='100px'
 				/>
 			</Td>
-			<Td
-				isNumeric
-				heading='Return SubTotal'>
-				{item?.unitPrice * returnQty}
-			</Td>
+			<Td heading='Return SubTotal'>{item?.unitPrice * returnQty}</Td>
 		</Tr>
 	);
 };

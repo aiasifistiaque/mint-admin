@@ -17,7 +17,7 @@ import {
 } from '../../..';
 
 const SendBulkSmsModal = ({ path, ids }: { path: string; ids: string[] }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const [text, setText] = useState<string>('');
 	const [trigger, result] = usePostMutation();
@@ -75,7 +75,7 @@ const SendBulkSmsModal = ({ path, ids }: { path: string; ids: string[] }) => {
 						<Button
 							size='sm'
 							onClick={handleSubmit}
-							isLoading={result?.isLoading}>
+							loading={result?.isLoading}>
 							Send
 						</Button>
 					</>

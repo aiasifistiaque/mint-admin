@@ -1,15 +1,17 @@
 'use client';
 
 import { FC, useRef, useState, useEffect, ChangeEvent } from 'react';
-import { Button, InputProps, Input, Link, Flex, Text } from '@chakra-ui/react';
+import { Button, InputProps, Input, Flex, Text } from '@chakra-ui/react';
 import { FormControl } from '../';
 import { Icon, useAddFileMutation } from '../../../';
+import Link from 'next/link';
+import { ExternalLinkIcon } from 'lucide-react';
 
 type InputContainerProps = InputProps & {
 	label: string;
 	isRequired?: boolean;
 	helper?: string;
-	value: string | number | undefined;
+	value: any;
 	placeholder?: any;
 };
 
@@ -78,13 +80,15 @@ const VFile: FC<InputContainerProps> = ({
 			label={label}
 			helper={helper}>
 			<Button
-				isDisabled={result?.isLoading}
-				isLoading={result?.isLoading}
+				px={3}
+				size='sm'
+				disabled={result?.isLoading}
+				loading={result?.isLoading}
 				loadingText='Uploading'
 				spinnerPlacement='start'
 				onClick={onRefClick}
-				variant='white'
-				leftIcon={<Icon name='copy' />}>
+				// leftIcon={<Icon name='copy' />}
+			>
 				{value ? 'Change File' : 'Upload File'}
 			</Button>
 			{value && (
@@ -94,9 +98,10 @@ const VFile: FC<InputContainerProps> = ({
 					justify='space-between'
 					gap={4}>
 					<Link
-						{...linkCss}
+						target='_blank'
+						rel='noopener noreferrer'
 						href={value}>
-						View Uploaded File
+						<Text {...linkCss}>View Uploaded File</Text>
 					</Link>
 					<Flex
 						align='center'
@@ -123,7 +128,8 @@ const linkCss: any = {
 	fontSize: '12px',
 	color: 'blue.500',
 	fontWeight: '500',
-	isExternal: true,
+	textDecoration: 'underline',
+	// isExternal: true,
 };
 
 const inputCss: InputProps = {

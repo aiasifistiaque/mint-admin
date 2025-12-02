@@ -1,9 +1,8 @@
 'use client';
 import { ReactNode, FC } from 'react';
-import { SelectProps } from '@chakra-ui/react';
 import { FormControl, SelectContainer } from '../..';
 
-type InputContainerProps = SelectProps & {
+type InputContainerProps = any & {
 	label: string;
 	isRequired?: boolean;
 	helper?: string;
@@ -11,6 +10,7 @@ type InputContainerProps = SelectProps & {
 	children: ReactNode;
 	placeholder?: any;
 	defaultDisabled?: boolean;
+	defaultEnabled?: boolean;
 };
 
 const VSelect: FC<InputContainerProps> = ({
@@ -21,6 +21,7 @@ const VSelect: FC<InputContainerProps> = ({
 	helper,
 	children,
 	defaultDisabled,
+	defaultEnabled,
 	...props
 }) => {
 	return (
@@ -38,6 +39,7 @@ const VSelect: FC<InputContainerProps> = ({
 						{placeholder || `Select an option`}
 					</option>
 				)}
+				{defaultEnabled && <option value=''>{placeholder || `Select an option`}</option>}
 				{children}
 			</SelectContainer>
 		</FormControl>

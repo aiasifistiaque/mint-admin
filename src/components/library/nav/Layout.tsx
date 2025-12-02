@@ -6,7 +6,7 @@ import { Flex, Heading, useMediaQuery, FlexProps, HeadingProps } from '@chakra-u
 import { SelfMenu, SearchMenu } from '../menu';
 import { AuthWrapper } from '../wrappers';
 import ColorMode from '../components/color-mode/ColorMode';
-import { LayoutWrapper, Navbar, Sidebar, Body } from '../nav';
+import { LayoutWrapper, Navbar, Sidebar, Body, MainBody } from '../nav';
 import { Align, SpaceBetween } from '../containers';
 import { useIsMobile, useAppDispatch } from '../hooks';
 import { refresh, useGetQuery, navigate } from '../store';
@@ -42,7 +42,8 @@ const Layout: FC<LayoutProps> = ({
 		dispatch(refresh());
 	}, []);
 
-	const [isLargerThan800] = useMediaQuery('(min-width: 800px)');
+	// Chakra UI v3: useMediaQuery expects an array and returns an array of booleans
+	const [isLargerThan800] = useMediaQuery(['(min-width: 800px)']);
 
 	const type = isLargerThan800 ? (props?.type == 'pos' ? 'pos' : 'default') : 'pos';
 	const isMobile = useIsMobile();
@@ -86,7 +87,7 @@ const Layout: FC<LayoutProps> = ({
 						{...mainContainer}
 						pl={type !== 'default' ? 0 : sizes.HOME_NAV_LEFT}
 						{...props}>
-						<Main>{!isLoading && children}</Main>
+						<MainBody>{!isLoading && children}</MainBody>
 					</Flex>
 				</Body>
 				{!hideColorMode && <ColorMode size={ICON_SIZE} />}
@@ -95,26 +96,12 @@ const Layout: FC<LayoutProps> = ({
 	);
 };
 
-const Main = ({ children }: { children: ReactNode }) => (
-	<Flex
-		pt={{ base: 2, md: 1 }}
-		flexDir='column'
-		gap={4}
-		overflowY='hidden'
-		h={`calc(100vh - ${sizes.NAV_HEIGHT})`}
-		px={PX}
-		pb='32px'
-		w='full'>
-		{children}
-	</Flex>
-);
-
 const titleCss: HeadingProps = {
 	color: 'inherit',
 	_dark: {
 		color: 'inherit',
 	},
-	size: 'md',
+	size: 'lg',
 	fontFamily: 'Bebas Neue',
 };
 

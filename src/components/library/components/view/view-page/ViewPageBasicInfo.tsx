@@ -28,15 +28,20 @@ const ViewPageBasicInfo: FC<ViewPageBasicInfoProps> = ({ slug, id, schema, layou
 			{...containerCss}
 			gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }}>
 			{viewFields.map((item: any, index: number) => {
-				const { title, dataKey, type, colorScheme, path, model, originalType, idKey } = item;
+				const { title, dataKey, type, colorPalette, path, model, originalType, idKey } = item;
 
 				return (
 					<GridItem
-						borderBottomWidth={() => {
-							if (index === viewFields.length - 1) return 0;
-							if (index === viewFields.length - 2) return index % 2 === 0 ? 0 : 1;
-							return 1;
+						borderColor={{
+							_light: 'border.light',
+							_dark: 'border.dark',
 						}}
+						borderBottomWidth={1}
+						// borderBottomWidth={() => {
+						// 	if (index === viewFields.length - 1) return 0;
+						// 	if (index === viewFields.length - 2) return index % 2 === 0 ? 0 : 1;
+						// 	return 1;
+						// }}
 						{...itemCss}
 						key={index}>
 						<ViewPageItem
@@ -45,7 +50,7 @@ const ViewPageBasicInfo: FC<ViewPageBasicInfoProps> = ({ slug, id, schema, layou
 							isLoading={isFetching}
 							title={title}
 							type={type}
-							colorScheme={colorScheme}
+							colorPalette={colorPalette}
 							path={model || path}>
 							{data && getValue({ dataKey, type, data })}
 						</ViewPageItem>
@@ -57,7 +62,7 @@ const ViewPageBasicInfo: FC<ViewPageBasicInfoProps> = ({ slug, id, schema, layou
 };
 
 const itemCss: any = {
-	px: 6,
+	px: 0,
 	py: 3,
 	borderBottomColor: 'container.borderLight',
 	_dark: {

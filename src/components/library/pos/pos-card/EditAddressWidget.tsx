@@ -1,14 +1,4 @@
-import {
-	Modal,
-	ModalOverlay,
-	ModalHeader,
-	ModalBody,
-	ModalCloseButton,
-	Button,
-	useDisclosure,
-	Flex,
-	ModalFooter,
-} from '@chakra-ui/react';
+import { Button, useDisclosure, Flex } from '@chakra-ui/react';
 
 import {
 	useFormData,
@@ -18,6 +8,12 @@ import {
 	DiscardButton,
 	Address,
 	useLazyGetByIdToEditQuery,
+	GenericModal,
+	GenericModalHeader,
+	GenericModalCloseButton,
+	GenericModalBody,
+	GenericModalFooter,
+	GenericModalContent,
 } from '../..';
 
 const inputFields: InputData<Address>[] = [
@@ -79,7 +75,7 @@ const inputFields: InputData<Address>[] = [
 ];
 
 const EditAddressWidget = ({ id }: { id: string }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const [fetch, { data: prevData }] = useLazyGetByIdToEditQuery();
 
@@ -110,7 +106,7 @@ const EditAddressWidget = ({ id }: { id: string }) => {
 	const addressNotSet = (
 		<Button
 			size='sm'
-			colorScheme='brand'
+			colorPalette='brand'
 			onClick={onModalOpen}>
 			Update
 		</Button>
@@ -120,24 +116,22 @@ const EditAddressWidget = ({ id }: { id: string }) => {
 		<>
 			<Flex>{addressNotSet}</Flex>
 
-			<Modal
-				size='4xl'
+			<GenericModal
+				size='xl'
 				isOpen={isOpen}
 				onClose={onClose}>
-				<ModalOverlay />
-
-				<ModalContainer>
-					<ModalCloseButton />
-					<ModalHeader>Edit Customer</ModalHeader>
+				<GenericModalContent>
+					<GenericModalCloseButton />
+					<GenericModalHeader>Edit Customer</GenericModalHeader>
 					<form onSubmit={handleSubmit}>
-						<ModalBody>
+						<GenericModalBody>
 							<FormContent
 								formData={formData}
 								setFormData={setFormData}
 								data={inputFields}
 							/>
-						</ModalBody>
-						<ModalFooter>
+						</GenericModalBody>
+						<GenericModalFooter>
 							<DiscardButton
 								mr={2}
 								onClick={onModalClose}>
@@ -148,10 +142,10 @@ const EditAddressWidget = ({ id }: { id: string }) => {
 								type='submit'>
 								Submit
 							</Button>
-						</ModalFooter>
+						</GenericModalFooter>
 					</form>
-				</ModalContainer>
-			</Modal>
+				</GenericModalContent>
+			</GenericModal>
 		</>
 	);
 };

@@ -1,22 +1,9 @@
 'use client';
 import { useCallback, useState, FC } from 'react';
-import {
-	Input,
-	InputProps,
-	FormControl,
-	Stack,
-	useColorModeValue,
-	InputGroup,
-	InputRightElement,
-	IconButton,
-	Tag,
-	Wrap,
-	WrapItem,
-	TagLabel,
-	TagCloseButton,
-} from '@chakra-ui/react';
+import { Input, InputProps, IconButton, Flex } from '@chakra-ui/react';
 
-import { Label, Icon, HelperText } from '../..';
+import { Label, Icon, HelperText, FormControl, inputContainerCss } from '../..';
+import { useColorMode } from '@/components/ui/color-mode';
 
 type InputContainerProps = InputProps & {
 	label: string;
@@ -38,7 +25,8 @@ const VTags: FC<InputContainerProps> = ({
 	section = false,
 	...props
 }) => {
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
+	const { colorMode } = useColorMode();
+	const borderColor = colorMode === 'dark' ? 'brand.200' : 'brand.500';
 	const [tag, setTag] = useState<string>('');
 
 	const handleChange = useCallback((e: any) => {
@@ -95,57 +83,86 @@ const VTags: FC<InputContainerProps> = ({
 		<FormControl
 			isRequired={isRequired}
 			gap={4}>
-			<Stack
-				spacing={2}
+			<Flex
+				flexDir='column'
+				gap={2}
 				w='full'>
 				<Label>{label}</Label>
 
-				<Stack
-					spacing={1}
+				<Flex
+					flexDir='column'
+					gap={1}
 					w='full'>
-					<InputGroup>
+					<Flex
+						position='relative'
+						alignItems='center'>
 						<Input
 							value={tag}
 							onChange={handleChange}
-							px={3}
-							borderRadius='lg'
-							size='sm'
-							focusBorderColor={borderColor}
-							color='text.500'
-							_dark={{
-								color: 'gray.300',
-							}}
+							{...inputContainerCss}
+							pr={0}
 							placeholder={placeholder ? placeholder : label}
-							_placeholder={{ fontSize: 14, fontWeight: '500' }}
 						/>
-						<InputRightElement
+						<Flex
+							position='absolute'
+							right={2}
 							h='32px'
-							p={0}>
+							alignItems='center'>
 							<IconButton
 								onClick={addTag}
 								size='xs'
-								colorScheme='gray'
-								aria-label='add tag'
-								icon={<Icon name='add' />}
-							/>
-						</InputRightElement>
-					</InputGroup>
+								color={{
+									_light: 'white',
+									_dark: 'black',
+								}}
+								aria-label='add tag'>
+								<Icon
+									name='add'
+									color='inherit'
+								/>
+							</IconButton>
+						</Flex>
+					</Flex>
 
 					{helper && <HelperText>{helper}</HelperText>}
-				</Stack>
-				<Wrap
+				</Flex>
+				<Flex
+					flexWrap='wrap'
 					gap={1}
 					pt={2}>
 					{value?.map((item: string, i: number) => (
-						<WrapItem key={i}>
-							<Tag variant='subtle'>
-								<TagLabel> {item}</TagLabel>
-								<TagCloseButton onClick={() => deleteTag(item)} />
-							</Tag>
-						</WrapItem>
+						<Flex key={i}>
+							<Flex
+								px={2.5}
+								py={1}
+								bg={{ _light: 'transparent', _dark: 'gray.700' }}
+								border='1px solid'
+								borderColor={{ _light: 'border.light', _dark: 'border.dark' }}
+								borderRadius='md'
+								alignItems='center'
+								gap={2}>
+								<Flex
+									fontWeight='600'
+									as='span'
+									fontSize='xs'>
+									{' '}
+									{item}
+								</Flex>
+								<Flex
+									as='button'
+									onClick={() => deleteTag(item)}
+									cursor='pointer'
+									fontSize='lg'
+									color={{ _light: 'text.light', _dark: 'text.dark' }}
+									opacity={0.7}
+									_hover={{ opacity: 1 }}>
+									×
+								</Flex>
+							</Flex>
+						</Flex>
 					))}
-				</Wrap>
-			</Stack>
+				</Flex>
+			</Flex>
 		</FormControl>
 	);
 };

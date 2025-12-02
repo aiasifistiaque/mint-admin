@@ -1,15 +1,5 @@
 import { ReactNode, useState } from 'react';
-import {
-	Center,
-	Flex,
-	FlexProps,
-	FormControl,
-	FormLabel,
-	Image,
-	Input,
-	Text,
-	useColorModeValue,
-} from '@chakra-ui/react';
+import { Center, Flex, FlexProps, Image, Input, Stack, Text } from '@chakra-ui/react';
 
 import { Column } from '../..';
 
@@ -21,13 +11,13 @@ const bodyText = {
 };
 
 const Label = ({ children }: { children: ReactNode }) => (
-	<FormLabel
+	<Text
 		fontWeight='bold'
 		m='0'
 		fontSize='14px'
 		whiteSpace='nowrap'>
 		{children}
-	</FormLabel>
+	</Text>
 );
 
 const imageContainerCss: FlexProps = {
@@ -47,7 +37,6 @@ const bodyContainerCss: FlexProps = {
 };
 
 const InsertUrl = ({ handleSelect }: { handleSelect: any }) => {
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
 	const [url, setUrl] = useState<any>(null);
 	const handleChange = (e: any) => {
 		setUrl(e.target.value);
@@ -83,22 +72,24 @@ const InsertUrl = ({ handleSelect }: { handleSelect: any }) => {
 			gap={2}
 			flex={1}
 			h='full'>
-			<Flex>
-				<FormControl>
-					<Flex
-						flexDir={{ base: 'column', md: 'row' }}
-						gap={2}
-						align='center'>
-						<Label>Paste an image URL here:</Label>
-						<Input
-							focusBorderColor={borderColor}
-							size='xs'
-							value={url}
-							onChange={handleChange}
-						/>
-					</Flex>
-				</FormControl>
+			<Flex
+				mt={4}
+				w='full'
+				flexDir={{ base: 'column', md: 'row' }}
+				gap={2}
+				align='center'>
+				<Label>Paste an image URL here:</Label>
+				<Input
+					w='full'
+					px={3}
+					// focusBorderColor={borderColor}
+					size='xs'
+					_dark={{ borderColor: 'border.dark' }}
+					value={url}
+					onChange={handleChange}
+				/>
 			</Flex>
+
 			<Center flex={1}>{body}</Center>
 		</Column>
 	);

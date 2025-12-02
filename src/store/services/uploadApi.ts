@@ -1,6 +1,7 @@
-import { mainApi } from '@/components/library/store';
-import { ListType, TableProps } from '../store.types';
-import { BASE_LIMIT } from '@/lib/constants';
+import mainApi from './mainApi';
+import { ListType } from '../store.types';
+
+const BASE_LIMIT = 16;
 
 export const uploadApi = mainApi.injectEndpoints({
 	overrideExisting: true,
@@ -15,19 +16,28 @@ export const uploadApi = mainApi.injectEndpoints({
 				type,
 				filters = {},
 			}) => ({
-				url: `upload?type=${type || 'image'}`,
-				params: { sort, page, type, limit, search, isActive, ...filters },
+				url: 'upload',
+				params: { sort, page, limit, type, search, isActive, ...filters },
 			}),
 			providesTags: ['uploads'],
 		}),
 		addUpload: builder.mutation<any, any>({
 			query: body => ({
-				url: 'upload',
+				url: `upload`,
 				method: 'POST',
 				body,
 				formData: true,
 			}),
-			invalidatesTags: ['uploads'],
+			invalidatesTags: ['uploads', 'upload'],
+		}),
+		addFile: builder.mutation<any, any>({
+			query: body => ({
+				url: `upload/file`,
+				method: 'POST',
+				body,
+				formData: true,
+			}),
+			invalidatesTags: ['uploads', 'upload'],
 		}),
 		addVideo: builder.mutation<any, any>({
 			query: ({ body, type }) => ({
@@ -36,9 +46,14 @@ export const uploadApi = mainApi.injectEndpoints({
 				body,
 				formData: true,
 			}),
-			invalidatesTags: ['uploads'],
+			invalidatesTags: ['uploads', 'upload'],
 		}),
 	}),
 });
 
-export const { useGetAllUploadsQuery, useAddUploadMutation, useAddVideoMutation } = uploadApi;
+export const {
+	useGetAllUploadsQuery,
+	useAddUploadMutation,
+	useAddFileMutation,
+	useAddVideoMutation,
+} = uploadApi;

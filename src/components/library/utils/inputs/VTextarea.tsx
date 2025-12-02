@@ -1,6 +1,6 @@
 'use client';
 import { FC } from 'react';
-import { useColorModeValue, Textarea, TextareaProps } from '@chakra-ui/react';
+import { Textarea, TextareaProps } from '@chakra-ui/react';
 import { FormControl } from '../..';
 
 type InputContainerProps = TextareaProps & {
@@ -20,8 +20,6 @@ const VTextarea: FC<InputContainerProps> = ({
 	helper,
 	...props
 }) => {
-	const borderColor = useColorModeValue('brand.500', 'brand.200');
-	const color = useColorModeValue('text.500', 'gray,300');
 	return (
 		<FormControl
 			isRequired={isRequired}
@@ -36,11 +34,17 @@ const VTextarea: FC<InputContainerProps> = ({
 				minH={MIN_H}
 				size='sm'
 				px={3}
+				pt={2}
+				fontSize='14px'
 				borderRadius='lg'
-				focusBorderColor={borderColor}
-				color={color}
+				color='text.500'
+				_dark={{
+					color: 'text.dark',
+					borderColor: 'selectBorder.dark',
+					_placeholder: { color: 'text.inputPlaceholder.dark' },
+				}}
 				placeholder={placeholder ? placeholder : label}
-				_placeholder={{ fontSize: 14, fontWeight: '500' }}
+				_placeholder={{ fontSize: 14 }}
 				value={value}
 				{...props}
 			/>

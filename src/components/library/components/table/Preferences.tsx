@@ -1,7 +1,6 @@
 'use client';
 
 import {
-	Button,
 	useDisclosure,
 	Text,
 	Checkbox,
@@ -9,11 +8,10 @@ import {
 	IconButton,
 	TextProps,
 	GridProps,
-	IconButtonProps,
 	Tooltip,
-	CheckboxProps,
 } from '@chakra-ui/react';
 import { useEffect, useState, useCallback } from 'react';
+import { useColorMode } from '@/components/ui/color-mode';
 
 import {
 	MenuModal,
@@ -28,11 +26,13 @@ import { useAppSelector } from '../../hooks';
 import { formatFieldTitle } from '../../functions';
 import { sizes, radius } from '../../config';
 import { Icon } from '../../icon';
+import { ConfirmButton, DiscardButton } from '../buttons';
 
 const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const { fields = [], preferences = [] } = useAppSelector(state => state.table);
 	const [selected, setSelected] = useState<string[]>([]);
+	const { colorMode } = useColorMode();
 
 	const [trigger, result] = useUpdatePreferencesMutation();
 	const { isSuccess, isLoading } = result;
@@ -57,41 +57,60 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 		if (isSuccess) closeModal();
 	}, [result]);
 
-	const handleCheckboxChange = useCallback((e: any, field: any) => {
-		if (e.target.checked) setSelected(prevSelected => [...prevSelected, field]);
+	const handleCheckboxChange = useCallback((checked: boolean, field: any) => {
+		if (checked) setSelected(prevSelected => [...prevSelected, field]);
 		else setSelected(prevSelected => prevSelected.filter(item => item !== field));
 	}, []);
 
 	const checkboxes = fields.map((field: string, i: number) => (
-		<Checkbox
+		<Checkbox.Root
 			{...style.checkbox}
 			key={i}
-			isChecked={selected?.includes(field)}
-			onChange={e => handleCheckboxChange(e, field)}>
-			{formatFieldTitle({ field, schema })}
-		</Checkbox>
+			checked={selected?.includes(field)}
+			onCheckedChange={(e: any) => handleCheckboxChange(e.checked, field)}>
+			<Checkbox.HiddenInput />
+			<Checkbox.Control>
+				<Checkbox.Indicator />
+			</Checkbox.Control>
+			<Checkbox.Label>{formatFieldTitle({ field, schema })}</Checkbox.Label>
+		</Checkbox.Root>
 	));
-
 	return (
 		<>
-			<Tooltip
-				placement='bottom'
-				label='Select Table Columns'>
-				<span>
+			<Tooltip.Root
+				openDelay={200}
+				closeDelay={100}
+				positioning={{ placement: 'bottom' }}>
+				<Tooltip.Trigger asChild>
 					<IconButton
 						onClick={onOpen}
-						{...style.iconButton}
-						icon={
-							<Icon
-								name='fields'
-								size={16}
-							/>
-						}
-					/>
-				</span>
-			</Tooltip>
+						aria-label='Select Table Fields'
+						colorPalette='gray'
+						size='sm'
+						borderWidth={1}
+						mr={0.5}
+						h={sizes?.SEARCH_BAR_HEIGHT}
+						w={sizes?.SEARCH_BAR_HEIGHT}
+						borderRadius={radius?.BUTTON}
+						bg='container.newLight'
+						borderColor='container.borderLight'
+						_dark={{
+							bg: 'container.dark',
+							borderColor: 'container.borderDark',
+						}}>
+						<Icon
+							name='fields'
+							size={12}
+						/>
+					</IconButton>
+				</Tooltip.Trigger>
+				<Tooltip.Positioner>
+					<Tooltip.Content p={1}>Select Table Columns</Tooltip.Content>
+				</Tooltip.Positioner>
+			</Tooltip.Root>
 
 			<MenuModal
+				placement={{ base: 'bottom', md: 'center' }}
 				isOpen={isOpen}
 				onClose={closeModal}>
 				{/* <MenuModalOverlay />
@@ -107,20 +126,13 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 						<Text {...style.errorText}>Please select at least 2 fields</Text>
 					) : (
 						<>
-							<Button
-								size='sm'
-								variant='white'
-								onClick={closeModal}>
-								Discard
-							</Button>
-							<Button
-								size='sm'
+							<DiscardButton onClick={closeModal}>Discard</DiscardButton>
+							<ConfirmButton
 								onClick={handleSubmit}
 								loadingText='Processing'
-								spinnerPlacement='start'
-								isLoading={result?.isLoading}>
+								loading={result?.isLoading}>
 								Apply
-							</Button>
+							</ConfirmButton>
 						</>
 					)}
 				</MenuModalFooter>
@@ -132,44 +144,24 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 type Style = {
 	checkboxGrid: GridProps;
 	errorText: TextProps;
-	iconButton: IconButtonProps;
-	checkbox: CheckboxProps;
+	checkbox: any;
 };
 
-const style: Style = {
+const style: any = {
 	checkboxGrid: {
 		py: 2,
 		gridTemplateColumns: '1fr 1fr',
 		gap: 4,
 		rowGap: 4,
+		colorPalette: 'gray',
 	},
 	checkbox: {
 		size: 'md',
 		fontWeight: '500',
-		colorScheme: 'brand',
 	},
 	errorText: {
 		color: 'red',
 		textAlign: 'right',
-	},
-	iconButton: {
-		'aria-label': 'Select Table Fields',
-		colorScheme: 'gray',
-		size: 'md',
-		borderWidth: 1,
-		mr: 0.5,
-		h: sizes?.SEARCH_BAR_HEIGHT,
-		w: sizes?.SEARCH_BAR_HEIGHT,
-		borderRadius: radius?.BUTTON,
-		_dark: {
-			bg: 'container.dark',
-			borderWidth: 1,
-		},
-
-		_light: {
-			borderColor: 'container.borderLight',
-			bg: 'container.newLight',
-		},
 	},
 };
 

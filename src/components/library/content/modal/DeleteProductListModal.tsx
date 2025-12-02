@@ -31,7 +31,7 @@
 // 	children,
 // 	path = 'nexa',
 // }) => {
-// 	const { isOpen, onOpen, onClose } = useDisclosure();
+// 	const {open: isOpen, onOpen, onClose } = useDisclosure();
 // 	const cancelRef = useRef<any>(undefined);
 
 // 	const [trigger, result] = useDeleteByIdMutation();
@@ -86,13 +86,13 @@
 // 									ref={cancelRef}
 // 									onClick={closeItem}
 // 									size='sm'
-// 									colorScheme='gray'>
+// 									colorPalette='gray'>
 // 									Discard
 // 								</Button>
 // 							)}
 // 							<Button
 // 								isLoading={result?.isLoading}
-// 								colorScheme='red'
+// 								colorPalette='red'
 // 								onClick={handleDelete}
 // 								ml={2}
 // 								size='sm'>
@@ -110,24 +110,11 @@
 
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogOverlay,
-	Button,
-	Flex,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { Button, Flex, useDisclosure } from '@chakra-ui/react';
+import { Dialog } from '@chakra-ui/react';
 import { useEffect, ReactNode, FC, useRef } from 'react';
 
-import {
-	useCustomToast,
-	AlertDialogHeader,
-	AlertDialogContent,
-	useDeleteByIdMutation,
-	useDeleteProductlistByKeyIdMutation,
-} from '../..';
+import { useCustomToast, useDeleteByIdMutation, useDeleteProductlistByKeyIdMutation } from '../..';
 
 type DeleteItemModalProps = {
 	title?: string;
@@ -144,7 +131,7 @@ const DeleteProductListModal: FC<DeleteItemModalProps> = ({
 	path = 'pulse',
 	productListKeys,
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = useRef<any>(undefined);
 	const [trigger, result] = useDeleteByIdMutation();
 	const [triggerProduct, productResult] = useDeleteProductlistByKeyIdMutation();
@@ -203,40 +190,42 @@ const DeleteProductListModal: FC<DeleteItemModalProps> = ({
 		<>
 			<Flex onClick={onOpen}>{children}</Flex>
 
-			<AlertDialog
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
-					<AlertDialogContent>
-						<AlertDialogHeader>Delete {title}</AlertDialogHeader>
+			<Dialog.Root
+				open={isOpen}
+				onOpenChange={(e: any) => (e.open ? onOpen() : closeItem())}
+				role='alertdialog'>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content>
+						<Dialog.Header>
+							<Dialog.Title>Delete {title}</Dialog.Title>
+						</Dialog.Header>
 
-						<AlertDialogBody>
-							Are you sure? You {`can't`} undo this action afterwards.
-						</AlertDialogBody>
+						<Dialog.Body>Are you sure? You {`can't`} undo this action afterwards.</Dialog.Body>
 
-						<AlertDialogFooter>
+						<Dialog.Footer>
 							{!result?.isLoading && (
-								<Button
-									ref={cancelRef}
-									onClick={closeItem}
-									size='sm'
-									colorScheme='gray'>
-									Discard
-								</Button>
+								<Dialog.ActionTrigger asChild>
+									<Button
+										onClick={closeItem}
+										size='sm'
+										colorPalette='gray'>
+										Discard
+									</Button>
+								</Dialog.ActionTrigger>
 							)}
 							<Button
-								isLoading={result?.isLoading}
-								colorScheme='red'
+								loading={result?.isLoading}
+								colorPalette='red'
 								onClick={handleDelete}
 								ml={2}
 								size='sm'>
 								Delete
 							</Button>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };

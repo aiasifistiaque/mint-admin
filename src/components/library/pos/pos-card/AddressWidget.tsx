@@ -1,15 +1,5 @@
-import {
-	Modal,
-	ModalOverlay,
-	ModalHeader,
-	ModalBody,
-	ModalCloseButton,
-	Button,
-	useDisclosure,
-	Flex,
-	ModalFooter,
-	Text,
-} from '@chakra-ui/react';
+import { Button, useDisclosure, Flex, Text } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 
 import {
 	IconButton,
@@ -25,6 +15,12 @@ import {
 	Address,
 	removeAddress,
 	setAddress,
+	GenericModal,
+	GenericModalHeader,
+	GenericModalCloseButton,
+	GenericModalBody,
+	GenericModalFooter,
+	GenericModalContent,
 } from '../..';
 
 const inputFields: InputData<Address>[] = [
@@ -85,9 +81,10 @@ const inputFields: InputData<Address>[] = [
 ];
 
 const AddressWidget = ({ id }: { id?: string }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const dispatch = useAppDispatch();
 	const { isAddressSet, address, user }: any = useAppSelector(state => state.cart);
+	const { colorMode } = useColorMode();
 
 	const { data, isFetching } = useGetByIdQuery(
 		{
@@ -140,7 +137,7 @@ const AddressWidget = ({ id }: { id?: string }) => {
 			<IconButton
 				tooltip='Delete Address'
 				aria-label='Delete Address'
-				colorScheme='red'
+				colorPalette='red'
 				variant='outline'
 				iconName='delete'
 				size='xs'
@@ -153,7 +150,7 @@ const AddressWidget = ({ id }: { id?: string }) => {
 		<Button
 			size='sm'
 			fontWeight='700'
-			variant='link'
+			variant='plain'
 			onClick={onModalOpen}>
 			Add Delivery Address
 		</Button>
@@ -167,31 +164,27 @@ const AddressWidget = ({ id }: { id?: string }) => {
 				{isAddressSet ? addressIsSet : addressNotSet}
 			</Flex>
 
-			<Modal
-				size='4xl'
+			<GenericModal
+				size='xl'
 				isOpen={isOpen}
 				onClose={onClose}>
-				<ModalOverlay />
-
-				<ModalContainer>
-					<ModalCloseButton />
-					<ModalHeader>Delivery Address</ModalHeader>
+				<GenericModalContent>
+					<GenericModalCloseButton />
+					<GenericModalHeader>Delivery Address</GenericModalHeader>
 					<form onSubmit={handleSubmit}>
-						<ModalBody>
+						<GenericModalBody>
 							<FormContent
 								formData={formData}
 								setFormData={setFormData}
 								data={inputFields}
 							/>
-						</ModalBody>
-						<ModalFooter>
+						</GenericModalBody>
+						<GenericModalFooter>
 							<DiscardButton
 								size='sm'
-								_light={{
-									borderWidth: 1,
-									borderColor: 'container.borderLight',
-									bg: 'container.newLight',
-								}}
+								borderWidth={colorMode === 'light' ? 1 : 0}
+								borderColor={colorMode === 'light' ? 'container.borderLight' : undefined}
+								bg={colorMode === 'light' ? 'container.newLight' : undefined}
 								mr={2}
 								onClick={onModalClose}>
 								Discard
@@ -201,10 +194,10 @@ const AddressWidget = ({ id }: { id?: string }) => {
 								type='submit'>
 								Submit
 							</Button>
-						</ModalFooter>
+						</GenericModalFooter>
 					</form>
-				</ModalContainer>
-			</Modal>
+				</GenericModalContent>
+			</GenericModal>
 		</>
 	);
 };

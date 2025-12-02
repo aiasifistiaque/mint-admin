@@ -56,7 +56,7 @@ const componentCSS: CenterProps = {
 	borderColor: 'dodgerblue',
 };
 
-const sectionCss: FlexProps = {
+const sectionCss: CenterProps = {
 	cursor: 'pointer',
 	position: 'absolute',
 	top: 8,

@@ -2,7 +2,14 @@ import { FC, Fragment } from 'react';
 
 import { format } from 'date-fns';
 import { GridItem, Heading, StackProps, TableRowProps, Flex } from '@chakra-ui/react';
-import { TableRow, EditableTableData, TableData, TableMenu } from '../../../..';
+import {
+	TableRow,
+	EditableTableData,
+	TableData,
+	TableMenu,
+	MenuButton,
+	CustomTd,
+} from '../../../..';
 
 import { useIsMobile } from '../../../../hooks';
 
@@ -56,7 +63,7 @@ const TableRowComponent: FC<TableProps> = ({
 					style,
 					tagType,
 					displayValue,
-					colorScheme,
+					colorPalette,
 					colorTheme,
 					copy,
 				} = val;
@@ -72,15 +79,28 @@ const TableRowComponent: FC<TableProps> = ({
 				if (type == 'menu')
 					if (!menu) return null;
 					else
-						return (
+						return isMobile ? (
 							<TableMenu
 								path={path}
 								data={menu}
 								id={item?._id}
 								doc={item}
 								key={dataKey}
-								title={item[dataKey]}
-							/>
+								title={item[dataKey]}>
+								<MenuButton />
+							</TableMenu>
+						) : (
+							<TableMenu
+								path={path}
+								data={menu}
+								id={item?._id}
+								doc={item}
+								key={dataKey}
+								title={item[dataKey]}>
+								<CustomTd>
+									<MenuButton />
+								</CustomTd>
+							</TableMenu>
 						);
 
 				// If the item name is not in the fields array and type is not 'menu', return null
@@ -92,7 +112,13 @@ const TableRowComponent: FC<TableProps> = ({
 				if (editable && !clickable)
 					return (
 						<Container key={dataKey}>
-							{isMobile && <Heading size='xs'>{formatDataKey(dataKey)}</Heading>}
+							{isMobile && (
+								<Heading
+									size='xs'
+									fontWeight='500'>
+									{formatDataKey(dataKey)}
+								</Heading>
+							)}
 							<EditableTableData
 								type={type}
 								dataKey={dataKey}
@@ -112,6 +138,13 @@ const TableRowComponent: FC<TableProps> = ({
 				// Return a TableData cell with the value
 				return (
 					<Container
+						px={4}
+						py={1}
+						borderBottom='1px solid'
+						borderColor={{
+							_light: 'border.light',
+							_dark: 'border.dark',
+						}}
 						key={dataKey}
 						type={type}
 						copy={copy}
@@ -125,7 +158,7 @@ const TableRowComponent: FC<TableProps> = ({
 							colorTheme={colorTheme}
 							copy={copy}
 							toLocaleStr={toLocaleStr}
-							colorScheme={colorScheme}
+							colorPalette={colorPalette}
 							key={dataKey}
 							type={type}
 							item={val}

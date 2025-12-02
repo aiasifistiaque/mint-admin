@@ -1,39 +1,32 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogOverlay,
-	Button,
-	useColorMode,
-	useColorModeValue,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { Dialog, Button, Flex, useDisclosure, Portal, Text, Box } from '@chakra-ui/react';
 import { useEffect, FC, useRef } from 'react';
 
 import {
 	useCustomToast,
-	AlertDialogHeader,
 	MenuItem,
-	AlertDialogContent,
 	useDeleteByIdMutation,
 	useAppSelector,
 	useLazyGetAllQuery,
+	Align,
+	AlertDialogHeader,
+	AlertDialogContent,
+	styles,
 } from '../../../..';
+import DiscardButton from '../../../buttons/DiscardButton';
 
 type DeleteItemModalProps = {
 	title?: string;
 	id: string;
 	path: string;
 	item: any;
+	children?: React.ReactNode;
 };
 
-const DeleteItemModal: FC<DeleteItemModalProps> = ({ title, path, id, item }) => {
-	const { page, limit, search, sort, filters, preferences, selectedItems }: any = useAppSelector(
-		(state: any) => state.table
-	);
-	const { isOpen, onOpen, onClose } = useDisclosure();
+const DeleteItemModal: FC<DeleteItemModalProps> = ({ title, path, id, item, children }) => {
+	const { page, limit, search, sort, filters }: any = useAppSelector((state: any) => state.table);
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = useRef<any>(undefined);
 
 	const [trigger, result] = useDeleteByIdMutation();
@@ -75,50 +68,68 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({ title, path, id, item }) =>
 		item?.prompt?.body ||
 		"Are you sure you want to delete this item? You can't undo this action afterwards.";
 
-	const redColor = useColorModeValue('red.500', 'red.300');
-
 	return (
 		<>
-			<MenuItem
-				color={redColor}
-				_dark={{ color: 'red.300' }}
-				icon='delete-outline'
-				onClick={onOpen}>
-				{title || 'Delete'}
-			</MenuItem>
+			{children ? (
+				<Flex onClick={onOpen}>{children}</Flex>
+			) : (
+				<MenuItem
+					closeOnSelect={false}
+					color='red.500'
+					_dark={{ color: 'red.300' }}
+					icon='delete-outline'
+					onClick={onOpen}>
+					{title || 'Delete'}
+				</MenuItem>
+			)}
+			<Dialog.Root
+				placement='center'
+				open={isOpen}
+				onOpenChange={(e: any) => !e.open && closeItem()}>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<AlertDialogContent
+							border='1px solid border.light'
+							_dark={{ bg: 'background.dark', border: '1px solid #222' }}>
+							<AlertDialogHeader>{titleText}</AlertDialogHeader>
 
-			<AlertDialog
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
-					<AlertDialogContent>
-						<AlertDialogHeader>{titleText}</AlertDialogHeader>
-						<AlertDialogBody>{bodyText}</AlertDialogBody>
+							<Dialog.Body
+								p={4}
+								pb={8}>
+								<Text>{bodyText}</Text>
+							</Dialog.Body>
 
-						<AlertDialogFooter>
-							<Button
-								variant='white'
-								isDisabled={isLoading}
-								ref={cancelRef}
-								onClick={closeItem}
-								size='sm'>
-								Discard
-							</Button>
-							<Button
-								loadingText='Deleting'
-								spinnerPlacement='start'
-								isLoading={isLoading}
-								colorScheme='red'
-								onClick={handleDelete}
-								ml={2}
-								size='sm'>
-								Delete
-							</Button>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
+							<Dialog.Footer
+								borderBottomRadius='2xl'
+								borderTop='1px solid border.light'
+								bg='menu.light'
+								_dark={{ bg: 'menu.dark', borderTop: '1px solid #222' }}>
+								<Align
+									gap={2}
+									p={4}>
+									<DiscardButton
+										disabled={isLoading}
+										onClick={closeItem}>
+										Discard
+									</DiscardButton>
+
+									<Button
+										loadingText='Deleting...'
+										spinnerPlacement='start'
+										loading={isLoading}
+										colorPalette='red'
+										onClick={handleDelete}
+										px={3}
+										size='sm'>
+										Delete
+									</Button>
+								</Align>
+							</Dialog.Footer>
+						</AlertDialogContent>
+					</Dialog.Positioner>
+				</Portal>
+			</Dialog.Root>
 		</>
 	);
 };

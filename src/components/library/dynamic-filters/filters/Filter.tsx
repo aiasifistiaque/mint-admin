@@ -1,9 +1,9 @@
-import { Flex, Tag, TagLabel, TagProps } from '@chakra-ui/react';
+import { Flex, FlexProps } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 
 import { Icon, radius } from '../..';
 
-type FilterProps = TagProps & {
+type FilterProps = FlexProps & {
 	children: ReactNode;
 	isActive?: boolean;
 	onCancel?: any;
@@ -11,11 +11,11 @@ type FilterProps = TagProps & {
 
 const Filter: FC<FilterProps> = ({ children, isActive = false, onCancel, ...props }) => {
 	return (
-		<Tag
+		<Flex
 			userSelect='none'
 			cursor='pointer'
 			bg='transparent'
-			borderRadius={'full'}
+			borderRadius='full'
 			border='1px dashed'
 			mr={0.5}
 			mb={0.5}
@@ -27,9 +27,11 @@ const Filter: FC<FilterProps> = ({ children, isActive = false, onCancel, ...prop
 				color: 'text.secondary.dark',
 				bg: 'table.row.dark',
 			}}
-			size='sm'
+			fontSize='sm'
 			pl={1}
 			py={1}
+			alignItems='center'
+			display='inline-flex'
 			{...props}>
 			{!isActive && (
 				<Icon
@@ -37,7 +39,7 @@ const Filter: FC<FilterProps> = ({ children, isActive = false, onCancel, ...prop
 					size={16}
 				/>
 			)}
-			<TagLabel mx={1}>{children}</TagLabel>
+			<Flex mx={1}>{children}</Flex>
 			{isActive && (
 				<Flex onClick={onCancel}>
 					<Icon
@@ -46,7 +48,7 @@ const Filter: FC<FilterProps> = ({ children, isActive = false, onCancel, ...prop
 					/>
 				</Flex>
 			)}
-		</Tag>
+		</Flex>
 	);
 };
 

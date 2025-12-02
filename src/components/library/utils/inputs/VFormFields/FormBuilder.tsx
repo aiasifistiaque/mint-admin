@@ -1,6 +1,6 @@
 import React from 'react';
 import { FC, useState, useCallback } from 'react';
-import { Box, Button, Divider, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Button, Separator as Divider, Flex, Heading, Text } from '@chakra-ui/react';
 import { Column } from '../../..';
 import FormFields from './FormFields';
 
@@ -58,7 +58,7 @@ const FormBuilder: FC<FormBuilderProps> = ({ availableFields, onChange, value = 
 				align='center'>
 				<Heading size='md'>Dynamic Form Builder</Heading>
 				<Button
-					colorScheme='blue'
+					colorPalette='blue'
 					size='sm'
 					onClick={addSection}>
 					+ Add Section
@@ -77,7 +77,7 @@ const FormBuilder: FC<FormBuilderProps> = ({ availableFields, onChange, value = 
 							Section {index + 1}
 						</Heading>
 						<Button
-							colorScheme='red'
+							colorPalette='red'
 							size='xs'
 							onClick={() => removeSection(index)}>
 							Remove Section

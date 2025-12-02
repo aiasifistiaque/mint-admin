@@ -8,7 +8,7 @@ export const WIDTH = { base: '300px', md: '340px' };
 export const hiddenInputCss: InputProps = {
 	h: '1px',
 	color: 'transparent',
-	focusBorderColor: 'transparent',
+	// focusBorderColor: 'transparent',
 	border: 'none',
 };
 
@@ -17,7 +17,7 @@ export const searchCss: InputProps = {
 	size: 'sm',
 	px: 4,
 	h: '40px',
-	focusBorderColor: 'transparent',
+	// focusBorderColor: 'transparent',
 	border: 'none',
 	placeholder: 'Search',
 };
@@ -27,7 +27,7 @@ export const searchInputCss: InputProps = {
 	size: 'sm',
 	px: 4,
 	h: '40px',
-	focusBorderColor: 'transparent',
+	// focusBorderColor: 'transparent',
 	border: 'none',
 	placeholder: 'Search',
 	borderTopRadius: radius?.MENU,

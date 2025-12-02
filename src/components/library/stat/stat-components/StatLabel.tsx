@@ -1,14 +1,16 @@
-import { StatLabelProps, StatLabel as CStatLabel } from '@chakra-ui/react';
+import { Stat } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
-const StatLabel = ({ children, ...props }: StatLabelProps & { children: ReactNode }) => {
+const StatLabel = ({ children, ...props }: any & { children: ReactNode }) => {
 	return (
-		<CStatLabel
+		<Stat.Label
+			color='text.light'
+			_dark={{ color: 'text.dark' }}
 			w='full'
 			fontSize='1.15rem'
 			{...props}>
 			{children}
-		</CStatLabel>
+		</Stat.Label>
 	);
 };
 

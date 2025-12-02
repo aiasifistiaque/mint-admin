@@ -1,32 +1,21 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
-import {
-	useDisclosure,
-	Modal,
-	ModalBody,
-	ModalOverlay,
-	ModalCloseButton,
-	Drawer,
-	DrawerOverlay,
-	DrawerCloseButton,
-	DrawerBody,
-	Flex,
-} from '@chakra-ui/react';
+import { useDisclosure, Flex } from '@chakra-ui/react';
 import {
 	ViewModalDataModelProps,
 	Column,
-	ModalContent,
-	ModalHeader,
 	useIsMobile,
-	DrawerHeader,
 	useGetByIdQuery,
 	MenuItem,
 	getValue,
-	DrawerContentContainer,
 	useGetSchemaQuery,
 	convertToViewFields,
+	Dialog,
 	ViewItem,
+	DialogHeader,
+	DialogBody,
+	DialogCloseButton,
 } from '../../../..';
 
 type Props = {
@@ -39,10 +28,9 @@ type Props = {
 };
 
 const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const [schema, setSchema] = useState<any>([]);
-
 	const { data: schemaData, isFetching: schemaLoading } = useGetSchemaQuery(path, {
 		skip: !isOpen || !path,
 	});
@@ -69,21 +57,14 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 		{ skip: !id || !isOpen }
 	);
 
-	const isMobile = useIsMobile();
-
-	const Container = isMobile ? Drawer : Modal;
-	const Overlay = isMobile ? DrawerOverlay : ModalOverlay;
-	const Content = isMobile ? DrawerContentContainer : ModalContent;
-	const Header = isMobile ? DrawerHeader : ModalHeader;
-	const CloseButton = isMobile ? DrawerCloseButton : ModalCloseButton;
-	const Body = isMobile ? DrawerBody : ModalBody;
-
 	const renderTrigger = () => {
 		if (trigger) {
 			return <Flex onClick={onOpen}>{trigger}</Flex>;
 		} else {
 			return (
 				<MenuItem
+					asChild
+					closeOnSelect={false}
 					icon='view-outline'
 					onClick={onOpen}>
 					{title || 'Quick View'}
@@ -95,42 +76,37 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 	return (
 		<>
 			{renderTrigger()}
-			<Container
-				isCentered
-				{...(isMobile && { placement: 'bottom' })}
-				{...(isMobile && { isFullHeight: false })}
+			<Dialog
+				// placement='center'
 				isOpen={isOpen}
-				size='2xl'
-				onClose={onClose}>
-				<Overlay />
-				<Content>
-					<Header>{title || 'Item Details'}</Header>
-					<CloseButton />
+				onClose={() => onClose()}>
+				<DialogHeader>{title || 'Item Details'}</DialogHeader>
+				<DialogCloseButton />
 
-					<Body px={0}>
-						<Column
-							gap={4}
-							pt={2}>
-							{schema?.map((item: any, i: number) => {
-								const { title, dataKey, type, colorScheme, path, copy, model } = item;
+				<DialogBody>
+					<Column
+						// bg='red'
+						gap={4}
+						pt={2}>
+						{schema?.map((item: any, i: number) => {
+							const { title, dataKey, type, colorPalette, path, copy, model } = item;
 
-								return (
-									<ViewItem
-										copy={copy}
-										isLoading={isFetching}
-										title={title}
-										type={type}
-										colorScheme={colorScheme}
-										path={model || path}
-										key={i}>
-										{data && getValue({ dataKey, type, data })}
-									</ViewItem>
-								);
-							})}
-						</Column>
-					</Body>
-				</Content>
-			</Container>
+							return (
+								<ViewItem
+									copy={copy}
+									isLoading={isFetching}
+									title={title}
+									type={type}
+									colorPalette={colorPalette}
+									path={model || path}
+									key={i}>
+									{data && getValue({ dataKey, type, data })}
+								</ViewItem>
+							);
+						})}
+					</Column>
+				</DialogBody>
+			</Dialog>
 		</>
 	);
 };

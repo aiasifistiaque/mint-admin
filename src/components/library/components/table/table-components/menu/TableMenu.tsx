@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { Menu } from '@chakra-ui/react';
+import { Menu, Center } from '@chakra-ui/react';
 import {
 	MenuButton,
 	CustomTd,
@@ -38,12 +38,19 @@ const TableMenu: FC<TableMenuProps> = ({
 }) => {
 	const { data: schemaData, isFetching } = useGetConfigQuery(path);
 	return (
-		<Menu>
-			{children || (
+		<Menu.Root>
+			<Menu.Trigger asChild>{children}</Menu.Trigger>
+			{/* {children ? (
+				<Menu.Trigger asChild>{children}</Menu.Trigger>
+			) : (
 				<CustomTd>
-					<MenuButton />
+					<Menu.Trigger asChild>
+						<Center h='full'>
+							<MenuButton />
+						</Center>
+					</Menu.Trigger>
 				</CustomTd>
-			)}
+			)} */}
 
 			<MenuContainer>
 				{data?.map((item: any, i: number) => {
@@ -63,6 +70,7 @@ const TableMenu: FC<TableMenuProps> = ({
 						case 'custom-redirect':
 							return (
 								<MenuItem
+									closeOnSelect={false}
 									href={item?.href(doc) || '#'}
 									key={i}>
 									{item?.title}
@@ -103,7 +111,7 @@ const TableMenu: FC<TableMenuProps> = ({
 									invalidate={item?.invalidate}
 									id={item?.id ? item?.id(doc) : id}
 									title={item?.title}>
-									<MenuItem>{item?.title}</MenuItem>
+									<MenuItem closeOnSelect={false}>{item?.title}</MenuItem>
 								</CreateModal>
 							);
 						case 'edit-modal':
@@ -148,6 +156,7 @@ const TableMenu: FC<TableMenuProps> = ({
 						case 'view-item':
 							return (
 								<MenuItem
+									closeOnSelect={false}
 									icon='arrow-angle'
 									key={i}
 									href={`/view/${path}/${id}`}>
@@ -253,11 +262,17 @@ const TableMenu: FC<TableMenuProps> = ({
 								/>
 							);
 						default:
-							return <MenuItem key={i}>{item?.title}</MenuItem>;
+							return (
+								<MenuItem
+									closeOnSelect={false}
+									key={i}>
+									{item?.title}
+								</MenuItem>
+							);
 					}
 				})}
 			</MenuContainer>
-		</Menu>
+		</Menu.Root>
 	);
 };
 

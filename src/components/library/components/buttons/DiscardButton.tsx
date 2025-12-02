@@ -8,8 +8,9 @@ type DiscardButtonProps = ButtonProps & {
 const DiscardButton: FC<DiscardButtonProps> = ({ children, ...props }) => {
 	return (
 		<Button
-			size='xs'
-			colorScheme='gray'
+			variant='outline'
+			px={3}
+			size='sm'
 			{...props}>
 			{children}
 		</Button>

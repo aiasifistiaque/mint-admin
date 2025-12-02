@@ -1,13 +1,14 @@
 import { FC, ReactNode } from 'react';
-import { ModalHeader, ModalHeaderProps } from '@chakra-ui/react';
+import { Dialog } from '@chakra-ui/react';
 
-type CustomModalHeaderProps = ModalHeaderProps & {
+type CustomDrawerHeaderProps = {
 	children?: ReactNode;
+	[key: string]: any;
 };
 
-const CustomDrawerHeader: FC<CustomModalHeaderProps> = ({ children, ...props }) => {
+const CustomDrawerHeader: FC<CustomDrawerHeaderProps> = ({ children, ...props }) => {
 	return (
-		<ModalHeader
+		<Dialog.Header
 			bg='sidebar.light'
 			borderColor='border.light'
 			borderBottomWidth={1}
@@ -18,7 +19,7 @@ const CustomDrawerHeader: FC<CustomModalHeaderProps> = ({ children, ...props }) 
 			h='100px'
 			{...props}>
 			{children}
-		</ModalHeader>
+		</Dialog.Header>
 	);
 };
 

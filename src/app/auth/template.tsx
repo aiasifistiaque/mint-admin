@@ -12,11 +12,11 @@ const template: FC<TemplateProps> = ({ children }) => {
 			{/* <Navbar borderBottomWidth={2} px={8}>
 				<Heading size='md'>{labels.HEADER_TITLE}</Heading>
 			</Navbar>
-			<Body sx={styles.body}>
+			<Body css={styles.body}>
 				<Center flexDir='column' gap={2} textAlign='center'>
 					<Heading>Login</Heading>
 				</Center> */}
-			{/* <Flex sx={styles.container}> */}
+			{/* <Flex css={styles.container}> */}
 			{children}
 			{/* <Button variant='link'>Forgot Password?</Button> */}
 			{/* </Flex>

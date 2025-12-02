@@ -1,8 +1,8 @@
-import { DrawerCloseButton } from '@chakra-ui/react';
+import { Drawer } from '@chakra-ui/react';
 
 const PopModalCloseButton = ({ isMobile }: { isMobile: boolean }) => {
 	if (isMobile) {
-		return <DrawerCloseButton borderRadius='full' />;
+		return <Drawer.CloseTrigger borderRadius='full' />;
 	}
 
 	return null;

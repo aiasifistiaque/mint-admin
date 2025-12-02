@@ -1,26 +1,17 @@
 'use client';
 
-import {
-	AlertDialog,
-	AlertDialogBody,
-	AlertDialogFooter,
-	AlertDialogOverlay,
-	Button,
-	useDisclosure,
-	Text,
-} from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Text, Portal } from '@chakra-ui/react';
 import { useEffect, useRef, FC, useState } from 'react';
 
 import {
 	useCustomToast,
 	MenuItem,
-	AlertDialogHeader,
-	AlertDialogContent,
 	AlertSubmitButton,
 	useUpdateByIdMutation,
 	PromptType,
 	Column,
 	Input,
+	AlertDialogHeader,
 } from '../../../..';
 
 type UpdateKeyProps = {
@@ -40,7 +31,7 @@ type UpdateKeyProps = {
 };
 
 const UpdateStringModal: FC<UpdateKeyProps> = ({ item, doc, id, path, type, icon }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const { title, prompt, invalidate, dataPath, key } = item;
 
 	const cancelRef = useRef<any>(undefined);
@@ -86,52 +77,63 @@ const UpdateStringModal: FC<UpdateKeyProps> = ({ item, doc, id, path, type, icon
 	return (
 		<>
 			<MenuItem
+				closeOnSelect={false}
 				icon={'update-key'}
 				onClick={onModalOpen}>
 				{title}
 			</MenuItem>
 
-			<AlertDialog
-				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
-				onClose={closeItem}>
-				<AlertDialogOverlay>
-					<form onSubmit={handleSubmit}>
-						<AlertDialogContent>
-							<AlertDialogHeader>{prompt?.title || `Update Item`}</AlertDialogHeader>
+			<Dialog.Root
+				placement='center'
+				open={isOpen}
+				onOpenChange={e => !e.open && closeItem()}>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<Dialog.Content>
+							<form onSubmit={handleSubmit}>
+								<AlertDialogHeader>
+									<Dialog.Title>{prompt?.title || `Update Item`}</Dialog.Title>
+								</AlertDialogHeader>
 
-							<AlertDialogBody py={4}>
-								<Column gap={4}>
-									<Text>{prompt?.body || 'Please select an option'}</Text>
-									<Input
-										size='sm'
-										value={value}
-										onChange={e => setValue(e.target.value)}
-										type={type}
-									/>
-								</Column>
-							</AlertDialogBody>
+								<Dialog.Body p={6}>
+									<Column gap={4}>
+										<Text>{prompt?.body || 'Please select an option'}</Text>
+										<Input
+											size='sm'
+											value={value}
+											onChange={e => setValue(e.target.value)}
+											type={type}
+										/>
+									</Column>
+								</Dialog.Body>
 
-							<AlertDialogFooter>
-								{!isLoading && (
-									<Button
-										ref={cancelRef}
-										onClick={closeItem}
-										size='sm'
-										variant='white'>
-										Discard
-									</Button>
-								)}
-								<AlertSubmitButton
-									isDisabled={!value}
-									isLoading={isLoading}>
-									{prompt?.btnText || 'Update'}
-								</AlertSubmitButton>
-							</AlertDialogFooter>
-						</AlertDialogContent>
-					</form>
-				</AlertDialogOverlay>
-			</AlertDialog>
+								<Dialog.Footer
+									px={6}
+									py={4}>
+									{!isLoading && (
+										// <Dialog.CloseTrigger asChild>
+										<Button
+											px={3}
+											onClick={closeItem}
+											ref={cancelRef}
+											size='sm'
+											variant='outline'>
+											Discard
+										</Button>
+										// </Dialog.CloseTrigger>
+									)}
+									<AlertSubmitButton
+										disabled={!value}
+										loading={isLoading}>
+										{prompt?.btnText || 'Update'}
+									</AlertSubmitButton>
+								</Dialog.Footer>
+							</form>
+						</Dialog.Content>
+					</Dialog.Positioner>
+				</Portal>
+			</Dialog.Root>
 		</>
 	);
 };

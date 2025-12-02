@@ -4,7 +4,6 @@ import {
 	Heading,
 	Button,
 	ButtonProps,
-	useColorModeValue,
 	Grid,
 	FlexProps,
 	HeadingProps,
@@ -65,7 +64,7 @@ const SettingsEditContainer: FC<SettingsEditContainerProps> = ({
 }) => {
 	const editState = editing ? (
 		<EditButtons
-			isLoading={isLoading}
+			loading={isLoading}
 			closeEdit={closeEdit}
 		/>
 	) : (
@@ -127,7 +126,7 @@ const EditButtons: FC<ButtonProps & { closeEdit: () => void }> = ({ closeEdit, .
 		<Button
 			mr={2}
 			size='sm'
-			variant='white'
+			colorPalette='white'
 			onClick={closeEdit}>
 			Discard
 		</Button>
@@ -141,18 +140,15 @@ const EditButtons: FC<ButtonProps & { closeEdit: () => void }> = ({ closeEdit, .
 );
 
 const ToEditButton: FC<ButtonProps & { children: ReactNode }> = ({ children, ...props }) => {
-	const iconColor = useColorModeValue('white', '#222');
 	return (
 		<Button
 			size='sm'
 			pl={3}
-			leftIcon={
-				<Icon
-					name='edit'
-					color={iconColor}
-				/>
-			}
 			{...props}>
+			<Icon
+				name='edit'
+				color='brand.500'
+			/>
 			{children}
 		</Button>
 	);

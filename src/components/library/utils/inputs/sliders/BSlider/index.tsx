@@ -1,6 +1,6 @@
 'use client';
 
-import { Slider, SliderTrack, SliderFilledTrack, SliderThumb, SliderMark } from '@chakra-ui/react';
+import { Slider } from '@chakra-ui/react';
 import { FC } from 'react';
 import { FormControl } from '../../../..';
 import { labelStyle, variables, SliderProps, toolTipStyle } from '../styles';
@@ -23,11 +23,11 @@ const BSlider: FC<
 	step,
 	...props
 }) => {
-	const handleChange = (val: any) => {
+	const handleChange = (details: any) => {
 		props?.onChange({
 			target: {
 				name: props.name,
-				value: val / threshold,
+				value: details.value / threshold,
 			},
 		});
 	};
@@ -38,33 +38,35 @@ const BSlider: FC<
 			label={label}
 			helper={helper}
 			h={variables?.height}>
-			<Slider
+			<Slider.Root
 				min={min || 0}
 				max={max || threshold}
-				value={value ? value * threshold : threshold}
+				value={[value ? value * threshold : threshold]}
 				step={step || 10}
 				mb={3}
-				onChange={handleChange}>
-				{values?.map((value: number) => (
-					<SliderMark
-						key={value}
-						value={value * threshold}
-						{...labelStyle}>
-						{value}
-					</SliderMark>
-				))}
+				onValueChange={handleChange}>
+				<Slider.Control>
+					{values?.map((val: number) => (
+						<Slider.MarkerGroup key={val}>
+							<Slider.Marker
+								value={val * threshold}
+								{...labelStyle}>
+								{val}
+							</Slider.Marker>
+						</Slider.MarkerGroup>
+					))}
 
-				<SliderMark
-					value={value * threshold}
-					{...toolTipStyle}>
-					{value} px
-				</SliderMark>
+					<Slider.ValueText {...toolTipStyle}>{value} px</Slider.ValueText>
 
-				<SliderTrack bg={variables?.track}>
-					<SliderFilledTrack bg={variables?.filledTrack} />
-				</SliderTrack>
-				<SliderThumb boxSize={variables?.boxSize} />
-			</Slider>
+					<Slider.Track bg={variables?.track}>
+						<Slider.Range bg={variables?.filledTrack} />
+					</Slider.Track>
+					<Slider.Thumb
+						index={0}
+						boxSize={variables?.boxSize}
+					/>
+				</Slider.Control>
+			</Slider.Root>
 		</FormControl>
 	);
 };

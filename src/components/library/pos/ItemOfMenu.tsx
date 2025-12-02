@@ -1,22 +1,25 @@
 import { FC, ReactNode } from 'react';
 
-import { MenuItemProps, useColorModeValue } from '@chakra-ui/react';
+import { MenuItemProps } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 import { useAppSelector, MenuItem } from '../';
 
 const WIDTH = '300px';
 const MAX_H = '300px';
 
-type ItemOfMenuProps = MenuItemProps & {
+type ItemOfMenuProps = any & {
 	children: ReactNode;
 	id: string;
 	filter: string;
+	value?: string;
 };
 
 const ItemOfMenu: FC<ItemOfMenuProps> = ({ children, filter, id, ...props }) => {
 	const { filters } = useAppSelector((state: any) => state.table);
-	const hoverBg = useColorModeValue('hover.light', 'hover.dark');
-	const itemBg = useColorModeValue('brand.500', 'brand.200');
-	const itemColor = useColorModeValue('white', '#4a4a4a');
+	const { colorMode } = useColorMode();
+	const hoverBg = colorMode === 'dark' ? 'hover.dark' : 'hover.light';
+	const itemBg = colorMode === 'dark' ? 'brand.200' : 'brand.500';
+	const itemColor = colorMode === 'dark' ? '#4a4a4a' : 'white';
 
 	const isActive = (id: string): boolean => {
 		return filters[filter] === id;
@@ -34,11 +37,6 @@ const ItemOfMenu: FC<ItemOfMenuProps> = ({ children, filter, id, ...props }) => 
 			_hover={hoverStyle(id)}
 			bg={isActive(id) ? itemBg : 'transparent'}
 			color={isActive(id) ? itemColor : 'inherit'}
-			_dark={{
-				bg: isActive(id) ? itemBg : 'transparent',
-				color: isActive(id ? itemColor : 'inherit'),
-				_hover: hoverStyle(id),
-			}}
 			{...props}>
 			{children}
 		</MenuItem>

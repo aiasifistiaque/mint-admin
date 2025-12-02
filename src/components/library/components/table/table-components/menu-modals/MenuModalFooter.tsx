@@ -1,33 +1,43 @@
 import { FC, ReactNode } from 'react';
-import { useIsMobile, ModalFooter } from '../../../..';
-import { DrawerFooter } from '@chakra-ui/react';
+import { styles, useIsMobile } from '../../../..';
+import { Drawer, Dialog } from '@chakra-ui/react';
 
-type MenuModalBodyProps = {
+type MenuModalFooterProps = {
 	children: ReactNode;
+	[key: string]: any;
 };
 
-const MenuModalFooter: FC<MenuModalBodyProps> = ({ children }) => {
+const MenuModalFooter: FC<MenuModalFooterProps> = ({ children, ...props }) => {
 	const isMobile = useIsMobile();
 	if (isMobile) {
 		return (
-			<DrawerFooter
+			<Drawer.Footer
+				p={{ base: 4, md: 6 }}
+				py={2}
 				_light={{ bg: 'background.light' }}
-				gap={2}>
+				gap={2}
+				{...props}>
 				{children}
-			</DrawerFooter>
+			</Drawer.Footer>
 		);
 	}
 
 	return (
-		<ModalFooter
+		<Dialog.Footer
 			w='full'
 			gap={2}
+			px={{ base: 4, md: 6 }}
+			borderTopWidth={1}
+			borderColor='container.borderLight'
+			_dark={{ borderColor: 'border.dark' }}
 			py={2}
+			borderBottomRadius={styles?.MODAL?.borderRadius || '8px'}
 			_light={{ bg: 'background.light' }}
 			justifyContent='flex-end'
-			alignItems='center'>
+			alignItems='center'
+			{...props}>
 			{children}
-		</ModalFooter>
+		</Dialog.Footer>
 	);
 };
 

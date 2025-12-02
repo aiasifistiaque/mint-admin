@@ -13,7 +13,7 @@ import {
 	BsThreeDots,
 	BsThreeDotsVertical,
 } from 'react-icons/bs';
-import { useColorModeValue } from '@chakra-ui/react';
+// import { useColorModeValue } from '@chakra-ui/react';
 import { TbArrowForward, TbDownload, TbSettings, TbSelector } from 'react-icons/tb';
 import {
 	LuAlignEndVertical,
@@ -28,7 +28,13 @@ import {
 } from 'react-icons/lu';
 import { DiNpm } from 'react-icons/di';
 
-import { TbFileInvoice, TbTruckDelivery, TbBrandPatreonFilled, TbFileExport } from 'react-icons/tb';
+import {
+	TbFileInvoice,
+	TbTruckDelivery,
+	TbBrandPatreonFilled,
+	TbFileExport,
+	TbRefresh,
+} from 'react-icons/tb';
 import {
 	FaTruck,
 	FaTshirt,
@@ -276,6 +282,8 @@ const icons: any = {
 	user: FaUserFriends,
 	sort: BiSortAZ,
 
+	refresh: TbRefresh,
+
 	//zhoei icons
 	'z-cart': IoBagOutline,
 	'z-grid': IoGridOutline,
@@ -310,12 +318,12 @@ const icons: any = {
 
 const Icon: FC<IconProps> = ({ name, ...props }) => {
 	const IconComponent = icons[name] || GrStatusUnknown;
-	const brandColor = useColorModeValue('brand.light', 'brand.dark');
-	const defaultColor = useColorModeValue('#4a4a4a', 'white');
+	// const brandColor = useColorModeValue('brand.light', 'brand.dark');
+	// const defaultColor = useColorModeValue('#4a4a4a', 'white');
 	return (
 		<IconComponent
 			size={props.size}
-			color={name == 'arrow' ? brandColor : props.color ? props.color : defaultColor}
+			color={name == 'arrow' ? 'brand.light' : props.color ? props.color : '#4a4a4a'}
 			{...props}
 		/>
 	);

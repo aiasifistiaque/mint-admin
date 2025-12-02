@@ -26,7 +26,7 @@ const ShowSum: FC<CountProps> = ({
 		<StatContainer href={href}>
 			<Align>
 				<StatLabel>{title}</StatLabel>
-				{tooltip && (
+				{/* {tooltip && (
 					<Tooltip
 						label={tooltip}
 						borderRadius='md'>
@@ -34,22 +34,22 @@ const ShowSum: FC<CountProps> = ({
 							<Icon name='info' />
 						</span>
 					</Tooltip>
-				)}
+				)} */}
 			</Align>
 
-			<Skeleton
-				isLoaded={!isLoading}
-				w={!isLoading ? '100%' : '100px'}>
-				<StatNumber>
-					{isError
-						? '--'
-						: isLoading
-						? '--'
-						: price
-						? `${currency.symbol}${children.toLocaleString()}`
-						: children}
-				</StatNumber>
-			</Skeleton>
+			{/* <Skeleton
+				loading={isLoading}
+				w={!isLoading ? '100%' : '100px'}> */}
+			<StatNumber>
+				{isError
+					? '--'
+					: isLoading
+					? '--'
+					: price
+					? `${currency.symbol}${children.toLocaleString()}`
+					: children}
+			</StatNumber>
+			{/* </Skeleton> */}
 		</StatContainer>
 	);
 };

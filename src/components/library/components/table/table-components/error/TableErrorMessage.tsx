@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Center, Text, FlexProps } from '@chakra-ui/react';
+import { Flex, Text, FlexProps } from '@chakra-ui/react';
 
 const TableErrorMessage = ({
 	title,
@@ -7,7 +7,9 @@ const TableErrorMessage = ({
 	...props
 }: FlexProps & { title: string; children: ReactNode }) => {
 	return (
-		<Center
+		<Flex
+			align='center'
+			justify='center'
 			flexDir='column'
 			textAlign='center'
 			h={{
@@ -17,7 +19,7 @@ const TableErrorMessage = ({
 			{...props}>
 			<Text>{title}</Text>
 			<Text>{children}</Text>
-		</Center>
+		</Flex>
 	);
 };
 

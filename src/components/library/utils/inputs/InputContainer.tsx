@@ -1,7 +1,7 @@
-import { Grid, Flex, FlexProps, FormControl, FormHelperText } from '@chakra-ui/react';
+import { Grid, Flex, FlexProps } from '@chakra-ui/react';
 import { ReactNode, FC } from 'react';
 
-import { Label, Column } from '../..';
+import { Label, Column, FormControl } from '../..';
 
 type InputContainerProps = FlexProps & {
 	children: ReactNode;
@@ -19,17 +19,19 @@ const InputContainer: FC<InputContainerProps> = ({
 }) => {
 	return (
 		<FormControl
+			label={label}
+			helper={helper}
 			as={Grid}
 			isRequired={isRequired}
-			sx={styles.container}>
-			{label && (
-				<Flex align='center'>
-					<Label>{label}</Label>
-				</Flex>
-			)}
+			css={styles.container}>
+			{/* // {label && (
+			// 	<Flex align='center'>
+			// 		<Label>{label}</Label>
+			// 	</Flex>
+			// )} */}
 			<Column>
 				{children}
-				{helper && <FormHelperText sx={styles.helper}>{helper}</FormHelperText>}
+				{/* {helper && <FormHelperText css={styles.helper}>{helper}</FormHelperText>} */}
 			</Column>
 		</FormControl>
 	);

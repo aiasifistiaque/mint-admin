@@ -1,4 +1,4 @@
-import { InputProps, MenuProps, SelectProps, SwitchProps, TextareaProps } from '@chakra-ui/react';
+import { InputProps, TextareaProps } from '@chakra-ui/react';
 import { FC, useEffect } from 'react';
 
 // Direct imports instead of barrel export
@@ -36,6 +36,7 @@ import VAlignment from '../../../utils/inputs/VAlign';
 import VFile from '../../../utils/inputs/VFile';
 import VVideo from '../../../utils/inputs/VVideo.new';
 import VIcon from '../../../utils/inputs/VIcon';
+import VVariant from '../../../utils/inputs/VVariant';
 
 import { flexAlignOptions, flexJustifyOptions, textAlignOptions } from './options';
 import VModelFields from '@/components/library/utils/inputs/VModelFields';
@@ -48,8 +49,8 @@ type Option = {
 
 type FormInputProps = InputProps &
 	TextareaProps &
-	SelectProps &
-	SwitchProps & {
+	any &
+	any & {
 		label: string;
 		value: any;
 		isRequired: boolean;
@@ -146,6 +147,21 @@ const FormInput: FC<FormInputProps> = ({
 					isRequired={isRequired}
 					onChange={props.onChange}
 					helper={item?.helper}
+					{...props}
+				/>
+			);
+
+		case 'variant':
+			return (
+				<VVariant
+					form={formData}
+					onChange={props.onChange}
+					isRequired={isRequired}
+					name={props.name}
+					helper={item?.helper}
+					hasImage={item?.hasImage}
+					limit={item?.limit}
+					section={item?.section}
 					{...props}
 				/>
 			);
@@ -426,6 +442,16 @@ const FormInput: FC<FormInputProps> = ({
 					{...props}
 				/>
 			);
+		// case 'select-tag':
+		// 	return (
+		// 		<VSelectTags
+		// 			type={type}
+		// 			helper={item?.helper}
+		// 			isRequired={isRequired}
+		// 			options={item?.options || []}
+		// 			{...props}
+		// 		/>
+		// 	);
 		case 'case-tag':
 			return (
 				<VTags

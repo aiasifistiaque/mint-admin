@@ -32,13 +32,13 @@ const HeadingMenu: FC<HeadingMenuProps> = ({
 						<Button
 							mr={2}
 							size='xs'
-							colorScheme='gray'
+							colorPalette='gray'
 							onClick={close}>
 							Discard
 						</Button>
 						<Button
 							size='xs'
-							isLoading={isLoading}
+							loading={isLoading}
 							type='submit'>
 							Confirm
 						</Button>
@@ -46,7 +46,7 @@ const HeadingMenu: FC<HeadingMenuProps> = ({
 				) : (
 					<Button
 						size='xs'
-						rightIcon={<Icon name='edit' />}
+						// rightIcon={<Icon name='edit' />}
 						onClick={open}>
 						Edit
 					</Button>

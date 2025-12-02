@@ -10,9 +10,10 @@ const HInput: FC<HInputProps> = ({ label, isRequired, placeholder, value, ...pro
 			label={label}
 			isRequired={isRequired}>
 			<Input
-				sx={styles.input}
+				css={styles.input}
 				placeholder={placeholder ? placeholder : label}
 				value={value}
+				required={isRequired}
 				{...props}
 			/>
 		</InputContainer>

@@ -1,7 +1,7 @@
 'use client';
 import React, { useMemo, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { FormControl } from '../input-components';
+import { Box, Text } from '@chakra-ui/react';
 import ImageUploader from '../../../modals/upload-modal/ImageUploader';
 import { useDisclosure } from '@chakra-ui/react';
 import './style.css';
@@ -48,7 +48,7 @@ const FullEditor = ({ value, onChange, name, isRequired, label, helper }: any) =
 	}, []);
 
 	const quillRef = useRef(null);
-	const { onOpen, isOpen, onClose } = useDisclosure();
+	const { onOpen, open: isOpen, onClose } = useDisclosure();
 
 	const handleImage = (image: string) => {
 		const quillObj: any = (quillRef as any)?.current?.getEditor();
@@ -90,10 +90,31 @@ const FullEditor = ({ value, onChange, name, isRequired, label, helper }: any) =
 
 	return (
 		<div className='full-editor-quill'>
-			<FormControl
-				isRequired={isRequired}
-				label={label}
-				helper={helper}>
+			<Box mb={4}>
+				{label && (
+					<Text
+						fontSize='sm'
+						fontWeight='medium'
+						mb={2}>
+						{label}
+						{isRequired && (
+							<Text
+								as='span'
+								color='red.500'
+								ml={1}>
+								*
+							</Text>
+						)}
+					</Text>
+				)}
+				{helper && (
+					<Text
+						fontSize='xs'
+						color='gray.500'
+						mb={2}>
+						{helper}
+					</Text>
+				)}
 				<ImageUploader
 					handleImage={handleImage}
 					isOpen={isOpen}
@@ -123,7 +144,7 @@ const FullEditor = ({ value, onChange, name, isRequired, label, helper }: any) =
 						onChange(customEvent);
 					}}
 				/>
-			</FormControl>
+			</Box>
 		</div>
 	);
 };

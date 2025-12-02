@@ -1,9 +1,8 @@
 'use client';
 import { FC } from 'react';
-import { SelectProps } from '@chakra-ui/react';
 import { FormControl, SelectContainer, useGetSelectDataQuery } from '../..';
 
-type InputContainerProps = SelectProps & {
+type InputContainerProps = any & {
 	label: string;
 	isRequired?: boolean;
 	helper?: string;

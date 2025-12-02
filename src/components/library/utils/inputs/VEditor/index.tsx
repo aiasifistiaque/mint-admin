@@ -48,7 +48,7 @@ const QuillEditor = ({
 }: QuillEditorProps) => {
 	const [mounted, setMounted] = useState(false);
 
-	const { onOpen, isOpen, onClose } = useDisclosure();
+	const { onOpen, open: isOpen, onClose } = useDisclosure();
 
 	const container = [
 		[{ header: [1, 2, 3, 4, 5, 6, false] }],

@@ -3,10 +3,10 @@ import { convertToViewFields, MenuItemProps } from '@/components/library';
 import ViewOrderModal from '@/components/library/pos/ViewOrderModel';
 
 const itemMenu: MenuItemProps[] = [
-	{
-		title: 'Edit',
-		type: 'edit',
-	},
+	// {
+	// 	title: 'Edit',
+	// 	type: 'edit',
+	// },
 	// {
 	// 	title: 'Details',
 	// 	type: 'redirect',

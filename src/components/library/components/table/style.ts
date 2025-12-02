@@ -18,6 +18,8 @@ export const containerCss: FlexProps = {
 export const headingCss: TextProps = {
 	fontSize: { base: '1.5rem', md: '1.75rem' },
 	fontWeight: '600',
+	color: 'text.light',
+	_dark: { color: 'text.dark' },
 };
 
 export const subHeadingCss: TextProps = {

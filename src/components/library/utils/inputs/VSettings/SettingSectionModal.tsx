@@ -28,6 +28,7 @@ type UploadModalProps = {
 	hasImage?: boolean;
 	section?: any;
 	sectionKey: string;
+	availableFields: string[];
 };
 
 const SettingSectionModal: FC<UploadModalProps> = ({
@@ -41,8 +42,9 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 	index = 0,
 	section,
 	sectionKey,
+	availableFields,
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [formData, setFormData] = useState<any>({
 		title: '',
 		type: 'string',
@@ -54,6 +56,7 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 		trim: false,
 		min: 0,
 		max: 99999999,
+		filter: {},
 	});
 	const [changedData, setChangedData] = useState<any>({});
 
@@ -102,6 +105,7 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 			trim: false,
 			min: 0,
 			max: 99999999,
+			filter: {},
 		});
 		closeModal();
 	};
@@ -111,8 +115,31 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 		e.stopPropagation();
 
 		const newArr = Array.isArray(value) ? [...value] : [];
+
+		// Base field data
+		const fieldData: any = {
+			title: formData.title,
+			type: formData.type,
+			required: formData.required,
+			sort: formData.sort,
+			unique: formData.unique,
+			edit: formData.edit,
+			filter: formData.filter,
+		};
+
+		// Only add min/max for number types
+		if (formData.type === 'number') {
+			fieldData.min = formData.min;
+			fieldData.max = formData.max;
+		}
+
+		if (fieldData.type === 'string' || fieldData.type === 'text' || fieldData.type === 'email') {
+			fieldData.trim = formData.trim;
+			fieldData.search = formData.search;
+		}
+
 		if (index >= 0 && index < newArr.length) {
-			newArr[index] = formData;
+			newArr[index] = fieldData;
 		}
 
 		if (handleDataChange) {
@@ -133,9 +160,8 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 	const buttonTypes = {
 		add: (
 			<Button
-				w='full'
 				size='sm'
-				variant='white'>
+				colorPalette='white'>
 				{section?.addBtnText || 'Add Setting'}
 			</Button>
 		),
@@ -144,9 +170,9 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 				variant='outline'
 				aria-label='edit-section'
 				size='xs'
-				colorScheme='brand'
-				icon={<Icon name='edit' />}
-			/>
+				colorPalette='brand'>
+				<Icon name='edit' />
+			</IconButton>
 		),
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
@@ -161,7 +187,7 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 				<Flex onClick={openModal}>{triggerButton}</Flex>
 			)}
 			<InsertModal
-				size='3xl'
+				size='xl'
 				isOpen={isOpen}
 				onClose={closeModal}>
 				<InsertModalOverlay />
@@ -174,12 +200,14 @@ const SettingSectionModal: FC<UploadModalProps> = ({
 							as='form'
 							onSubmit={handleSubmit}>
 							<FormFields
+								sectionKey={sectionKey}
 								formData={formData}
 								onChange={onChange}
+								availableFields={availableFields}
 							/>
 							<Flex {...footerCss}>
 								<Button
-									variant='white'
+									colorPalette='white'
 									size='sm'
 									onClick={closeModal}>
 									Discard

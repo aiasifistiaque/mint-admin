@@ -112,7 +112,7 @@ const schema = {
 		label: 'Is Active',
 		type: 'checkbox',
 		displayInTable: true,
-		colorScheme: (isActive: boolean) => (isActive ? 'green' : 'red'),
+		colorPalette: (isActive: boolean) => (isActive ? 'green' : 'red'),
 	},
 
 	images: {
@@ -130,14 +130,14 @@ const schema = {
 		label: 'Is Featured',
 		type: 'checkbox',
 		displayInTable: true,
-		colorScheme: (isActive: boolean) => (isActive ? 'green' : 'red'),
+		colorPalette: (isActive: boolean) => (isActive ? 'green' : 'red'),
 	},
 	isDiscount: {
 		sort: true,
 		label: 'Is Discount',
 		type: 'checkbox',
 		displayIntable: true,
-		colorScheme: (isActive: boolean) => (isActive ? 'green' : 'red'),
+		colorPalette: (isActive: boolean) => (isActive ? 'green' : 'red'),
 	},
 	discountType: {
 		sort: true,
@@ -171,7 +171,7 @@ const schema = {
 		label: 'Allow Stock',
 		sort: true,
 		displayInTable: true,
-		colorScheme: (isActive: boolean) => (isActive ? 'green' : 'red'),
+		colorPalette: (isActive: boolean) => (isActive ? 'green' : 'red'),
 	},
 
 	stock: {
@@ -199,7 +199,7 @@ const schema = {
 		label: 'Status',
 		isRequired: true,
 		displayInTable: true,
-		colorScheme: (data: any) => {
+		colorPalette: (data: any) => {
 			if (data === 'published') return 'green';
 			if (data === 'draft') return 'orange';
 			if (data === 'archived') return 'red';

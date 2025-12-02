@@ -1,30 +1,33 @@
-import { MenuButton as CustomButton, IconButton } from '@chakra-ui/react';
+import { Menu, IconButton } from '@chakra-ui/react';
 import { Icon, useIsMobile, radius } from '../../../../..';
 
-const MenuButton = () => {
+const MenuButton = ({ ...props }: any) => {
 	const isMobile = useIsMobile();
+
 	return (
-		<CustomButton
-			sx={isMobile ? { position: 'absolute', right: 2, top: 2 } : {}}
-			as={IconButton}
-			size={isMobile ? 'md' : 'sm'}
+		// <Menu.Trigger
+		//
+		// 	asChild>
+		<IconButton
+			css={isMobile ? { position: 'absolute', right: 2, top: 2 } : {}}
+			size={isMobile ? 'md' : 'xs'}
 			borderWidth={1}
 			borderRadius={radius?.BUTTON}
+			borderColor='border.light'
+			bg='container.newLight'
 			_dark={{
+				color: 'white',
+				bg: 'background.dark',
 				borderColor: 'border.dark',
 			}}
-			_light={{
-				borderColor: 'container.borderLight',
-				bg: 'container.newLight',
-			}}
-			icon={
-				<Icon
-					name={isMobile ? 'dots' : 'config'}
-					size={isMobile ? 20 : 16}
-				/>
-			}
-			colorScheme='gray'
-		/>
+			colorPalette='gray'
+			{...props}>
+			<Icon
+				name={isMobile ? 'dots' : 'dots'}
+				size={isMobile ? 20 : 16}
+			/>
+		</IconButton>
+		// </Menu.Trigger>
 	);
 };
 

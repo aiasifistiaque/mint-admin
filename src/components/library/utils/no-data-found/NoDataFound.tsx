@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { Center, FlexProps, Text } from '@chakra-ui/react';
+import { Center, CenterProps, FlexProps, Text } from '@chakra-ui/react';
 
-type NoDataFoundProps = FlexProps & {
+type NoDataFoundProps = CenterProps & {
 	title?: string;
 	description?: string;
 	children?: string;

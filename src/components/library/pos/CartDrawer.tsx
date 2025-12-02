@@ -1,19 +1,12 @@
 'use client';
 import { ReactNode } from 'react';
-import {
-	Drawer,
-	DrawerBody,
-	DrawerFooter,
-	DrawerHeader,
-	DrawerOverlay,
-	DrawerContent,
-	DrawerCloseButton,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { useDisclosure, Drawer } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 import { IconButton } from '..';
 
 const CartDrawer = ({ footer, cart }: { footer: ReactNode; cart: ReactNode }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
+	const { colorMode } = useColorMode();
 
 	return (
 		<>
@@ -25,25 +18,26 @@ const CartDrawer = ({ footer, cart }: { footer: ReactNode; cart: ReactNode }) =>
 				onClick={onOpen}>
 				Open
 			</IconButton>
-			<Drawer
-				isOpen={isOpen}
-				placement='right'
-				onClose={onClose}>
-				<DrawerOverlay />
-				<DrawerContent
-					bg='sidebar.light'
-					_dark={{ bg: 'sidebar.dark' }}>
-					<DrawerCloseButton />
-					<DrawerHeader h='52px'>Cart</DrawerHeader>
-					<DrawerBody p={0}>{cart}</DrawerBody>
-
-					<DrawerFooter
-						h='52px'
-						p={0}>
-						{footer}
-					</DrawerFooter>
-				</DrawerContent>
-			</Drawer>
+			<Drawer.Root
+				open={isOpen}
+				placement='end'
+				onOpenChange={e => (e.open ? onOpen() : onClose())}>
+				<Drawer.Backdrop />
+				<Drawer.Positioner>
+					<Drawer.Content bg={colorMode === 'dark' ? 'sidebar.dark' : 'sidebar.light'}>
+						<Drawer.Header h='52px'>
+							<Drawer.Title>Cart</Drawer.Title>
+							<Drawer.CloseTrigger />
+						</Drawer.Header>
+						<Drawer.Body p={0}>{cart}</Drawer.Body>
+						<Drawer.Footer
+							h='52px'
+							p={0}>
+							{footer}
+						</Drawer.Footer>
+					</Drawer.Content>
+				</Drawer.Positioner>
+			</Drawer.Root>
 		</>
 	);
 };

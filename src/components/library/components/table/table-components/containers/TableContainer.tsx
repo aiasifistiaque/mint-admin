@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { TableContainer as ChakraTableContainer } from '@chakra-ui/react';
+import { Table } from '@chakra-ui/react';
 import { useIsMobile, theme, shadow, Column } from '../../../..';
 
 const { TABLE } = theme;
@@ -19,11 +19,11 @@ const style = {
 const TableContainer = ({ children }: { children: ReactNode }) => {
 	const isMobile = useIsMobile();
 
-	const Container = isMobile ? Column : ChakraTableContainer;
+	const Container = isMobile ? Column : Table.ScrollArea;
 
 	return (
 		<Container
-			sx={style}
+			css={style}
 			bg={{ base: 'transparent', md: TABLE.bg.light }}
 			borderWidth={{ base: 0, md: TABLE.border.width }}
 			shadow={{ base: 'none', md: shadow.DASH }}>

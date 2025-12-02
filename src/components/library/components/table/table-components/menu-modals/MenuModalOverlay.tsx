@@ -1,14 +1,21 @@
 import { styles, useIsMobile } from '../../../..';
-import { DrawerOverlay, ModalOverlay } from '@chakra-ui/react';
+import { Drawer, Dialog } from '@chakra-ui/react';
 
+// Note: In v3, Backdrop is automatically included in Dialog.Root/Drawer.Root
+// This component is deprecated but kept for backward compatibility
 const MenuModalOverlay = () => {
 	const isMobile = useIsMobile();
+
+	console.warn(
+		'MenuModalOverlay is deprecated in Chakra v3. Backdrop is automatically included in Dialog.Root.'
+	);
+
 	if (isMobile) {
-		return <DrawerOverlay />;
+		return <Drawer.Backdrop />;
 	}
 
 	return (
-		<ModalOverlay
+		<Dialog.Backdrop
 			_light={{
 				bg: styles.color.MODAL_OVERLAY.LIGHT,
 			}}

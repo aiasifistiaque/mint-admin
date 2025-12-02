@@ -1,7 +1,7 @@
 'use client';
 import { ChangeEvent, FC, useState } from 'react';
 
-import { Flex, PopoverTrigger, useColorModeValue, useDisclosure } from '@chakra-ui/react';
+import { Flex, PopoverTrigger, useDisclosure } from '@chakra-ui/react';
 import { applyFilters, FilterButton, FilterSelect } from '../..';
 
 import {
@@ -31,9 +31,7 @@ type FilterProps = {
 };
 
 const SelectFilter: FC<FilterProps> = ({ title, field, options, label }) => {
-	const arrow = useColorModeValue('menu.light', 'menu.dark');
-
-	const { onOpen, onClose, isOpen } = useDisclosure();
+	const { onOpen, onClose, open: isOpen } = useDisclosure();
 	const dispatch: any = useAppDispatch();
 	const { filters } = useAppSelector((state: any) => state.table);
 

@@ -7,11 +7,14 @@ import {
 	IconButton,
 	Image,
 	ImageProps,
-	MenuButton,
+	Menu,
 	Skeleton,
 	Tooltip,
+	Box,
+	IconButtonProps,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
+import { useColorMode } from '@/components/ui/color-mode';
 
 import LucideIcon from '../../../icon/LucideIcon';
 import { Caption } from '../../../texts';
@@ -63,6 +66,7 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 	const [isLongPress, setIsLongPress] = useState(false);
 	const { selectedItems }: any = useAppSelector(state => state.table);
 	const dispatch = useAppDispatch();
+	const { colorMode } = useColorMode();
 
 	const handleSelectAll = (isSelected: boolean) => {
 		const ids = data?.map((item: any) => item?._id);
@@ -71,7 +75,7 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 
 	const handleLongPress = (item: any) => {
 		// TODO: Implement long press functionality
-		console.log('Long press detected for item:', item);
+		// console.log('Long press detected for item:', item);
 	};
 
 	const startLongPress = (item: any) => {
@@ -132,12 +136,15 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 			{isLoading
 				? [...Array(12)].map((y, j) => (
 						<Flex
-							{...contentCss}
+							overflow='hidden'
+							w='100%'
+							gap={2}
+							flexDir='column'
 							key={j}>
 							<Skeleton
-								{...imageBoxCss}
 								w={{ base: '150px', md: '240px' }}
 								h={{ base: '120px', md: '160px' }}
+								borderRadius='8px'
 							/>
 						</Flex>
 				  ))
@@ -145,16 +152,20 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 						<Flex
 							onMouseEnter={() => setIndex(i)}
 							onMouseLeave={() => setIndex(-1)}
-							{...contentCss}
+							overflow='hidden'
+							w='100%'
+							gap={2}
+							flexDir='column'
 							key={i}>
 							<Flex
-								{...imageBoxCss}
-								borderColor={selectedItems.includes(item?.id) ? 'brand.500' : 'transparent'}
-								_dark={{
-									borderColor: selectedItems.includes(item?._id) ? 'brand.200' : 'transparent',
-									bg: 'image.900',
-									_hover: { bg: 'image.800' },
-								}}
+								{...styles.imageWrapperCss}
+								borderColor={
+									selectedItems.includes(item?.id)
+										? colorMode === 'dark'
+											? 'brand.200'
+											: 'brand.500'
+										: 'transparent'
+								}
 								// Long press event handlers
 								// onMouseDown={() => startLongPress(item)}
 								// onMouseUp={endLongPress}
@@ -164,112 +175,108 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 								// 	onTouchCancel={endLongPress}
 								onClick={(e: any) => handleClick(item, e)}>
 								<Flex
-									bgImage={item?.url}
 									w='full'
-									bgPosition='center'
-									bgSize='contain'
-									bgRepeat='no-repeat'
-									h={{ base: '120px', md: '160px' }}>
+									backgroundImage={`url(${item?.url})`}
+									{...styles.imageBg}>
 									<Flex
 										onClick={(e: any) => e.stopPropagation()}
 										justify='space-between'
 										w='full'>
-										<Flex {...selectBoxCss}>
+										<Flex
+											bg='white'
+											_dark={{
+												bg: 'background.dark',
+											}}
+											h='20px'>
 											<SelectItem id={item?._id} />
 										</Flex>
 
 										<Center
-											display={selectedItems?.length > 0 ? 'none' : 'flex'}
-											{...iconBoxCss}>
+											{...styles.menuWrapper}
+											display={selectedItems?.length > 0 ? 'none' : 'flex'}>
 											<TableMenu
 												data={menu}
 												doc={item}
 												id={item?._id}
 												path='files'>
-												<MenuButton
-													as={IconButton}
-													{...menuButtonCss}
-													icon={<LucideIcon name='ellipsis' />}
-												/>
+												<IconButton {...styles.menuButton}>
+													<LucideIcon name='ellipsis' />
+												</IconButton>
 											</TableMenu>
 										</Center>
 									</Flex>
 								</Flex>
 							</Flex>
 
-							<Tooltip
-								label={item?.name || `Image ${i + 1}`}
-								placement='top'>
-								<Caption mr={2}>{item?.name || `Image ${i + 1}`}</Caption>
-							</Tooltip>
+							<Tooltip.Root
+								positioning={{ placement: 'top' }}
+								openDelay={200}>
+								<Tooltip.Trigger asChild>
+									<Caption mr={2}>{item?.name || `Image ${i + 1}`}</Caption>
+								</Tooltip.Trigger>
+								<Tooltip.Positioner>
+									<Tooltip.Content>{item?.name || `Image ${i + 1}`}</Tooltip.Content>
+								</Tooltip.Positioner>
+							</Tooltip.Root>
 						</Flex>
 				  ))}
 		</Grid>
 	);
 };
 
-const selectBoxCss: FlexProps = {
-	bg: 'white',
-	_dark: { bg: 'background.dark' },
-	h: '20px',
-};
-
-const contentCss: FlexProps = {
-	overflow: 'hidden',
-	w: '100%',
-	gap: 2,
-	flexDir: 'column',
-};
-
-const menuButtonCss: any = {
-	h: '30px',
-	w: '30px',
-	boxSize: '30px',
-	size: 'sm',
-	borderColor: 'white',
-	borderWidth: 2,
-	bg: 'transparent',
-	borderRadius: '8px',
-	_hover: {
+const styles: any = {
+	imageBg: {
+		w: 'full',
+		backgroundPosition: 'center',
+		backgroundSize: 'contain',
+		backgroundRepeat: 'no-repeat',
+		h: { base: '120px', md: '160px' },
+		flex: 1,
+	},
+	menuWrapper: {
+		border: '1px solid',
+		bg: 'white',
+		borderColor: 'border.light',
+		_dark: {
+			borderColor: 'border.dark',
+			bg: 'background.dark',
+		},
+		h: '30px',
+		w: '30px',
+		boxShadow: 'md',
+		borderRadius: '4px',
+		top: '8px',
+		p: '1px',
+		right: '8px',
+	},
+	menuButton: {
+		h: '30px',
+		w: '30px',
+		size: 'sm',
+		borderColor: 'white',
+		borderWidth: 2,
+		bg: 'white',
+		borderRadius: '8px',
+		_hover: { bg: 'image.50' },
+		_dark: { borderColor: 'background.dark', bg: 'container.dark', _hover: { bg: 'image.800' } },
+	},
+	imageWrapperCss: {
+		// h: { base: '120px', md: '160px' },
+		cursor: 'pointer',
+		border: '2px solid',
+		transition: '.2s',
+		w: 'full',
+		p: 2,
+		borderRadius: '8px',
 		bg: 'image.50',
+		_hover: {
+			bg: 'image.100',
+		},
+		_dark: {
+			bg: 'image.900',
+			_hover: { bg: 'image.800' },
+		},
 	},
-};
-const imageBoxCss: FlexProps = {
-	cursor: 'pointer',
-	border: '2px solid',
-	transition: '.2s',
-	bg: 'image.50',
-	_hover: { bg: 'image.100' },
-	_dark: { bg: 'image.900', _hover: { bg: 'image.800' } },
-	w: 'full',
-	p: 2,
-	borderRadius: '8px',
-};
-
-const iconBoxCss: CenterProps = {
-	border: '1px solid',
-	bg: 'white',
-	borderColor: 'border.light',
-	_dark: {
-		borderColor: 'border.dark',
-		bg: 'background.dark',
-	},
-	h: '34px',
-	w: '34px',
-	boxShadow: 'md',
-	borderRadius: '6px',
-
-	top: '8px',
-	p: '1px',
-	right: '8px',
-};
-
-const imageCss: ImageProps = {
-	objectFit: 'contain',
-	loading: 'lazy',
-	w: { base: '150px', md: '240px' },
-	h: { base: '120px', md: '160px' },
-	borderRadius: '8px',
 };
 
 export default ImageGridData;

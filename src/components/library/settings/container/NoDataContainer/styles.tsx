@@ -1,6 +1,6 @@
 //CSS Properties
 
-import { FlexProps } from '@chakra-ui/react';
+import { CenterProps, FlexProps } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { IconNameOptions } from '../../..';
 
@@ -11,7 +11,7 @@ export type NoDataContainerProps = {
 	children: ReactNode;
 };
 
-export const mainProps: FlexProps = {
+export const mainProps: CenterProps = {
 	px: { base: 2, md: 20 },
 	textAlign: 'center',
 	flexDir: 'column',

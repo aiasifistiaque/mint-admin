@@ -1,8 +1,9 @@
-import { Flex, FlexProps, Heading, Button, useColorModeValue, TextProps } from '@chakra-ui/react';
+import { Flex, FlexProps, Heading, Button, TextProps } from '@chakra-ui/react';
 import Link from 'next/link';
 import { FC } from 'react';
 import { CreateModal, Icon } from '../..';
 import ExportModal from '../modals/export/ExportModal';
+import { useColorMode } from '@/components/ui/color-mode';
 
 type PageHeadingProps = FlexProps & {
 	title: string;
@@ -26,18 +27,17 @@ const PageHeading: FC<PageHeadingProps> = ({
 	export: exportData,
 	...props
 }) => {
-	const iconColor = useColorModeValue('text.dark', 'text.light');
+	const { colorMode } = useColorMode();
+	const iconColor = colorMode === 'light' ? 'text.dark' : 'text.light';
 	const btn = (
 		<Button
 			size='sm'
-			pl={3}
-			leftIcon={
-				<Icon
-					size={18}
-					name='add'
-					color={iconColor}
-				/>
-			}>
+			px={3}>
+			<Icon
+				size={18}
+				name='add'
+				color={iconColor}
+			/>
 			{button}
 		</Button>
 	);
@@ -81,6 +81,10 @@ const containerCss: FlexProps = {
 };
 
 const headingCss: TextProps = {
+	color: 'text.light',
+	_dark: {
+		color: 'text.dark',
+	},
 	fontSize: { base: '1.5rem', md: '1.75rem' },
 };
 

@@ -59,7 +59,7 @@ const Attendance: FC<AttendanceProps> = ({
 						mt={4}
 						w='full'
 						borderRadius='lg'
-						isLoading={isLoading}
+						loading={isLoading}
 						size='md'
 						type='submit'>
 						Submit

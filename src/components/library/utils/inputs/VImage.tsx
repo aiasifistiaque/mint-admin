@@ -1,15 +1,7 @@
 import { FC } from 'react';
 
-import {
-	Center,
-	FormControl,
-	Image,
-	Stack,
-	InputProps,
-	GridProps,
-	FlexProps,
-} from '@chakra-ui/react';
-import { UploadModal, HelperText, Label, ImageContainer } from '../..';
+import { Center, Image, Stack, InputProps, GridProps, FlexProps } from '@chakra-ui/react';
+import { UploadModal, HelperText, Label, ImageContainer, FormControl } from '../..';
 
 type FormDataType = InputProps &
 	GridProps & {
@@ -73,7 +65,7 @@ const VImage: FC<FormDataType> = ({
 	);
 };
 
-const imageCss: FlexProps = {
+const imageCss: any = {
 	bg: 'transparent',
 	position: 'relative',
 };

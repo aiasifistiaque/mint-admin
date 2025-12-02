@@ -48,7 +48,7 @@ const AddSectionModal: FC<UploadModalProps> = ({
 	hasImage,
 	section,
 }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 
 	const [val, setVal] = useState<{
 		image?: string;
@@ -135,7 +135,7 @@ const AddSectionModal: FC<UploadModalProps> = ({
 		add: (
 			<Button
 				size='sm'
-				colorScheme='brand'>
+				colorPalette='brand'>
 				{section?.addBtnText || 'Add Item'}
 			</Button>
 		),
@@ -144,9 +144,9 @@ const AddSectionModal: FC<UploadModalProps> = ({
 				variant='outline'
 				aria-label='edit-section'
 				size='xs'
-				colorScheme='brand'
-				icon={<Icon name='edit' />}
-			/>
+				colorPalette='brand'>
+				<Icon name='edit' />
+			</IconButton>
 		),
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
@@ -213,12 +213,12 @@ const AddSectionModal: FC<UploadModalProps> = ({
 							flex={1}>
 							<Button
 								size='sm'
-								isDisabled={!val.title || !val.description}
+								disabled={!val.title || !val.description}
 								onClick={handleSubmit}>
 								{type == 'add' ? 'Add' : 'Update'}
 							</Button>
 							<Button
-								colorScheme='gray'
+								colorPalette='gray'
 								size='sm'
 								onClick={onClose}>
 								Cancel

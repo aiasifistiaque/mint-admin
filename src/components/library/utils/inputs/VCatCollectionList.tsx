@@ -2,17 +2,15 @@
 import { useCallback, useState, FC } from 'react';
 import {
 	InputProps,
-	FormControl,
 	Stack,
 	IconButton,
 	Tag,
 	Wrap,
 	WrapItem,
 	TagLabel,
-	TagCloseButton,
 	Flex,
 } from '@chakra-ui/react';
-import { Label, Icon, HelperText, Align, useGetItemNameById } from '../..';
+import { Label, Icon, HelperText, Align, useGetItemNameById, FormControl } from '../..';
 import { VDataMenu, VInput, VSelect } from '.';
 
 type InputContainerProps = InputProps & {
@@ -89,12 +87,12 @@ const VCatCollectionList: FC<InputContainerProps> = ({
 			isRequired={isRequired}
 			gap={4}>
 			<Stack
-				spacing={2}
+				gap={2}
 				w='full'>
 				<Label>{label}</Label>
 
 				<Stack
-					spacing={1}
+					gap={1}
 					w='full'>
 					<Flex
 						gap={2}
@@ -125,7 +123,7 @@ const VCatCollectionList: FC<InputContainerProps> = ({
 									label='Category/Collection'
 									value={tag?.id}
 									name='id'
-									isDisabled={true}
+									disabled={true}
 								/>
 							)}
 						</Align>
@@ -140,10 +138,10 @@ const VCatCollectionList: FC<InputContainerProps> = ({
 						<IconButton
 							onClick={addTag}
 							size='sm'
-							colorScheme='gray'
-							aria-label='add tag'
-							icon={<Icon name='add' />}
-						/>
+							colorPalette='gray'
+							aria-label='add tag'>
+							<Icon name='add' />
+						</IconButton>
 					</Flex>
 
 					{helper && <HelperText>{helper}</HelperText>}
@@ -154,17 +152,17 @@ const VCatCollectionList: FC<InputContainerProps> = ({
 					pt={2}>
 					{value?.map((item: any, i: number) => (
 						<WrapItem key={i}>
-							<Tag
+							<Tag.Root
 								size='lg'
 								borderRadius='md'>
-								<TagLabel>
+								<Tag.Label>
 									<TagName
 										id={item?.id}
 										path={item?.type}
 									/>
-								</TagLabel>
-								<TagCloseButton onClick={() => deleteTag(item)} />
-							</Tag>
+								</Tag.Label>
+								<Tag.CloseTrigger onClick={() => deleteTag(item)} />
+							</Tag.Root>
 						</WrapItem>
 					))}
 				</Wrap>

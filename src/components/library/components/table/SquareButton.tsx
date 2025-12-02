@@ -1,8 +1,8 @@
-import { Center, Flex, FlexProps, Text, Tooltip } from '@chakra-ui/react';
+import { Center, CenterProps, Flex, FlexProps, Text, Tooltip } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FC, ReactNode } from 'react';
 
-type SquareButtonProps = FlexProps & {
+type SquareButtonProps = CenterProps & {
 	label: string;
 	children: ReactNode;
 };
@@ -12,19 +12,27 @@ const SquareButton: FC<SquareButtonProps> = ({ children, label, ...props }) => {
 		<Flex
 			// whileTap={{ scale: 0.8 }}
 			onClick={props.onClick}>
-			<Tooltip label={label}>
-				<Center
-					userSelect='none'
-					boxSize={8}
-					cursor='pointer'
-					borderRadius={1}
-					_hover={{
-						boxShadow: 'md',
-					}}
-					{...props}>
-					<Text>{children}</Text>
-				</Center>
-			</Tooltip>
+			<Tooltip.Root
+				openDelay={200}
+				closeDelay={100}
+				positioning={{ placement: 'top' }}>
+				<Tooltip.Trigger asChild>
+					<Center
+						userSelect='none'
+						boxSize={8}
+						cursor='pointer'
+						borderRadius={1}
+						_hover={{
+							boxShadow: 'md',
+						}}
+						{...props}>
+						<Text>{children}</Text>
+					</Center>
+				</Tooltip.Trigger>
+				<Tooltip.Positioner>
+					<Tooltip.Content>{label}</Tooltip.Content>
+				</Tooltip.Positioner>
+			</Tooltip.Root>
 		</Flex>
 	);
 };

@@ -28,14 +28,12 @@ const BuilderEditButton: FC<BuilderEditButtonProps> = ({
 			_light={{
 				color: color,
 			}}
-			leftIcon={
-				<Icon
-					name={icon || btnType == 'delete' ? 'delete-builder' : 'edit-builder'}
-					size={14}
-					color={color}
-				/>
-			}
 			{...props}>
+			<Icon
+				name={icon || btnType == 'delete' ? 'delete-builder' : 'edit-builder'}
+				size={14}
+				color={color}
+			/>
 			{children || 'Click to Edit'}
 		</Button>
 	);
@@ -43,7 +41,7 @@ const BuilderEditButton: FC<BuilderEditButtonProps> = ({
 
 const buttonCSS: ButtonProps = {
 	//position: 'absolute',
-	colorScheme: 'gray',
+	colorPalette: 'gray',
 	alignItems: 'center',
 	borderRadius: '6px',
 	textTransform: 'uppercase',

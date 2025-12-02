@@ -41,7 +41,7 @@
 // 	type,
 // 	id,
 // }: CreateModalProps) => {
-// 	const { isOpen, onOpen, onClose } = useDisclosure();
+// 	const {open: isOpen, onOpen, onClose } = useDisclosure();
 
 // 	const [formData, setFormData] = useFormData<any>(dataModel, data);
 
@@ -131,14 +131,7 @@
 // export default EditProductListModal;
 
 import { FormEvent, useEffect, useState, ReactNode, MouseEvent } from 'react';
-import {
-	Flex,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalOverlay,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { Flex, useDisclosure, Dialog } from '@chakra-ui/react';
 
 import {
 	ModalFormSection,
@@ -175,7 +168,7 @@ const EditProductListModal = ({
 	productListKeys,
 	id,
 }: CreateModalProps) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [formData, setFormData] = useFormData<any>(dataModel, data);
 	const [trigger, result] = useUpdateByIdMutation();
 
@@ -232,38 +225,42 @@ const EditProductListModal = ({
 		<>
 			<Flex onClick={onModalOpen}>{children || title || path}</Flex>
 
-			<Modal
-				size='2xl'
-				isOpen={isOpen}
-				onClose={onModalClose}
-				closeOnOverlayClick={false}>
-				<ModalOverlay />
-				<ModalContainer onClick={(e: MouseEvent) => e.stopPropagation()}>
-					<ModalHeader>{`Update ${title}`}</ModalHeader>
-					<ModalCloseButton />
-					<form onSubmit={handleSubmit}>
-						<ModalBody px={6}>
-							<ModalFormSection>
-								<FormMain
-									fields={dataModel}
-									formData={formData}
-									setFormData={setFormData}
-									setChangedData={setChangedData}
-									isModal={true}
-								/>
-							</ModalFormSection>
-						</ModalBody>
-						<ModalFooter>
-							<DiscardButton
-								mr={2}
-								onClick={onModalClose}>
-								Discard
-							</DiscardButton>
-							<ModalSubmitButton isLoading={isLoading}>Confirm</ModalSubmitButton>
-						</ModalFooter>
-					</form>
-				</ModalContainer>
-			</Modal>
+			<Dialog.Root
+				size='xl'
+				open={isOpen}
+				onOpenChange={(e: any) => (e.open ? onOpen() : onModalClose())}
+				closeOnInteractOutside={false}>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<Dialog.Content onClick={(e: MouseEvent) => e.stopPropagation()}>
+						<Dialog.Header>
+							<Dialog.Title>{`Update ${title}`}</Dialog.Title>
+						</Dialog.Header>
+						<Dialog.CloseTrigger />
+						<form onSubmit={handleSubmit}>
+							<Dialog.Body px={6}>
+								<ModalFormSection>
+									<FormMain
+										fields={dataModel}
+										formData={formData}
+										setFormData={setFormData}
+										setChangedData={setChangedData}
+										isModal={true}
+									/>
+								</ModalFormSection>
+							</Dialog.Body>
+							<ModalFooter>
+								<DiscardButton
+									mr={2}
+									onClick={onModalClose}>
+									Discard
+								</DiscardButton>
+								<ModalSubmitButton isLoading={isLoading}>Confirm</ModalSubmitButton>
+							</ModalFooter>
+						</form>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</>
 	);
 };

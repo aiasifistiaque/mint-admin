@@ -30,14 +30,14 @@ const schema: SchemaProps = {
 		sort: true,
 		type: 'checkbox',
 		displayInTable: true,
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 	isRegisteredOnline: {
 		title: 'Is Registered Online',
 		sort: true,
 		type: 'checkbox',
 		displayInTable: true,
-		colorScheme: (data: boolean) => (data ? 'green' : 'red'),
+		colorPalette: (data: boolean) => (data ? 'green' : 'red'),
 	},
 	createdAt: { title: 'Created', type: 'date', sort: true, displayInTable: true },
 };

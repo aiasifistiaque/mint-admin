@@ -1,17 +1,18 @@
 import { FC, ReactNode } from 'react';
-import { ModalBody, ModalBodyProps } from '@chakra-ui/react';
+import { Dialog } from '@chakra-ui/react';
 
-type InsertModalBodyProps = ModalBodyProps & {
+type InsertModalBodyProps = {
 	children: ReactNode;
+	[key: string]: any;
 };
 
 const InsertModalBody: FC<InsertModalBodyProps> = ({ children, ...props }) => {
 	return (
-		<ModalBody
+		<Dialog.Body
 			minH='70vh'
 			{...props}>
 			{children}
-		</ModalBody>
+		</Dialog.Body>
 	);
 };
 
