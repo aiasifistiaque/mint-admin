@@ -47,7 +47,7 @@ const ImageComponent = ({
 			bg='background.light'
 			_dark={{
 				bg: 'background.dark',
-				borderColor: selected === src ? 'brand.200' : 'gray.600',
+				borderColor: selected === src ? 'brand.200' : 'border.dark',
 			}}
 			{...props}>
 			{type == 'video' ? (

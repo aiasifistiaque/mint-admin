@@ -21,10 +21,7 @@ export const Toaster = () => {
 				toaster={toaster}
 				insetInline={{ mdDown: '4' }}>
 				{toast => (
-					<Toast.Root
-						width={{ md: 'sm' }}
-						borderRadius={6}
-						p={4}>
+					<Toast.Root width={{ md: 'sm' }}>
 						{toast.type === 'loading' ? (
 							<Spinner
 								size='sm'
@@ -41,8 +38,7 @@ export const Toaster = () => {
 							{toast.description && <Toast.Description>{toast.description}</Toast.Description>}
 						</Stack>
 						{toast.action && <Toast.ActionTrigger>{toast.action.label}</Toast.ActionTrigger>}
-						{/* {toast.closable && <Toast.CloseTrigger />} */}
-						<Toast.CloseTrigger />
+						{toast.closable && <Toast.CloseTrigger />}
 					</Toast.Root>
 				)}
 			</ChakraToaster>

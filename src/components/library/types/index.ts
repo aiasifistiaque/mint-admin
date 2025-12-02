@@ -161,6 +161,7 @@ export type TextChild = TextProps & {
 
 export type SelectChild = any & {
 	children?: ReactNode;
+	placeholder?: any;
 };
 
 export type PromptType = {

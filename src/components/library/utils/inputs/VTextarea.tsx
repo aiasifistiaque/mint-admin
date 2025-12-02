@@ -20,8 +20,6 @@ const VTextarea: FC<InputContainerProps> = ({
 	helper,
 	...props
 }) => {
-	// const borderColor = useColorModeValue('brand.500', 'brand.200');
-	// const color = useColorModeValue('text.500', 'gray,300');
 	return (
 		<FormControl
 			isRequired={isRequired}
@@ -37,11 +35,11 @@ const VTextarea: FC<InputContainerProps> = ({
 				size='sm'
 				px={3}
 				pt={2}
+				fontSize='14px'
 				borderRadius='lg'
-				// focusBorderColor={borderColor}
 				color='text.500'
 				_dark={{
-					color: 'gray.400',
+					color: 'text.dark',
 					borderColor: 'selectBorder.dark',
 					_placeholder: { color: 'text.inputPlaceholder.dark' },
 				}}

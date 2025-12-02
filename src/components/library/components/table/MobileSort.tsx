@@ -79,23 +79,35 @@ const MobileSort = ({ tableData, show = false }: { tableData: any; show?: boolea
 
 	return (
 		<>
-			<Tooltip.Root positioning={{ placement: 'bottom' }}>
-				<Tooltip.Trigger asChild>
-					<IconButton
-						onClick={onOpen}
-						{...style.iconButton}>
-						<Icon
-							name='sort'
-							size={14}
-						/>
-					</IconButton>
-				</Tooltip.Trigger>
-				<Tooltip.Positioner>
-					<Tooltip.Content>Sort results by</Tooltip.Content>
-				</Tooltip.Positioner>
-			</Tooltip.Root>
+			{isMobile ? (
+				<IconButton
+					onClick={() => onOpen()}
+					{...style.iconButton}>
+					<Icon
+						name='sort'
+						size={14}
+					/>
+				</IconButton>
+			) : (
+				<Tooltip.Root positioning={{ placement: 'bottom' }}>
+					<Tooltip.Trigger asChild>
+						<IconButton
+							onClick={onOpen}
+							{...style.iconButton}>
+							<Icon
+								name='sort'
+								size={14}
+							/>
+						</IconButton>
+					</Tooltip.Trigger>
+					<Tooltip.Positioner>
+						<Tooltip.Content>Sort results by</Tooltip.Content>
+					</Tooltip.Positioner>
+				</Tooltip.Root>
+			)}
 
 			<MenuModal
+				placement={isMobile ? 'bottom' : 'center'}
 				isOpen={open}
 				onClose={closeModal}>
 				{/* <MenuModalOverlay />
@@ -157,11 +169,14 @@ const style: Style = {
 		colorPalette: 'gray',
 		size: 'md',
 		borderWidth: 1,
+		mr: 0.5,
 		h: sizes?.SEARCH_BAR_HEIGHT,
 		w: sizes?.SEARCH_BAR_HEIGHT,
 		borderRadius: radius?.BUTTON,
 		_dark: {
-			borderWidth: 0,
+			borderWidth: 1,
+			bg: 'container.dark',
+			borderColor: 'border.dark',
 		},
 		_light: {
 			borderColor: 'container.borderLight',

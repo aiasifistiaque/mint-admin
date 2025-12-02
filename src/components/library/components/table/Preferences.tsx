@@ -110,7 +110,7 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 			</Tooltip.Root>
 
 			<MenuModal
-				placement='center'
+				placement={{ base: 'bottom', md: 'center' }}
 				isOpen={isOpen}
 				onClose={closeModal}>
 				{/* <MenuModalOverlay />

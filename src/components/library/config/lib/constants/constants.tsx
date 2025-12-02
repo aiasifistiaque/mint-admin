@@ -159,7 +159,7 @@ export const styles = {
 		},
 		maxH: '85vh',
 		userSelect: 'none',
-		borderTopRadius: '20px',
+		borderTopRadius: '16px',
 	},
 	CONTAINER: {
 		RADIUS: {

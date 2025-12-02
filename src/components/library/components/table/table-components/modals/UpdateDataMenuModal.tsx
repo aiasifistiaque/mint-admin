@@ -74,9 +74,7 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
 
 			<Dialog.Root
 				open={isOpen}
-				onOpenChange={e => !e.open && closeItem()}
-				// role='alertdialog'
-			>
+				onOpenChange={e => !e.open && closeItem()}>
 				<Portal>
 					<Dialog.Backdrop />
 					<Dialog.Positioner>

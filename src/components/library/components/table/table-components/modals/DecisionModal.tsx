@@ -1,9 +1,17 @@
 'use client';
 
-import { Dialog, Button, useDisclosure } from '@chakra-ui/react';
+import { Button, useDisclosure, Portal } from '@chakra-ui/react';
 import { useEffect, FC, useRef } from 'react';
 
-import { useCustomToast, MenuItem, useUpdateByIdMutation } from '../../../..';
+import {
+	Dialog,
+	useCustomToast,
+	MenuItem,
+	useUpdateByIdMutation,
+	DialogHeader,
+	DialogContent,
+	DialogFooter,
+} from '../../../..';
 
 type DecisionModalProps = {
 	itemId: string;
@@ -68,47 +76,41 @@ const DecisionModal: FC<DecisionModalProps> = ({ item, doc, path, icon, itemId }
 				{title || 'Alert'}
 			</MenuItem>
 
-			<Dialog.Root
-				open={isOpen}
-				onOpenChange={(e: any) => !e.open && closeItem()}
-				role='alertdialog'>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<Dialog.Content>
-						<Dialog.Header>
-							<Dialog.Title>{prompt?.title || 'Alert'}</Dialog.Title>
-						</Dialog.Header>
+			<Dialog
+				placenemt='center'
+				isOpen={isOpen}
+				onOpenChange={(e: any) => !e.open && closeItem()}>
+				<DialogHeader>{prompt?.title || 'Alert'}</DialogHeader>
 
-						<Dialog.Body>
-							{prompt?.body || 'Are you sure you want to take this action?'}
-						</Dialog.Body>
+				<DialogContent>
+					{prompt?.body || 'Are you sure you want to take this action?'}
+				</DialogContent>
 
-						<Dialog.Footer>
-							<Dialog.CloseTrigger asChild>
-								<Button
-									colorPalette='white'
-									disabled={isLoading}
-									ref={cancelRef}
-									onClick={closeItem}
-									size='sm'>
-									Discard
-								</Button>
-							</Dialog.CloseTrigger>
+				<DialogFooter>
+					{/* <Dialog.CloseTrigger asChild> */}
+					<Button
+						variant='outline'
+						disabled={isLoading}
+						ref={cancelRef}
+						onClick={closeItem}
+						size='sm'
+						px={2}>
+						Discard
+					</Button>
+					{/* </Dialog.CloseTrigger> */}
 
-							<Button
-								spinnerPlacement='start'
-								loadingText='Processing'
-								loading={isLoading}
-								colorPalette='brand'
-								onClick={handleSubmit}
-								ml={2}
-								size='sm'>
-								{prompt?.btnText || 'Proceed'}
-							</Button>
-						</Dialog.Footer>
-					</Dialog.Content>
-				</Dialog.Positioner>
-			</Dialog.Root>
+					<Button
+						px={2}
+						spinnerPlacement='start'
+						loadingText='Processing'
+						loading={isLoading}
+						onClick={handleSubmit}
+						ml={2}
+						size='sm'>
+						{prompt?.btnText || 'Proceed'}
+					</Button>
+				</DialogFooter>
+			</Dialog>
 		</>
 	);
 };

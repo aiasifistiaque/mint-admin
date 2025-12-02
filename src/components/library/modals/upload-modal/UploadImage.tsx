@@ -70,6 +70,7 @@ const UploadImage = ({
 
 	const body = result?.isLoading ? (
 		<Center
+			bg='red'
 			gap={4}
 			flexDir='column'
 			flex={1}
@@ -108,7 +109,7 @@ const UploadImage = ({
 
 			<Button
 				size='sm'
-				colorPalette='gray'
+				px={3}
 				onClick={handleUpload}>
 				Upload From Device
 			</Button>
@@ -124,6 +125,9 @@ const UploadImage = ({
 			w='100%'
 			borderRadius='8px'
 			border={isDragOver ? '2px dashed #4A90E2' : '2px dashed #ddd'}
+			_dark={{
+				borderColor: isDragOver ? 'brand.500' : 'border.dark',
+			}}
 			backgroundColor={isDragOver ? 'blue.50' : 'transparent'}
 			gap={2}
 			onDragOver={handleDragOver}

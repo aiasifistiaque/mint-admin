@@ -70,7 +70,15 @@ const Details: FC<DetailProps> = ({
 
 	const passwordBox = (
 		<Box>
-			<UpdatePasswordModal trigger={<Button size='sm'>Change Password</Button>} />
+			<UpdatePasswordModal
+				trigger={
+					<Button
+						size='sm'
+						px={3}>
+						Change Password
+					</Button>
+				}
+			/>
 		</Box>
 	);
 
@@ -92,11 +100,14 @@ const Details: FC<DetailProps> = ({
 	// const inputTextColor = useColorModeValue('text.500', 'gray.300');
 
 	const styleProps = {
-		borderRadius: 'lg',
+		borderRadius: 'md',
 		color: 'text.500',
 		size: 'sm',
+		px: 3,
+		fontSize: '13px',
+
 		w: { base: '100%', md: '400px' },
-		_dark: { color: 'gray.300' },
+		_dark: { color: 'text.dark', borderColor: 'border.dark' },
 	};
 
 	const inputBox =

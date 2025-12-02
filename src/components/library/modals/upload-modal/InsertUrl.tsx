@@ -72,22 +72,24 @@ const InsertUrl = ({ handleSelect }: { handleSelect: any }) => {
 			gap={2}
 			flex={1}
 			h='full'>
-			<Flex>
-				<Stack>
-					<Flex
-						flexDir={{ base: 'column', md: 'row' }}
-						gap={2}
-						align='center'>
-						<Label>Paste an image URL here:</Label>
-						<Input
-							// focusBorderColor={borderColor}
-							size='xs'
-							value={url}
-							onChange={handleChange}
-						/>
-					</Flex>
-				</Stack>
+			<Flex
+				mt={4}
+				w='full'
+				flexDir={{ base: 'column', md: 'row' }}
+				gap={2}
+				align='center'>
+				<Label>Paste an image URL here:</Label>
+				<Input
+					w='full'
+					px={3}
+					// focusBorderColor={borderColor}
+					size='xs'
+					_dark={{ borderColor: 'border.dark' }}
+					value={url}
+					onChange={handleChange}
+				/>
 			</Flex>
+
 			<Center flex={1}>{body}</Center>
 		</Column>
 	);

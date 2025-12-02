@@ -5,11 +5,12 @@ import { Icon, inputContainerCss } from '../../..';
 
 type InputContainerProps = NativeSelectFieldProps & {
 	children: ReactNode;
+	size?: 'sm' | 'md' | 'lg' | 'xs';
 };
 
-const SelectContainer: FC<InputContainerProps> = ({ children, ...props }) => {
+const SelectContainer: FC<InputContainerProps> = ({ children, size = 'sm', ...props }) => {
 	return (
-		<NativeSelect.Root size='sm'>
+		<NativeSelect.Root size={size}>
 			<NativeSelect.Field
 				{...inputContainerCss}
 				boxShadow='sm'

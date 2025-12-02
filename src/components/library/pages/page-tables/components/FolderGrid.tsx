@@ -54,19 +54,27 @@ const FolderGrid = ({ path, parent }: { path: string; parent?: string }) => {
 					border='1px solid'
 					borderColor='border.light'
 					bg={colorMode === 'dark' ? 'background.cardDark' : 'background.cardLight'}
+					_dark={{ borderColor: 'border.dark', bg: 'container.dark' }}
 					gap={0.5}>
 					<Link href={`/images/f/${item._id}`}>
 						<Flex
 							h='full'
 							pl={4}
 							flex={1}
-							alignItems='center'
+							align='center'
 							gap={3}>
 							<Icon
 								name='folder'
 								size={26}
 							/>
-							<Text fontWeight='600'>{item?.name}</Text>
+							<Text
+								fontSize={{
+									base: '14px',
+									md: '16px',
+								}}
+								fontWeight={{ base: '600', md: '600' }}>
+								{item?.name}
+							</Text>
 						</Flex>
 					</Link>
 
@@ -80,8 +88,7 @@ const FolderGrid = ({ path, parent }: { path: string; parent?: string }) => {
 								h='full'
 								cursor='pointer'
 								p={2}
-								borderRadius='full'
-								as={Menu.Trigger}>
+								borderRadius='full'>
 								<Icon
 									name='vertical-dots'
 									size={18}

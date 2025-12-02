@@ -71,6 +71,7 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id }:
 					gap={2}>
 					{children?.map((item: any, i: number) => (
 						<Badge
+							px={2}
 							colorPalette='purple'
 							variant='subtle'
 							key={i}>
@@ -147,8 +148,8 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id }:
 					{Array.isArray(children)
 						? children.map((item: any, i: number) => (
 								<Badge
-									colorPalette='purple'
-									variant='subtle'
+									px={2}
+									variant='outline'
 									key={i}>
 									{item?.toString()}
 								</Badge>

@@ -12,7 +12,12 @@ const MenuModalBody: FC<MenuModalBodyProps> = ({ children, ...props }) => {
 	if (isMobile) {
 		return (
 			<Drawer.Body
+				borderTop='1px solid'
+				borderColor='border.light'
+				_dark={{ borderColor: 'border.dark' }}
+				maxH='80vh'
 				p={{ base: 4, md: 6 }}
+				pt={{ base: 2, md: 6 }}
 				overflowY='scroll'
 				{...props}>
 				{children}

@@ -68,14 +68,14 @@ export { default as VFormFields } from './VFormFields';
 export { default as VSettings } from './VSettings';
 
 export const inputContainerCss: any = {
-	color: 'text.500',
+	color: 'text.light',
 	borderRadius: 'md',
 	fontSize: '14px',
-	_placeholder: { fontSize: 14, color: 'text.400' },
+	_placeholder: { fontSize: 14, color: 'text.inputPlaceholder.light' },
 	borderColor: 'selectBorder.light',
 	px: 3,
 	_dark: {
-		color: 'gray.300',
+		color: 'text.dark',
 		borderColor: 'selectBorder.dark',
 		_placeholder: {
 			color: 'text.inputPlaceholder.dark',

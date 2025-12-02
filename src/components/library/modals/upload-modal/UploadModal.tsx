@@ -96,7 +96,6 @@ const UploadModal: FC<UploadModalProps> = ({
 				<GenericModalContent {...styles.modalContentCss}>
 					<GenericModalHeader
 						px={{ base: 4, md: 6 }}
-						color='inherit'
 						pb={2}
 						pt={4}>
 						Insert Photo/File
@@ -107,10 +106,11 @@ const UploadModal: FC<UploadModalProps> = ({
 							{...styles.tabsCss}
 							defaultValue='0'>
 							<Tabs.List
-								px={{ base: 4, md: 6 }}
+								px={{ base: 4, md: 4 }}
 								gap={2}>
-								{tabs.map((label: string, i: number) => (
+								{tabs?.map((label: string, i: number) => (
 									<Tabs.Trigger
+										color={{ _light: 'text.light', _dark: 'text.dark' }}
 										px={2}
 										key={i}
 										value={String(i)}>
@@ -120,7 +120,7 @@ const UploadModal: FC<UploadModalProps> = ({
 							</Tabs.List>
 							<Tabs.Content
 								value='0'
-								px={{ base: 4, md: 8 }}>
+								px={{ base: 4, md: 6 }}>
 								<MyPhotos
 									handleSelect={handleImageSelect}
 									type={fileType || 'image'}
@@ -128,7 +128,8 @@ const UploadModal: FC<UploadModalProps> = ({
 							</Tabs.Content>
 							<Tabs.Content
 								value='1'
-								px={{ base: 4, md: 8 }}>
+								px={{ base: 4, md: 6 }}
+								mt={6}>
 								<MyFolders
 									handleSelect={handleImageSelect}
 									type={fileType || 'image'}
@@ -136,7 +137,9 @@ const UploadModal: FC<UploadModalProps> = ({
 							</Tabs.Content>
 							<Tabs.Content
 								value='2'
-								px={{ base: 4, md: 8 }}>
+								h='full'
+								mt={1}
+								px={{ base: 4, md: 4 }}>
 								<UploadImage
 									fileType={fileType || 'image'}
 									handleSelect={handleUploadComplete}
@@ -144,6 +147,7 @@ const UploadModal: FC<UploadModalProps> = ({
 								/>
 							</Tabs.Content>
 							<Tabs.Content
+								h='full'
 								value='3'
 								px={{ base: 4, md: 8 }}>
 								<InsertUrl handleSelect={handleImageSelect} />
@@ -151,7 +155,11 @@ const UploadModal: FC<UploadModalProps> = ({
 						</Tabs.Root>
 					</GenericModalBody>
 
-					<MFooter px={{ base: 4, md: 6 }}>
+					<MFooter
+						px={{ base: 4, md: 6 }}
+						border='1px solid'
+						borderBottomRadius='md'
+						borderColor={{ _light: 'border.light', _dark: 'border.dark' }}>
 						<Button
 							px={3}
 							size='sm'

@@ -1,7 +1,7 @@
 import { NativeSelect } from '@chakra-ui/react';
 import { SelectChild } from '../../../types';
 
-const SelectInput = ({ children, ...props }: SelectChild) => (
+const SelectInput = ({ children, placeholder, ...props }: SelectChild) => (
 	<NativeSelect.Root
 		cursor='pointer'
 		size='sm'
@@ -17,7 +17,7 @@ const SelectInput = ({ children, ...props }: SelectChild) => (
 		fontSize={12}
 		borderRadius={4}
 		{...props}>
-		<NativeSelect.Field placeholder='Select option'>{children}</NativeSelect.Field>
+		<NativeSelect.Field placeholder={placeholder || 'Select option'}>{children}</NativeSelect.Field>
 		<NativeSelect.Indicator />
 	</NativeSelect.Root>
 );

@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { Menu } from '@chakra-ui/react';
+import { Menu, Center } from '@chakra-ui/react';
 import {
 	MenuButton,
 	CustomTd,
@@ -39,13 +39,18 @@ const TableMenu: FC<TableMenuProps> = ({
 	const { data: schemaData, isFetching } = useGetConfigQuery(path);
 	return (
 		<Menu.Root>
-			{/* <Menu.Trigger asChild> */}
-			{children || (
+			<Menu.Trigger asChild>{children}</Menu.Trigger>
+			{/* {children ? (
+				<Menu.Trigger asChild>{children}</Menu.Trigger>
+			) : (
 				<CustomTd>
-					<MenuButton />
+					<Menu.Trigger asChild>
+						<Center h='full'>
+							<MenuButton />
+						</Center>
+					</Menu.Trigger>
 				</CustomTd>
-			)}
-			{/* </Menu.Trigger> */}
+			)} */}
 
 			<MenuContainer>
 				{data?.map((item: any, i: number) => {

@@ -73,7 +73,12 @@ const MyFolders = ({ handleSelect, type = 'image' }: { handleSelect: any; type?:
 								name='folder'
 								size={26}
 							/>
-							<Text fontWeight='600'>{item}</Text>
+							<Text
+								fontSize='14px'
+								fontWeight='400'
+								textTransform='capitalize'>
+								{item}
+							</Text>
 						</Flex>
 					))}
 				</Grid>
@@ -106,11 +111,14 @@ const styles = {
 		px: 4,
 		h: '50px',
 		cursor: 'pointer',
-		border: '1px solid border.light',
+		border: '1px solid',
 		bg: 'background.cardLight',
+		borderColor: 'border.light',
 		_dark: {
 			bg: 'background.cardDark',
+			borderColor: 'border.dark',
 		},
+		alignItems: 'center',
 		gap: 3,
 	},
 };

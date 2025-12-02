@@ -9,6 +9,7 @@ type RowContainerMobileProps = StackProps & {
 const RowContainerBase: FC<RowContainerMobileProps> = ({ children, ...props }) => {
 	return (
 		<Grid
+			overflow='hidden'
 			gridTemplateColumns='1fr 1fr'
 			position='relative'
 			width='100%'
@@ -17,8 +18,8 @@ const RowContainerBase: FC<RowContainerMobileProps> = ({ children, ...props }) =
 			bg='table.row.light'
 			borderWidth={1}
 			borderColor='table.cardBorder.light'
-			gap={4}
-			p={4}
+			rowGap={2}
+			py={4}
 			pb={0}
 			_last={{ mb: 4 }}
 			_dark={{

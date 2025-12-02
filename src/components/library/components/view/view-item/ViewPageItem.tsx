@@ -26,7 +26,15 @@ const ViewPageItem: FC<ViewItemProps> = ({
 	}, [children]);
 
 	return (
-		<Column {...props}>
+		<Column
+			{...props}
+			px={{ base: 4, md: 6 }}
+			// borderBottom='1px solid'
+			// borderColor={{
+			// 	_light: 'border.light',
+			// 	_dark: 'border.dark',
+			// }}
+			pb={4}>
 			<SkeletonContent isLoading={isLoading}>
 				<Heading
 					size='sm'

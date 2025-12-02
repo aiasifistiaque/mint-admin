@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
-import { useDisclosure, Dialog, Flex } from '@chakra-ui/react';
+import { useDisclosure, Flex } from '@chakra-ui/react';
 import {
 	Column,
 	useIsMobile,
@@ -10,6 +10,10 @@ import {
 	getValue,
 	ViewItem,
 	useGetConfigQuery,
+	Dialog,
+	DialogHeader,
+	DialogBody,
+	DialogCloseButton,
 } from '../../../..';
 
 type Props = {
@@ -61,45 +65,36 @@ const ViewItemModal: FC<Props> = ({ title, path, trigger, id }) => {
 	return (
 		<>
 			{renderTrigger()}
-			<Dialog.Root
-				open={isOpen}
-				onOpenChange={e => !e.open && onClose()}
-				size='xl'
-				placement={isMobile ? 'bottom' : 'center'}
-				motionPreset={isMobile ? 'slide-in-bottom' : 'scale'}>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<Dialog.Content>
-						<Dialog.Header>
-							<Dialog.Title>{title || 'Item Details'}</Dialog.Title>
-						</Dialog.Header>
-						<Dialog.CloseTrigger />
+			<Dialog
+				placement='center'
+				isOpen={isOpen}
+				onClose={() => onClose()}>
+				<DialogHeader>{title || 'Item Details'}</DialogHeader>
+				<DialogCloseButton />
 
-						<Dialog.Body px={0}>
-							<Column
-								gap={4}
-								pt={2}>
-								{schema?.map((item: any, i: number) => {
-									const { title, dataKey, type, colorPalette, path, copy, model } = item;
+				<DialogBody>
+					<Column
+						gap={4}
+						pt={2}>
+						{schema?.map((item: any, i: number) => {
+							const { title, dataKey, type, colorPalette, path, copy, model } = item;
 
-									return (
-										<ViewItem
-											copy={copy}
-											isLoading={isFetching}
-											title={title}
-											type={type}
-											colorPalette={colorPalette}
-											path={model || path}
-											key={i}>
-											{data && getValue({ dataKey, type, data })}
-										</ViewItem>
-									);
-								})}
-							</Column>
-						</Dialog.Body>
-					</Dialog.Content>
-				</Dialog.Positioner>
-			</Dialog.Root>
+							return (
+								<ViewItem
+									copy={copy}
+									isLoading={isFetching}
+									title={title}
+									type={type}
+									colorPalette={colorPalette}
+									path={model || path}
+									key={i}>
+									{data && getValue({ dataKey, type, data })}
+								</ViewItem>
+							);
+						})}
+					</Column>
+				</DialogBody>
+			</Dialog>
 		</>
 	);
 };

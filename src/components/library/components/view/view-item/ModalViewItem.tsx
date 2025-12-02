@@ -27,7 +27,7 @@ const ViewItem: FC<ViewItemProps> = ({
 			{...props}>
 			<SkeletonContent isLoading={isLoading}>
 				<Heading
-					size='xs'
+					size='sm'
 					color='heading.lightMuted'
 					_dark={{ color: 'heading.darkMuted' }}>
 					{title}:
@@ -68,7 +68,7 @@ const GRID_COLUMNS = '1fr 3fr';
 const gridCss = (type: string = 'string'): GridProps => {
 	return {
 		justifyContent: 'center',
-		px: { base: 4, md: 6 },
+		px: { base: 4, md: 4 },
 		pb: 2,
 		gridTemplateColumns: {
 			base: '1fr',

@@ -37,10 +37,9 @@ const TableSelectItem: FC<TableDataPropsType> = ({ id, isMobile = false, ...prop
 				alignItems='center'
 				{...props}>
 				<Checkbox.Root
-					size='lg'
+					size='sm'
 					checked={selectedItems.includes(id)}
-					onCheckedChange={handleCheck}
-					colorPalette='brand'>
+					onCheckedChange={handleCheck}>
 					<Checkbox.HiddenInput />
 					<Checkbox.Control />
 				</Checkbox.Root>

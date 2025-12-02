@@ -32,11 +32,16 @@ const ViewPageBasicInfo: FC<ViewPageBasicInfoProps> = ({ slug, id, schema, layou
 
 				return (
 					<GridItem
-						borderBottomWidth={() => {
-							if (index === viewFields.length - 1) return 0;
-							if (index === viewFields.length - 2) return index % 2 === 0 ? 0 : 1;
-							return 1;
+						borderColor={{
+							_light: 'border.light',
+							_dark: 'border.dark',
 						}}
+						borderBottomWidth={1}
+						// borderBottomWidth={() => {
+						// 	if (index === viewFields.length - 1) return 0;
+						// 	if (index === viewFields.length - 2) return index % 2 === 0 ? 0 : 1;
+						// 	return 1;
+						// }}
 						{...itemCss}
 						key={index}>
 						<ViewPageItem
@@ -57,7 +62,7 @@ const ViewPageBasicInfo: FC<ViewPageBasicInfoProps> = ({ slug, id, schema, layou
 };
 
 const itemCss: any = {
-	px: 6,
+	px: 0,
 	py: 3,
 	borderBottomColor: 'container.borderLight',
 	_dark: {

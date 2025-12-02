@@ -5,7 +5,7 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { HiArrowUturnLeft, HiArrowUturnRight } from 'react-icons/hi2';
 
 import { useIsMobile, useAppDispatch, useAppSelector } from '../../hooks';
-import { SquareButton, TableHeading, updateTable } from '../..';
+import { SelectContainer, SquareButton, TableHeading, updateTable } from '../..';
 import { SHOW_PER_PAGE_OPTIONS } from '../..';
 import { SelectInput, CurrentPage } from './_components';
 
@@ -38,7 +38,7 @@ const Pagination: FC<PaginationProps> = ({ data, showPerPage = true }) => {
 	const perpage = (
 		<>
 			{!isMobile && <TableHeading>SHOWING RESULTS</TableHeading>}
-			<SelectInput
+			<SelectContainer
 				size='xs'
 				px={3}
 				defaultValue={limit}
@@ -51,7 +51,7 @@ const Pagination: FC<PaginationProps> = ({ data, showPerPage = true }) => {
 						{label}
 					</option>
 				))}
-			</SelectInput>
+			</SelectContainer>
 		</>
 	);
 

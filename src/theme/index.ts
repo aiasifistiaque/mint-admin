@@ -41,6 +41,12 @@ export const system = createSystem(defaultConfig, {
 				color: '{colors.text.dark}',
 			},
 		},
+		'h1, h2, h3, h4, h5, h6': {
+			color: '{colors.text.light}',
+			_dark: {
+				color: '{colors.text.dark}',
+			},
+		},
 	},
 });
 

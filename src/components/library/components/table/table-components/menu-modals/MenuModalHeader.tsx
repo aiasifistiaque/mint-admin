@@ -18,7 +18,7 @@ const MenuModalHeader: FC<MenuModalHeaderProps> = ({ children, ...props }) => {
 				fontSize='lg'
 				_dark={{ color: 'text.dark' }}
 				h='52px'>
-				{children}
+				<Drawer.Title>{children}</Drawer.Title>
 			</Drawer.Header>
 		);
 	}

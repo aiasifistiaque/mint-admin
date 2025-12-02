@@ -2,7 +2,7 @@
 import { useCallback, useState, FC } from 'react';
 import { Input, InputProps, IconButton, Flex } from '@chakra-ui/react';
 
-import { Label, Icon, HelperText, FormControl } from '../..';
+import { Label, Icon, HelperText, FormControl, inputContainerCss } from '../..';
 import { useColorMode } from '@/components/ui/color-mode';
 
 type InputContainerProps = InputProps & {
@@ -99,16 +99,9 @@ const VTags: FC<InputContainerProps> = ({
 						<Input
 							value={tag}
 							onChange={handleChange}
-							px={3}
-							paddingRight={10}
-							borderRadius='lg'
-							size='sm'
-							color='text.500'
-							_dark={{
-								color: 'gray.300',
-							}}
+							{...inputContainerCss}
+							pr={0}
 							placeholder={placeholder ? placeholder : label}
-							_placeholder={{ fontSize: 14, fontWeight: '500' }}
 						/>
 						<Flex
 							position='absolute'
@@ -118,9 +111,15 @@ const VTags: FC<InputContainerProps> = ({
 							<IconButton
 								onClick={addTag}
 								size='xs'
-								colorPalette='gray'
+								color={{
+									_light: 'white',
+									_dark: 'black',
+								}}
 								aria-label='add tag'>
-								<Icon name='add' />
+								<Icon
+									name='add'
+									color='inherit'
+								/>
 							</IconButton>
 						</Flex>
 					</Flex>
@@ -136,13 +135,16 @@ const VTags: FC<InputContainerProps> = ({
 							<Flex
 								px={2.5}
 								py={1}
-								bg='gray.100'
+								bg={{ _light: 'transparent', _dark: 'gray.700' }}
+								border='1px solid'
+								borderColor={{ _light: 'border.light', _dark: 'border.dark' }}
 								borderRadius='md'
 								alignItems='center'
 								gap={2}>
 								<Flex
+									fontWeight='600'
 									as='span'
-									fontSize='sm'>
+									fontSize='xs'>
 									{' '}
 									{item}
 								</Flex>
@@ -151,6 +153,7 @@ const VTags: FC<InputContainerProps> = ({
 									onClick={() => deleteTag(item)}
 									cursor='pointer'
 									fontSize='lg'
+									color={{ _light: 'text.light', _dark: 'text.dark' }}
 									opacity={0.7}
 									_hover={{ opacity: 1 }}>
 									×

@@ -3,7 +3,7 @@
 import { FC, ReactNode } from 'react';
 import { Dialog } from '@chakra-ui/react';
 
-export type GenericModalProps = {
+export type GenericModalProps = any & {
 	isOpen: boolean;
 	onClose: () => void;
 	children: ReactNode;
@@ -65,6 +65,7 @@ const GenericModal: FC<GenericModalProps> = ({
 	blockScrollOnMount = true,
 	returnFocusOnClose = true,
 	preserveScrollBarGap = false,
+	...props
 }) => {
 	const handleOpenChange = (details: { open: boolean }) => {
 		if (!details.open) {
@@ -87,7 +88,8 @@ const GenericModal: FC<GenericModalProps> = ({
 			trapFocus={trapFocus}
 			preventScroll={blockScrollOnMount}
 			restoreFocus={returnFocusOnClose}
-			persistentElements={preserveScrollBarGap ? [() => document.body] : undefined}>
+			persistentElements={preserveScrollBarGap ? [() => document.body] : undefined}
+			{...props}>
 			<Dialog.Backdrop />
 			<Dialog.Positioner>{children}</Dialog.Positioner>
 		</Dialog.Root>

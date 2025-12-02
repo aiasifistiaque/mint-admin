@@ -30,10 +30,9 @@ const SelectItem: FC<TableDataPropsType> = ({ id, ...props }) => {
 
 	return (
 		<Checkbox.Root
-			size={'lg'}
+			size={'md'}
 			checked={selectedItems.includes(id)}
-			onCheckedChange={handleCheck}
-			colorPalette='brand'>
+			onCheckedChange={handleCheck}>
 			<Checkbox.HiddenInput />
 			<Checkbox.Control>
 				<Checkbox.Indicator />

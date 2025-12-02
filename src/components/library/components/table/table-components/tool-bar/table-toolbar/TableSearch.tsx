@@ -71,6 +71,7 @@ const inputCss: InputProps = {
 	h: sizes.SEARCH_BAR_HEIGHT,
 	borderRadius: radius.BUTTON,
 	placeholder: 'Search... (⌘ + F)',
+	_placeholder: { fontSize: '14px' },
 	_dark: {
 		bg: 'transparent',
 		borderColor: 'container.borderDark',

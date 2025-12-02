@@ -8,7 +8,15 @@ import { Icon } from '../icon';
  * ModalHeader - Generic modal header component
  */
 export const ModalHeader: FC<{ children: ReactNode } & any> = ({ children, ...props }) => {
-	return <Dialog.Header {...props}>{children}</Dialog.Header>;
+	return (
+		<Dialog.Header
+			fontSize='lg'
+			fontWeight='600'
+			color={{ _light: 'text.light', _dark: 'text.dark' }}
+			{...props}>
+			{children}
+		</Dialog.Header>
+	);
 };
 
 /**

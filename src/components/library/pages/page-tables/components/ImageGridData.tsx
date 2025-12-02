@@ -11,6 +11,7 @@ import {
 	Skeleton,
 	Tooltip,
 	Box,
+	IconButtonProps,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useColorMode } from '@/components/ui/color-mode';
@@ -74,7 +75,7 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 
 	const handleLongPress = (item: any) => {
 		// TODO: Implement long press functionality
-		console.log('Long press detected for item:', item);
+		// console.log('Long press detected for item:', item);
 	};
 
 	const startLongPress = (item: any) => {
@@ -157,14 +158,7 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 							flexDir='column'
 							key={i}>
 							<Flex
-								cursor='pointer'
-								border='2px solid'
-								transition='.2s'
-								bg={colorMode === 'dark' ? 'image.900' : 'image.50'}
-								_hover={{ bg: colorMode === 'dark' ? 'image.800' : 'image.100' }}
-								w='full'
-								p={2}
-								borderRadius='8px'
+								{...styles.imageWrapperCss}
 								borderColor={
 									selectedItems.includes(item?.id)
 										? colorMode === 'dark'
@@ -180,56 +174,38 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 								// 	onTouchEnd={endLongPress}
 								// 	onTouchCancel={endLongPress}
 								onClick={(e: any) => handleClick(item, e)}>
-								<Box
-									backgroundImage={item?.url}
+								<Flex
 									w='full'
-									backgroundPosition='center'
-									backgroundSize='contain'
-									backgroundRepeat='no-repeat'
-									h={{ base: '120px', md: '160px' }}>
+									backgroundImage={`url(${item?.url})`}
+									{...styles.imageBg}>
 									<Flex
 										onClick={(e: any) => e.stopPropagation()}
 										justify='space-between'
 										w='full'>
 										<Flex
-											bg={colorMode === 'dark' ? 'background.dark' : 'white'}
+											bg='white'
+											_dark={{
+												bg: 'background.dark',
+											}}
 											h='20px'>
 											<SelectItem id={item?._id} />
 										</Flex>
 
 										<Center
-											display={selectedItems?.length > 0 ? 'none' : 'flex'}
-											border='1px solid'
-											bg={colorMode === 'dark' ? 'background.dark' : 'white'}
-											borderColor={colorMode === 'dark' ? 'border.dark' : 'border.light'}
-											h='34px'
-											w='34px'
-											boxShadow='md'
-											borderRadius='6px'
-											top='8px'
-											p='1px'
-											right='8px'>
+											{...styles.menuWrapper}
+											display={selectedItems?.length > 0 ? 'none' : 'flex'}>
 											<TableMenu
 												data={menu}
 												doc={item}
 												id={item?._id}
 												path='files'>
-												<IconButton
-													h='30px'
-													w='30px'
-													size='sm'
-													borderColor='white'
-													borderWidth={2}
-													bg='transparent'
-													borderRadius='8px'
-													_hover={{ bg: 'image.50' }}
-													as={Menu.Trigger}>
+												<IconButton {...styles.menuButton}>
 													<LucideIcon name='ellipsis' />
 												</IconButton>
 											</TableMenu>
 										</Center>
 									</Flex>
-								</Box>
+								</Flex>
 							</Flex>
 
 							<Tooltip.Root
@@ -246,6 +222,61 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 				  ))}
 		</Grid>
 	);
+};
+
+const styles: any = {
+	imageBg: {
+		w: 'full',
+		backgroundPosition: 'center',
+		backgroundSize: 'contain',
+		backgroundRepeat: 'no-repeat',
+		h: { base: '120px', md: '160px' },
+		flex: 1,
+	},
+	menuWrapper: {
+		border: '1px solid',
+		bg: 'white',
+		borderColor: 'border.light',
+		_dark: {
+			borderColor: 'border.dark',
+			bg: 'background.dark',
+		},
+		h: '30px',
+		w: '30px',
+		boxShadow: 'md',
+		borderRadius: '4px',
+		top: '8px',
+		p: '1px',
+		right: '8px',
+	},
+	menuButton: {
+		h: '30px',
+		w: '30px',
+		size: 'sm',
+		borderColor: 'white',
+		borderWidth: 2,
+		bg: 'white',
+		borderRadius: '8px',
+		_hover: { bg: 'image.50' },
+		_dark: { borderColor: 'background.dark', bg: 'container.dark', _hover: { bg: 'image.800' } },
+	},
+	imageWrapperCss: {
+		// h: { base: '120px', md: '160px' },
+		cursor: 'pointer',
+		border: '2px solid',
+		transition: '.2s',
+		w: 'full',
+		p: 2,
+		borderRadius: '8px',
+		bg: 'image.50',
+		_hover: {
+			bg: 'image.100',
+		},
+		_dark: {
+			bg: 'image.900',
+			_hover: { bg: 'image.800' },
+		},
+	},
 };
 
 export default ImageGridData;

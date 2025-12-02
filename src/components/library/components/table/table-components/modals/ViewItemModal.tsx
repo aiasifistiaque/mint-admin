@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
-import { useDisclosure, Dialog, Flex, Portal } from '@chakra-ui/react';
+import { useDisclosure, Flex } from '@chakra-ui/react';
 import {
 	ViewModalDataModelProps,
 	Column,
@@ -11,7 +11,11 @@ import {
 	getValue,
 	useGetSchemaQuery,
 	convertToViewFields,
+	Dialog,
 	ViewItem,
+	DialogHeader,
+	DialogBody,
+	DialogCloseButton,
 } from '../../../..';
 
 type Props = {
@@ -53,8 +57,6 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 		{ skip: !id || !isOpen }
 	);
 
-	const isMobile = useIsMobile();
-
 	const renderTrigger = () => {
 		if (trigger) {
 			return <Flex onClick={onOpen}>{trigger}</Flex>;
@@ -74,54 +76,37 @@ const ViewItemModal: FC<Props> = ({ title, path, dataModel, trigger, id, item })
 	return (
 		<>
 			{renderTrigger()}
-			<Dialog.Root
-				preventScroll
-				open={isOpen}
-				onOpenChange={e => !e.open && onClose()}
-				size='xl'
-				placement={isMobile ? 'bottom' : 'center'}
-				motionPreset={isMobile ? 'slide-in-bottom' : 'scale'}>
-				<Portal>
-					<Dialog.Backdrop />
-					<Dialog.Positioner>
-						<Dialog.Content>
-							<Dialog.Header
-								p={4}
-								fontWeight='600'
-								fontSize='18px'
-								px={{ base: 4, md: 6 }}
-								color='text.light'
-								_dark={{ color: 'text.dark' }}>
-								{title || 'Item Details'}
-							</Dialog.Header>
-							<Dialog.CloseTrigger />
+			<Dialog
+				// placement='center'
+				isOpen={isOpen}
+				onClose={() => onClose()}>
+				<DialogHeader>{title || 'Item Details'}</DialogHeader>
+				<DialogCloseButton />
 
-							<Dialog.Body px={0}>
-								<Column
-									gap={4}
-									pt={2}>
-									{schema?.map((item: any, i: number) => {
-										const { title, dataKey, type, colorPalette, path, copy, model } = item;
+				<DialogBody>
+					<Column
+						// bg='red'
+						gap={4}
+						pt={2}>
+						{schema?.map((item: any, i: number) => {
+							const { title, dataKey, type, colorPalette, path, copy, model } = item;
 
-										return (
-											<ViewItem
-												copy={copy}
-												isLoading={isFetching}
-												title={title}
-												type={type}
-												colorPalette={colorPalette}
-												path={model || path}
-												key={i}>
-												{data && getValue({ dataKey, type, data })}
-											</ViewItem>
-										);
-									})}
-								</Column>
-							</Dialog.Body>
-						</Dialog.Content>
-					</Dialog.Positioner>
-				</Portal>
-			</Dialog.Root>
+							return (
+								<ViewItem
+									copy={copy}
+									isLoading={isFetching}
+									title={title}
+									type={type}
+									colorPalette={colorPalette}
+									path={model || path}
+									key={i}>
+									{data && getValue({ dataKey, type, data })}
+								</ViewItem>
+							);
+						})}
+					</Column>
+				</DialogBody>
+			</Dialog>
 		</>
 	);
 };

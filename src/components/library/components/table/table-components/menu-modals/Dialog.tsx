@@ -1,6 +1,6 @@
 'use client';
 import { Drawer, Dialog as ChakraDialog, Portal } from '@chakra-ui/react';
-import { radius, styles, useIsMobile } from '../../../..';
+import { DialogCloseButton, radius, styles, useIsMobile } from '../../../..';
 import { FC, ReactNode } from 'react';
 
 type DialogProps = {
@@ -20,7 +20,7 @@ const Dialog: FC<DialogProps> = ({
 	isOpen,
 	onClose,
 	onOpenChange,
-	size = 'lg',
+	size = 'xl',
 	...props
 }) => {
 	const isMobile = useIsMobile();
@@ -38,6 +38,7 @@ const Dialog: FC<DialogProps> = ({
 	if (isMobile) {
 		return (
 			<Drawer.Root
+				preventScroll={true}
 				placement='bottom'
 				size='full'
 				open={isDialogOpen}
@@ -49,7 +50,7 @@ const Dialog: FC<DialogProps> = ({
 					<Drawer.Positioner>
 						<Drawer.Content
 							onClick={(e: any) => e.stopPropagation()}
-							overflowY='scroll'
+							// overflowY='scroll'
 							bg='container.newLight'
 							_dark={{ bg: 'menu.dark' }}
 							shadow='2xl'
@@ -58,6 +59,7 @@ const Dialog: FC<DialogProps> = ({
 							minH='20vh'
 							userSelect='none'
 							borderTopRadius='20px'>
+							<Drawer.CloseTrigger />
 							{children}
 						</Drawer.Content>
 					</Drawer.Positioner>

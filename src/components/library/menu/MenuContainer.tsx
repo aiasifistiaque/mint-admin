@@ -16,7 +16,8 @@ const MenuContainer: FC<MenuContainerProps> = ({ children, ...props }) => {
 					gap={2}
 					borderRadius={radius?.MENU}
 					bg={{ base: 'menu.light', _dark: 'menu.dark' }}
-					borderColor={{ base: 'container.borderLight', _dark: 'container.borderDark' }}
+					borderWidth={1}
+					borderColor={{ base: 'border.light', _dark: 'border.dark' }}
 					{...props}>
 					{children}
 				</Menu.Content>
