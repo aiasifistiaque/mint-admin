@@ -62,6 +62,7 @@ const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, icon, href, ...prop
 			<Menu.Separator
 				_last={{ display: 'none' }}
 				m={1}
+				_dark={{ borderColor: 'border.dark' }}
 			/>
 		</>
 	);

@@ -157,7 +157,7 @@ export const styles = {
 		_dark: {
 			bg: 'menu.dark',
 		},
-		maxH: '85vh',
+		maxH: '75vh',
 		userSelect: 'none',
 		borderTopRadius: '16px',
 	},

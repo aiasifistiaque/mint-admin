@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, Flex, Input, useDisclosure, Button } from '@chakra-ui/react';
+import { Menu, Flex, Input, useDisclosure, Button, Portal, CloseButton } from '@chakra-ui/react';
 
 import { useState, FC, useRef, useEffect } from 'react';
 
@@ -14,10 +14,14 @@ import {
 	FormControl,
 	Scroll,
 	CreateServerModal,
+	sizes,
+	Icon,
+	radius,
 } from '../../..';
 
 import { VDataMenuProps } from './types';
 import { hiddenInputCss, searchInputCss, unselectTextCss, MAX_H, WIDTH } from './styles';
+import { TicketIcon } from 'lucide-react';
 
 const VDataMenu: FC<VDataMenuProps> = ({
 	label,
@@ -77,8 +81,17 @@ const VDataMenu: FC<VDataMenuProps> = ({
 			cursor='pointer'
 			id={item?._id}
 			key={i}
+			gap={2}
+			fontWeight={value == item?._id ? '700' : '400'}
+			justify='space-between'
 			onClick={() => handleChange(item)}>
-			{item?.[menuKey]} {menuAddOnKey && `(${item?.[menuAddOnKey]})`}
+			{item?.[menuKey]} {menuAddOnKey && `(${item?.[menuAddOnKey]})`}{' '}
+			{value == item?._id && (
+				<Icon
+					name='check'
+					size={16}
+				/>
+			)}
 		</ItemOfDataMenu>
 	));
 
@@ -96,6 +109,68 @@ const VDataMenu: FC<VDataMenuProps> = ({
 			if (inputRef.current) inputRef.current.focus();
 		}
 	}, [isOpen, onOpen, onClose]);
+
+	const menuBody = (
+		<>
+			<Flex
+				p={1}
+				justify='space-between'
+				py={0.5}>
+				<Input
+					{...searchInputCss}
+					css={{
+						'--focus-color': 'transparent',
+					}}
+					value={search}
+					onChange={handleSearch}
+				/>
+
+				<CloseButton
+					size='xs'
+					onClick={() => setSearch('')}
+				/>
+			</Flex>
+			<Menu.Separator
+				mb={1}
+				_dark={{ borderColor: 'border.dark' }}
+			/>
+			{dataModel && (
+				<>
+					<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
+					<Menu.Separator
+						mt={1}
+						mb={0}
+						_dark={{ borderColor: 'border.dark' }}
+					/>
+				</>
+			)}
+			{item?.addItem && (
+				<>
+					<MenuItem
+						fontWeight='700'
+						onClick={() => addItemRef.current.click()}>
+						(+) Add New Item
+					</MenuItem>
+					<Menu.Separator
+						mt={1}
+						mb={0}
+						_dark={{ borderColor: 'red' }}
+					/>
+				</>
+			)}
+
+			<Scroll maxH={MAX_H}>
+				{unselect && (
+					<MenuItem
+						{...unselectTextCss}
+						onClick={() => handleChange({ name: ``, _id: undefined })}>
+						<i>Unselect</i>
+					</MenuItem>
+				)}
+				{renderMenuItems}
+			</Scroll>
+		</>
+	);
 
 	return (
 		<Flex w='full'>
@@ -126,15 +201,45 @@ const VDataMenu: FC<VDataMenuProps> = ({
 					}
 				/>
 			)}
-			<Menu.Root onOpenChange={e => (e.open ? onOpen() : closeMenu())}>
+			<Menu.Root>
 				<FormControl
+					asChild
 					isRequired={isRequired}
 					label={label}
 					helper={helper}
 					w='full'>
-					<DataMenuButton value={value}>
-						{value ? getNameById(value) : `Select ${label}`}
-					</DataMenuButton>
+					<Menu.Trigger asChild>
+						<Flex
+							align='center'
+							justify='space-between'
+							w='full'
+							boxShadow='sm'
+							borderRadius={sizes.RADIUS_MENU}
+							borderWidth={1}
+							colorPalette='gray'
+							cursor='default'
+							h='36px'
+							textAlign='left'
+							fontSize='.9rem'
+							pl={3}
+							pr={2}
+							borderColor={{
+								_light: 'selectBorder.light',
+								_dark: 'selectBorder.dark',
+							}}
+							color={{
+								_light: 'text.light',
+								_dark: 'text.dark',
+							}}>
+							{value ? getNameById(value) : `Select ${label}`}
+							<Icon
+								name='select'
+								size={20}
+							/>
+						</Flex>
+
+						{/* <DataMenuButton value={value}></DataMenuButton> */}
+					</Menu.Trigger>
 					<Input
 						ref={inputRef}
 						required={isRequired}
@@ -144,51 +249,22 @@ const VDataMenu: FC<VDataMenuProps> = ({
 					/>
 				</FormControl>
 
-				<MenuContainer w={WIDTH}>
-					<Flex
-						p={1}
-						py={0.5}>
-						<Input
-							{...searchInputCss}
-							value={search}
-							onChange={handleSearch}
-						/>
-					</Flex>
-					<Menu.Separator mb={1} />
-					{dataModel && (
-						<>
-							<MenuItem onClick={() => btnRef.current.click()}>Add new {model}</MenuItem>
-							<Menu.Separator
-								mt={1}
-								mb={0}
-							/>
-						</>
-					)}
-					{item?.addItem && (
-						<>
-							<MenuItem
-								fontWeight='700'
-								onClick={() => addItemRef.current.click()}>
-								(+) Add New Item
-							</MenuItem>
-							<Menu.Separator
-								mt={1}
-								mb={0}
-							/>
-						</>
-					)}
+				<Menu.Positioner>
+					<Menu.Content
+						boxShadow='md'
+						p={2}
+						px={2}
+						gap={2}
+						borderRadius={radius?.MENU}
+						bg={{ base: 'menu.light', _dark: 'menu.dark' }}
+						borderWidth={1}
+						borderColor={{ base: 'border.light', _dark: 'border.dark' }}
+						{...props}>
+						{menuBody}
+					</Menu.Content>
+				</Menu.Positioner>
 
-					<Scroll maxH={MAX_H}>
-						{unselect && (
-							<MenuItem
-								{...unselectTextCss}
-								onClick={() => handleChange({ name: ``, _id: undefined })}>
-								<i>Unselect</i>
-							</MenuItem>
-						)}
-						{renderMenuItems}
-					</Scroll>
-				</MenuContainer>
+				{/* <MenuContainer w={WIDTH}>{menuBody}</MenuContainer> */}
 			</Menu.Root>
 		</Flex>
 	);

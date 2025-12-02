@@ -7,6 +7,7 @@ import ExportModal from '../modals/export/ExportModal';
 import { buttonGroupCss, containerCss, headingCss, subHeadingCss, wrapperCss } from './style';
 import { BackendCreateModal } from '../../modals';
 import { Icon } from '../../icon';
+import { useIsMobile } from '../../hooks';
 
 type PageHeadingProps = FlexProps & {
 	title: string;
@@ -32,6 +33,7 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 	export: exportData,
 	...props
 }) => {
+	const isMobile = useIsMobile();
 	const btn = (
 		<Button
 			size='sm'
@@ -42,7 +44,7 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 				name='add'
 				color='fg.inverted'
 			/>
-			{button}
+			{!isMobile && button}
 		</Button>
 	);
 

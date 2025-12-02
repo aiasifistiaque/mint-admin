@@ -31,6 +31,9 @@ export const searchInputCss: InputProps = {
 	border: 'none',
 	placeholder: 'Search',
 	borderTopRadius: radius?.MENU,
+	borderColor: 'transparent',
+	_focus: { borderColor: 'transparent', border: 'none' },
+	_dark: { _placeholder: { color: 'text.dark' } },
 };
 
 export const unselectTextCss: any = {

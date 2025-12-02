@@ -65,8 +65,6 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 					w='full'
 					h='full'>
 					<LucideIcon
-						// color={'red'}
-						// color={'background.dark'}
 						name={icon}
 						size={isMobile ? 20 : 16}
 					/>

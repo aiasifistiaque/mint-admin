@@ -160,8 +160,9 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 			)}
 			<Button
 				{...(isMobile && { w: 'full' })}
+				px={2}
 				type='submit'
-				size='sm'>
+				size={{ base: 'md', md: 'sm' }}>
 				{isLoading ? 'Processing...' : prompt?.btnText || 'Confirm'}
 			</Button>
 		</>
@@ -188,7 +189,7 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 					<DialogHeader>{prompt?.title || title || `Create ${path}`}</DialogHeader>
 					<DialogCloseButton />
 
-					<DialogBody>
+					<DialogBody px={{ base: 0, md: 6 }}>
 						<ModalFormSection>
 							{!isFetching && (
 								<FormMain
@@ -200,7 +201,7 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 								/>
 							)}
 						</ModalFormSection>
-						{isMobile && <Align py={5}>{footer}</Align>}
+						{isMobile && <Align p={4}>{footer}</Align>}
 					</DialogBody>
 					{!isMobile && <DialogFooter>{footer}</DialogFooter>}
 				</form>
