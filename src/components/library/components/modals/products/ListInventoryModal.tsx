@@ -34,6 +34,7 @@ const ListInventoryModal: FC<ListInventoryModalProps> = ({ key, id, path, data, 
 
 			<MenuModal
 				size='xl'
+				forceModal
 				isOpen={isOpen}
 				onClose={closeModal}>
 				<MenuModalHeader>Inventory Details</MenuModalHeader>

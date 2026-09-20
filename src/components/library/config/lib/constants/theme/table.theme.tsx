@@ -66,7 +66,7 @@ const TABLE: TableObjectProps = {
 		},
 	},
 	cell: {
-		paddingX: 4,
+		paddingX: 3,
 		paddingY: 3,
 	},
 	head: {

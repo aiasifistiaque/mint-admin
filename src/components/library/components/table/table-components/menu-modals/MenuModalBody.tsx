@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react';
-import { useIsMobile, useModalLayout } from '../../../..';
+import { useIsMobile } from '../../../..';
 import { Drawer, Dialog } from '@chakra-ui/react';
+import { useResolvedModalLayout } from './ModalLayoutContext';
 
 type MenuModalBodyProps = {
 	children: ReactNode;
@@ -17,9 +18,9 @@ const bodyCss = {
 
 const MenuModalBody: FC<MenuModalBodyProps> = ({ children, ...props }) => {
 	const isMobile = useIsMobile();
-	const layout = useModalLayout();
+	const layout = useResolvedModalLayout();
 
-	if (isMobile || layout === 'drawer') {
+	if (layout === 'drawer') {
 		return (
 			<Drawer.Body
 				borderTopWidth='1px'

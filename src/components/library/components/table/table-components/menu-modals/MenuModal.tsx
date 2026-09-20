@@ -2,6 +2,7 @@ import { Dialog as ChakraDialog, Portal, Drawer } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 
 import { styles, useIsMobile, useModalLayout } from '../../../..';
+import { ModalLayoutProvider } from './ModalLayoutContext';
 
 type MenuModalProps = {
 	children: ReactNode;
@@ -10,6 +11,11 @@ type MenuModalProps = {
 	// Legacy v2 props for compatibility
 	isOpen?: boolean;
 	onClose?: () => void;
+	// Smaller utility modals (preferences, export field pickers) stay a
+	// centered dialog on desktop regardless of the admin's drawer
+	// preference — that preference is meant for the bigger view/create/edit
+	// forms, not these. Mobile still gets the bottom sheet either way.
+	forceModal?: boolean;
 	[key: string]: any;
 };
 
@@ -19,10 +25,12 @@ const MenuModal: FC<MenuModalProps> = ({
 	isOpen,
 	onClose,
 	onOpenChange,
+	forceModal,
 	...props
 }) => {
 	const isMobile = useIsMobile();
-	const layout = useModalLayout();
+	const layoutPreference = useModalLayout();
+	const layout = forceModal ? 'modal' : layoutPreference;
 	const drawerStyleProps: any = styles.DRAWER;
 	const rightDrawerStyleProps: any = styles.DRAWER_END;
 
@@ -49,7 +57,9 @@ const MenuModal: FC<MenuModalProps> = ({
 				<Portal>
 					<Drawer.Backdrop />
 					<Drawer.Positioner>
-						<Drawer.Content {...drawerStyleProps}>{children}</Drawer.Content>
+						<Drawer.Content {...drawerStyleProps}>
+							<ModalLayoutProvider value='drawer'>{children}</ModalLayoutProvider>
+						</Drawer.Content>
 					</Drawer.Positioner>
 				</Portal>
 			</Drawer.Root>
@@ -68,7 +78,9 @@ const MenuModal: FC<MenuModalProps> = ({
 				<Portal>
 					<Drawer.Backdrop />
 					<Drawer.Positioner>
-						<Drawer.Content {...rightDrawerStyleProps}>{children}</Drawer.Content>
+						<Drawer.Content {...rightDrawerStyleProps}>
+							<ModalLayoutProvider value='drawer'>{children}</ModalLayoutProvider>
+						</Drawer.Content>
 					</Drawer.Positioner>
 				</Portal>
 			</Drawer.Root>
@@ -87,7 +99,9 @@ const MenuModal: FC<MenuModalProps> = ({
 					_dark={{ bg: styles?.color?.MODAL_OVERLAY?.DARK }}
 				/>
 				<ChakraDialog.Positioner>
-					<ChakraDialog.Content {...styles?.MODAL}>{children}</ChakraDialog.Content>
+					<ChakraDialog.Content {...styles?.MODAL}>
+						<ModalLayoutProvider value='modal'>{children}</ModalLayoutProvider>
+					</ChakraDialog.Content>
 				</ChakraDialog.Positioner>
 			</Portal>
 		</ChakraDialog.Root>

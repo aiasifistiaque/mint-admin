@@ -1,4 +1,4 @@
-import { Portal, TableCellProps, Tooltip, useClipboard } from '@chakra-ui/react';
+import { TableCellProps, useClipboard } from '@chakra-ui/react';
 import { FC } from 'react';
 import { TableObjectDataProps } from '../../../..';
 import { Copy as CopyIcon } from 'lucide-react';
@@ -40,43 +40,28 @@ const TableData: FC<TableDataPropsType> = ({
 	};
 	if (copy) {
 		if (!children) return <TableBody {...commonProps}>--</TableBody>;
+		// A Tooltip.Trigger `asChild` around this used to be here, but
+		// TableBody resolves to a dynamic `Cell` component (getTableCell) that
+		// doesn't forward a single ref, so Ark fell back to rendering its own
+		// wrapper <div>. A <div> isn't a valid child of <tr> next to the real
+		// <td> cells, so the browser foster-parented it out of the table
+		// entirely — breaking row height calculation and overlapping this
+		// row's wrapped text over the next row. A native `title` attribute
+		// gives the same "click to copy" hint without adding any element.
 		return (
-			<Tooltip.Root
-				openDelay={200}
-				closeDelay={100}
-				positioning={{ placement: 'top' }}>
-				{/* `asChild` is meant to merge these props onto TableBody's own root
-				    element, but TableBody resolves to a dynamic `Cell` component
-				    (getTableCell) that doesn't forward a single ref reliably, so Ark
-				    falls back to rendering its own wrapper div. That wrapper is a
-				    flex row with no width constraint of its own, so on the mobile
-				    card grid a long value (a URL) could overflow past its column
-				    instead of wrapping — minW/maxW here keep it inside the cell
-				    whichever way the merge resolves. */}
-				<Tooltip.Trigger
-					asChild
-					display='flex'
-					minW={0}
-					maxW='full'>
-					<TableBody
-						item={item}
-						{...commonProps}
-						cursor='pointer'
-						onClick={onCopy}
-						{...props}>
-						{children}
-						<CopyIcon
-							size={16}
-							style={{ marginLeft: '8px' }}
-						/>
-					</TableBody>
-				</Tooltip.Trigger>
-				<Portal>
-					<Tooltip.Positioner>
-						<Tooltip.Content>{hasCopied ? 'Copied!' : 'Click to Copy'}</Tooltip.Content>
-					</Tooltip.Positioner>
-				</Portal>
-			</Tooltip.Root>
+			<TableBody
+				item={item}
+				{...commonProps}
+				cursor='pointer'
+				onClick={onCopy}
+				title={hasCopied ? 'Copied!' : 'Click to Copy'}
+				{...props}>
+				{children}
+				<CopyIcon
+					size={16}
+					style={{ marginLeft: '8px' }}
+				/>
+			</TableBody>
 		);
 	}
 

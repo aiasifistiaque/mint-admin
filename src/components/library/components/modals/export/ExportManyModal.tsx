@@ -83,6 +83,7 @@ const ExportManyModal = ({ path, ids, icon }: { path: string; ids: string[]; ico
 			</MenuItem>
 
 			<MenuModal
+				forceModal
 				isOpen={isOpen}
 				onClose={closeModal}>
 				<MenuModalHeader>Select Fields</MenuModalHeader>

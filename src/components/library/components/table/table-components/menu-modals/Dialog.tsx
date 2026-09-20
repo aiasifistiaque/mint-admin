@@ -2,6 +2,7 @@
 import { Drawer, Dialog as ChakraDialog, Portal, Box } from '@chakra-ui/react';
 import { styles, useIsMobile, useModalLayout } from '../../../..';
 import { FC, ReactNode } from 'react';
+import { ModalLayoutProvider } from './ModalLayoutContext';
 
 type DialogProps = {
 	children: ReactNode;
@@ -11,6 +12,9 @@ type DialogProps = {
 	isOpen?: boolean;
 	onClose?: () => void;
 	size?: 'xl' | 'sm' | 'md' | 'lg' | 'xs' | 'full' | 'cover';
+	// Smaller utility/confirmation dialogs stay a centered dialog on desktop
+	// regardless of the admin's drawer preference — see MenuModal's same prop.
+	forceModal?: boolean;
 	[key: string]: any;
 };
 
@@ -52,10 +56,12 @@ const Dialog: FC<DialogProps> = ({
 	onClose,
 	onOpenChange,
 	size = 'xl',
+	forceModal,
 	...props
 }) => {
 	const isMobile = useIsMobile();
-	const layout = useModalLayout();
+	const layoutPreference = useModalLayout();
+	const layout = forceModal ? 'modal' : layoutPreference;
 
 	// Handle both v2 and v3 prop patterns
 	const isDialogOpen = open ?? isOpen ?? false;
@@ -85,7 +91,7 @@ const Dialog: FC<DialogProps> = ({
 							css={formLayoutCss}
 							{...styles.DRAWER_END}
 							overflow='hidden'>
-							{children}
+							<ModalLayoutProvider value='drawer'>{children}</ModalLayoutProvider>
 						</Drawer.Content>
 					</Drawer.Positioner>
 				</Portal>
@@ -119,7 +125,7 @@ const Dialog: FC<DialogProps> = ({
 							overflow='hidden'
 							borderTopRadius='20px'>
 							<Grabber />
-							{children}
+							<ModalLayoutProvider value='drawer'>{children}</ModalLayoutProvider>
 						</Drawer.Content>
 					</Drawer.Positioner>
 				</Portal>
@@ -145,7 +151,7 @@ const Dialog: FC<DialogProps> = ({
 						onClick={(e: any) => e.stopPropagation()}
 						{...styles.MODAL}
 						css={formLayoutCss}>
-						{children}
+						<ModalLayoutProvider value='modal'>{children}</ModalLayoutProvider>
 					</ChakraDialog.Content>
 				</ChakraDialog.Positioner>
 			</Portal>

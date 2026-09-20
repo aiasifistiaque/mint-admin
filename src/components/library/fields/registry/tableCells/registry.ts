@@ -15,6 +15,7 @@ import {
 	PriceCell,
 	DataArrayCell,
 	DataArrayCountCell,
+	InvitationStatusCell,
 } from './cells';
 
 // WO-13: TableData.tsx's `TableBody` switch, as data. 'menu' is deliberately
@@ -37,5 +38,10 @@ export const TABLE_CELLS: Partial<Record<TableTypeId, ComponentType<any>>> = {
 	'data-array-count': DataArrayCountCell,
 };
 
-export const getTableCell = (type: TableTypeId | string | undefined) =>
-	(type && TABLE_CELLS[type as TableTypeId]) || TextCell;
+// Not in TABLE_CELLS/TableTypeId — a genuinely new, narrow field (invitation
+// status) rather than an extension of the shared type vocabulary, so it's
+// special-cased here instead of widening TableDataFieldType for one column.
+export const getTableCell = (type: TableTypeId | string | undefined) => {
+	if (type === 'invitation-status') return InvitationStatusCell;
+	return (type && TABLE_CELLS[type as TableTypeId]) || TextCell;
+};

@@ -111,6 +111,7 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 
 			<MenuModal
 				placement={{ base: 'bottom', md: 'center' }}
+				forceModal
 				isOpen={isOpen}
 				onClose={closeModal}>
 				{/* <MenuModalOverlay />

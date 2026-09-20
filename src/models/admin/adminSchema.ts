@@ -55,6 +55,14 @@ const schema: SchemaProps = {
 		label: 'Active Status',
 		type: 'tag',
 	},
+	invitationStatus: {
+		label: 'Invitation',
+		type: 'string',
+		tableType: 'invitation-status',
+		viewType: 'string',
+		displayInTable: true,
+		default: true,
+	},
 };
 
 export default schema;

@@ -83,6 +83,7 @@ const EditManySelectModal: FC<EditManyModalType> = ({
 			<MenuItem onClick={onOpen}>{title}</MenuItem>
 
 			<MenuModal
+				forceModal
 				isOpen={isOpen}
 				onClose={closeItem}>
 				<form onSubmit={handleSubmit}>

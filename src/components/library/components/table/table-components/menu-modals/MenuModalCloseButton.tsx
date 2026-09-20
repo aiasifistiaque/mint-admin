@@ -1,5 +1,5 @@
-import { useIsMobile, useModalLayout } from '../../../..';
 import { Drawer, Dialog, CloseButton } from '@chakra-ui/react';
+import { useResolvedModalLayout } from './ModalLayoutContext';
 
 const buttonCss = {
 	size: 'sm' as const,
@@ -12,10 +12,9 @@ const buttonCss = {
 };
 
 const MenuModalCloseButton = () => {
-	const isMobile = useIsMobile();
-	const layout = useModalLayout();
+	const layout = useResolvedModalLayout();
 
-	if (isMobile || layout === 'drawer') {
+	if (layout === 'drawer') {
 		return (
 			<Drawer.CloseTrigger asChild>
 				<CloseButton {...buttonCss} />

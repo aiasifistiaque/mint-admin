@@ -25,9 +25,11 @@ import { Column } from '../containers';
 const SearchMenu = ({
 	sidebarData,
 	iconSize,
+	iconColor,
 }: {
 	sidebarData: SidebarItemType[];
 	iconSize?: number;
+	iconColor?: string;
 }) => {
 	const { open: isOpen, onOpen, onClose: closeModal } = useDisclosure();
 	const [search, setSearch] = useState('');
@@ -141,7 +143,7 @@ const SearchMenu = ({
 							<Icon
 								name='search'
 								size={iconSize || 16}
-								color={THEME == 'basic' ? 'inherit' : 'white'}
+								color={iconColor || (THEME == 'basic' ? 'inherit' : 'white')}
 							/>
 						</MenuIconContainer>
 					</Flex>
@@ -154,7 +156,9 @@ const SearchMenu = ({
 							px={0}
 							gap={0}>
 							<Dialog.Header
-								px={4}
+								px={3}
+								pt={2.5}
+								pb={2.5}
 								borderColor={{
 									_light: 'border.light',
 									_dark: 'border.dark',
@@ -163,7 +167,7 @@ const SearchMenu = ({
 								<Input
 									ref={initialRef}
 									variant='flushed'
-									size='lg'
+									size='md'
 									_focus={{
 										borderColor: 'transparent',
 									}}
@@ -256,19 +260,22 @@ const modalBodyCss: any = {
 	px: PX,
 	mt: 0,
 	pt: 0,
+	pb: 2,
 };
 
 const bodyCss: FlexProps = {
-	py: 2,
+	py: 1,
 	// borderTopWidth: 1,
 	// borderTopColor: { base: 'gray.200', _dark: 'black' },
 	flexDir: 'column',
+	gap: 0.5,
 };
 
 const itemContainerCss: FlexProps = {
 	borderRadius: 4,
 	cursor: 'pointer',
-	p: 2,
+	px: 2,
+	py: 1.5,
 	flexDir: 'column',
 	gap: 0.2,
 };

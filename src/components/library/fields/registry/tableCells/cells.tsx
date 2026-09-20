@@ -121,6 +121,30 @@ export const FileCell = ({ children, type, ...props }: any) => (
 
 export const TextCell = ({ children, ...props }: any) => <CustomTd {...props}>{children}</CustomTd>;
 
+const INVITATION_STATUS_COLOR: Record<string, string> = {
+	pending: 'orange',
+	accepted: 'green',
+	cancelled: 'red',
+};
+
+export const InvitationStatusCell = ({ children, ...props }: any) => {
+	const status = typeof children === 'string' ? children : undefined;
+	return (
+		<CustomTd {...props}>
+			{status ? (
+				<Badge
+					colorPalette={INVITATION_STATUS_COLOR[status] || 'gray'}
+					textTransform='capitalize'
+					{...badgeCss}>
+					{status}
+				</Badge>
+			) : (
+				'--'
+			)}
+		</CustomTd>
+	);
+};
+
 // WO-13: the 3 previously-unhandled cells.
 export const PriceCell = ({ children, ...props }: any) => (
 	<CustomTd {...props}>{children === undefined || children === null || children === '' ? '--' : <Price>{children}</Price>}</CustomTd>

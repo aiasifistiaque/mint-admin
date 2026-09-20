@@ -1,5 +1,5 @@
-const fields = ['name', 'email', 'phone', 'role', 'isActive', 'github'];
-const tableFields = ['name', 'email', 'phone', 'role', 'isActive', 'github'];
+const fields = ['name', 'email', 'phone', 'role', 'isActive', 'invitationStatus', 'github'];
+const tableFields = ['name', 'email', 'phone', 'role', 'invitationStatus', 'isActive', 'github'];
 
 const formFields = [
 	{

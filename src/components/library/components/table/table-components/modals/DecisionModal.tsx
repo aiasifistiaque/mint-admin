@@ -78,6 +78,7 @@ const DecisionModal: FC<DecisionModalProps> = ({ item, doc, path, icon, itemId }
 
 			<Dialog
 				placenemt='center'
+				forceModal
 				isOpen={isOpen}
 				onOpenChange={(e: any) => !e.open && closeItem()}>
 				<DialogHeader>{prompt?.title || 'Alert'}</DialogHeader>

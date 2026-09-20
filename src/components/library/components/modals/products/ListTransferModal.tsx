@@ -50,6 +50,7 @@ const ListTransferModal: FC<ListInventoryModalProps> = ({ key, id, path, data, d
 
 			<MenuModal
 				size='xl'
+				forceModal
 				isOpen={isOpen}
 				onClose={closeModal}>
 				<MenuModalHeader>Transfer Product Details</MenuModalHeader>

@@ -34,7 +34,14 @@ type Types =
 	| 'text'
 	| 'textarea';
 
-type TableTypes = 'checkbox' | 'date' | 'image-text' | 'string' | 'tag' | 'text';
+type TableTypes =
+	| 'checkbox'
+	| 'date'
+	| 'image-text'
+	| 'string'
+	| 'tag'
+	| 'text'
+	| 'invitation-status';
 
 type SchemaField = {
 	type: Types;

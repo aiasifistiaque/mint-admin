@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react';
-import { useIsMobile, useModalLayout } from '../../../..';
+import { useIsMobile } from '../../../..';
 import { Drawer, Dialog } from '@chakra-ui/react';
+import { useResolvedModalLayout } from './ModalLayoutContext';
 
 type MenuModalFooterProps = {
 	children: ReactNode;
@@ -23,9 +24,9 @@ const footerCss = {
 
 const MenuModalFooter: FC<MenuModalFooterProps> = ({ children, ...props }) => {
 	const isMobile = useIsMobile();
-	const layout = useModalLayout();
+	const layout = useResolvedModalLayout();
 
-	if (isMobile || layout === 'drawer') {
+	if (layout === 'drawer') {
 		return (
 			<Drawer.Footer
 				{...footerCss}

@@ -92,6 +92,7 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 
 			<MenuModal
 				placement={{ base: 'bottom', md: 'center' }}
+				forceModal
 				isOpen={isOpen}
 				onClose={closeModal}>
 				<MenuModalHeader>Select Export Fields</MenuModalHeader>
