@@ -7,6 +7,8 @@ import {
 	login,
 	LoginContainer,
 } from '@/components/library';
+import { Link as ChakraLink } from '@chakra-ui/react';
+import NextLink from 'next/link';
 
 import React, { FC, ChangeEvent, useState, useEffect } from 'react';
 
@@ -68,6 +70,13 @@ const LoginPage: FC<{}> = () => {
 				name='password'
 				type='password'
 			/>
+			<ChakraLink
+				as={NextLink}
+				href='/auth/forgot-password'
+				fontSize='sm'
+				alignSelf='flex-end'>
+				Forgot Password?
+			</ChakraLink>
 		</LoginContainer>
 	);
 };

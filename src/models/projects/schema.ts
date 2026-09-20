@@ -174,6 +174,13 @@ const schema = {
 		label: 'Updated At',
 		type: 'string',
 	},
+	addedBy: {
+		label: 'Added By',
+		type: 'string',
+		displayInTable: true,
+		sort: true,
+		tableKey: 'addedBy.name',
+	},
 };
 
 export default schema;

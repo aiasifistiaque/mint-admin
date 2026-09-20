@@ -8,9 +8,11 @@ const style = {
 	w: '100%',
 	borderRadius: TABLE.border.radius,
 	pb: TABLE.padding.bottom,
-	// Clip to the radius so the header band and the last row follow the corners
-	// instead of squaring them off.
-	overflow: 'hidden',
+	// Clip vertically to the radius so the header band and last row follow the
+	// corners, but keep horizontal scroll (Table.ScrollArea's own `overflow:
+	// auto`) working for tables wider than their container.
+	overflowX: 'auto',
+	overflowY: 'hidden',
 
 	borderColor: TABLE.border.color.light,
 	_dark: {

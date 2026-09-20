@@ -30,6 +30,20 @@ export const authApi = mainApi.injectEndpoints({
 			}),
 			invalidatesTags: ['self'],
 		}),
+		forgotPassword: builder.mutation<any, { email: string }>({
+			query: body => ({
+				url: `auth/forgot-password`,
+				method: 'POST',
+				body,
+			}),
+		}),
+		resetPassword: builder.mutation<any, { token: string; password: string }>({
+			query: ({ token, password }) => ({
+				url: `auth/reset-password/${token}`,
+				method: 'POST',
+				body: { password },
+			}),
+		}),
 		getSelf: builder.query<any, any>({
 			query: () => `auth/self`,
 			providesTags: ['self'],
@@ -61,5 +75,7 @@ export const {
 	useRegisterMutation,
 	useUpdatePasswordMutation,
 	useUpdateSelfMutation,
+	useForgotPasswordMutation,
+	useResetPasswordMutation,
 } = authApi;
 export default authApi;

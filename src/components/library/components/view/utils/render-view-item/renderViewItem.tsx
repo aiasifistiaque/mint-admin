@@ -263,6 +263,14 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id }:
 			return <Text {...textCss}>{Array.isArray(children) ? children.length : children ?? '--'}</Text>;
 		case 'text':
 		case 'string':
+			// A populated Mongoose reference (e.g. `addedBy`) can reach here as a
+			// raw {_id, name, email} object when a schema's dataKey doesn't drill
+			// into it — rendering it directly crashes with React error #31.
+			if (children && typeof children === 'object' && !Array.isArray(children)) {
+				return (
+					<Text {...textCss}>{(children as any).name ?? (children as any).email ?? '--'}</Text>
+				);
+			}
 			return <Text {...textCss}>{children ?? '--'}</Text>;
 		case 'menu':
 			// Menu columns are intercepted upstream (table row / view field list
