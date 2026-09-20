@@ -1,6 +1,6 @@
 import { Flex, FlexProps, Heading, Button, Text } from '@chakra-ui/react';
 import Link from 'next/link';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { CreateModal, Icon } from '../..';
 import ExportModal from '../modals/export/ExportModal';
 import { useColorMode } from '@/components/ui/color-mode';
@@ -16,6 +16,7 @@ type PageHeadingProps = FlexProps & {
 	data?: any;
 	export?: boolean;
 	table: any;
+	customButton?: ReactNode;
 };
 
 const PageHeading: FC<PageHeadingProps> = ({
@@ -28,6 +29,7 @@ const PageHeading: FC<PageHeadingProps> = ({
 	table,
 	data,
 	export: exportData,
+	customButton,
 	...props
 }) => {
 	const { colorMode } = useColorMode();
@@ -75,7 +77,11 @@ const PageHeading: FC<PageHeadingProps> = ({
 			</Flex>
 			<Flex {...buttonGroupCss}>
 				<>{Boolean(exportData) && exportButton}</>
-				<>{(Boolean(button) || isModal) && renderButton()}</>
+				{customButton ? (
+					<>{customButton}</>
+				) : (
+					<>{(Boolean(button) || isModal) && renderButton()}</>
+				)}
 			</Flex>
 		</Flex>
 	);

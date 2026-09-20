@@ -2,9 +2,11 @@
 
 import { Button, useDisclosure, NativeSelect } from '@chakra-ui/react';
 import { useEffect, useState, ChangeEvent } from 'react';
+import { useColorMode } from '@/components/ui/color-mode';
 
 import {
 	VInput,
+	FormControl,
 	useCustomToast,
 	useGetAllQuery,
 	useInviteAdminMutation,
@@ -22,6 +24,7 @@ const InviteAdminModal = () => {
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [email, setEmail] = useState('');
 	const [role, setRole] = useState('');
+	const { colorMode } = useColorMode();
 
 	const { data } = useGetAllQuery({ path: 'adminroles', limit: 999, sort: 'name' });
 	const roles = data?.doc || [];
@@ -63,7 +66,7 @@ const InviteAdminModal = () => {
 				<Icon
 					size={16}
 					name='add'
-					color='white'
+					color={colorMode === 'light' ? 'text.dark' : 'text.light'}
 				/>
 				Invite Admin
 			</Button>
@@ -73,7 +76,9 @@ const InviteAdminModal = () => {
 				isOpen={isOpen}
 				onClose={closeModal}>
 				<form onSubmit={handleSubmit}>
-					<MenuModalHeader>Invite Admin</MenuModalHeader>
+					<MenuModalHeader description="They'll get an email with a link to set their name, phone and password — the link works once and expires in 7 days.">
+						Invite Admin
+					</MenuModalHeader>
 					<MenuModalCloseButton />
 					<MenuModalBody
 						pt={4}
@@ -83,30 +88,35 @@ const InviteAdminModal = () => {
 							isRequired
 							size='md'
 							type='email'
+							placeholder='name@company.com'
 							value={email}
 							onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
 							name='email'
 						/>
 
-						<NativeSelect.Root
-							size='sm'
-							_light={{
-								borderColor: 'container.borderLight',
-								bg: 'container.newLight',
-							}}>
-							<NativeSelect.Field
-								value={role}
-								onChange={(e: any) => setRole(e.target.value)}>
-								<option value=''>Select a role</option>
-								{roles.map((r: any) => (
-									<option
-										key={r._id}
-										value={r._id}>
-										{r.name}
-									</option>
-								))}
-							</NativeSelect.Field>
-						</NativeSelect.Root>
+						<FormControl
+							label='Role'
+							isRequired>
+							<NativeSelect.Root size='sm'>
+								<NativeSelect.Field
+									value={role}
+									_light={{
+										borderColor: 'container.borderLight',
+										bg: 'container.newLight',
+									}}
+									onChange={(e: any) => setRole(e.target.value)}>
+									<option value=''>Select a role</option>
+									{roles.map((r: any) => (
+										<option
+											key={r._id}
+											value={r._id}>
+											{r.name}
+										</option>
+									))}
+								</NativeSelect.Field>
+								<NativeSelect.Indicator />
+							</NativeSelect.Root>
+						</FormControl>
 					</MenuModalBody>
 					<MenuModalFooter>
 						<DiscardButton onClick={closeModal}>Discard</DiscardButton>

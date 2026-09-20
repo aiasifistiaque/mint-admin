@@ -11,6 +11,7 @@ const table: TableObjectProps = {
 	title: 'Admin',
 	path: 'admins',
 	export: true,
+	customButton: <InviteAdminModal />,
 	menu: [
 		{
 			title: 'View',
@@ -32,7 +33,7 @@ const table: TableObjectProps = {
 			},
 		},
 		{
-			type: 'update-api',
+			type: 'delete',
 			title: 'Cancel Invitation',
 			path: 'admin-invitations',
 			id: (data: any) => `${data?._id}/cancel`,
@@ -41,7 +42,6 @@ const table: TableObjectProps = {
 			prompt: {
 				title: 'Cancel Invitation',
 				body: 'This invitation link will stop working. You can invite this email again later.',
-				btnText: 'Cancel Invitation',
 				successMsg: 'Invitation cancelled',
 			},
 		},
@@ -50,11 +50,7 @@ const table: TableObjectProps = {
 };
 
 const page: NextPage = () => {
-	return (
-		<PageTable table={table}>
-			<InviteAdminModal />
-		</PageTable>
-	);
+	return <PageTable table={table} />;
 };
 
 export default page;

@@ -1,11 +1,9 @@
 'use client';
-import { Flex, FlexProps, Heading, Stack } from '@chakra-ui/react';
+import { FlexProps, Heading, Stack } from '@chakra-ui/react';
 import { ReactNode, FC, useCallback, useEffect, useMemo, useState } from 'react';
 import SidebarItem from './SidebarItem';
 
 import { sidebarData as sidebar, useGetQuery, useGetSelfQuery, useAppSelector } from '../..';
-import { useColorMode } from '@/components/ui/color-mode';
-import { SearchMenu } from '../../menu';
 
 import { SidebarBody, SidebarContainer, SidebarLogo, SidebarSection } from './sidebar-components';
 import Link from 'next/link';
@@ -54,7 +52,6 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 	const { data: sidebarData, isFetching } = useGetQuery({ path: `/sidebar/crm/${sidebarType}` });
 
 	const { selected } = useAppSelector((state: any) => state.route);
-	const { colorMode } = useColorMode();
 
 	const title = data?.shop?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Admin';
 
@@ -112,7 +109,7 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 
 	return (
 		<>
-			<SidebarLogo justifyContent='space-between'>
+			<SidebarLogo>
 				<Heading
 					color='sidebar.headerText.light'
 					_dark={{ color: 'sidebar.headerText.dark' }}
@@ -120,16 +117,7 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 					fontFamily='Bebas Neue'>
 					{title}
 				</Heading>
-				<Flex
-					align='center'
-					gap={1}>
-					<SearchMenu
-						sidebarData={source}
-						iconSize={15}
-						iconColor={colorMode === 'dark' ? 'white' : '#4a4a4a'}
-					/>
-					{closeBtn && closeBtn}
-				</Flex>
+				{closeBtn && closeBtn}
 			</SidebarLogo>
 
 			<SidebarContainer {...props}>

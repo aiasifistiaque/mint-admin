@@ -123,8 +123,9 @@ const PageTable: FC<TableProps> = ({ table, layoutPath, children, schemaLoading 
 					path={table?.path} //Path of the table
 					data={table?.button?.dataModel || table?.createModel} //Input fields for the create page
 					export={table?.export} //If export button should be displayed
+					customButton={table?.customButton} //Replaces the built-in create button entirely
 				/>
-				<Flex>{children}</Flex>
+				{children && <Flex>{children}</Flex>}
 
 				<CustomTable
 					schema={table?.data}

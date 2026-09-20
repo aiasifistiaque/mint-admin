@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { SelectDataType, PromptType, TableObjectDataProps } from '.';
 import { MenuItem } from './table';
 
@@ -7,6 +8,11 @@ type CommonTableProps = {
 	path: string;
 	filters?: boolean;
 	button?: ButtonType;
+	// Replaces the header's built-in create button/modal entirely — for
+	// pages whose "create" action isn't a plain create-form POST (e.g. the
+	// Admins page's Invite modal, which posts elsewhere with different
+	// fields).
+	customButton?: ReactNode;
 	pagination?: boolean;
 	clickable?: boolean;
 	toPath?: string;
