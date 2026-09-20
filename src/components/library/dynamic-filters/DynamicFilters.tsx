@@ -30,9 +30,15 @@ type FilterItemType = {
 // the fold.
 const COLLAPSED_COUNT = 4;
 
-const renderFilter = (item: FilterItemType, key: number) => {
+const renderFilter = (item: FilterItemType, index: number) => {
+	// Keyed on the filter's own field rather than its position: the collapsed
+	// row renders a different slice of the same list, so an index key would
+	// remount a filter — losing what's typed into it — just because the row
+	// expanded. The key is also set on each element directly; spreading it in
+	// with the rest of the props is not how React reads a key.
+	const key = item?.field ?? index;
+
 	const commonProps = {
-		key,
 		field: item?.field,
 		label: item?.label,
 		title: item?.title,
@@ -40,23 +46,45 @@ const renderFilter = (item: FilterItemType, key: number) => {
 
 	switch (item?.type) {
 		case 'boolean':
-			return <BooleanFilter {...commonProps} />;
+			return (
+				<BooleanFilter
+					key={key}
+					{...commonProps}
+				/>
+			);
 		case 'multi-select':
 			return (
 				<MultiSelectFilter
+					key={key}
 					{...commonProps}
 					options={item?.options}
 				/>
 			);
 		case 'date':
-			return <DateFilter {...commonProps} />;
+			return (
+				<DateFilter
+					key={key}
+					{...commonProps}
+				/>
+			);
 		case 'text':
-			return <TextFilter {...commonProps} />;
+			return (
+				<TextFilter
+					key={key}
+					{...commonProps}
+				/>
+			);
 		case 'range':
-			return <RangeFilter {...commonProps} />;
+			return (
+				<RangeFilter
+					key={key}
+					{...commonProps}
+				/>
+			);
 		case 'select':
 			return (
 				<SelectFilter
+					key={key}
 					{...commonProps}
 					options={item?.options}
 				/>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { Checkbox } from '@chakra-ui/react';
-import { useAppDispatch, useAppSelector, useIsMobile, Title, selectAll } from '../../../..';
+import { useAppDispatch, useAppSelector, useIsCardView, Title, selectAll } from '../../../..';
 
 type HeadersProps = {
 	tableData: any; // Schema of the table
@@ -31,9 +31,11 @@ const Headers = ({ tableData, fields, selectable, isLoading, data, showMenu }: H
 		setChecked(isSelected);
 	}, [selectedItems, data]);
 
-	const isMobile = useIsMobile();
+	// Cards carry their own field labels, so there is no header row to draw —
+	// on a phone, and equally in the desktop card view.
+	const isCardView = useIsCardView();
 
-	if (isMobile) return null;
+	if (isCardView) return null;
 
 	return (
 		<>

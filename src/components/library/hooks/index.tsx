@@ -1,4 +1,5 @@
 export { default as useIsMobile } from './useIsMobile';
+export { default as useIsCardView } from './useIsCardView';
 export { default as useModalLayout } from './useModalLayout';
 export type { ModalLayout } from './useModalLayout';
 export { default as useCustomToast } from './useCustomToast';

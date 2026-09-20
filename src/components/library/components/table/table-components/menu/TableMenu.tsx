@@ -54,8 +54,10 @@ const TableMenu: FC<TableMenuProps> = ({
 
 			<MenuContainer>
 				{data?.map((item: any, i: number) => {
+					// No `key` in here — React does not read a key out of a spread
+					// props object, so every `{...commonProps}` below sets it
+					// directly on the element instead.
 					const commonProps = {
-						key: i,
 						id: item?.id ? item?.id(doc) : id,
 						path: item?.path || path,
 					};
@@ -117,6 +119,7 @@ const TableMenu: FC<TableMenuProps> = ({
 						case 'edit-modal':
 							return (
 								<CreateModal
+									key={i}
 									{...commonProps}
 									isMenu
 									icon='edit-outline'
@@ -132,6 +135,7 @@ const TableMenu: FC<TableMenuProps> = ({
 						case 'edit-server-modal':
 							return (
 								<CreateModal
+									key={i}
 									{...commonProps}
 									isMenu
 									icon='edit-outline'
@@ -167,6 +171,7 @@ const TableMenu: FC<TableMenuProps> = ({
 						case 'delete':
 							return (
 								<DeleteItemModal
+									key={i}
 									{...commonProps}
 									title={item?.title}
 									item={item}
@@ -222,6 +227,7 @@ const TableMenu: FC<TableMenuProps> = ({
 						case 'duplicate':
 							return (
 								<DuplicateModal
+									key={i}
 									{...commonProps}
 									title={item?.title}
 								/>
@@ -229,6 +235,7 @@ const TableMenu: FC<TableMenuProps> = ({
 						case 'view-modal':
 							return (
 								<ViewItemModal
+									key={i}
 									{...commonProps}
 									title={item?.title}
 									dataModel={item?.dataModel}
@@ -239,6 +246,7 @@ const TableMenu: FC<TableMenuProps> = ({
 						case 'view-server-modal':
 							return (
 								<ViewServerModal
+									key={i}
 									{...commonProps}
 									title={item?.title}
 								/>
@@ -247,6 +255,7 @@ const TableMenu: FC<TableMenuProps> = ({
 						case 'custom':
 							return (
 								<item.modal
+									key={i}
 									{...commonProps}
 									title={item?.title}
 									data={doc}
@@ -256,6 +265,7 @@ const TableMenu: FC<TableMenuProps> = ({
 						case 'custom-modal':
 							return (
 								<item.modal
+									key={i}
 									{...commonProps}
 									data={doc}
 									title={item?.title}

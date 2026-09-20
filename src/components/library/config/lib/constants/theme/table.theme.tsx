@@ -33,6 +33,7 @@ type TableObjectProps = {
 		fontSize: string;
 		letterSpacing: string;
 		height: string;
+		paddingY: number;
 	};
 };
 
@@ -59,7 +60,10 @@ const TABLE: TableObjectProps = {
 		dark: 'transparent',
 	},
 	row: {
-		height: '56px',
+		// A minimum, not a fixed height — a cell that wraps still grows. It only
+		// sets how tall a single-line row is, so it wants to be the tightest
+		// height that still reads as a row rather than a list item.
+		height: '44px',
 		hover: {
 			light: 'table.row.hoverLight',
 			dark: 'table.row.hoverDark',
@@ -67,12 +71,17 @@ const TABLE: TableObjectProps = {
 	},
 	cell: {
 		paddingX: 3,
-		paddingY: 3,
+		paddingY: 2,
 	},
 	head: {
 		fontSize: '11px',
 		letterSpacing: '0.06em',
-		height: '42px',
+		height: '36px',
+		// Applied to the `th` itself. Chakra's table recipe already pads the
+		// column header, so Title used to stack its own `py` on top of that and
+		// the label ended up with 16px of air on each side; this replaces the
+		// recipe's padding instead of adding to it.
+		paddingY: 2,
 	},
 };
 

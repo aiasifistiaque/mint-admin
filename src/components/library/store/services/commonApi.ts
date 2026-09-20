@@ -58,6 +58,20 @@ export const userApi = mainApi.injectEndpoints({
 			query: (id: any) => `${id}?limit=1000&sort=name`,
 			providesTags: ['filters', 'products', 'brands', 'categories', 'coupons', 'collections'],
 		}),
+		/**
+		 * One record's audit trail.
+		 *
+		 * Its own endpoint rather than `get` with an interpolated path: `get`
+		 * derives its cache tag from `path`, so a per-document URL would register
+		 * a brand new tag per record ("Tag type 'history/g/document/<id>' was
+		 * used, but not specified in `tagTypes`"). This tags them all as
+		 * 'history', so any write to the log refreshes every open timeline.
+		 */
+		getDocumentHistory: builder.query<any, { id: string; limit?: number }>({
+			query: ({ id, limit = 50 }): any => `history/g/document/${id}?limit=${limit}`,
+			providesTags: ['history'],
+		}),
+
 		getById: builder.query<any, { path: string; id: any; invalidate?: string[] }>({
 			query: ({ path, id, invalidate = [] }): any => `${path}/${id}`,
 			providesTags: (result, error, { path, invalidate = [] }: any) => [path, ...invalidate],
@@ -201,6 +215,7 @@ export const {
 	useGetFiltersQuery,
 	useGetSelectDataQuery,
 	useGetByIdQuery,
+	useGetDocumentHistoryQuery,
 	useUpdateByIdMutation,
 	useGetAllQuery,
 	useDeleteByIdMutation,

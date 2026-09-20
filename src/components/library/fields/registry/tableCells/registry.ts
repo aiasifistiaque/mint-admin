@@ -17,6 +17,7 @@ import {
 	DataArrayCountCell,
 	InvitationStatusCell,
 } from './cells';
+import HistoryCell from './HistoryCell';
 
 // WO-13: TableData.tsx's `TableBody` switch, as data. 'menu' is deliberately
 // absent — convertToTableFields.ts appends the menu column separately and
@@ -38,10 +39,20 @@ export const TABLE_CELLS: Partial<Record<TableTypeId, ComponentType<any>>> = {
 	'data-array-count': DataArrayCountCell,
 };
 
-// Not in TABLE_CELLS/TableTypeId — a genuinely new, narrow field (invitation
-// status) rather than an extension of the shared type vocabulary, so it's
-// special-cased here instead of widening TableDataFieldType for one column.
+/**
+ * Cell types that are handed the whole row document, not just their own value.
+ *
+ * Kept as an opt-in set because every other cell spreads its rest props onto
+ * the <td>: handing `doc` to all of them would put an object on a DOM node.
+ */
+export const CELLS_WITH_DOC = new Set(['history']);
+
+// Not in TABLE_CELLS/TableTypeId — genuinely new, narrow fields (invitation
+// status; the history sentence) rather than extensions of the shared type
+// vocabulary, so they're special-cased here instead of widening
+// TableDataFieldType for one column each.
 export const getTableCell = (type: TableTypeId | string | undefined) => {
 	if (type === 'invitation-status') return InvitationStatusCell;
+	if (type === 'history') return HistoryCell;
 	return (type && TABLE_CELLS[type as TableTypeId]) || TextCell;
 };

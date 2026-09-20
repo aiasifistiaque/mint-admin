@@ -15,6 +15,7 @@ export { default as SendBulkSmsModal } from './modals/marketing/SendBulkSmsModal
 export { default as ListTransferModal } from './modals/products/ListTransferModal';
 
 export { default as Breadcrumbs } from './breadcrumbs/Breadcrumbs';
+export * from './history';
 
 export * from './view';
 

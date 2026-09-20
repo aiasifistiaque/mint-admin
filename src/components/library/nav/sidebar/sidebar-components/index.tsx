@@ -5,3 +5,4 @@ export { default as SidebarHeading } from './SidebarHeading';
 export { default as SidebarBody } from './SidebarBody';
 export { default as SidebarFooter } from './SidebarFooter';
 export { default as SidebarSection } from './SidebarSection';
+export { default as SidebarSearch } from './SidebarSearch';

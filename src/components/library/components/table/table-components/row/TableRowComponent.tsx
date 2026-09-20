@@ -11,7 +11,7 @@ import {
 	CustomTd,
 } from '../../../..';
 
-import { useIsMobile } from '../../../../hooks';
+import { useIsCardView } from '../../../../hooks';
 
 import { formatDataKey, formatFieldTitle } from '../../../../functions';
 import { Column } from '../../../../containers';
@@ -37,7 +37,7 @@ const TableRowComponent: FC<TableProps> = ({
 	selectable,
 	...props
 }) => {
-	const isMobile = useIsMobile();
+	const isCardView = useIsCardView();
 
 	return (
 		// Create a TableRow for each item
@@ -45,12 +45,11 @@ const TableRowComponent: FC<TableProps> = ({
 			cursor={clickable ? 'pointer' : 'default'}
 			selectable={selectable}
 			id={item?._id}
-			key={item?._id}
 			actions={<div></div>}
 			{...props}>
 			{/* If the table is selectable, return a TableData cell with a checkbox */}
 			{/* Map over the data keys and create a TableData cell for each */}
-			{data?.map((val: any) => {
+			{data?.map((val: any, index: number) => {
 				const {
 					dataKey,
 					type,
@@ -67,6 +66,13 @@ const TableRowComponent: FC<TableProps> = ({
 					colorTheme,
 					copy,
 				} = val;
+				// A column is keyed by its dataKey, but not every column has one —
+				// the menu column is defined by `type` alone, so `key={dataKey}`
+				// was `key={undefined}` there, i.e. no key at all as far as React
+				// is concerned. Hence "each child in a list should have a unique
+				// key" pointing at a child of <tr>.
+				const columnKey = dataKey ?? `${type ?? 'col'}-${index}`;
+
 				// Split the dataKey into keys
 				const keys = dataKey?.split('.');
 				// Use the keys to get the value from the item
@@ -79,13 +85,13 @@ const TableRowComponent: FC<TableProps> = ({
 				if (type == 'menu')
 					if (!menu) return null;
 					else
-						return isMobile ? (
+						return isCardView ? (
 							<TableMenu
 								path={path}
 								data={menu}
 								id={item?._id}
 								doc={item}
-								key={dataKey}
+								key={columnKey}
 								title={item[dataKey]}>
 								<MenuButton />
 							</TableMenu>
@@ -95,7 +101,7 @@ const TableRowComponent: FC<TableProps> = ({
 								data={menu}
 								id={item?._id}
 								doc={item}
-								key={dataKey}
+								key={columnKey}
 								title={item[dataKey]}>
 								<CustomTd>
 									<MenuButton />
@@ -111,8 +117,8 @@ const TableRowComponent: FC<TableProps> = ({
 				// If the item is editable, return an EditableTableData component
 				if (editable && !clickable)
 					return (
-						<Container key={dataKey}>
-							{isMobile && <Heading {...cardLabelCss}>{formatDataKey(dataKey)}</Heading>}
+						<Container key={columnKey}>
+							{isCardView && <Heading {...cardLabelCss}>{formatDataKey(dataKey)}</Heading>}
 							<EditableTableData
 								type={type}
 								dataKey={dataKey}
@@ -121,7 +127,6 @@ const TableRowComponent: FC<TableProps> = ({
 									editType == 'date' ? format(new Date(item[dataKey]), 'yyyy-MM-dd') : item[dataKey]
 								}
 								id={item?._id}
-								key={dataKey}
 								editType={editType}
 								options={options}
 								style={style}
@@ -132,12 +137,12 @@ const TableRowComponent: FC<TableProps> = ({
 				// Return a TableData cell with the value
 				return (
 					<Container
-						key={dataKey}
+						key={columnKey}
 						type={type}
 						copy={copy}
-						isMobile={isMobile}
+						isCardView={isCardView}
 						value={value}>
-						{isMobile && type !== 'image-text' && (
+						{isCardView && type !== 'image-text' && (
 							<Heading {...cardLabelCss}>
 								{formatFieldTitle({ field: dataKey, schema: data })}
 							</Heading>
@@ -148,9 +153,12 @@ const TableRowComponent: FC<TableProps> = ({
 							copy={copy}
 							toLocaleStr={toLocaleStr}
 							colorPalette={colorPalette}
-							key={dataKey}
 							type={type}
 							item={val}
+							// `item` is the column's schema entry; `doc` is the row itself.
+							// Cells that render one value never need it, but a few (the
+							// history sentence) have to reach other fields on the same row.
+							doc={item}
 							tagType={tagType}
 							imageKey={item[imageKey]}>
 							{value}
@@ -172,11 +180,11 @@ const cardLabelCss = {
 	mb: 0.5,
 };
 
-const Container = ({ children, isMobile, type, value, copy, ...props }: any) => {
+const Container = ({ children, isCardView, type, value, copy, ...props }: any) => {
 	const styleProps = {
 		...props,
 	};
-	if (isMobile && type !== 'image-text') {
+	if (isCardView && type !== 'image-text') {
 		return (
 			// This is a direct child of RowContainerBase's `1fr 1fr` grid. A bare
 			// `1fr` track is really `minmax(auto, 1fr)`, so without `minW={0}`
@@ -191,7 +199,7 @@ const Container = ({ children, isMobile, type, value, copy, ...props }: any) => 
 			</Column>
 		);
 	}
-	if (isMobile) {
+	if (isCardView) {
 		return (
 			<GridItem
 				{...styleProps}

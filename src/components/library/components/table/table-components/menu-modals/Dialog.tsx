@@ -12,6 +12,18 @@ type DialogProps = {
 	isOpen?: boolean;
 	onClose?: () => void;
 	size?: 'xl' | 'sm' | 'md' | 'lg' | 'xs' | 'full' | 'cover';
+	/**
+	 * Accepted and ignored.
+	 *
+	 * This component picks its own placement from the viewport and the admin's
+	 * layout preference — bottom sheet on mobile, end drawer or centred dialog
+	 * on desktop. It used to spread `props` after its own `placement`, so a
+	 * leftover Chakra v2 `placement='center'` on a caller silently overrode
+	 * that and left the mobile sheet floating in the middle of the screen.
+	 * Swallowing the prop here means that can't happen again, and it also keeps
+	 * an unknown attribute off the DOM.
+	 */
+	placement?: never;
 	// Smaller utility/confirmation dialogs stay a centered dialog on desktop
 	// regardless of the admin's drawer preference — see MenuModal's same prop.
 	forceModal?: boolean;
@@ -57,6 +69,7 @@ const Dialog: FC<DialogProps> = ({
 	onOpenChange,
 	size = 'xl',
 	forceModal,
+	placement: _ignoredPlacement,
 	...props
 }) => {
 	const isMobile = useIsMobile();

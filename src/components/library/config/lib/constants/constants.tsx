@@ -65,7 +65,14 @@ export const padding = {
 	BASE: sizes.PADDING_X_BASE,
 	MD: sizes.PADDING_X_MD,
 	LG: sizes.PADDING_X_LG,
-	BODY_TOP: '72px',
+	// Clears the fixed sidebar header (h: NAV_HEIGHT = 56px).
+	BODY_TOP: '56px',
+	// Sits on top of BODY_TOP to drop the sidebar's search field onto the top
+	// edge of the first block in the main column rather than onto the navbar:
+	// 4px MainBody `pt` + 12px of page padding. It belongs to the search field's
+	// own sticky wrapper, not to the body, so the wrapper's opaque background
+	// covers this band too and rows scrolling past never show through it.
+	SIDEBAR_SEARCH_TOP: '16px',
 	CONTAINER: {
 		BASE: 4,
 		MD: 8,

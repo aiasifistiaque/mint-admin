@@ -3,9 +3,11 @@
 import { FC, ReactNode } from 'react';
 import { Box, chakra, Collapsible, Flex, Skeleton, Text } from '@chakra-ui/react';
 import { ChevronDown } from 'lucide-react';
+import { LucideIcon } from '../../../icon';
 
 type SidebarSectionProps = {
 	title: string;
+	icon?: string;
 	isOpen: boolean;
 	onToggle: () => void;
 	isLoading?: boolean;
@@ -27,6 +29,7 @@ type SidebarSectionProps = {
  */
 const SidebarSection: FC<SidebarSectionProps> = ({
 	title,
+	icon,
 	isOpen,
 	onToggle,
 	isLoading = false,
@@ -53,16 +56,31 @@ const SidebarSection: FC<SidebarSectionProps> = ({
 				py={2}
 				cursor='pointer'
 				borderRadius='md'>
-				<Text
-					color='sidebar.bodyText.headingLight'
-					_dark={{ color: 'sidebar.bodyText.headingDark' }}
-					fontSize={{ base: 'md', md: '2xs' }}
-					fontWeight='700'
-					textTransform='uppercase'
-					lineClamp={1}
-					textAlign='left'>
-					{title}
-				</Text>
+				<Flex
+					align='center'
+					gap={1.5}
+					minW={0}>
+					{icon ? (
+						<Box
+							flexShrink={0}
+							display='flex'>
+							<LucideIcon
+								name={icon}
+								size={12}
+							/>
+						</Box>
+					) : null}
+					<Text
+						color='sidebar.bodyText.headingLight'
+						_dark={{ color: 'sidebar.bodyText.headingDark' }}
+						fontSize={{ base: 'md', md: '2xs' }}
+						fontWeight='700'
+						textTransform='uppercase'
+						lineClamp={1}
+						textAlign='left'>
+						{title}
+					</Text>
+				</Flex>
 
 				<Flex
 					align='center'

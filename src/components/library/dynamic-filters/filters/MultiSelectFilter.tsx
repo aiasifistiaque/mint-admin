@@ -42,14 +42,11 @@ const MultiSelectFilter: FC<FilterProps> = ({ title, field, options, label }) =>
 		setSearch(e.target.value);
 	};
 
-	const handleChange = (e: any) => {
-		setVal(val => {
-			if (val.includes(e.target.name)) {
-				return val.filter(item => item !== e.target.name);
-			} else {
-				return [...val, e.target.name];
-			}
-		});
+	// Takes the option's value rather than reading `e.target.name` off a change
+	// event: the checkbox is controlled now, so the toggle comes from Chakra's
+	// `onCheckedChange` and there is no DOM event to read a name from.
+	const handleToggle = (value: string) => {
+		setVal(val => (val.includes(value) ? val.filter(item => item !== value) : [...val, value]));
 	};
 
 	const open = () => {
@@ -147,11 +144,15 @@ const MultiSelectFilter: FC<FilterProps> = ({ title, field, options, label }) =>
 					{options
 						.filter(option => option?.label?.toLowerCase()?.includes(search?.toLowerCase()))
 						.map((option: any, i: number) => (
+							// `checked`, not Chakra v2's `isChecked` — that name is not a
+							// prop in v3, so it fell through to the DOM (the "React does
+							// not recognize the `isChecked` prop" warning) and left
+							// `checked` undefined, i.e. the box was uncontrolled and never
+							// showed the filter that was actually applied.
 							<FilterCheckbox
-								isChecked={val.includes(option?.value) ? true : false}
-								onChange={handleChange}
-								name={option?.value}
-								key={i}>
+								checked={val.includes(option?.value)}
+								onCheckedChange={() => handleToggle(option?.value)}
+								key={option?.value ?? i}>
 								{option?.label}
 							</FilterCheckbox>
 						))}

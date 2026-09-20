@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react';
 
 // Direct imports instead of barrel export
 import { useAppDispatch } from '../../hooks/useReduxHooks';
-import { useIsMobile, useTableUrlSync } from '../../hooks';
+import { useIsMobile, useIsCardView, useTableUrlSync } from '../../hooks';
 import TableContainer from './table-components/containers/TableContainer';
 import TableSkeleton from './TableSkeleton';
 import TableSearch from './table-components/tool-bar/table-toolbar/TableSearch';
@@ -55,6 +55,10 @@ const CustomTable: FC<CustomTableProps> = ({
 
 	const dispatch = useAppDispatch();
 	const isMobile = useIsMobile();
+	const isCardView = useIsCardView();
+	// Cards on a desktop. On a phone they already stack one per row and the
+	// viewport does the work; here there is width to fill, so they tile.
+	const isCardGrid = isCardView && !isMobile;
 	const onUnselect = () => dispatch(selectAll({ ids: [], isSelected: false }));
 
 	useEffect(() => {
@@ -124,6 +128,7 @@ const CustomTable: FC<CustomTableProps> = ({
 			<TableContainer>
 				<Table.Root
 					size='sm'
+					{...(isCardGrid && { w: '100%', tableLayout: 'fixed' })}
 					// Each mobile row is one <td colSpan> holding the whole card, so
 					// the table has effectively one column — `table-layout: auto`
 					// (the default) sizes a table to its content's natural width
@@ -140,7 +145,7 @@ const CustomTable: FC<CustomTableProps> = ({
 						_dark={{ bg: 'table.head.bgDark' }}>
 						<Table.Row bg='inherit'>{header}</Table.Row>
 					</Table.Header>
-					<Table.Body>{tbody}</Table.Body>
+					<Table.Body css={isCardGrid ? cardGridCss : undefined}>{tbody}</Table.Body>
 				</Table.Root>
 				{data?.docsInPage == 0 && (
 					<TableErrorMessage title='No results found.'>
@@ -158,6 +163,32 @@ const CustomTable: FC<CustomTableProps> = ({
 			{pagination && <ResultContainer data={data} />}
 		</>
 	);
+};
+
+/**
+ * Lays the desktop card view out as a grid.
+ *
+ * Each card is already wrapped in a `<tr><td colSpan>` so it can sit legally
+ * inside `<tbody>`, so the grid is applied to the tbody and the row and cell
+ * are flattened to blocks to become its items. `auto-fill` with a min track
+ * means the column count follows the available width instead of being a
+ * breakpoint guess, and the card's own bottom margin is dropped so the grid gap
+ * is the only thing setting the spacing.
+ */
+const cardGridCss = {
+	display: 'grid',
+	gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+	gap: '16px',
+	// Cards in the same row share a height. Left to their natural heights the
+	// row ends ragged, which reads as a broken grid rather than a deliberate one.
+	alignItems: 'stretch',
+
+	// The height has to be handed down the whole chain: `stretch` sizes the
+	// <tr> grid item, but the <td> and the card inside it are ordinary blocks
+	// and would otherwise stay at their content height.
+	'& > tr': { display: 'block', height: '100%' },
+	'& > tr > td': { display: 'block', padding: 0, border: 'none', height: '100%' },
+	'& > tr > td > *': { marginBottom: 0, height: '100%' },
 };
 
 export default CustomTable;

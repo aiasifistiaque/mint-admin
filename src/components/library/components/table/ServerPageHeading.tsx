@@ -1,4 +1,4 @@
-import { Flex, FlexProps, Heading, Button, Text, Skeleton, SkeletonText } from '@chakra-ui/react';
+import { Flex, FlexProps, Heading, Button, Text, Skeleton } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
 // import { BackendCreateModal, Icon } from '../..';
@@ -8,6 +8,7 @@ import { buttonGroupCss, containerCss, headingCss, subHeadingCss, wrapperCss } f
 import { BackendCreateModal } from '../../modals';
 import { Icon } from '../../icon';
 import { useIsMobile } from '../../hooks';
+import { radius, sizes } from '../../config';
 
 type PageHeadingProps = FlexProps & {
 	title: string;
@@ -68,10 +69,13 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 			{...props}>
 			<Flex {...containerCss}>
 				{isLoading ? (
-					<SkeletonText
-						noOfLines={3}
-						w='300px'
-						h='40px'
+					// One bar the size of the <Heading> it stands in for. This was a
+					// `SkeletonText noOfLines={3}`, where `h` applies per line — so a
+					// single 30px title loaded in behind a 300x144 slab.
+					<Skeleton
+						w='140px'
+						h={HEADING_HEIGHT}
+						borderRadius='full'
 					/>
 				) : (
 					<Heading {...headingCss}>{title}</Heading>
@@ -79,9 +83,9 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 
 				{isLoading ? (
 					<Skeleton
-						w='140px'
-						h='40px'
-						borderRadius='8px'
+						w='124px'
+						h={sizes.CONTROL_HEIGHT}
+						borderRadius={radius.BUTTON}
 					/>
 				) : (
 					<Flex {...buttonGroupCss}>
@@ -94,5 +98,9 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 		</Flex>
 	);
 };
+
+// `headingCss` is 1.375rem/1.5rem at lineHeight 1.25, so the rendered <h2> box
+// is 27.5px on mobile and 30px from md up.
+const HEADING_HEIGHT = { base: '28px', md: '30px' };
 
 export default ServerPageHeading;

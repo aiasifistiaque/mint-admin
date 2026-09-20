@@ -14,6 +14,7 @@ import {
 	DialogHeader,
 	DialogBody,
 	DialogCloseButton,
+	DocumentHistory,
 } from '../../../..';
 
 type Props = {
@@ -66,7 +67,6 @@ const ViewItemModal: FC<Props> = ({ title, path, trigger, id }) => {
 		<>
 			{renderTrigger()}
 			<Dialog
-				placement='center'
 				isOpen={isOpen}
 				onClose={() => onClose()}>
 				<DialogHeader>{title || 'Item Details'}</DialogHeader>
@@ -92,6 +92,12 @@ const ViewItemModal: FC<Props> = ({ title, path, trigger, id }) => {
 								</ViewItem>
 							);
 						})}
+
+						{/* Who did what to this record, under its fields. */}
+						<DocumentHistory
+							id={id}
+							path={path}
+						/>
 					</Column>
 				</DialogBody>
 			</Dialog>

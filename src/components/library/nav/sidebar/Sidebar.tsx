@@ -1,11 +1,17 @@
 'use client';
-import { FlexProps, Heading, Stack } from '@chakra-ui/react';
-import { ReactNode, FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FlexProps, Heading, Stack, Text } from '@chakra-ui/react';
+import { ReactNode, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import SidebarItem from './SidebarItem';
 
 import { sidebarData as sidebar, useGetQuery, useGetSelfQuery, useAppSelector } from '../..';
 
-import { SidebarBody, SidebarContainer, SidebarLogo, SidebarSection } from './sidebar-components';
+import {
+	SidebarBody,
+	SidebarContainer,
+	SidebarLogo,
+	SidebarSearch,
+	SidebarSection,
+} from './sidebar-components';
 import Link from 'next/link';
 
 const COLLAPSED_KEY = 'emint_sidebar_collapsed';
@@ -16,10 +22,11 @@ type NavItem = {
 	icon: any;
 	title: string;
 	sectionTitle?: string;
+	sectionIcon?: string;
 	startOfSection?: boolean;
 };
 
-type Section = { title: string; items: NavItem[] };
+type Section = { title: string; icon?: string; items: NavItem[] };
 
 /**
  * Turns the flat link list into sections.
@@ -34,7 +41,7 @@ const toSections = (items: NavItem[]): { lead: NavItem[]; sections: Section[] } 
 
 	for (const item of items) {
 		if (item?.startOfSection && item?.sectionTitle) {
-			sections.push({ title: item.sectionTitle, items: [item] });
+			sections.push({ title: item.sectionTitle, icon: item.sectionIcon, items: [item] });
 			continue;
 		}
 
@@ -59,6 +66,55 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 	const source: NavItem[] = isLoading ? (sidebar as any) : sidebarData;
 
 	const { lead, sections } = useMemo(() => toSections(source ?? []), [source]);
+
+	// Filters the sidebar in place — matches Vercel's project-nav search, which
+	// narrows the list itself rather than opening a command palette. That's a
+	// separate feature (SearchMenu, still in the navbar for a global jump).
+	const [search, setSearch] = useState('');
+	const searchInputRef = useRef<HTMLInputElement>(null);
+	const query = search.trim().toLowerCase();
+	const isSearching = query.length > 0;
+
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.metaKey || e.ctrlKey || e.altKey || e.key.toLowerCase() !== 'f') return;
+
+			const target = e.target as HTMLElement | null;
+			const tag = target?.tagName;
+			// Don't steal the letter while the admin is typing anywhere else.
+			if (tag === 'INPUT' || tag === 'TEXTAREA' || target?.isContentEditable) return;
+
+			e.preventDefault();
+			searchInputRef.current?.focus();
+		};
+
+		window.addEventListener('keydown', handleKeyDown);
+		return () => window.removeEventListener('keydown', handleKeyDown);
+	}, []);
+
+	const filteredLead = useMemo(() => {
+		if (!isSearching) return lead;
+		return lead.filter(item => item.title?.toLowerCase().includes(query));
+	}, [lead, query, isSearching]);
+
+	const filteredSections = useMemo(() => {
+		if (!isSearching) return sections;
+
+		return sections
+			.map(section => {
+				// A matching category name keeps its whole list, otherwise only
+				// the items that actually match survive.
+				const sectionMatches = section.title.toLowerCase().includes(query);
+				const items = sectionMatches
+					? section.items
+					: section.items.filter(item => item.title?.toLowerCase().includes(query));
+
+				return { ...section, items };
+			})
+			.filter(section => section.items.length > 0);
+	}, [sections, query, isSearching]);
+
+	const hasResults = filteredLead.length > 0 || filteredSections.length > 0;
 
 	// Only collapsed sections are stored, so a newly added category is open by
 	// default rather than inheriting someone's stale "everything closed" state.
@@ -122,18 +178,26 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 
 			<SidebarContainer {...props}>
 				<SidebarBody>
-					{lead.length ? <Stack gap={0.5}>{lead.map(renderItem)}</Stack> : null}
+					<SidebarSearch
+						value={search}
+						onChange={setSearch}
+						inputRef={searchInputRef}
+					/>
 
-					{sections.map(section => {
+					{filteredLead.length ? <Stack gap={0.5}>{filteredLead.map(renderItem)}</Stack> : null}
+
+					{filteredSections.map(section => {
 						const active = isActive(section);
-						// The section holding the current page always renders open, so the
-						// sidebar can never hide where you actually are.
-						const open = active || !collapsed[section.title];
+						// The section holding the current page, or one with a live match,
+						// always renders open — collapsing never hides where you are or
+						// what you just searched for.
+						const open = isSearching || active || !collapsed[section.title];
 
 						return (
 							<SidebarSection
 								key={section.title}
 								title={section.title}
+								icon={section.icon}
 								isOpen={open}
 								hasActive={active}
 								isLoading={isLoading}
@@ -144,6 +208,17 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 							</SidebarSection>
 						);
 					})}
+
+					{isSearching && !hasResults ? (
+						<Text
+							mt={4}
+							textAlign='center'
+							fontSize='xs'
+							color='sidebar.bodyText.light'
+							_dark={{ color: 'sidebar.bodyText.dark' }}>
+							No matches for &ldquo;{search}&rdquo;
+						</Text>
+					) : null}
 				</SidebarBody>
 			</SidebarContainer>
 		</>

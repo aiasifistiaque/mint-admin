@@ -72,6 +72,9 @@ export const Title: FC<TitleProps> = ({
 		<Table.ColumnHeader
 			bg='inherit'
 			h={TABLE.head.height}
+			// Overrides the recipe's own column-header padding rather than
+			// stacking on top of it — the inner Flex below carries none.
+			py={TABLE.head.paddingY}
 			_light={{ borderColor: 'container.borderLight' }}
 			_dark={{
 				bg: 'inherit',
@@ -86,7 +89,7 @@ export const Title: FC<TitleProps> = ({
 			userSelect='none'>
 			<Flex
 				px={{ base: 0, md: TABLE.cell.paddingX }}
-				py={2}
+				py={0}
 				align='center'
 				gap={1.5}
 				fontSize={TABLE.head.fontSize}

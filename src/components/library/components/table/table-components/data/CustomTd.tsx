@@ -11,21 +11,25 @@ import {
 } from '@chakra-ui/react';
 import { ExternalLink as ExternalLinkIcon } from 'lucide-react';
 
-import { useIsMobile, Column, PLACEHOLDER_IMAGE, TableDataProps, theme } from '../../../..';
+import { useIsCardView, Column, PLACEHOLDER_IMAGE, TableDataProps, theme } from '../../../..';
 
 const { TABLE } = theme;
 
 const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, ...props }) => {
-	const isMobile = useIsMobile();
+	const isCardView = useIsCardView();
 
 	const text = children;
 
-	const Container = isMobile ? Column : Table.Cell;
+	const Container = isCardView ? Column : Table.Cell;
 
-	const TextContainer = isMobile
+	// On mobile the value is wrapped in a <Text> (a <p>) unless the cell renders
+	// its own structure. 'tag' and 'history' both hand back elements containing
+	// a <div>, which is not valid inside a <p> — the browser hoists it out, and
+	// the markup React hydrates against no longer matches what it rendered.
+	const TextContainer = isCardView
 		? editable
 			? Fragment
-			: type == 'tag'
+			: type == 'tag' || type == 'history'
 			? Fragment
 			: Text
 		: Fragment;
@@ -70,12 +74,19 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 					</Center>
 				)}
 
-				{isMobile && heading && <Heading size='xs'>{heading}</Heading>}
+				{isCardView && heading && <Heading size='xs'>{heading}</Heading>}
 				<External>
 					{TextContainer === Fragment ? (
 						formatTextForBreaking(text) || <i>--</i>
 					) : (
 						<TextContainer
+							// A div, not the <p> Chakra's Text renders by default.
+							// Several cells (checkbox, history, image-text) return their
+							// own block structure, and the parser auto-closes a <p> when
+							// it meets a <div> — so the DOM React hydrated against no
+							// longer matched what it rendered. Nothing here needs to be
+							// a paragraph; the styling is identical either way.
+							as='div'
 							color='text.light'
 							_dark={{ color: 'text.dark' }}
 							// This sits next to the copy icon in a row flex container
