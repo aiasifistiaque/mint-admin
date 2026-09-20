@@ -32,7 +32,8 @@ const VCheckbox: FC<InputContainerProps> = ({
 				w='full'>
 				<Label>{label}</Label>
 				<Checkbox.Root
-					size='lg'
+					size='sm'
+					cursor='pointer'
 					checked={value}
 					// colorPalette='brand'
 					onCheckedChange={details => {
@@ -49,9 +50,10 @@ const VCheckbox: FC<InputContainerProps> = ({
 					<Checkbox.HiddenInput />
 					<Checkbox.Control />
 					<Checkbox.Label
-						fontSize='18px'
+						fontSize='14px'
 						textTransform='capitalize'
-						fontWeight='600'>
+						fontWeight='500'
+						cursor='pointer'>
 						{placeholder || label}
 					</Checkbox.Label>
 				</Checkbox.Root>

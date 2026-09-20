@@ -1,7 +1,16 @@
-type TableDataFieldConverter = {
+import assertSchema from './assertSchema';
+
+// WO-03 note: this should be `schema: SchemaType<T>`, but a second, incompatible
+// schema-prop vocabulary (`SchemaProps`/`SchemaField` in
+// `model/types/index.ts` — defect #15) is still passed in by ~20 call sites.
+// Unifying the two vocabularies is Phase 1 registry work, not a Phase 0
+// mechanical fix, so this stays loosely typed until then; assertSchema below
+// still validates the actual shape at runtime in dev.
+type TableDataFieldConverter<T = any> = {
 	schema: any;
 	menu?: boolean;
 	fields?: string[];
+	modelName?: string;
 };
 
 const createTableField = ({ key, field }: { key: string; field: any }): any => {
@@ -23,11 +32,18 @@ const createTableField = ({ key, field }: { key: string; field: any }): any => {
 	};
 };
 
-const convertToTableFields = ({ schema, menu = true, fields }: TableDataFieldConverter): any[] => {
+const convertToTableFields = <T = any,>({
+	schema,
+	menu = true,
+	fields,
+	modelName = 'unknown',
+}: TableDataFieldConverter<T>): any[] => {
+	assertSchema(schema as any, modelName);
+
 	const tableFields: any[] = [];
 
 	const processField = (key: string) => {
-		const field = schema[key];
+		const field = (schema as any)[key];
 
 		if (!field?.displayInTable) return;
 

@@ -18,10 +18,15 @@ const AuthWrapper: FC<FlexPropsType> = ({ children }) => {
 	const router = useRouter();
 
 	useEffect(() => {
-		if (!isLoading && !isLoggedIn) {
+		if (isLoading) return;
+		// Only clear on an actual logout/redirect-to-login — this effect was
+		// firing on every normal authenticated page load too (any time
+		// `isLoading` settles, which is every mount), wiping out filters and
+		// pagination a table had just hydrated from the URL a moment earlier.
+		if (!isLoggedIn) {
 			router.replace('/auth/login');
+			dispatch(clearFilters());
 		}
-		dispatch(clearFilters());
 	}, [isLoading]);
 
 	if (isLoading) return null;

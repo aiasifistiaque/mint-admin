@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { Dialog } from '@chakra-ui/react';
+import { styles } from '../../config';
 
 type AlertContentProps = {
 	children: ReactNode;
@@ -9,12 +10,7 @@ type AlertContentProps = {
 const AlertContent: FC<AlertContentProps> = ({ children, ...props }) => {
 	return (
 		<Dialog.Content
-			boxShadow='lg'
-			borderRadius='xl'
-			bg='menu.light'
-			_dark={{
-				bg: 'menu.dark',
-			}}
+			{...(styles.MODAL as any)}
 			{...props}>
 			{children}
 		</Dialog.Content>

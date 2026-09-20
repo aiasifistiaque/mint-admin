@@ -9,11 +9,14 @@ type CustomModalFooterProps = {
 const CustomModalFooter: FC<CustomModalFooterProps> = ({ children, ...props }) => {
 	return (
 		<Dialog.Footer
-			borderTopWidth={1}
-			borderColor='container.borderLight'
-			_dark={{ borderColor: 'border.dark' }}
-			borderBottomRadius='2xl'
+			px={{ base: 4, md: 6 }}
 			py={3}
+			gap={2}
+			borderTopWidth={1}
+			borderColor='border.muted'
+			bg='bg.subtle'
+			justifyContent='flex-end'
+			alignItems='center'
 			{...props}>
 			{children}
 		</Dialog.Footer>

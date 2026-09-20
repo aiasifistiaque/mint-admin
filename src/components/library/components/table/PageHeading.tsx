@@ -1,12 +1,14 @@
-import { Flex, FlexProps, Heading, Button, TextProps } from '@chakra-ui/react';
+import { Flex, FlexProps, Heading, Button, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { FC } from 'react';
 import { CreateModal, Icon } from '../..';
 import ExportModal from '../modals/export/ExportModal';
 import { useColorMode } from '@/components/ui/color-mode';
+import { buttonGroupCss, containerCss, headingCss, subHeadingCss } from './style';
 
 type PageHeadingProps = FlexProps & {
 	title: string;
+	subtitle?: string;
 	button?: string;
 	href?: string;
 	isModal?: boolean;
@@ -18,6 +20,7 @@ type PageHeadingProps = FlexProps & {
 
 const PageHeading: FC<PageHeadingProps> = ({
 	title,
+	subtitle,
 	href,
 	button,
 	isModal = false,
@@ -29,19 +32,20 @@ const PageHeading: FC<PageHeadingProps> = ({
 }) => {
 	const { colorMode } = useColorMode();
 	const iconColor = colorMode === 'light' ? 'text.dark' : 'text.light';
+
 	const btn = (
-		<Button
-			size='sm'
-			px={3}>
+		<Button size='sm'>
 			<Icon
-				size={18}
+				size={16}
 				name='add'
 				color={iconColor}
 			/>
 			{button}
 		</Button>
 	);
+
 	const exportButton = <ExportModal path={path} />;
+
 	const renderButton = () => {
 		if (isModal)
 			return (
@@ -62,36 +66,19 @@ const PageHeading: FC<PageHeadingProps> = ({
 		<Flex
 			{...containerCss}
 			{...props}>
-			<Heading {...headingCss}>{title}</Heading>
+			<Flex
+				flexDir='column'
+				gap={0.5}
+				minW={0}>
+				<Heading {...headingCss}>{title}</Heading>
+				{subtitle && <Text {...subHeadingCss}>{subtitle}</Text>}
+			</Flex>
 			<Flex {...buttonGroupCss}>
 				<>{Boolean(exportData) && exportButton}</>
 				<>{(Boolean(button) || isModal) && renderButton()}</>
 			</Flex>
 		</Flex>
 	);
-};
-
-const containerCss: FlexProps = {
-	flexDir: { base: 'row', md: 'row' },
-	flexWrap: 'wrap',
-	gap: 2,
-	justify: 'space-between',
-	align: { base: 'flex-start', md: 'center' },
-	pt: { base: 3, md: 4 },
-};
-
-const headingCss: TextProps = {
-	color: 'text.light',
-	_dark: {
-		color: 'text.dark',
-	},
-	fontSize: { base: '1.5rem', md: '1.75rem' },
-};
-
-const buttonGroupCss: FlexProps = {
-	gap: 2,
-	// w: 'full',
-	justify: 'flex-end',
 };
 
 export default PageHeading;

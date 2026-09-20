@@ -3,6 +3,7 @@ import { FC, useEffect } from 'react';
 
 // Direct imports instead of barrel export
 import { useAppDispatch } from '../../hooks/useReduxHooks';
+import { useIsMobile, useTableUrlSync } from '../../hooks';
 import TableContainer from './table-components/containers/TableContainer';
 import TableSkeleton from './TableSkeleton';
 import TableSearch from './table-components/tool-bar/table-toolbar/TableSearch';
@@ -53,11 +54,17 @@ const CustomTable: FC<CustomTableProps> = ({
 	);
 
 	const dispatch = useAppDispatch();
+	const isMobile = useIsMobile();
 	const onUnselect = () => dispatch(selectAll({ ids: [], isSelected: false }));
 
 	useEffect(() => {
 		dispatch(setCurrentPath(path));
 	}, [path]);
+
+	// Mirrors page/search/sort/filters to the URL's query string (and reads
+	// them back on load), so a refresh lands on the same filtered/paginated
+	// view instead of resetting.
+	useTableUrlSync(path);
 
 	return (
 		<>
@@ -67,11 +74,18 @@ const CustomTable: FC<CustomTableProps> = ({
 						align='center'
 						gap={2}>
 						<CloseButton
-							size='md'
+							size='sm'
 							borderRadius='full'
+							color='inherit'
+							_hover={{ bg: 'whiteAlpha.200' }}
 							onClick={onUnselect}
 						/>
-						<Text>{selectedItems?.length} Items Selected</Text>
+						<Text
+							color='inherit'
+							fontSize='14px'
+							fontWeight='500'>
+							{selectedItems?.length} selected
+						</Text>
 					</Flex>
 
 					<SelectedMenu
@@ -108,8 +122,20 @@ const CustomTable: FC<CustomTableProps> = ({
 			)}
 			{table?.topPagination && <TableResultContainer data={data} />}
 			<TableContainer>
-				<Table.Root size='sm'>
+				<Table.Root
+					size='sm'
+					// Each mobile row is one <td colSpan> holding the whole card, so
+					// the table has effectively one column — `table-layout: auto`
+					// (the default) sizes a table to its content's natural width
+					// though, and a long unbroken value (a URL) inside that cell was
+					// enough to blow the table itself wider than the viewport,
+					// forcing horizontal scroll instead of the text wrapping.
+					// `fixed` makes the single column just take the container width.
+					{...(isMobile && { tableLayout: 'fixed', w: '100%' })}>
 					<Table.Header
+						position='sticky'
+						top={0}
+						zIndex={1}
 						_light={{ bg: 'table.head.bgLight' }}
 						_dark={{ bg: 'table.head.bgDark' }}>
 						<Table.Row bg='inherit'>{header}</Table.Row>

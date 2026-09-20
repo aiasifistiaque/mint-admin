@@ -9,7 +9,7 @@ import ColorMode from '../components/color-mode/ColorMode';
 import { LayoutWrapper, Navbar, Sidebar, Body, MainBody } from '../nav';
 import { Align, SpaceBetween } from '../containers';
 import { useIsMobile, useAppDispatch } from '../hooks';
-import { refresh, useGetQuery, navigate } from '../store';
+import { unselectAll, useGetQuery, navigate } from '../store';
 import { padding, sizes } from '../config';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
@@ -39,7 +39,12 @@ const Layout: FC<LayoutProps> = ({
 
 	useEffect(() => {
 		dispatch(navigate({ selected: path }));
-		dispatch(refresh());
+		// Not `refresh()` — that reset page/search/sort/filters back to
+		// defaults on every single page mount, which was clobbering the
+		// table's own URL-driven state (see useTableUrlSync) a moment after
+		// it hydrated. Row selection is still page-local and stale from a
+		// previous table, so that part still gets cleared.
+		dispatch(unselectAll());
 	}, []);
 
 	// Chakra UI v3: useMediaQuery expects an array and returns an array of booleans

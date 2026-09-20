@@ -73,7 +73,15 @@ const BooleanFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 			<Filter
 				isActive={ifFieldExists()}
 				onCancel={onFilterReset}>
-				{label} {ifFieldExists() && <span> | {filters[field]}</span>}
+				{label}{' '}
+				{ifFieldExists() && (
+					// A bare `<span>` picks up the global `span { color }` rule (light
+					// text meant for a dark page) instead of inheriting the chip's own
+					// color, which is black-on-white once the chip is active — hence
+					// near-invisible. `color: inherit` (highest-specificity inline
+					// style) forces it back to the parent's actual color.
+					<span style={{ color: 'inherit' }}> | {filters[field]}</span>
+				)}
 			</Filter>
 		</span>
 	);

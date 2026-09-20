@@ -11,9 +11,7 @@ import {
 	FormSection,
 	CreateNav,
 	CreateBody,
-	handleChange,
-	handleImage,
-	handleSwitch,
+	getOnChangeHandler as resolveOnChangeHandler,
 	getFieldValue,
 } from '../..';
 
@@ -84,19 +82,12 @@ const FormPage: FC<FormPageType> = ({
 		}
 	};
 
-	const getOnChangeHandler = (type: string, key?: string) => {
-		const params = { formData, setFormData, setChangedData };
-
-		switch (type) {
-			case 'image':
-				return (e: any) => handleImage({ e, dataKey: key || 'image', ...params });
-			case 'switch':
-			case 'checkbox':
-				return (e: any) => handleSwitch({ e, ...params });
-			default:
-				return (e: any) => handleChange({ e, ...params });
-		}
-	};
+	// WO-12: was a smaller local copy of functions/getOnChangeHandler.ts, missing
+	// image-array/nested-image/nested-string/nested-select/nested-data-menu/icon/
+	// video — those types silently broke on this shell. Both shells now call the
+	// one shared resolver.
+	const getOnChangeHandler = (type: string, key?: string) =>
+		resolveOnChangeHandler({ type, key, formData, setFormData, setChangedData });
 
 	return (
 		<form onSubmit={handleSubmit}>
@@ -125,6 +116,7 @@ const FormPage: FC<FormPageType> = ({
 											placeholder={item?.placeholder}
 											options={item?.options}
 											dataModel={item?.dataModel}
+											item={item}
 										/>
 									)}
 								</FormItem>

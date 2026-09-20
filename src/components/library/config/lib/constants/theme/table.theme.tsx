@@ -18,6 +18,22 @@ type TableObjectProps = {
 		light: string;
 		dark: string;
 	};
+	row: {
+		height: string;
+		hover: {
+			light: string;
+			dark: string;
+		};
+	};
+	cell: {
+		paddingX: number;
+		paddingY: number;
+	};
+	head: {
+		fontSize: string;
+		letterSpacing: string;
+		height: string;
+	};
 };
 
 const TABLE: TableObjectProps = {
@@ -31,7 +47,7 @@ const TABLE: TableObjectProps = {
 			dark: 'table.outerBorder.dark',
 		},
 		width: 1,
-		radius: 6,
+		radius: 10,
 	},
 	bg: {
 		light: 'container.newLight',
@@ -41,6 +57,22 @@ const TABLE: TableObjectProps = {
 		// light: 'container.borderLight',
 		light: 'red',
 		dark: 'transparent',
+	},
+	row: {
+		height: '56px',
+		hover: {
+			light: 'table.row.hoverLight',
+			dark: 'table.row.hoverDark',
+		},
+	},
+	cell: {
+		paddingX: 4,
+		paddingY: 3,
+	},
+	head: {
+		fontSize: '11px',
+		letterSpacing: '0.06em',
+		height: '42px',
 	},
 };
 

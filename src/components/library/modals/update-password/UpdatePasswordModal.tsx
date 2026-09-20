@@ -63,10 +63,15 @@ const UpdatePasswordModal = ({ trigger, path }: { trigger?: any; path?: any }) =
 				onClose={onModalClose}
 				closeOnOverlayClick={false}>
 				<ModalContainer>
-					<GenericModalHeader>Update Password</GenericModalHeader>
+					<GenericModalHeader
+						px={{ base: 4, md: 6 }}
+						pt={4}
+						pb={2}>
+						Update Password
+					</GenericModalHeader>
 					<GenericModalCloseButton />
 					<form onSubmit={handleSubmit}>
-						<GenericModalBody>
+						<GenericModalBody px={{ base: 4, md: 6 }}>
 							<ModalFormSection>
 								<VInput
 									label='Old Password'
@@ -94,16 +99,22 @@ const UpdatePasswordModal = ({ trigger, path }: { trigger?: any; path?: any }) =
 								/>
 							</ModalFormSection>
 						</GenericModalBody>
-						<GenericModalFooter py={4}>
+						<GenericModalFooter
+							px={{ base: 4, md: 6 }}
+							py={4}
+							gap={2}
+							borderTopWidth={1}
+							borderTopColor={{ _light: 'border.light', _dark: 'border.dark' }}>
 							<Button
-								mr={2}
 								size='sm'
+								px={3}
 								variant='outline'
 								onClick={onModalClose}>
 								Discard
 							</Button>
 							<Button
 								size='sm'
+								px={3}
 								type='submit'
 								loading={result.isLoading}>
 								Update

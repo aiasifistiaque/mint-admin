@@ -4,7 +4,18 @@ import { Button, Grid, GridItem, Input } from '@chakra-ui/react';
 import { Column, useGetAllQuery } from '../..';
 import { ImageComponent } from '.';
 
-const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type?: string }) => {
+const MyPhotos = ({
+	handleSelect,
+	type = 'image',
+	multiple = false,
+}: {
+	handleSelect: any;
+	type?: string;
+	/** Lets several images be picked before "Insert Media" is pressed — each
+	 *  click toggles that image in/out of the selection instead of replacing
+	 *  it, and `handleSelect` is called with the whole array so far. */
+	multiple?: boolean;
+}) => {
 	const [page, setPage] = useState<number>(1);
 	const [viewData, setViewData] = useState<any>([]);
 	const [search, setSearch] = useState<string>('');
@@ -17,7 +28,20 @@ const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type?: 
 		sort: '-createdAt',
 		filters: { type: type || 'image' },
 	});
-	const [selected, setSelected] = useState<any>(null);
+	const [selected, setSelected] = useState<any>(multiple ? [] : null);
+
+	const toggleSelect = (url: string) => {
+		if (!multiple) {
+			setSelected(url);
+			handleSelect(url);
+			return;
+		}
+		setSelected((prev: string[]) => {
+			const next = prev.includes(url) ? prev.filter(existing => existing !== url) : [...prev, url];
+			handleSelect(next);
+			return next;
+		});
+	};
 
 	const onLoadMore = () => {
 		if (page < data?.totalPages) setPage(prev => prev + 1);
@@ -62,10 +86,7 @@ const MyPhotos = ({ handleSelect, type = 'image' }: { handleSelect: any; type?: 
 					<ImageComponent
 						src={item?.url}
 						type={type}
-						onClick={() => {
-							setSelected(item?.url);
-							handleSelect(item?.url);
-						}}
+						onClick={() => toggleSelect(item?.url)}
 						selected={selected}
 						key={item?._id}
 					/>

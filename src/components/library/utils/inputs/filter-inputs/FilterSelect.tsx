@@ -1,6 +1,8 @@
 import { FC, ReactNode } from 'react';
 import { NativeSelectFieldProps, NativeSelect } from '@chakra-ui/react';
 import { Icon } from '../../..';
+import { styles, radius } from '../../../config';
+import { FILTER_CONTROL_HEIGHT } from './FilterInput';
 
 type FilterSelectProps = NativeSelectFieldProps & {
 	children: ReactNode;
@@ -8,23 +10,22 @@ type FilterSelectProps = NativeSelectFieldProps & {
 
 const FilterSelect: FC<FilterSelectProps> = ({ children, ...props }) => {
 	return (
-		<NativeSelect.Root size='xs'>
+		<NativeSelect.Root
+			size='sm'
+			w='full'>
 			<NativeSelect.Field
-				color='text.light'
-				borderRadius='md'
-				fontSize='14px'
-				h={{ base: '42px', md: '28px' }}
-				boxShadow='md'
-				px={2}
-				borderColor='selectBorder.light'
-				_dark={{
-					color: 'text.dark',
-					borderColor: 'selectBorder.dark',
-				}}
+				{...(styles.FIELD as any)}
+				// The old `boxShadow='md'` put a drop shadow on a 28px control
+				// sitting inside an already-elevated popover.
+				boxShadow='none'
+				h={FILTER_CONTROL_HEIGHT}
+				px={2.5}
+				borderRadius={radius.INPUT}
+				cursor='pointer'
 				{...props}>
 				{children}
 			</NativeSelect.Field>
-			<NativeSelect.Indicator>
+			<NativeSelect.Indicator color='fg.muted'>
 				<Icon name='select' />
 			</NativeSelect.Indicator>
 		</NativeSelect.Root>

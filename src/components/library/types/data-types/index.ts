@@ -18,7 +18,18 @@ export type ViewDataType =
 	| 'data-array-tag'
 	| 'data-array-count'
 	| 'custom-attribute'
-	| 'custom-section-array';
+	| 'custom-section-array'
+	// WO-10: real view kinds the registry needs that weren't declared yet
+	| 'editor'
+	| 'basic-editor'
+	| 'section-data-array'
+	// WO-15: renderViewItem.tsx already had working cases for these, just never
+	// declared in the union
+	| 'array-tag'
+	| 'external-link'
+	| 'date-only'
+	| 'number'
+	| 'data-tag';
 
 export type TableDataFieldType =
 	| 'date'

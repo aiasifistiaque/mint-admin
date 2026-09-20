@@ -18,6 +18,13 @@ type UploadModalProps = {
 	handleImage: any;
 	type?: 'add' | 'edit' | 'delete';
 	multiple?: boolean;
+	/** Lets the "All Photos"/"Browse by folder" grids pick several images
+	 *  before inserting, instead of inserting on the first click. On insert,
+	 *  `handleImage` is called once with the whole array and a second
+	 *  argument of `'add-many'` — see `VImageArray`'s "add" tile, the only
+	 *  current caller. Unrelated to `multiple`, which only changes what
+	 *  trigger button is rendered for the `delete` type. */
+	multiSelect?: boolean;
 	handleDelete?: any;
 	title?: string;
 	fileType?: any;
@@ -30,6 +37,7 @@ const tabs = ['All Photos', 'Browse by folder', 'Upload', 'Web Address (URL)'];
 const UploadModal: FC<UploadModalProps> = ({
 	album,
 	multiple,
+	multiSelect = false,
 	trigger,
 	handleImage,
 	folder,
@@ -40,20 +48,44 @@ const UploadModal: FC<UploadModalProps> = ({
 	type = 'add',
 }) => {
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
-	const [img, setImg] = useState(null);
+	const emptySelection = multiSelect ? [] : null;
+	const [img, setImg] = useState<any>(emptySelection);
 	const { currentPath } = useAppSelector(state => state.table);
+
+	// A selection left over from a previous open must never carry into the
+	// next one — reset it both when the modal opens and after it closes.
+	const resetSelection = () => setImg(emptySelection);
+
+	const handleClose = () => {
+		onClose();
+		resetSelection();
+	};
+
+	const handleOpen = () => {
+		resetSelection();
+		onOpen();
+	};
 
 	const handleImageSelect = (e: any) => setImg(e);
 
+	const selectionCount = multiSelect ? (Array.isArray(img) ? img.length : 0) : img ? 1 : 0;
+
 	const handleInsert = () => {
-		handleImage(img);
-		onClose();
+		if (multiSelect) {
+			if (Array.isArray(img) && img.length) handleImage(img, 'add-many');
+		} else {
+			handleImage(img);
+		}
+		handleClose();
 	};
 
 	const handleUploadComplete = (e: any) => {
+		// Direct upload (the "Upload" tab) always inserts immediately, even in
+		// multi-select mode — picking several existing images is what the grid
+		// tabs are for; a freshly uploaded file is wanted right away.
 		setImg(e);
 		handleImage(e);
-		onClose();
+		handleClose();
 	};
 
 	const buttonTypes = {
@@ -83,14 +115,14 @@ const UploadModal: FC<UploadModalProps> = ({
 				<DeleteImageButton onClick={handleDelete} />
 			) : (
 				<Flex
-					onClick={onOpen}
+					onClick={handleOpen}
 					{...flexCss}>
 					{children || triggerButton}
 				</Flex>
 			)}
 			<GenericModal
 				isOpen={isOpen}
-				onClose={onClose}
+				onClose={handleClose}
 				size='xl'
 				isCentered>
 				<GenericModalContent {...styles.modalContentCss}>
@@ -124,6 +156,7 @@ const UploadModal: FC<UploadModalProps> = ({
 								<MyPhotos
 									handleSelect={handleImageSelect}
 									type={fileType || 'image'}
+									multiple={multiSelect}
 								/>
 							</Tabs.Content>
 							<Tabs.Content
@@ -133,6 +166,7 @@ const UploadModal: FC<UploadModalProps> = ({
 								<MyFolders
 									handleSelect={handleImageSelect}
 									type={fileType || 'image'}
+									multiple={multiSelect}
 								/>
 							</Tabs.Content>
 							<Tabs.Content
@@ -164,15 +198,15 @@ const UploadModal: FC<UploadModalProps> = ({
 							px={3}
 							size='sm'
 							variant='outline'
-							onClick={onClose}>
+							onClick={handleClose}>
 							Cancel
 						</Button>
 						<Button
 							px={3}
 							size='sm'
-							disabled={!img}
+							disabled={!selectionCount}
 							onClick={handleInsert}>
-							Insert Media
+							{multiSelect && selectionCount > 1 ? `Insert ${selectionCount} Images` : 'Insert Media'}
 						</Button>
 					</MFooter>
 				</GenericModalContent>

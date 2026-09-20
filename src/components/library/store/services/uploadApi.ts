@@ -47,6 +47,26 @@ export const uploadApi = mainApi.injectEndpoints({
 			}),
 			invalidatesTags: ['uploads', 'upload'],
 		}),
+		uploadSignature: builder.mutation<any, FormData>({
+			query: body => ({
+				url: 'upload/signature',
+				method: 'POST',
+				body,
+				formData: true,
+			}),
+		}),
+		uploadMultipleImages: builder.mutation<
+			{ message: string; uploaded: number; failed: number; results: any[] },
+			{ files: File[]; folder?: string; path?: string }
+		>({
+			query: ({ files, folder }) => {
+				const body = new FormData();
+				files.forEach(file => body.append('images', file));
+				if (folder) body.append('folder', folder);
+				return { url: 'upload/multiple', method: 'POST', body, formData: true };
+			},
+			invalidatesTags: (result, error, { path }) => ['uploads', 'upload', path || 'images'],
+		}),
 	}),
 });
 
@@ -55,4 +75,6 @@ export const {
 	useAddUploadMutation,
 	useAddFileMutation,
 	useAddVideoMutation,
+	useUploadSignatureMutation,
+	useUploadMultipleImagesMutation,
 } = uploadApi;

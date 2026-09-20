@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, ChangeEvent, FC } from 'react';
-import { Flex, PopoverTrigger, useDisclosure, Input } from '@chakra-ui/react';
+import { Flex, PopoverTrigger, useDisclosure } from '@chakra-ui/react';
 
 import {
 	PopModal,
@@ -12,6 +12,7 @@ import {
 	useAppDispatch,
 	useAppSelector,
 	Filter,
+	FilterInput,
 	applyFilters,
 } from '../..';
 
@@ -72,7 +73,12 @@ const TextFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 			<Filter
 				isActive={ifFieldExists()}
 				onCancel={onFilterReset}>
-				{label} {ifFieldExists() && <span> | {filters[field]}</span>}
+				{label}{' '}
+				{ifFieldExists() && (
+					// A bare `<span>` picks up the global `span { color }` rule instead
+					// of the chip's own color — see BooleanFilter.tsx for the full story.
+					<span style={{ color: 'inherit' }}> | {filters[field]}</span>
+				)}
 			</Filter>
 		</span>
 	);
@@ -95,9 +101,8 @@ const TextFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 
 			<PopModalCloseButton isMobile={isMobile} />
 			<PopModalBody isMobile={isMobile}>
-				<Input
+				<FilterInput
 					value={val}
-					size='sm'
 					onChange={handleChange}
 					placeholder='Search value'
 				/>

@@ -50,7 +50,7 @@ const Headers = ({ tableData, fields, selectable, isLoading, data, showMenu }: H
 						</Checkbox.Control>
 					</Checkbox.Root>
 				</Title>
-			)}{' '}
+			)}
 			{tableData?.map((item: any, i: number) => {
 				const { title, sort, dataKey, type, tooltip } = item;
 				if (!fields?.includes(dataKey) && type !== 'menu') return null;

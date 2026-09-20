@@ -63,6 +63,34 @@ export const tableSlice = createSlice({
 			state.search = action.payload.search || state.search;
 			state.sort = action.payload.sort || state.sort;
 		},
+		// `updateTable` falls back to the existing value for anything falsy
+		// (`payload.search || state.search`), which is right for a partial
+		// update — typing in the search box shouldn't reset the sort — but
+		// wrong for hydrating from the URL on load, where an *absent* query
+		// param means "page 1 / no search / default sort", not "leave
+		// whatever was already there". This sets the values exactly as given.
+		// Filters live in the same action (rather than a second `setFilters`
+		// dispatch) so this is one state update, not two — react-redux can
+		// render synchronously in between two separate dispatches made outside
+		// a React event handler (e.g. from inside a plain `useEffect`), which
+		// let a sibling effect observe page/sort already updated but filters
+		// still the old value, and write that half-updated state to the URL.
+		hydrateTable: (
+			state,
+			action: PayloadAction<{
+				page: number;
+				limit: number;
+				search: string;
+				sort: string;
+				filters: FilterPayload;
+			}>
+		) => {
+			state.page = action.payload.page;
+			state.limit = action.payload.limit;
+			state.search = action.payload.search;
+			state.sort = action.payload.sort;
+			state.filters = action.payload.filters || {};
+		},
 		setCurrentPath: (state, action: PayloadAction<string>) => {
 			// Update the current path in the state
 			state.currentPath = action.payload;
@@ -137,6 +165,7 @@ export const tableSlice = createSlice({
 export const {
 	refresh,
 	updateTable,
+	hydrateTable,
 	applyFilters,
 	clearFilters,
 	setFields,

@@ -101,7 +101,12 @@ const RangeFilter: FC<DateFilterProps> = ({ title, field, label }) => {
 			<Filter
 				isActive={ifFieldExists()}
 				onCancel={onFilterReset}>
-				{label} {ifFieldExists() && <span> | {filters[field]}</span>}
+				{label}{' '}
+				{ifFieldExists() && (
+					// A bare `<span>` picks up the global `span { color }` rule instead
+					// of the chip's own color — see BooleanFilter.tsx for the full story.
+					<span style={{ color: 'inherit' }}> | {filters[field]}</span>
+				)}
 			</Filter>
 		</span>
 	);

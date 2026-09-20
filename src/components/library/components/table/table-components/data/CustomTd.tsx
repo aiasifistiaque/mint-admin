@@ -11,7 +11,9 @@ import {
 } from '@chakra-ui/react';
 import { ExternalLink as ExternalLinkIcon } from 'lucide-react';
 
-import { useIsMobile, Column, PLACEHOLDER_IMAGE, TableDataProps } from '../../../..';
+import { useIsMobile, Column, PLACEHOLDER_IMAGE, TableDataProps, theme } from '../../../..';
+
+const { TABLE } = theme;
 
 const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, ...props }) => {
 	const isMobile = useIsMobile();
@@ -70,11 +72,21 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 
 				{isMobile && heading && <Heading size='xs'>{heading}</Heading>}
 				<External>
-					<TextContainer
-						color='text.light'
-						_dark={{ color: 'text.dark' }}>
-						{formatTextForBreaking(text) || <i>--</i>}
-					</TextContainer>
+					{TextContainer === Fragment ? (
+						formatTextForBreaking(text) || <i>--</i>
+					) : (
+						<TextContainer
+							color='text.light'
+							_dark={{ color: 'text.dark' }}
+							// This sits next to the copy icon in a row flex container
+							// (see tdCss below): as a flex item it defaults to
+							// `min-width: auto`, which lets long unbroken text (a URL)
+							// refuse to shrink and overflow past the card's column
+							// instead of wrapping.
+							minW={0}>
+							{formatTextForBreaking(text) || <i>--</i>}
+						</TextContainer>
+					)}
 				</External>
 			</Container>
 		</>
@@ -82,8 +94,8 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 };
 
 //CSS STARTS HERE
-const PADDING_Y = 1.5;
-const PADDING_X = 4;
+const PADDING_Y = TABLE.cell.paddingY;
+const PADDING_X = TABLE.cell.paddingX;
 
 const IMG_SIZE = { base: '50px', md: '40px' };
 
@@ -91,6 +103,12 @@ const IMG_SIZE = { base: '50px', md: '40px' };
 const tdCss = (type: any, heading: any): any => {
 	return {
 		maxW: type == 'image-text' ? '240px' : '160px',
+		// Grid items default to `min-width: auto`, so even with `maxW` set a
+		// long unbroken run (a URL, before the zero-width-space breaks below
+		// even get a chance) can still force its track wider than its 1fr
+		// share on the mobile card grid, pushing into the next field. `minW:
+		// 0` lets the track actually shrink to that share.
+		minW: 0,
 		border: 'none',
 		whiteSpace: 'normal',
 		wordBreak: 'normal',

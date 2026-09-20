@@ -9,8 +9,9 @@ type ConfirmButtonProps = ButtonProps & {
 const ConfirmButton: FC<ConfirmButtonProps> = ({ children, icon, ...props }) => {
 	return (
 		<Button
-			px={3}
 			size='sm'
+			minW='84px'
+			px={4}
 			{...props}>
 			{children || 'Confirm'}
 		</Button>

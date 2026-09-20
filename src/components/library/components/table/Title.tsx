@@ -2,8 +2,10 @@ import { Flex, FlexProps, Skeleton, Table, Tooltip } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { TbArrowUp, TbArrowDown, TbArrowsDownUp } from 'react-icons/tb';
 import { BsInfoCircle } from 'react-icons/bs';
-import { useAppDispatch, useAppSelector, updateTable } from '../..';
+import { useAppDispatch, useAppSelector, updateTable, theme } from '../..';
 import { FC, ReactNode } from 'react';
+
+const { TABLE } = theme;
 
 export type TitleProps = FlexProps & {
 	children: ReactNode;
@@ -41,9 +43,13 @@ export const Title: FC<TitleProps> = ({
 			<Flex
 				as={motion.div}
 				align='center'
-				gap={1}>
+				gap={1.5}>
 				{children}
-				{icon}
+				<Flex
+					opacity={val == sort || val == `-${sort}` ? 1 : 0.35}
+					fontSize='12px'>
+					{icon}
+				</Flex>
 			</Flex>
 		) : (
 			children
@@ -65,22 +71,29 @@ export const Title: FC<TitleProps> = ({
 	return (
 		<Table.ColumnHeader
 			bg='inherit'
+			h={TABLE.head.height}
 			_light={{ borderColor: 'container.borderLight' }}
 			_dark={{
 				bg: 'inherit',
 				borderColor: 'container.borderDark',
 			}}
 			cursor={Boolean(sort) ? 'pointer' : 'default'}
+			// Only sortable columns react to the pointer, so the affordance says
+			// which headers actually do something.
+			transition='color .15s ease'
+			_hover={Boolean(sort) ? { color: 'text.light', _dark: { color: 'text.dark' } } : undefined}
 			onClick={handleSort}
 			userSelect='none'>
 			<Flex
-				px={{ base: 0, md: 4 }}
+				px={{ base: 0, md: TABLE.cell.paddingX }}
 				py={2}
 				align='center'
-				gap={2}
-				fontSize='13px'
+				gap={1.5}
+				fontSize={TABLE.head.fontSize}
+				letterSpacing={TABLE.head.letterSpacing}
 				textTransform='uppercase'
 				fontWeight='600'
+				whiteSpace='nowrap'
 				color='table.head.textLight'
 				_dark={{
 					color: 'table.head.textDark',

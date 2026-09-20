@@ -10,8 +10,12 @@ import { Icon } from '../icon';
 export const ModalHeader: FC<{ children: ReactNode } & any> = ({ children, ...props }) => {
 	return (
 		<Dialog.Header
-			fontSize='lg'
+			px={{ base: 4, md: 6 }}
+			pt={{ base: 4, md: 5 }}
+			pb={{ base: 3, md: 4 }}
+			fontSize='16px'
 			fontWeight='600'
+			letterSpacing='-0.01em'
 			color={{ _light: 'text.light', _dark: 'text.dark' }}
 			{...props}>
 			{children}
@@ -23,14 +27,36 @@ export const ModalHeader: FC<{ children: ReactNode } & any> = ({ children, ...pr
  * ModalBody - Generic modal body component
  */
 export const ModalBody: FC<{ children: ReactNode } & any> = ({ children, ...props }) => {
-	return <Dialog.Body {...props}>{children}</Dialog.Body>;
+	return (
+		<Dialog.Body
+			px={{ base: 4, md: 6 }}
+			pt={0}
+			pb={{ base: 4, md: 5 }}
+			overflowY='auto'
+			{...props}>
+			{children}
+		</Dialog.Body>
+	);
 };
 
 /**
  * ModalFooter - Generic modal footer component
  */
 export const ModalFooter: FC<{ children: ReactNode } & any> = ({ children, ...props }) => {
-	return <Dialog.Footer {...props}>{children}</Dialog.Footer>;
+	return (
+		<Dialog.Footer
+			px={{ base: 4, md: 6 }}
+			py={3}
+			gap={2}
+			borderTopWidth={1}
+			borderColor='border.muted'
+			bg='bg.subtle'
+			justifyContent='flex-end'
+			alignItems='center'
+			{...props}>
+			{children}
+		</Dialog.Footer>
+	);
 };
 
 /**
@@ -43,8 +69,11 @@ export const ModalCloseButton: FC<any> = props => {
 				variant='ghost'
 				size='sm'
 				position='absolute'
-				right={2}
-				top={2}
+				insetEnd={3}
+				top={3}
+				borderRadius='full'
+				color='fg.muted'
+				_hover={{ bg: 'bg.muted', color: 'fg' }}
 				aria-label='Close modal'
 				{...props}>
 				<Icon

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
 // Direct imports instead of barrel export
 import { useAppDispatch, useAppSelector } from '../../hooks';
@@ -33,6 +33,8 @@ import {
 } from '../../components/table';
 import DynamicFilters from '../../dynamic-filters/DynamicFilters';
 import FolderGrid from './components/FolderGrid';
+import { MediaUploadModal } from '../../modals/upload-modal';
+import { useDisclosure } from '@chakra-ui/react';
 
 type TableProps = {
 	route: string;
@@ -79,6 +81,41 @@ const ImagePage: FC<TableProps> = ({ route, title, folder }) => {
 
 	const tableFilters = table?.filters !== undefined ? table?.filters : true;
 	const onUnselect = () => dispatch(selectAll({ ids: [], isSelected: false }));
+
+	// Page-level drag-to-upload. dragCounter survives nested enter/leave flicker
+	// across child elements (a plain boolean flag would flash off on every
+	// child boundary crossed while dragging over the grid).
+	const dragCounter = useRef(0);
+	const [dragActive, setDragActive] = useState(false);
+	const [dropFiles, setDropFiles] = useState<File[] | null>(null);
+	const { open: isDropModalOpen, onOpen: onDropModalOpen, onClose: onDropModalClose } =
+		useDisclosure();
+
+	const hasFiles = (e: React.DragEvent) => Array.from(e.dataTransfer.types).includes('Files');
+
+	const onDragEnter = (e: React.DragEvent) => {
+		e.preventDefault();
+		if (!hasFiles(e)) return;
+		dragCounter.current += 1;
+		setDragActive(true);
+	};
+	const onDragOver = (e: React.DragEvent) => {
+		if (hasFiles(e)) e.preventDefault();
+	};
+	const onDragLeave = (e: React.DragEvent) => {
+		e.preventDefault();
+		dragCounter.current = Math.max(0, dragCounter.current - 1);
+		if (dragCounter.current === 0) setDragActive(false);
+	};
+	const onDrop = (e: React.DragEvent) => {
+		e.preventDefault();
+		dragCounter.current = 0;
+		setDragActive(false);
+		const dropped = e.dataTransfer.files;
+		if (!dropped?.length) return;
+		setDropFiles(Array.from(dropped));
+		onDropModalOpen();
+	};
 	// Get the table state from the redux store
 	const { data, isLoading, isError, error, isSuccess, isUninitialized } = useGetAllQuery(
 		{
@@ -106,7 +143,28 @@ const ImagePage: FC<TableProps> = ({ route, title, folder }) => {
 				pb='32px'
 				title={title || table?.title}
 				path={route}>
-				<Column gap={2}>
+				<Column
+					gap={2}
+					position='relative'
+					onDragEnter={onDragEnter}
+					onDragOver={onDragOver}
+					onDragLeave={onDragLeave}
+					onDrop={onDrop}>
+					{dragActive && (
+						<Flex
+							position='absolute'
+							inset={0}
+							zIndex={10}
+							align='center'
+							justify='center'
+							borderRadius='md'
+							border='2px dashed #4A90E2'
+							backgroundColor='blue.50'
+							_dark={{ backgroundColor: 'whiteAlpha.100' }}
+							pointerEvents='none'>
+							<Text fontSize='lg'>Drop images to upload</Text>
+						</Flex>
+					)}
 					<ImagePageHeading
 						folder={folder}
 						isLoading={!table}
@@ -176,6 +234,17 @@ const ImagePage: FC<TableProps> = ({ route, title, folder }) => {
 				</Column>
 				<ResultContainer data={data} />
 			</Layout>
+
+			<MediaUploadModal
+				isOpen={isDropModalOpen}
+				onClose={() => {
+					setDropFiles(null);
+					onDropModalClose();
+				}}
+				initialFiles={dropFiles}
+				folder={folder}
+			/>
+
 			{/* Toast component to display error */}
 			<Toast
 				error={error}

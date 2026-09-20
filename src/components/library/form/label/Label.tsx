@@ -1,10 +1,6 @@
 import { Text, TextProps } from '@chakra-ui/react';
 import { FC } from 'react';
 
-const FONT_SIZE = '.85rem';
-const FONT_WEIGHT = '600';
-const M = 0;
-
 type LabelProps = TextProps & {
 	children: any;
 };
@@ -15,9 +11,11 @@ const Label: FC<LabelProps> = ({ children, ...props }) => {
 			color='text.formLabel.light'
 			_dark={{ color: 'text.formLabel.dark' }}
 			userSelect='none'
-			m={M}
-			fontSize={FONT_SIZE}
-			fontWeight={FONT_WEIGHT}
+			m={0}
+			fontSize='13px'
+			lineHeight='1.3'
+			letterSpacing='-0.005em'
+			fontWeight='600'
 			{...props}>
 			{children}
 		</Text>

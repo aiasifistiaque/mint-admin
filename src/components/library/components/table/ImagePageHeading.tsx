@@ -1,9 +1,12 @@
-import { Flex, FlexProps, Text, Skeleton, Breadcrumb } from '@chakra-ui/react';
+import { Button, Flex, FlexProps, Text, Skeleton, Breadcrumb, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
 
-import { containerCss, subHeadingCss, wrapperCss } from './style';
+import { buttonGroupCss, containerCss, subHeadingCss, wrapperCss } from './style';
 import { useGetByIdQuery } from '../../store';
+import { MediaUploadModal } from '../../modals/upload-modal';
+import { Icon } from '../..';
+import { useColorMode } from '@/components/ui/color-mode';
 
 type PageHeadingProps = FlexProps & {
 	title: string;
@@ -32,6 +35,9 @@ const ImagePageHeading: React.FC<PageHeadingProps> = ({
 	...props
 }) => {
 	const { data: folderData } = useGetByIdQuery({ path: 'folders', id: folder }, { skip: !folder });
+	const { open: isUploadOpen, onOpen: onUploadOpen, onClose: onUploadClose } = useDisclosure();
+	const { colorMode } = useColorMode();
+	const iconColor = colorMode === 'light' ? 'text.dark' : 'text.light';
 
 	return (
 		<Flex
@@ -86,7 +92,29 @@ const ImagePageHeading: React.FC<PageHeadingProps> = ({
 						</Breadcrumb.List>
 					</Breadcrumb.Root>
 				)}
+
+				{!isLoading && (
+					<Flex {...buttonGroupCss}>
+						<Button
+							size='sm'
+							px={3}
+							onClick={onUploadOpen}>
+							<Icon
+								size={18}
+								name='add'
+								color={iconColor}
+							/>
+							Add Media
+						</Button>
+					</Flex>
+				)}
 			</Flex>
+
+			<MediaUploadModal
+				isOpen={isUploadOpen}
+				onClose={onUploadClose}
+				folder={folder}
+			/>
 		</Flex>
 	);
 };

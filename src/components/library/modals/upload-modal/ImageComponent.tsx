@@ -1,6 +1,7 @@
 import { useRef } from 'react';
-import { Flex, Image, FlexProps } from '@chakra-ui/react';
+import { Box, Flex, Image, FlexProps } from '@chakra-ui/react';
 import { useIsMobile } from '../../hooks';
+import { Icon } from '../..';
 
 const ImageComponent = ({
 	src,
@@ -11,11 +12,14 @@ const ImageComponent = ({
 }: FlexProps & {
 	src: string;
 	type: string;
+	/** A single selected url (single-select mode) or an array of them
+	 *  (multi-select mode — see `MyPhotos`/`MyFolders`'s `multiple` prop). */
 	selected: any;
 	thumbnail?: string;
 }) => {
 	const videoRef = useRef<any>(null);
 	const isMobile = useIsMobile();
+	const isSelected = Array.isArray(selected) ? selected.includes(src) : selected === src;
 
 	const handleMouseEnter = () => {
 		if (isMobile) return;
@@ -42,14 +46,32 @@ const ImageComponent = ({
 			h='200px'
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
+			position='relative'
 			border='2px solid'
-			borderColor={selected === src ? 'brand.500' : '#ddd'}
+			borderColor={isSelected ? 'brand.500' : '#ddd'}
 			bg='background.light'
 			_dark={{
 				bg: 'background.dark',
-				borderColor: selected === src ? 'brand.200' : 'border.dark',
+				borderColor: isSelected ? 'brand.200' : 'border.dark',
 			}}
 			{...props}>
+			{isSelected && Array.isArray(selected) && (
+				<Box
+					position='absolute'
+					top={1}
+					right={1}
+					zIndex={1}
+					bg='brand.500'
+					color='white'
+					borderRadius='full'
+					p='2px'
+					_dark={{ bg: 'brand.200', color: 'black' }}>
+					<Icon
+						name='check'
+						size={14}
+					/>
+				</Box>
+			)}
 			{type == 'video' ? (
 				<video
 					muted

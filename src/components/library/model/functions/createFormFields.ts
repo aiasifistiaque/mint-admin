@@ -1,9 +1,14 @@
 import { FormLayout } from '../../types';
+import assertSchema from './assertSchema';
 
+// WO-03 note: see convertToTableFields.ts — kept as `any` because a second,
+// incompatible schema-prop vocabulary (defect #15) is still passed in by some
+// callers. assertSchema below still validates the actual shape at runtime in dev.
 type CreateType = {
 	schema: any;
 	layout: FormLayout;
 	type?: 'post' | 'update';
+	modelName?: string;
 };
 
 const createType = ({ type, isReadOnly, fieldType }: any) => {
@@ -13,7 +18,85 @@ const createType = ({ type, isReadOnly, fieldType }: any) => {
 	return fieldType;
 };
 
-const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] => {
+// WO-06: single whitelist-driven mapper. Both the scalar and the array-of-fields
+// branches in createFormFields call this instead of hand-copying the same ~20
+// optional-prop spreads twice (and drifting, per WO-05/WO-11 defects).
+const OPTIONAL_FIELD_PROPS = [
+	'limit',
+	'section',
+	'placeholder',
+	'options',
+	'model',
+	'menuKey',
+	'menuAddOnKey',
+	'style',
+	'renderIf',
+	'folder',
+	'labelKey',
+	'valueKey',
+	'modelAddOn',
+	'value',
+	'fetch',
+	'isExcluded',
+	'getValue',
+	'renderCondition',
+	'tooltip',
+	'colorTheme',
+] as const;
+
+const createResolvedField = ({
+	name,
+	fieldConfig,
+	type,
+	sectionMeta,
+	lastElement,
+}: {
+	name: string;
+	fieldConfig: any;
+	type: 'post' | 'update';
+	sectionMeta?: { sectionTitle?: string; description?: string; collapsible?: boolean };
+	lastElement: boolean;
+}) => {
+	const typeDetail = createType({
+		type,
+		isReadOnly: fieldConfig?.readOnlyOnUpdate || false,
+		fieldType: fieldConfig?.type,
+	});
+
+	const resolved: any = {
+		...sectionMeta,
+		name,
+		label: fieldConfig.label || fieldConfig.title,
+		isRequired: fieldConfig.isRequired || fieldConfig.required || false,
+		type: typeDetail,
+		span: 1,
+		endOfSection: lastElement,
+		...(fieldConfig?.helperText && { helper: fieldConfig.helperText }),
+		// WO-05: this was `fieldConfig.model` in the array branch — dataModel must
+		// come from dataModel, `model` is the unrelated related-collection name.
+		...(fieldConfig?.dataModel && { dataModel: fieldConfig.dataModel }),
+		...(fieldConfig?.options && { dataModel: fieldConfig.options }),
+	};
+
+	OPTIONAL_FIELD_PROPS.forEach(key => {
+		const value = (fieldConfig as any)?.[key];
+		if (value !== undefined && value !== null && value !== '' && !(key in resolved)) {
+			resolved[key] = value;
+		}
+	});
+
+	// WO-05: emit valueKey (what FormInput/VDataSelect read), not the legacy valKey
+	// typo. Keep valKey too as a deprecated fallback for VDataTags until it's migrated.
+	if (fieldConfig?.valueKey) resolved.valueKey = fieldConfig.valueKey;
+	else if (fieldConfig?.valKey) resolved.valueKey = fieldConfig.valKey;
+	if (fieldConfig?.valKey) resolved.valKey = fieldConfig.valKey;
+
+	return resolved;
+};
+
+const createFormFields = ({ schema, layout, type = 'post', modelName = 'unknown' }: CreateType): any[] => {
+	assertSchema(schema, modelName);
+
 	const dataFields: any[] = [];
 
 	if (!layout) return [];
@@ -30,84 +113,32 @@ const createFormFields = ({ schema, layout, type = 'post' }: CreateType): any[] 
 					const fieldConfig = schema?.[subField];
 					const lastSubIndex = subIndex === field.length - 1;
 					const firstSubIndex = subIndex === 0;
-					const typeDetail = createType({
-						type: type,
-						isReadOnly: fieldConfig?.readOnlyOnUpdate || false,
-						fieldType: fieldConfig?.type,
-					});
-					if (fieldConfig) {
-						dataFields.push({
-							...(firstIndex && firstSubIndex && { sectionTitle, description, collapsible }),
 
-							name: subField,
-							label: fieldConfig.label || fieldConfig.title,
-							isRequired: fieldConfig.isRequired || fieldConfig.required || false,
-							type: typeDetail,
-							...(fieldConfig.limit && { limit: fieldConfig.limit }),
-							...(fieldConfig.section && { section: fieldConfig.section }),
-							...(fieldConfig.placeholder && { placeholder: fieldConfig.placeholder }),
-							...(fieldConfig?.helperText && { helper: fieldConfig.helperText }),
-							...(fieldConfig.options && { options: fieldConfig.options }),
-							...(fieldConfig.model && { model: fieldConfig.model }),
-							...(fieldConfig.dataModel && { dataModel: fieldConfig.model }),
-							...(fieldConfig.options && { dataModel: fieldConfig.options }),
-							span: 1,
-							endOfSection: lastElement && lastSubIndex,
-							...(fieldConfig?.renderCondition && { renderCondition: fieldConfig.renderCondition }),
-							...(fieldConfig?.value && { value: fieldConfig.value }),
-							...(fieldConfig?.fetch && { fetch: fieldConfig.fetch }),
-							...(fieldConfig?.isExcluded && { isExcluded: fieldConfig.isExcluded }),
-							...(fieldConfig?.getValue && { getValue: fieldConfig.getValue }),
-							...(fieldConfig?.modelAddOn && { modelAddOn: fieldConfig.modelAddOn }),
-							...(fieldConfig?.limit && { limit: fieldConfig.limit }),
-							...(fieldConfig.menuKey && { menuKey: fieldConfig.menuKey }),
-							...(fieldConfig.menuAddOnKey && { menuAddOnKey: fieldConfig.menuAddOnKey }),
-							...(fieldConfig?.style && { style: fieldConfig.style }),
-							...(fieldConfig?.renderIf && { renderIf: fieldConfig.renderIf }),
-							...(fieldConfig.folder && { folder: fieldConfig.folder }),
-							...(fieldConfig.labelKey && { labelKey: fieldConfig.labelKey }),
-							...(fieldConfig.valKey && { valKey: fieldConfig.valKey }),
-						});
+					if (fieldConfig) {
+						dataFields.push(
+							createResolvedField({
+								name: subField,
+								fieldConfig,
+								type,
+								sectionMeta: firstIndex && firstSubIndex ? { sectionTitle, description, collapsible } : undefined,
+								lastElement: lastElement && lastSubIndex,
+							})
+						);
 					}
 				});
 			} else {
 				const fieldConfig = schema?.[field];
-				const typeDetail = createType({
-					type: type,
-					isReadOnly: fieldConfig?.readOnlyOnUpdate || false,
-					fieldType: fieldConfig?.type,
-				});
-				if (fieldConfig) {
-					dataFields.push({
-						...(firstIndex && { sectionTitle, description, collapsible }),
-						name: field,
-						label: fieldConfig.label || fieldConfig.title,
-						isRequired: fieldConfig.isRequired || fieldConfig.required || false,
-						type: typeDetail,
-						...(fieldConfig.placeholder && { placeholder: fieldConfig.placeholder }),
-						...(fieldConfig.options && { options: fieldConfig.options }),
-						...(fieldConfig.model && { model: fieldConfig.model }),
-						...(fieldConfig.dataModel && { dataModel: fieldConfig.dataModel }),
-						...(fieldConfig.options && { dataModel: fieldConfig.options }),
-						...(fieldConfig?.helperText && { helper: fieldConfig.helperText }),
-						...(fieldConfig?.renderCondition && { renderCondition: fieldConfig.renderCondition }),
-						...(fieldConfig?.value && { value: fieldConfig.value }),
-						...(fieldConfig?.fetch && { fetch: fieldConfig.fetch }),
-						...(fieldConfig?.isExcluded && { isExcluded: fieldConfig.isExcluded }),
-						...(fieldConfig?.getValue && { getValue: fieldConfig.getValue }),
-						...(fieldConfig.limit && { limit: fieldConfig.limit }),
-						...(fieldConfig.section && { section: fieldConfig.section }),
-						...(fieldConfig?.modelAddOn && { modelAddOn: fieldConfig.modelAddOn }),
-						...(fieldConfig.menuKey && { menuKey: fieldConfig.menuKey }),
-						...(fieldConfig.menuAddOnKey && { menuAddOnKey: fieldConfig.menuAddOnKey }),
-						...(fieldConfig?.style && { style: fieldConfig.style }),
-						...(fieldConfig?.renderIf && { renderIf: fieldConfig.renderIf }),
-						...(fieldConfig.folder && { folder: fieldConfig.folder }),
-						...(fieldConfig.labelKey && { labelKey: fieldConfig.labelKey }),
-						...(fieldConfig.valKey && { valKey: fieldConfig.valKey }),
 
-						endOfSection: lastElement,
-					});
+				if (fieldConfig) {
+					dataFields.push(
+						createResolvedField({
+							name: field,
+							fieldConfig,
+							type,
+							sectionMeta: firstIndex ? { sectionTitle, description, collapsible } : undefined,
+							lastElement,
+						})
+					);
 				}
 			}
 		});

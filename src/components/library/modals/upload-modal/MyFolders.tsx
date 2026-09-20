@@ -4,14 +4,36 @@ import { Button, Flex, Grid, Text } from '@chakra-ui/react';
 import { Column, Icon, useGetAllQuery, useGetQuery } from '../..';
 import { ImageComponent } from '.';
 
-const MyFolders = ({ handleSelect, type = 'image' }: { handleSelect: any; type?: string }) => {
+const MyFolders = ({
+	handleSelect,
+	type = 'image',
+	multiple = false,
+}: {
+	handleSelect: any;
+	type?: string;
+	/** See `MyPhotos`'s `multiple` — same toggle-into-an-array behaviour. */
+	multiple?: boolean;
+}) => {
 	const [page, setPage] = useState<number>(1);
 	const [viewData, setViewData] = useState<any>([]);
 	const { data, isFetching } = useGetQuery({
 		path: `files/get/distinct/folder`,
 	});
 	const [folder, setFolder] = useState<any>('');
-	const [selected, setSelected] = useState<any>(null);
+	const [selected, setSelected] = useState<any>(multiple ? [] : null);
+
+	const toggleSelect = (url: string) => {
+		if (!multiple) {
+			setSelected(url);
+			handleSelect(url);
+			return;
+		}
+		setSelected((prev: string[]) => {
+			const next = prev.includes(url) ? prev.filter(existing => existing !== url) : [...prev, url];
+			handleSelect(next);
+			return next;
+		});
+	};
 
 	const { data: imageData, isFetching: imageFetching } = useGetAllQuery(
 		{
@@ -90,10 +112,7 @@ const MyFolders = ({ handleSelect, type = 'image' }: { handleSelect: any; type?:
 						<ImageComponent
 							src={item?.url}
 							type={type}
-							onClick={() => {
-								setSelected(item?.url);
-								handleSelect(item?.url);
-							}}
+							onClick={() => toggleSelect(item?.url)}
 							selected={selected}
 							key={item?._id}
 						/>

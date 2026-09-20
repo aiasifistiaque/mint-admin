@@ -1,25 +1,31 @@
-import { useIsMobile } from '../../../..';
+import { useIsMobile, useModalLayout } from '../../../..';
 import { Drawer, Dialog, CloseButton } from '@chakra-ui/react';
+
+const buttonCss = {
+	size: 'sm' as const,
+	position: 'absolute' as const,
+	top: '3',
+	insetEnd: '3',
+	borderRadius: 'full',
+	color: 'fg.muted',
+	_hover: { bg: 'bg.muted', color: 'fg' },
+};
 
 const MenuModalCloseButton = () => {
 	const isMobile = useIsMobile();
-	if (isMobile) {
+	const layout = useModalLayout();
+
+	if (isMobile || layout === 'drawer') {
 		return (
-			<Drawer.CloseTrigger
-				asChild
-				color='text.light'
-				_dark={{ color: 'text.dark' }}>
-				<CloseButton size='sm' />
+			<Drawer.CloseTrigger asChild>
+				<CloseButton {...buttonCss} />
 			</Drawer.CloseTrigger>
 		);
 	}
 
 	return (
-		<Dialog.CloseTrigger
-			asChild
-			color='text.light'
-			_dark={{ color: 'text.dark' }}>
-			<CloseButton size='sm' />
+		<Dialog.CloseTrigger asChild>
+			<CloseButton {...buttonCss} />
 		</Dialog.CloseTrigger>
 	);
 };

@@ -101,7 +101,12 @@ const SelectFilter: FC<FilterProps> = ({ title, field, options, label }) => {
 			<Filter
 				isActive={ifFieldExists()}
 				onCancel={onFilterReset}>
-				{label} {ifFieldExists() && <span> | {getLabelsFromFilters()}</span>}
+				{label}{' '}
+				{ifFieldExists() && (
+					// A bare `<span>` picks up the global `span { color }` rule instead
+					// of the chip's own color — see BooleanFilter.tsx for the full story.
+					<span style={{ color: 'inherit' }}> | {getLabelsFromFilters()}</span>
+				)}
 			</Filter>
 		</span>
 	);

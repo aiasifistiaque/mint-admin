@@ -13,11 +13,11 @@ const SelectContainer: FC<InputContainerProps> = ({ children, size = 'sm', ...pr
 		<NativeSelect.Root size={size}>
 			<NativeSelect.Field
 				{...inputContainerCss}
-				boxShadow='sm'
+				cursor='pointer'
 				{...props}>
 				{children}
 			</NativeSelect.Field>
-			<NativeSelect.Indicator>
+			<NativeSelect.Indicator color='fg.muted'>
 				<Icon name='select' />
 			</NativeSelect.Indicator>
 		</NativeSelect.Root>

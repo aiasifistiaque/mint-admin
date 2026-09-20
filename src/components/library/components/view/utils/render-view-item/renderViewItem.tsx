@@ -5,6 +5,7 @@ import { PLACEHOLDER_IMAGE, ImageContainer } from '../../../..';
 import { JSONDisplay } from '../..';
 import { ExternalLink } from 'lucide-react';
 import moment from 'moment';
+import Price from '../../../../utils/texts/Price';
 
 const textCss: TextProps & LinkProps = {
 	fontSize: '.95rem',
@@ -233,6 +234,62 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id }:
 			return <div dangerouslySetInnerHTML={{ __html: children }} />;
 		case 'basic-editor':
 			return <div dangerouslySetInnerHTML={{ __html: children }} />;
+		// WO-15: the remaining declared-but-unhandled ViewDataTypes.
+		case 'price':
+			return children === undefined || children === null || children === '' ? (
+				<Text {...textCss}>--</Text>
+			) : (
+				<Text {...textCss}>
+					<Price>{children}</Price>
+				</Text>
+			);
+		case 'boolean':
+			return <Badge colorPalette={children ? 'green' : 'red'}>{children ? 'Yes' : 'No'}</Badge>;
+		case 'number':
+			return <Text {...textCss}>{typeof children === 'number' ? children.toLocaleString() : children ?? '--'}</Text>;
+		case 'image-text':
+			return (
+				<Flex
+					align='center'
+					gap={2}>
+					<ImageContainer
+						size={40}
+						src={children || PLACEHOLDER_IMAGE}
+					/>
+					<Text {...textCss}>{typeof children === 'string' ? children : ''}</Text>
+				</Flex>
+			);
+		case 'data-array-count':
+			return <Text {...textCss}>{Array.isArray(children) ? children.length : children ?? '--'}</Text>;
+		case 'text':
+		case 'string':
+			return <Text {...textCss}>{children ?? '--'}</Text>;
+		case 'menu':
+			// Menu columns are intercepted upstream (table row / view field list
+			// building) before a value ever reaches here — nothing to view-render.
+			return null;
+		case 'object':
+			return children && typeof children === 'object' && !Array.isArray(children) ? (
+				<Column gap={1}>
+					{Object.entries(children).map(([key, value]) => (
+						<Grid
+							alignItems='center'
+							gridTemplateColumns='1fr 2fr'
+							key={key}>
+							<Heading size='xs'>{key}:</Heading>
+							<Text fontSize='.8rem'>
+								{value === null || value === undefined
+									? '--'
+									: typeof value === 'object'
+									? JSON.stringify(value)
+									: String(value)}
+							</Text>
+						</Grid>
+					))}
+				</Column>
+			) : (
+				<Text {...textCss}>--</Text>
+			);
 		default:
 			if (originalType === 'data-menu')
 				return (

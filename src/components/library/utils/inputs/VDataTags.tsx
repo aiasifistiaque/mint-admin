@@ -13,6 +13,8 @@ type InputContainerProps = InputProps & {
 	model: string;
 	placeholder?: any;
 	item?: any;
+	valueKey?: string;
+	/** @deprecated use valueKey */
 	valKey?: string;
 	labelKey?: string;
 };
@@ -32,7 +34,8 @@ const VDataTags: React.FC<InputContainerProps> = ({
 	const [tag, setTag] = useState<string>('');
 	const { data } = useGetSelectDataQuery(model);
 
-	const valKey = item?.valKey || '_id';
+	// WO-05: valueKey is what createFormFields emits; valKey kept as a deprecated fallback.
+	const valKey = item?.valueKey || item?.valKey || '_id';
 	const labelKey = item?.labelKey || 'name';
 
 	const addTag = useCallback(() => {

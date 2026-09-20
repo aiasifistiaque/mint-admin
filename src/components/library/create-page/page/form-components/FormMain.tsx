@@ -3,12 +3,7 @@ import {
 	FormDivision,
 	FormInput,
 	getFieldValue,
-	handleChange,
-	handleImage,
-	handleSwitch,
-	handleImageArray,
-	handleNestedImage,
-	handleNestedString,
+	getOnChangeHandler as resolveOnChangeHandler,
 	FormDivisionAccordion,
 	FormItemAccordion,
 } from '../../..';
@@ -46,35 +41,11 @@ const FormMain: FC<FormMainType> = ({
 		return sections;
 	}, [fields]);
 
-	const getOnChangeHandler = (type: string, key?: string) => {
-		const params = { formData, setFormData, setChangedData };
-
-		switch (type) {
-			case 'image':
-				return (e: any) => handleImage({ e, dataKey: key || 'image', ...params });
-			case 'icon':
-				return (e: any) => handleImage({ e, dataKey: key || 'icon', ...params });
-			case 'switch':
-			case 'image-array':
-				return (e: any, type?: string) =>
-					handleImageArray({ e, dataKey: key || 'image', type, ...params });
-			case 'checkbox':
-				return (e: any) => handleSwitch({ e, ...params });
-			case 'nested-image':
-				return (e: any) => handleNestedImage({ e, dataKey: key || 'image', ...params });
-			case 'nested-string':
-				return (e: any) => handleNestedString({ e, ...params });
-			case 'nested-select':
-				return (e: any) => handleNestedString({ e, ...params });
-			case 'nested-data-menu':
-				return (e: any) => handleNestedString({ e, ...params });
-			case 'video':
-				return (e: any) => handleImage({ e, dataKey: key || 'image', ...params });
-
-			default:
-				return (e: any) => handleChange({ e, ...params });
-		}
-	};
+	// WO-12: was a local duplicate of functions/getOnChangeHandler.ts that had
+	// drifted (extra icon/video cases FormPage.tsx's copy never got). Both shells
+	// now call the one shared resolver.
+	const getOnChangeHandler = (type: string, key?: string) =>
+		resolveOnChangeHandler({ type, key, formData, setFormData, setChangedData });
 
 	// return <Text>{JSON.stringify(fields)}</Text>;
 

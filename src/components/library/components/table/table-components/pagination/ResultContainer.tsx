@@ -2,15 +2,18 @@ import { FC } from 'react';
 import { Flex, FlexProps, Text } from '@chakra-ui/react';
 
 import { useIsMobile, useAppSelector } from '../../../../hooks';
-import { sizes, THEME, styles as style } from '../../../../config';
+import { sizes } from '../../../../config';
 import Pagination from '../../../../components/pagination/Pagination';
-
-//Migration checked
 
 type ResultContainerProps = FlexProps & {
 	data: any;
 };
 
+/**
+ * The bar pinned to the bottom of every table page. Opaque rather than
+ * translucent: rows scroll underneath it constantly, and a blurred bar makes
+ * the browser recomposite the whole strip on every frame.
+ */
 const ResultContainer: FC<ResultContainerProps> = ({ data, ...props }) => {
 	const { selectedItems } = useAppSelector(state => state.table);
 	const isMobile = useIsMobile();
@@ -21,45 +24,41 @@ const ResultContainer: FC<ResultContainerProps> = ({ data, ...props }) => {
 
 	return (
 		<Flex
-			css={{
-				...styles.container,
-				left: isMobile ? 0 : sizes.HOME_NAV_LEFT,
-				w: isMobile ? '100vw' : sizes.HOME_NAV_MAX_WIDTH,
-				// pb: isMobile ? 4 : 0,
-				...props,
-			}}
-			bg='result.bg.light'
-			borderTop='1px solid'
-			backdropFilter='blur(10px)'
-			borderTopColor='result.border.light'
-			_dark={{ bg: 'result.bg.dark', borderTopColor: 'result.border.dark' }}
-			pl={{ base: 0, md: THEME == 'basic' ? 0 : 4 }}>
+			position='fixed'
+			bottom={0}
+			left={isMobile ? 0 : sizes.HOME_NAV_LEFT}
+			w={isMobile ? '100vw' : sizes.HOME_NAV_MAX_WIDTH}
+			maxW='100%'
+			zIndex={5}
+			borderTopWidth='1px'
+			borderTopColor='border.muted'
+			bg='bg.panel'
+			_dark={{ bg: 'bg', borderTopColor: 'border' }}
+			{...props}>
 			<Flex
-				px={4}
-				pl={6}
-				backdropFilter={style.BACKDROP_FILTER}
+				px={{ base: 4, md: 6 }}
+				py={2}
 				align='center'
 				justify='space-between'
 				gap={4}
 				w='100%'>
-				<Text>
-					<b>{data?.totalDocs || '--'}</b> Results
+				<Text
+					fontSize='13px'
+					color='fg.muted'
+					whiteSpace='nowrap'>
+					<Text
+						as='span'
+						fontWeight='600'
+						color='fg'>
+						{data?.totalDocs?.toLocaleString() || '--'}
+					</Text>{' '}
+					results
 				</Text>
 
 				<Pagination data={data && data} />
 			</Flex>
 		</Flex>
 	);
-};
-
-const styles = {
-	container: {
-		position: 'fixed',
-		bottom: 0,
-		overflow: 'scroll',
-		maxW: '100%',
-		fontSize: '.9rem',
-	},
 };
 
 export default ResultContainer;

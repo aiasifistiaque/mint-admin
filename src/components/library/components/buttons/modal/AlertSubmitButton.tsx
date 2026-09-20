@@ -10,8 +10,9 @@ const AlertSubmitButton: FC<ModalSubmitButtonProps> = ({ children, ...props }) =
 	return (
 		<Button
 			type='submit'
-			px={3}
 			size='sm'
+			minW='84px'
+			px={4}
 			{...props}>
 			{children || 'Confirm'}
 		</Button>

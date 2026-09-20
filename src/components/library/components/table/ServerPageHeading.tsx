@@ -35,10 +35,7 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 }) => {
 	const isMobile = useIsMobile();
 	const btn = (
-		<Button
-			size='sm'
-			px={3}
-			gap={2}>
+		<Button size='sm'>
 			<Icon
 				size={18}
 				name='add'

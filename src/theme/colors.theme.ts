@@ -18,10 +18,48 @@ const THIRSTLE = '#D0C4DF';
 const BLACK = '#171717';
 
 export const colors: any = {
-	fg: {
-		value: { base: '#171717', _dark: '{colors.text.dark}' },
+	// A real neutral ramp. The legacy `gray` scale below is collapsed onto a
+	// handful of brand values, so Chakra's semantic layer can't derive anything
+	// usable from it — the semantic tokens in theme/index.ts point here instead.
+	neutral: {
+		50: '#fafafa',
+		100: '#f5f5f5',
+		200: '#ebebeb',
+		300: '#e0e0e0',
+		400: '#a3a3a3',
+		500: '#737373',
+		600: '#525252',
+		700: '#404040',
+		800: '#262626',
+		900: '#171717',
+		950: '#0a0a0a',
 	},
-	// ... other tokens
+
+	// Form controls share one surface so an input, a select and a textarea read
+	// as the same kind of thing.
+	field: {
+		bg: {
+			light: '#fff',
+			dark: '#0A0A0A',
+		},
+		border: {
+			light: BORDER_LIGHT,
+			dark: BORDER_DARK,
+		},
+		borderHover: {
+			light: '#d4d4d4',
+			dark: '#333',
+		},
+		placeholder: {
+			light: '#a3a3a3',
+			dark: '#6b6b6b',
+		},
+		focusRing: {
+			light: '#171717',
+			dark: '#d4d4d4',
+		},
+	},
+
 
 	brand: {
 		// 100: 'red',
@@ -271,6 +309,7 @@ export const colors: any = {
 		700: PRIMARY,
 		800: 'black', //initial bg color of the load of colormode
 		900: 'black',
+		950: 'black',
 	},
 	image: {
 		50: '#ececec', //Primary For Light Mode
@@ -318,13 +357,21 @@ export const colors: any = {
 		},
 		head: {
 			bgLight: '#fafafa',
-			bgDark: '#0A0A0A',
-			textDark: '#888',
-			textLight: '#222',
+			// Rows are #0A0A0A in dark mode, so the head needs its own value or
+			// the band disappears into the body.
+			bgDark: '#101010',
+			textDark: '#8f8f8f',
+			// Column labels are small uppercase text; muted keeps them from
+			// competing with the data underneath.
+			textLight: '#6b6b6b',
 		},
 		row: {
 			light: 'white',
 			dark: '#0A0A0A',
+			// Row hover — a tint just strong enough to track a row across wide
+			// tables without reading as a selection.
+			hoverLight: '#f7f7f7',
+			hoverDark: '#151515',
 		},
 	},
 	selectBorder: {

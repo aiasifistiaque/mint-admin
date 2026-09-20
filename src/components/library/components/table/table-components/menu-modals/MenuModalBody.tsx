@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { useIsMobile } from '../../../..';
+import { useIsMobile, useModalLayout } from '../../../..';
 import { Drawer, Dialog } from '@chakra-ui/react';
 
 type MenuModalBodyProps = {
@@ -7,18 +7,28 @@ type MenuModalBodyProps = {
 	[key: string]: any;
 };
 
+const bodyCss = {
+	px: { base: 4, md: 6 },
+	pt: 0,
+	pb: { base: 4, md: 5 },
+	flex: '1',
+	minH: 0,
+};
+
 const MenuModalBody: FC<MenuModalBodyProps> = ({ children, ...props }) => {
 	const isMobile = useIsMobile();
-	if (isMobile) {
+	const layout = useModalLayout();
+
+	if (isMobile || layout === 'drawer') {
 		return (
 			<Drawer.Body
-				borderTop='1px solid'
-				borderColor='border.light'
-				_dark={{ borderColor: 'border.dark' }}
-				maxH='80vh'
-				p={{ base: 4, md: 6 }}
-				pt={{ base: 2, md: 6 }}
-				overflowY='scroll'
+				borderTopWidth='1px'
+				borderColor='border.muted'
+				// No fixed cap: the sheet's own max height plus the flex column
+				// decide how tall the body gets.
+				overflowY='auto'
+				{...bodyCss}
+				{...(isMobile ? { pt: 4 } : {})}
 				{...props}>
 				{children}
 			</Drawer.Body>
@@ -27,8 +37,8 @@ const MenuModalBody: FC<MenuModalBodyProps> = ({ children, ...props }) => {
 
 	return (
 		<Dialog.Body
-			p={{ base: 4, md: 6 }}
-			pt={{ base: 2, md: 2 }}
+			overflowY='auto'
+			{...bodyCss}
 			{...props}>
 			{children}
 		</Dialog.Body>

@@ -8,6 +8,9 @@ const style = {
 	w: '100%',
 	borderRadius: TABLE.border.radius,
 	pb: TABLE.padding.bottom,
+	// Clip to the radius so the header band and the last row follow the corners
+	// instead of squaring them off.
+	overflow: 'hidden',
 
 	borderColor: TABLE.border.color.light,
 	_dark: {

@@ -23,7 +23,7 @@ const SideDrawer = () => {
 			size='full'
 			preventScroll={true}
 			onOpenChange={(e: any) => (e.open ? onOpen() : onClose())}>
-			<Drawer.Trigger>
+			<Drawer.Trigger asChild>
 				<Flex
 					ml={-3}
 					onClick={onOpen}

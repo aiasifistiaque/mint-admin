@@ -43,14 +43,22 @@ export const sizes = {
 	NAV_HEIGHT: 14,
 	CARD_RADIUS: '8px',
 	SIDEBAR_PX: 3,
-	SEARCH_BAR_HEIGHT: '38px',
+	// Chakra's `sm` control is 36px; the toolbar used to sit at 38px, which
+	// left the search field a couple of pixels taller than the buttons beside it.
+	SEARCH_BAR_HEIGHT: '36px',
+	CONTROL_HEIGHT: '36px',
+	CONTROL_HEIGHT_SM: '30px',
 };
 
 export const shadow = {
-	MENU: 'lg',
-	CARD: '2px 2px 10px rgba(0,0,0,.1)',
+	MENU: '0 10px 32px -8px rgba(0, 0, 0, 0.18), 0 2px 6px -2px rgba(0, 0, 0, 0.08)',
+	CARD: '0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 12px -4px rgba(0, 0, 0, 0.08)',
 	DASH: '0px 0px 1px rgba(0,0,0,.08), 0px 2px 2px 0px rgba(0, 0, 0, 0.04)',
-	MODAL: '2xl',
+	// Modals sit on a dimmed backdrop, so they need depth without the heavy
+	// black halo that `2xl` casts over a light page.
+	MODAL: '0 16px 48px -12px rgba(0, 0, 0, 0.22), 0 4px 12px -4px rgba(0, 0, 0, 0.1)',
+	MODAL_DARK: '0 16px 48px -12px rgba(0, 0, 0, 0.7)',
+	SUBTLE: '0 1px 2px rgba(0, 0, 0, 0.05)',
 };
 
 export const padding = {
@@ -70,16 +78,19 @@ export const zIndex = {
 	SIDEBAR: 998,
 };
 
+// One radius ramp. The old values ran 4px for containers and buttons against
+// 10px for menus, so nested chrome never shared a corner.
 export const radius = {
-	CONTAINER: '4px',
-	MODAL: '8px',
-	MENU: '10px',
+	CONTAINER: '8px',
+	MODAL: '12px',
+	MENU: '12px',
 	MENU_INNER: '6px',
 
-	BUTTON: '4px',
-	INPUT: '4px',
-	SELECT_CONTAINER: '6px',
-	FILTER: '4px',
+	BUTTON: '8px',
+	INPUT: '8px',
+	SELECT_CONTAINER: '8px',
+	FILTER: '8px',
+	PILL: '9999px',
 };
 
 export const styles = {
@@ -130,9 +141,31 @@ export const styles = {
 	},
 	color: {
 		MODAL_OVERLAY: {
-			LIGHT: 'rgba(250, 250, 250, .8)',
-			DARK: 'menu.overlayDark',
+			// A near-white scrim over a near-white page did no separating at all.
+			LIGHT: 'rgba(17, 17, 17, 0.44)',
+			DARK: 'rgba(0, 0, 0, 0.7)',
 		},
+	},
+	// Shared form-control surface. Spread this instead of restating border,
+	// radius and focus colours on each input.
+	FIELD: {
+		bg: 'field.bg',
+		color: 'fg',
+		borderWidth: 1,
+		borderColor: 'field.border',
+		borderRadius: radius.INPUT,
+		fontSize: '14px',
+		transitionProperty: 'border-color, box-shadow, background-color',
+		transitionDuration: '150ms',
+		transitionTimingFunction: 'cubic-bezier(.4, 0, .2, 1)',
+		_placeholder: { fontSize: '14px', color: 'field.placeholder' },
+		_hover: { borderColor: 'field.borderHover' },
+		_focusVisible: {
+			borderColor: 'field.focusRing',
+			boxShadow: '0 0 0 1px var(--chakra-colors-field-focus-ring)',
+			outline: 'none',
+		},
+		_disabled: { bg: 'bg.subtle', opacity: 0.6, cursor: 'not-allowed' },
 	},
 	BORDER: {
 		_light: {
@@ -144,22 +177,39 @@ export const styles = {
 	MODAL: {
 		bg: 'menu.light',
 		borderWidth: 1,
-		borderColor: 'container.borderLight',
+		borderColor: 'border.muted',
 		_dark: {
 			bg: 'menu.dark',
-			borderColor: 'container.borderDark',
+			borderColor: 'border',
+			boxShadow: shadow.MODAL_DARK,
 		},
-		borderRadius: '8px',
-		shadow: '2xl',
+		borderRadius: radius.MODAL,
+		boxShadow: shadow.MODAL,
+		overflow: 'hidden',
+		// Chakra's inside-scroll default is `calc(100% - 120px)`; go to the full
+		// 90% of the viewport so long forms get the room before they scroll.
+		maxH: '90vh',
 	},
 	DRAWER: {
 		bg: 'menu.light',
 		_dark: {
 			bg: 'menu.dark',
 		},
-		maxH: '75vh',
+		maxH: '90vh',
 		userSelect: 'none',
-		borderTopRadius: '16px',
+		borderTopRadius: '20px',
+		boxShadow: shadow.MODAL,
+	},
+	// The desktop "modal layout: drawer" preference — a right-hand panel
+	// instead of the bottom sheet above, so full height and no top radius.
+	DRAWER_END: {
+		bg: 'menu.light',
+		_dark: {
+			bg: 'menu.dark',
+		},
+		h: '100vh',
+		maxH: '100vh',
+		boxShadow: shadow.MODAL,
 	},
 	CONTAINER: {
 		RADIUS: {

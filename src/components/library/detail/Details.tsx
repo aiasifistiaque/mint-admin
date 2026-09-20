@@ -42,6 +42,7 @@ const Details: FC<DetailProps> = ({
 	editing,
 	type,
 	isPassword,
+	isDisabled,
 	body,
 	path,
 	dataModel,
@@ -120,6 +121,17 @@ const Details: FC<DetailProps> = ({
 		) : type == 'image' ? (
 			<VImage
 				value={children}
+				{...props}
+			/>
+		) : isDisabled ? (
+			<Input
+				{...styleProps}
+				value={children}
+				disabled
+				readOnly
+				cursor='not-allowed'
+				bg={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
+				color={{ _light: 'gray.500', _dark: 'gray.500' }}
 				{...props}
 			/>
 		) : (

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { FC } from 'react';
 import { CreateModal } from '../..';
 import ExportModal from '../modals/export/ExportModal';
+import { buttonGroupCss, headingCss } from './style';
 
 type PageHeadingProps = FlexProps & {
 	title: string;
@@ -52,8 +53,8 @@ const SimplePageHeading: FC<PageHeadingProps> = ({
 			justify='space-between'
 			{...props}
 			align='center'>
-			<Heading fontSize='1.75rem'>{title}</Heading>
-			<Flex gap={2}>
+			<Heading {...headingCss}>{title}</Heading>
+			<Flex {...buttonGroupCss}>
 				<>{Boolean(exportData) && exportButton}</>
 				<>{(Boolean(button) || isModal) && toButton}</>
 			</Flex>

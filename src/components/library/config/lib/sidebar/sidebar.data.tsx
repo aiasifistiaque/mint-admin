@@ -255,6 +255,12 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Website Settings',
+		title: 'Content',
+		href: '/contents',
+		icon: 'blog',
+		path: 'contents',
+	},
+	{
 		title: 'Featured Projects',
 		href: '/portfolios',
 		icon: 'customer',

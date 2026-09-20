@@ -1,7 +1,7 @@
-import { FC, Fragment } from 'react';
+import { FC } from 'react';
 
 import { format } from 'date-fns';
-import { GridItem, Heading, StackProps, TableRowProps, Flex } from '@chakra-ui/react';
+import { GridItem, Heading, StackProps, TableRowProps } from '@chakra-ui/react';
 import {
 	TableRow,
 	EditableTableData,
@@ -112,13 +112,7 @@ const TableRowComponent: FC<TableProps> = ({
 				if (editable && !clickable)
 					return (
 						<Container key={dataKey}>
-							{isMobile && (
-								<Heading
-									size='xs'
-									fontWeight='500'>
-									{formatDataKey(dataKey)}
-								</Heading>
-							)}
+							{isMobile && <Heading {...cardLabelCss}>{formatDataKey(dataKey)}</Heading>}
 							<EditableTableData
 								type={type}
 								dataKey={dataKey}
@@ -138,20 +132,15 @@ const TableRowComponent: FC<TableProps> = ({
 				// Return a TableData cell with the value
 				return (
 					<Container
-						px={4}
-						py={1}
-						borderBottom='1px solid'
-						borderColor={{
-							_light: 'border.light',
-							_dark: 'border.dark',
-						}}
 						key={dataKey}
 						type={type}
 						copy={copy}
 						isMobile={isMobile}
 						value={value}>
 						{isMobile && type !== 'image-text' && (
-							<Heading size='xs'>{formatFieldTitle({ field: dataKey, schema: data })}</Heading>
+							<Heading {...cardLabelCss}>
+								{formatFieldTitle({ field: dataKey, schema: data })}
+							</Heading>
 						)}
 
 						<TableData
@@ -173,14 +162,30 @@ const TableRowComponent: FC<TableProps> = ({
 	);
 };
 
+const cardLabelCss = {
+	fontSize: '10px',
+	fontWeight: '600',
+	letterSpacing: '0.06em',
+	textTransform: 'uppercase' as const,
+	color: 'fg.muted',
+	lineHeight: '1.4',
+	mb: 0.5,
+};
+
 const Container = ({ children, isMobile, type, value, copy, ...props }: any) => {
 	const styleProps = {
 		...props,
 	};
 	if (isMobile && type !== 'image-text') {
 		return (
+			// This is a direct child of RowContainerBase's `1fr 1fr` grid. A bare
+			// `1fr` track is really `minmax(auto, 1fr)`, so without `minW={0}`
+			// here the track won't shrink below this item's content size — a long
+			// unbroken value (a URL) further down would still blow the column
+			// past its fair half and push the other column off the card.
 			<Column
 				gap={0}
+				minW={0}
 				{...styleProps}>
 				{children}
 			</Column>
@@ -196,13 +201,12 @@ const Container = ({ children, isMobile, type, value, copy, ...props }: any) => 
 		);
 	}
 
-	return (
-		<Flex
-			as={Fragment}
-			{...styleProps}>
-			{children}
-		</Flex>
-	);
+	// Desktop wants no wrapper element at all here (TableData already renders
+	// its own <td>) — a real Fragment, not a styled Flex asked to impersonate
+	// one: Flex always injects its own layout styles (display, gap, ...) onto
+	// whatever `as` names, and Fragment can't accept those, which is what was
+	// spamming "invalid prop supplied to React.Fragment" for every table cell.
+	return <>{children}</>;
 };
 
 export default TableRowComponent;

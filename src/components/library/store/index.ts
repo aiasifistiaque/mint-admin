@@ -14,5 +14,6 @@ export * from './services/commonApi';
 export * from './services/ordersApi';
 export * from './services/authApi';
 export * from './services/uploadApi';
+export * from './services/invoiceApi';
 
 export * from './store';

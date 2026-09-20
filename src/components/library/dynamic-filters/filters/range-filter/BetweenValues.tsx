@@ -21,19 +21,29 @@ const BetweenValues = ({ setVal }: { setVal: (val: string) => void }) => {
 	return (
 		<Flex
 			alignItems='center'
-			gap={1}
-			justifyContent='space-between'>
+			gap={2}
+			w='full'>
+			{/* Both boxes flex equally; the first used to be w='100%' and the
+			    second auto, so the pair never lined up. */}
 			<FilterInput
 				type='number'
 				value={start}
 				onChange={handleStart}
-				w='100%'
+				placeholder='Min'
+				flex='1'
 			/>
-			<Text>{`&`}</Text>
+			<Text
+				fontSize='13px'
+				color='fg.muted'
+				flexShrink={0}>
+				&amp;
+			</Text>
 			<FilterInput
 				type='number'
 				value={end}
 				onChange={handleEnd}
+				placeholder='Max'
+				flex='1'
 			/>
 		</Flex>
 	);

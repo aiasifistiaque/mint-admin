@@ -165,6 +165,10 @@ const VImageArray: FC<FormDataType> = ({
 								type='add'
 								handleImage={onChange}
 								multiple={true}
+								// Adding new images is the one place a picker makes
+								// sense to multi-select from — per-image tiles above
+								// only ever browse to replace/delete that one image.
+								multiSelect={true}
 							/>
 						</Center>
 					)}

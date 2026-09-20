@@ -136,14 +136,14 @@ const schema = {
 		sort: true,
 		label: 'Is Discount',
 		type: 'checkbox',
-		displayIntable: true,
+		displayInTable: true,
 		colorPalette: (isActive: boolean) => (isActive ? 'green' : 'red'),
 	},
 	discountType: {
 		sort: true,
 		label: 'Discount Type',
 		type: 'select',
-		displayIntable: true,
+		displayInTable: true,
 		options: [
 			{ label: 'Percentage', value: 'percentage' },
 			{ label: 'Flat', value: 'flat' },
@@ -244,7 +244,7 @@ const schema = {
 	createdAt: {
 		label: 'Created At',
 		type: 'date',
-		showInTable: true,
+		displayInTable: true,
 		sort: true,
 	},
 };

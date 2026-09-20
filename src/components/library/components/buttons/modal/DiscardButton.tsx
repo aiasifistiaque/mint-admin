@@ -9,8 +9,9 @@ const DiscardButton: FC<DiscardButtonProps> = ({ children, ...props }) => {
 	return (
 		<Button
 			variant='outline'
-			px={3}
 			size='sm'
+			minW='84px'
+			px={4}
 			{...props}>
 			{children || 'Discard'}
 		</Button>

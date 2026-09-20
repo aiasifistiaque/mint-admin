@@ -1,7 +1,7 @@
 import { Dialog as ChakraDialog, Portal, Drawer } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 
-import { styles, useIsMobile } from '../../../..';
+import { styles, useIsMobile, useModalLayout } from '../../../..';
 
 type MenuModalProps = {
 	children: ReactNode;
@@ -22,7 +22,9 @@ const MenuModal: FC<MenuModalProps> = ({
 	...props
 }) => {
 	const isMobile = useIsMobile();
+	const layout = useModalLayout();
 	const drawerStyleProps: any = styles.DRAWER;
+	const rightDrawerStyleProps: any = styles.DRAWER_END;
 
 	// Handle both v2 and v3 prop patterns
 	const isDialogOpen = open ?? isOpen ?? false;
@@ -48,6 +50,25 @@ const MenuModal: FC<MenuModalProps> = ({
 					<Drawer.Backdrop />
 					<Drawer.Positioner>
 						<Drawer.Content {...drawerStyleProps}>{children}</Drawer.Content>
+					</Drawer.Positioner>
+				</Portal>
+			</Drawer.Root>
+		);
+	}
+
+	if (layout === 'drawer') {
+		return (
+			<Drawer.Root
+				preventScroll
+				placement='end'
+				size='xl'
+				open={isDialogOpen}
+				onOpenChange={handleOpenChange}
+				{...props}>
+				<Portal>
+					<Drawer.Backdrop />
+					<Drawer.Positioner>
+						<Drawer.Content {...rightDrawerStyleProps}>{children}</Drawer.Content>
 					</Drawer.Positioner>
 				</Portal>
 			</Drawer.Root>

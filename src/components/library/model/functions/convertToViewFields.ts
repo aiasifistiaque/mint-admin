@@ -1,6 +1,9 @@
+import assertSchema from './assertSchema';
+
 type TableDataFieldConverter = {
 	schema: any;
 	fields?: string[];
+	modelName?: string;
 };
 
 const createViewField = ({ key, field }: { key: string; field: any }): any => {
@@ -31,7 +34,9 @@ const createViewField = ({ key, field }: { key: string; field: any }): any => {
 	};
 };
 
-const convertToViewFields = ({ schema, fields }: TableDataFieldConverter): any[] => {
+const convertToViewFields = ({ schema, fields, modelName = 'unknown' }: TableDataFieldConverter): any[] => {
+	assertSchema(schema, modelName);
+
 	const tableFields: any[] = [];
 
 	const processField = (key: string) => {

@@ -34,7 +34,10 @@ const EditSelectedModal: FC<EditManyModalType> = ({
 }) => {
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = useRef<any>(undefined);
-	const [value, setValue] = useState<any>(val);
+	// `val` is `undefined` until a caller passes one, which would start the
+	// select uncontrolled and then flip it controlled the moment a value
+	// exists — React warns about exactly that transition.
+	const [value, setValue] = useState<any>(val ?? '');
 
 	const [trigger, result] = useUpdateManyMutation();
 	const { isLoading, isSuccess, isError, error, reset } = result;

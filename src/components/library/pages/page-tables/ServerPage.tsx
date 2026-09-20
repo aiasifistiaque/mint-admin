@@ -17,10 +17,14 @@ import ServerPageHeading from '../../components/table/ServerPageHeading';
 
 type TableProps = {
 	route: string;
+	// Frontend-only row-menu entries (e.g. a 'custom' item backed by a real
+	// component) appended to the backend-authored `table.menu`, since the
+	// backend config is plain JSON and can't carry a component reference.
+	extraMenu?: any[];
 };
 
 // Define the PageTable component
-const ServerPage: FC<TableProps> = ({ route }) => {
+const ServerPage: FC<TableProps> = ({ route, extraMenu }) => {
 	const { page, limit, search, sort, filters, preferences, selectedItems }: any = useAppSelector(
 		(state: any) => state.table
 	);
@@ -46,6 +50,7 @@ const ServerPage: FC<TableProps> = ({ route }) => {
 
 	const selectable = table?.select?.show ? true : false;
 	const tableFilters = table?.filters !== undefined ? table?.filters : true;
+	const menu = extraMenu?.length ? [...(table?.menu || []), ...extraMenu] : table?.menu;
 	// Get the table state from the redux store
 	const { data, isLoading, isError, error, isSuccess } = useGetAllQuery(
 		{
@@ -91,7 +96,7 @@ const ServerPage: FC<TableProps> = ({ route }) => {
 			tableData={schema}
 			isLoading={schemaLoading || isLoading}
 			data={data?.doc}
-			showMenu={table?.menu ? true : false}
+			showMenu={menu ? true : false}
 		/>
 	);
 	// Create the table body by mapping over the data and creating a TableRowComponent for each item
@@ -102,7 +107,7 @@ const ServerPage: FC<TableProps> = ({ route }) => {
 			fields={preferences}
 			item={item}
 			data={schema}
-			menu={table?.menu}
+			menu={menu}
 			path={table?.path}
 			key={item?._id}
 			clickable={table?.clickable}

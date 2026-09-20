@@ -105,7 +105,12 @@ const DateFilter: FC<DateFilterProps> = ({ title, field, label }) => {
 			<Filter
 				isActive={ifFieldExists()}
 				onCancel={onFilterReset}>
-				{label} {ifFieldExists() && <span> | {display}</span>}
+				{label}{' '}
+				{ifFieldExists() && (
+					// A bare `<span>` picks up the global `span { color }` rule instead
+					// of the chip's own color — see BooleanFilter.tsx for the full story.
+					<span style={{ color: 'inherit' }}> | {display}</span>
+				)}
 			</Filter>
 		</span>
 	);

@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { styles, useIsMobile } from '../../../..';
+import { useIsMobile, useModalLayout } from '../../../..';
 import { Drawer, Dialog } from '@chakra-ui/react';
 
 type MenuModalFooterProps = {
@@ -7,15 +7,29 @@ type MenuModalFooterProps = {
 	[key: string]: any;
 };
 
+// The footer is a quiet ledge under the body: a hairline, a tinted surface and
+// enough room that the buttons aren't pinned to the edge.
+const footerCss = {
+	w: 'full',
+	gap: 2,
+	px: { base: 4, md: 6 },
+	py: 3,
+	borderTopWidth: 1,
+	borderColor: 'border.muted',
+	bg: 'bg.subtle',
+	justifyContent: 'flex-end',
+	alignItems: 'center',
+};
+
 const MenuModalFooter: FC<MenuModalFooterProps> = ({ children, ...props }) => {
 	const isMobile = useIsMobile();
-	if (isMobile) {
+	const layout = useModalLayout();
+
+	if (isMobile || layout === 'drawer') {
 		return (
 			<Drawer.Footer
-				p={{ base: 4, md: 6 }}
-				py={2}
-				_light={{ bg: 'background.light' }}
-				gap={2}
+				{...footerCss}
+				{...(isMobile ? { pb: 5 } : {})}
 				{...props}>
 				{children}
 			</Drawer.Footer>
@@ -24,17 +38,7 @@ const MenuModalFooter: FC<MenuModalFooterProps> = ({ children, ...props }) => {
 
 	return (
 		<Dialog.Footer
-			w='full'
-			gap={2}
-			px={{ base: 4, md: 6 }}
-			borderTopWidth={1}
-			borderColor='container.borderLight'
-			_dark={{ borderColor: 'border.dark' }}
-			py={2}
-			borderBottomRadius={styles?.MODAL?.borderRadius || '8px'}
-			_light={{ bg: 'background.light' }}
-			justifyContent='flex-end'
-			alignItems='center'
+			{...footerCss}
 			{...props}>
 			{children}
 		</Dialog.Footer>

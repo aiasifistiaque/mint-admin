@@ -179,7 +179,7 @@ const schema: SchemaType<any> = {
 	},
 	followUps: {
 		label: 'Follow Ups',
-		type: 'tags',
+		type: 'tag',
 	},
 	facebook: {
 		label: 'Facebook',
@@ -268,7 +268,7 @@ const schema: SchemaType<any> = {
 	},
 	notes: {
 		label: 'Notes',
-		type: 'tags',
+		type: 'tag',
 	},
 };
 

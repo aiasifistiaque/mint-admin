@@ -3,12 +3,13 @@ import { TextChild } from '../../../types';
 
 const CurrentPage = ({ children }: TextChild) => (
 	<Center
-		h={8}
-		px={2}
-		color='text.light'
-		_dark={{ color: 'text.dark' }}
+		h='30px'
+		px={2.5}
+		minW='90px'
+		color='fg'
 		fontWeight='500'
-		fontSize='.9rem'
+		fontSize='13px'
+		whiteSpace='nowrap'
 		userSelect='none'>
 		{children}
 	</Center>

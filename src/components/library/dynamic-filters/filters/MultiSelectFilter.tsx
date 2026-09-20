@@ -141,7 +141,7 @@ const MultiSelectFilter: FC<FilterProps> = ({ title, field, options, label }) =>
 
 				<Column
 					maxH={{ base: 'auto', md: '180px' }}
-					overflowY='scroll'
+					overflowY='auto'
 					gap={2}>
 					{options?.length === 0 && <FilterCheckbox>No options available</FilterCheckbox>}
 					{options

@@ -37,11 +37,20 @@ const Pagination: FC<PaginationProps> = ({ data, showPerPage = true }) => {
 
 	const perpage = (
 		<>
-			{!isMobile && <TableHeading>SHOWING RESULTS</TableHeading>}
+			{!isMobile && (
+				<TableHeading
+					fontSize='11px'
+					letterSpacing='0.06em'
+					color='fg.muted'
+					whiteSpace='nowrap'>
+					ROWS
+				</TableHeading>
+			)}
 			<SelectContainer
 				size='xs'
-				px={3}
-				defaultValue={limit}
+				px={2.5}
+				h='30px'
+				fontSize='13px'
 				value={limit}
 				onChange={(e: any) => update({ setLimit: e.target.value })}>
 				{SHOW_PER_PAGE_OPTIONS.map(({ value, label }) => (
@@ -55,25 +64,36 @@ const Pagination: FC<PaginationProps> = ({ data, showPerPage = true }) => {
 		</>
 	);
 
+	const isFirstPage = page <= 1;
+	const isLastPage = !data?.totalPages || page >= data?.totalPages;
+
 	return (
 		<Flex
 			justify='flex-end'
-			align='center'>
-			{showPerPage && <Center gap={2}>{perpage}</Center>}
+			align='center'
+			gap={{ base: 2, md: 4 }}>
+			{showPerPage && (
+				<Center
+					gap={2}
+					display={{ base: 'none', md: 'flex' }}>
+					{perpage}
+				</Center>
+			)}
 
 			<Flex
-				p={2}
-				alignSelf='flex-end'>
+				align='center'
+				gap={0.5}>
 				<SquareButton
 					label='To the beginning'
 					onClick={toStart}
-					borderLeftRadius={4}>
-					<HiArrowUturnLeft size={18} />
+					disabled={isFirstPage}>
+					<HiArrowUturnLeft size={15} />
 				</SquareButton>
 				<SquareButton
 					label='Previous Page'
-					onClick={back}>
-					<IoIosArrowBack size={20} />
+					onClick={back}
+					disabled={isFirstPage}>
+					<IoIosArrowBack size={17} />
 				</SquareButton>
 
 				<CurrentPage>
@@ -83,14 +103,15 @@ const Pagination: FC<PaginationProps> = ({ data, showPerPage = true }) => {
 				</CurrentPage>
 				<SquareButton
 					label='Next Page'
-					onClick={next}>
-					<IoIosArrowForward size={20} />
+					onClick={next}
+					disabled={isLastPage}>
+					<IoIosArrowForward size={17} />
 				</SquareButton>
 				<SquareButton
 					label='To the end'
 					onClick={toLast}
-					borderRightRadius={4}>
-					<HiArrowUturnRight size={18} />
+					disabled={isLastPage}>
+					<HiArrowUturnRight size={15} />
 				</SquareButton>
 			</Flex>
 		</Flex>

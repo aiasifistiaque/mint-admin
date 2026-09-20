@@ -12,6 +12,8 @@ const ModalSubmitButton: FC<ModalSubmitButtonProps> = ({ children, ...props }) =
 			loadingText='Processing'
 			spinnerPlacement='start'
 			size='sm'
+			minW='84px'
+			px={4}
 			type='submit'
 			{...props}>
 			{children || 'Confirm'}

@@ -45,8 +45,7 @@ const styles = {
 		gap: 1,
 		_notLast: {
 			borderBottomWidth: 1,
-			borderColor: 'border.light',
-			_dark: { borderColor: 'border.dark' },
+			borderColor: 'border.muted',
 		},
 		py: 4,
 		_last: { pb: 0 },
@@ -57,8 +56,8 @@ const styles = {
 		fontWeight: '700',
 	},
 	helper: {
-		fontSize: '.8rem',
+		fontSize: '12px',
 		px: 3,
-		color: 'gray.400',
+		color: 'fg.muted',
 	},
 };

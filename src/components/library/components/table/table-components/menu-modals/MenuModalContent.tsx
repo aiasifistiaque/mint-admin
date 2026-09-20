@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { useIsMobile } from '../../../..';
+import { useIsMobile, useModalLayout, styles } from '../../../..';
 import { DrawerContent, DrawerContentProps, Dialog } from '@chakra-ui/react';
 
 type Props = any &
@@ -9,16 +9,25 @@ type Props = any &
 
 const MenuModalContent: FC<Props> = ({ children, ...props }) => {
 	const isMobile = useIsMobile();
+	const layout = useModalLayout();
+
 	if (isMobile) {
 		return (
 			<DrawerContent
-				bg='menu.light'
-				_dark={{
-					bg: 'menu.dark',
-				}}
-				maxH='85vh'
-				userSelect='none'
-				borderTopRadius='20px'
+				{...(styles.DRAWER as any)}
+				maxH='90vh'
+				overflow='hidden'
+				{...props}>
+				{children}
+			</DrawerContent>
+		);
+	}
+
+	if (layout === 'drawer') {
+		return (
+			<DrawerContent
+				{...(styles.DRAWER_END as any)}
+				overflow='hidden'
 				{...props}>
 				{children}
 			</DrawerContent>
@@ -27,12 +36,7 @@ const MenuModalContent: FC<Props> = ({ children, ...props }) => {
 
 	return (
 		<Dialog.Content
-			boxShadow='lg'
-			borderRadius='2xl'
-			bg='menu.light'
-			_dark={{
-				bg: 'menu.dark',
-			}}
+			{...(styles.MODAL as any)}
 			{...props}>
 			{children}
 		</Dialog.Content>

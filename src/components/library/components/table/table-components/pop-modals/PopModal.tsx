@@ -1,7 +1,7 @@
 import { Drawer, Popover, Button, Flex } from '@chakra-ui/react';
 
 import { FC, ReactNode } from 'react';
-import { Column, FilterButton } from '../../../..';
+import { Column } from '../../../..';
 import { DrawerContentContainer, PopoverContentContainer } from '.';
 
 type MenuModalProps = {
@@ -36,8 +36,12 @@ const PopModal: FC<MenuModalProps> = ({
 						<DrawerContentContainer>
 							{children}
 							<Drawer.Footer
-								pt={2}
-								px={4}>
+								px={4}
+								py={3}
+								pb={5}
+								borderTopWidth={1}
+								borderColor='border.muted'
+								bg='bg.subtle'>
 								<Button
 									w='full'
 									size='md'
@@ -68,14 +72,18 @@ const PopModal: FC<MenuModalProps> = ({
 					<Column gap={0}>
 						{children}
 						<Flex
+							px={4}
 							pt={3}
-							pb={0}
+							pb={4}
 							w='full'>
-							<FilterButton
+							{/* Solid, not the muted outline chip used elsewhere in the
+							    toolbar — this is the primary action of the popup. */}
+							<Button
 								w='full'
+								size='sm'
 								onClick={handleClick}>
 								Apply
-							</FilterButton>
+							</Button>
 						</Flex>
 					</Column>
 				</PopoverContentContainer>

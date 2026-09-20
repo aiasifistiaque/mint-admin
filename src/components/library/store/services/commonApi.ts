@@ -172,7 +172,9 @@ export const userApi = mainApi.injectEndpoints({
 				method: 'PUT',
 				body: body,
 			}),
-			invalidatesTags: (result, error, { path, invalidate = '' }) => [path, invalidate],
+			// `invalidate` is optional here; an empty default would emit a '' tag type.
+			invalidatesTags: (result, error, { path, invalidate }) =>
+				invalidate ? [path, invalidate] : [path],
 		}),
 		copyItem: builder.mutation<any, { path: string; body: any; invalidate?: string[] }>({
 			query: ({ path, body, invalidate }): any => ({
@@ -190,7 +192,7 @@ export const userApi = mainApi.injectEndpoints({
 				url: `${path}/${id}?key=${key}`,
 				method: 'DELETE',
 			}),
-			invalidatesTags: (result, error, { path, id, invalidate }: any) => [path, ...invalidate],
+			invalidatesTags: (result, error, { path, id, invalidate = [] }: any) => [path, ...invalidate],
 		}),
 	}),
 });

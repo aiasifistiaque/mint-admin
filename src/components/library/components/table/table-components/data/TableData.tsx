@@ -1,19 +1,8 @@
-import {
-	Badge,
-	BadgeProps,
-	Flex,
-	Portal,
-	TableCellProps,
-	Text,
-	Tooltip,
-	useClipboard,
-} from '@chakra-ui/react';
-import moment from 'moment';
+import { Portal, TableCellProps, Tooltip, useClipboard } from '@chakra-ui/react';
 import { FC } from 'react';
-import { CustomTd } from '.';
-import { Align, TableObjectDataProps } from '../../../..';
+import { TableObjectDataProps } from '../../../..';
 import { Copy as CopyIcon } from 'lucide-react';
-import { useColorMode } from '@/components/ui/color-mode';
+import { getTableCell } from '@/components/library/fields/registry/tableCells';
 
 // Define the type for the props of the TableData component
 type TableDataPropsType = TableCellProps &
@@ -56,7 +45,19 @@ const TableData: FC<TableDataPropsType> = ({
 				openDelay={200}
 				closeDelay={100}
 				positioning={{ placement: 'top' }}>
-				<Tooltip.Trigger asChild>
+				{/* `asChild` is meant to merge these props onto TableBody's own root
+				    element, but TableBody resolves to a dynamic `Cell` component
+				    (getTableCell) that doesn't forward a single ref reliably, so Ark
+				    falls back to rendering its own wrapper div. That wrapper is a
+				    flex row with no width constraint of its own, so on the mobile
+				    card grid a long value (a URL) could overflow past its column
+				    instead of wrapping — minW/maxW here keep it inside the cell
+				    whichever way the merge resolves. */}
+				<Tooltip.Trigger
+					asChild
+					display='flex'
+					minW={0}
+					maxW='full'>
 					<TableBody
 						item={item}
 						{...commonProps}
@@ -88,149 +89,18 @@ const TableData: FC<TableDataPropsType> = ({
 	);
 };
 
-const TableBody: FC<TableDataPropsType> = ({
-	children,
-	id,
-	type,
-	colorPalette,
-	toLocaleStr,
-	tagType,
-	imageKey,
-	key,
-	item,
-	colorTheme,
-	...props
-}) => {
-	const { colorMode } = useColorMode();
-	switch (type) {
-		case 'checkbox':
-			return (
-				<CustomTd>
-					<Align gap={2}>
-						<Flex
-							borderRadius='full'
-							h='10px'
-							w='10px'
-							bg={
-								children?.toString() === 'true'
-									? colorMode == 'dark'
-										? '#50e3c2'
-										: '#00a843'
-									: colorMode === 'dark'
-									? '#fe5f55'
-									: '#EE0000'
-							}
-						/>
-						<Text
-							fontSize='15px'
-							textTransform='capitalize'>
-							{item?.displayValue ? item?.displayValue[children?.toString()] : children?.toString()}
-						</Text>
-					</Align>
-
-					{/* <Badge
-						colorPalette={
-							colorTheme ? colorTheme[children] : children?.toString() === 'true' ? 'green' : 'red'
-						}
-						{...badgeCss}>
-						{item?.displayValue ? item?.displayValue[children?.toString()] : children?.toString()}
-					</Badge> */}
-				</CustomTd>
-			);
-
-		case 'tag':
-			return (
-				<CustomTd
-					flexWrap='wrap'
-					gap={2}>
-					{Array.isArray(children)
-						? children.map((item: any, i: number) => (
-								<Badge
-									key={i}
-									colorPalette={
-										item?.colorTheme
-											? item?.colorTheme[item.toLowerCase()]
-											: colorPalette
-											? colorPalette(children)
-											: 'gray'
-									}
-									{...badgeCss}>
-									{item}
-								</Badge>
-						  ))
-						: null}
-				</CustomTd>
-			);
-		case 'number':
-			return <CustomTd {...props}>{children?.toLocaleString()}</CustomTd>;
-
-		case 'image-text':
-			return (
-				<CustomTd
-					display='flex'
-					alignItems='center'
-					type='image-text'
-					gap={2}
-					src={imageKey}
-					{...props}>
-					{children}
-				</CustomTd>
-			);
-		case 'time':
-			return (
-				<CustomTd
-					{...dateCss}
-					{...props}>
-					{children || '--'}
-				</CustomTd>
-			);
-		case 'date-only':
-			return (
-				<CustomTd
-					{...dateCss}
-					{...props}>
-					{children ? moment(children).format('DD-MM-YYYY') : '--'}
-				</CustomTd>
-			);
-		case 'date':
-			return (
-				<CustomTd
-					{...dateCss}
-					{...props}>
-					{children ? moment(children).calendar() : '--'}
-				</CustomTd>
-			);
-		case 'boolean':
-			return <CustomTd {...props}>{children ? 'Yes' : 'No'}</CustomTd>;
-		case 'external-link':
-			return (
-				<CustomTd
-					type={type}
-					{...props}>
-					{children}
-				</CustomTd>
-			);
-		case 'file':
-			return (
-				<CustomTd
-					type={type}
-					{...props}>
-					{children}
-				</CustomTd>
-			);
-
-		default:
-			return <CustomTd {...props}>{children}</CustomTd>;
-	}
-};
-
-const dateCss: any = {
-	fontSize: { base: '1rem', md: '.8rem' },
-};
-
-const badgeCss: BadgeProps = {
-	fontSize: '12px',
-	size: 'xs',
+// WO-13: was a 15-case switch (TableBody delegates to a `type -> cell
+// component` map now — see fields/registry/tableCells/). 'price', 'data-array'
+// and 'data-array-count' used to have no case at all (silently fell to
+// `default`, i.e. rendered raw); they're real cells now.
+const TableBody: FC<TableDataPropsType> = ({ type, ...props }) => {
+	const Cell = getTableCell(type);
+	return (
+		<Cell
+			type={type}
+			{...props}
+		/>
+	);
 };
 
 export default TableData;
