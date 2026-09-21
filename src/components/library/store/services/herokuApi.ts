@@ -189,6 +189,22 @@ export const herokuApi = mainApi.injectEndpoints({
 		}),
 		// A mutation, not a query: a plain `<a href>` would not carry the auth
 		// header, and a query would fire the download on mount.
+		/**
+		 * The same .env the download produces, returned as text for the clipboard.
+		 *
+		 * A separate endpoint rather than a flag on the download, because that
+		 * one's `onQueryStarted` unconditionally creates a blob and clicks a link
+		 * — copy and download are different side effects, and sharing one
+		 * mutation would mean a copy also writing a file to disk.
+		 */
+		copyHerokuConfigVars: builder.mutation<string, { id: string; app: string }>({
+			query: ({ id, app }) => ({
+				url: `herokus/${id}/apps/${app}/config-vars/download?format=env`,
+				method: 'GET',
+				responseHandler: (response: any) => response.text(),
+			}),
+			invalidatesTags: ['heroku-activity'],
+		}),
 		downloadHerokuConfigVars: builder.mutation<
 			any,
 			{ id: string; app: string; format: 'env' | 'json' }
@@ -252,6 +268,7 @@ export const {
 	useRenameHerokuAppMutation,
 	useDestroyHerokuAppMutation,
 	useDownloadHerokuConfigVarsMutation,
+	useCopyHerokuConfigVarsMutation,
 } = herokuApi;
 
 export default herokuApi;

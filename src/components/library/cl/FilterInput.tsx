@@ -3,7 +3,7 @@
 import { FC } from 'react';
 import { Box, Flex, IconButton, Input, Text } from '@chakra-ui/react';
 import { Search as SearchIcon, X as ClearIcon } from 'lucide-react';
-import { radius } from '@/components/library';
+import { radius } from '../index';
 
 type FilterInputProps = {
 	value: string;

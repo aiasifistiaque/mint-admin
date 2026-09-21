@@ -9,7 +9,7 @@ import {
 	GenericModalFooter,
 	GenericModalContent,
 	radius,
-} from '@/components/library';
+} from '../index';
 
 type ConfirmActionProps = {
 	isOpen: boolean;

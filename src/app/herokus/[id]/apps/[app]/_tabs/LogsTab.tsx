@@ -3,7 +3,7 @@
 import { FC, useState } from 'react';
 import { Box, Button, Flex, NativeSelect, Text } from '@chakra-ui/react';
 import { radius, useGetHerokuLogsQuery } from '@/components/library';
-import { Panel, EmptyState, ErrorState, TableSkeleton } from '../../../../_components';
+import { Panel, EmptyState, ErrorState, TableSkeleton } from '@/components/library/cl';
 
 const LINE_OPTIONS = [100, 500, 1500];
 

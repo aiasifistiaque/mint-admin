@@ -132,14 +132,17 @@ export const styles = {
 	SIDEBAR_NAV: {
 		h: sizes.NAV_HEIGHT || 12,
 		alignItems: 'center',
-		bg: 'sidebar.header.light',
-		backdropFilter: 'blur(5px)',
-
+		// Glass, like the page navbar: a translucent fill with the content
+		// behind it blurred. The fill has to be translucent for the filter to do
+		// anything — this carried `blur(5px)` over an opaque `sidebar.header`
+		// for a long time and rendered as a plain white bar.
+		bg: 'sidebar.headerBlur.light',
+		backdropFilter: 'blur(16px)',
 		borderBottomWidth: 1,
 		zIndex: zIndex.NAV || 999,
 		borderColor: 'sidebar.borderBottom.light',
 		_dark: {
-			bg: 'sidebar.header.dark',
+			bg: 'sidebar.headerBlur.dark',
 			borderColor: 'sidebar.borderBottom.dark',
 		},
 	},

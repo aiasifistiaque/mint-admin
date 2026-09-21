@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { List, Text } from '@chakra-ui/react';
 import { Layout, Section, Column } from '@/components/library';
-import Crumbs from '../herokus/_components/Crumbs';
+import { Crumbs } from '@/components/library/cl';
 
 const HerokuDocPage = () => {
 	return (

@@ -11,7 +11,7 @@ import {
 	EmptyState,
 	ErrorState,
 	TableSkeleton,
-} from '../../../../_components';
+} from '@/components/library/cl';
 
 /** Heroku reports add-on plan prices in cents per month; this one *is*
  *  documented, unlike the billing totals. */

@@ -166,6 +166,38 @@ const schema = {
 		tableType: 'external-link',
 		copy: true,
 	},
+	/**
+	 * Set together by the repo page's Link dialog, never one at a time — see
+	 * the note on the backend settings. Not in the create/edit form: picking an
+	 * account and then a project from it is a two-request cascade that the
+	 * generic form has no way to express.
+	 */
+	hostedPlatform: {
+		label: 'Hosted On',
+		type: 'select',
+		displayInTable: true,
+		options: [
+			{ label: 'Vercel', value: 'vercel' },
+			{ label: 'Heroku', value: 'heroku' },
+		],
+	},
+	hostedProjectName: {
+		label: 'Hosted Project',
+		type: 'string',
+		displayInTable: true,
+	},
+	hostingAccount: {
+		label: 'Hosting Account',
+		type: 'string',
+	},
+	hostingAccountModel: {
+		label: 'Hosting Account Type',
+		type: 'string',
+	},
+	hostedProjectId: {
+		label: 'Hosted Project ID',
+		type: 'string',
+	},
 	createdAt: {
 		label: 'Created At',
 		type: 'string',

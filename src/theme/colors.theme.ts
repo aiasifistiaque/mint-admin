@@ -199,6 +199,21 @@ export const colors: any = {
 			light: '#fff',
 			dark: '#0a0a0a',
 		},
+		/**
+		 * The glass version of the header, for the fixed logo strip and the
+		 * sticky search box.
+		 *
+		 * Translucent on purpose: `backdrop-filter` has nothing to reveal behind
+		 * an opaque background, which is why `styles.SIDEBAR_NAV` carried a blur
+		 * for months with no visible effect. The alpha is higher than the
+		 * navbar's 0.4 because sidebar rows pass *directly* beneath this strip —
+		 * at the navbar's value their text stayed legible through it and read as
+		 * a rendering fault rather than as glass.
+		 */
+		headerBlur: {
+			light: 'rgba(255, 255, 255, 0.55)',
+			dark: 'rgba(10, 10, 10, 0.55)',
+		},
 		borderBottom: {
 			light: '#ebebeb',
 			dark: BORDER_DARK,

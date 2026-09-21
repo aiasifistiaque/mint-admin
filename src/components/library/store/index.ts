@@ -17,5 +17,7 @@ export * from './services/adminInvitationApi';
 export * from './services/uploadApi';
 export * from './services/invoiceApi';
 export * from './services/herokuApi';
+export * from './services/vercelApi';
+export * from './services/repoApi';
 
 export * from './store';

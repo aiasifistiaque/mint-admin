@@ -10,7 +10,7 @@ import {
 	useRenameHerokuAppMutation,
 	useDestroyHerokuAppMutation,
 } from '@/components/library';
-import { Panel, ConfirmAction } from '../../../../_components';
+import { Panel, ConfirmAction } from '@/components/library/cl';
 
 type SettingsTabProps = {
 	id: string;

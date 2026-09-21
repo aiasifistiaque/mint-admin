@@ -56,8 +56,11 @@ const SidebarSearch: FC<SidebarSearchProps> = ({ value, onChange, inputRef }) =>
 	</Box>
 );
 
-// Pinned below the fixed sidebar header, opaque across its whole box, so rows
-// scrolling up disappear behind it instead of showing through.
+// Pinned below the fixed sidebar header, and glass across its whole box to
+// match it: rows scrolling up pass behind a translucent, blurred fill rather
+// than behind a solid one. The fill must stay translucent for the blur to have
+// anything to work on, and opaque enough that row text does not read through it
+// — 0.55 is the line where motion still shows but words do not.
 //
 // `top` stays 0 even though the field has to clear the 56px header: the offset
 // resolves against the scroll container's *content* box, and SidebarBody's
@@ -73,8 +76,9 @@ const stickyWrapCss: any = {
 	zIndex: 1,
 	pt: padding.SIDEBAR_SEARCH_TOP,
 	pb: 3,
-	bg: 'sidebar.light',
-	_dark: { bg: 'sidebar.dark' },
+	bg: 'sidebar.headerBlur.light',
+	backdropFilter: 'blur(16px)',
+	_dark: { bg: 'sidebar.headerBlur.dark' },
 };
 
 // Light mode keeps the standard field styling (white pill, bordered).

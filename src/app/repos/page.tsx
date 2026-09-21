@@ -11,6 +11,7 @@ import {
 } from '@/components/library';
 import { projectSchema as schema } from '@/models';
 import { formFields, fields, tableFields } from './config';
+import { projectHref, platformLabel } from './_components/hosting';
 
 const table: TableObjectProps = {
 	title: 'Repo',
@@ -23,7 +24,21 @@ const table: TableObjectProps = {
 	},
 	menu: [
 		{
-			title: 'View',
+			title: 'Open',
+			type: 'view',
+		},
+		{
+			// Straight to the Vercel or Heroku console page for whatever this repo
+			// deploys to. Hidden rather than disabled when the repo is not linked:
+			// a greyed-out row here would be the only thing in the menu that never
+			// becomes clickable from the menu itself.
+			title: 'View Project',
+			type: 'custom-redirect',
+			href: (doc: any) => projectHref(doc) || '#',
+			renderCondition: (doc: any) => !!projectHref(doc),
+		},
+		{
+			title: 'Quick View',
 			type: 'view-modal',
 			dataModel: convertToViewFields({ schema }),
 		},

@@ -18,7 +18,7 @@ import {
 	EmptyState,
 	ErrorState,
 	TableSkeleton,
-} from '../../../../_components';
+} from '@/components/library/cl';
 
 /** Heroku's current sizes. A size the account cannot use is rejected upstream
  *  with a readable message, so this stays a plain list rather than a gate. */

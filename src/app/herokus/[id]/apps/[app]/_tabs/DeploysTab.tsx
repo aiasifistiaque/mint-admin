@@ -11,6 +11,7 @@ import {
 	useCreateHerokuBuildMutation,
 } from '@/components/library';
 import {
+	when,
 	Panel,
 	DataTable,
 	StatusDot,
@@ -18,10 +19,7 @@ import {
 	EmptyState,
 	ErrorState,
 	TableSkeleton,
-} from '../../../../_components';
-
-const when = (value?: string | null) =>
-	value ? new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '—';
+} from '@/components/library/cl';
 
 const DeploysTab: FC<{ id: string; app: string }> = ({ id, app }) => {
 	const {

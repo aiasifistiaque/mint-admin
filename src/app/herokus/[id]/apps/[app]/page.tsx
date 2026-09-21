@@ -16,6 +16,10 @@ import {
 	useRestartHerokuAppMutation,
 } from '@/components/library';
 import {
+	bytes,
+	when,
+	DetailRow,
+	ConsoleTabs,
 	Panel,
 	PageHeader,
 	StatusDot,
@@ -23,7 +27,7 @@ import {
 	ConfirmAction,
 	ErrorState,
 	DetailSkeleton,
-} from '../../../_components';
+} from '@/components/library/cl';
 import ConfigVarsTab from './_tabs/ConfigVarsTab';
 import DeploysTab from './_tabs/DeploysTab';
 import DynosTab from './_tabs/DynosTab';
@@ -40,12 +44,6 @@ const TABS = [
 	{ value: 'resources', label: 'Resources' },
 	{ value: 'settings', label: 'Settings' },
 ];
-
-const when = (value?: string | null) =>
-	value ? new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '—';
-
-const bytes = (value?: number | null) =>
-	typeof value === 'number' ? `${(value / 1024 / 1024).toFixed(1)} MB` : '—';
 
 const HerokuAppPage = () => {
 	const { id, app }: { id: string; app: string } = useParams();
@@ -246,29 +244,10 @@ const HerokuAppPage = () => {
 							)}
 						</Panel>
 
-						<Tabs.Root
-							size='sm'
-							variant='subtle'
-							lazyMount
+						<ConsoleTabs
+							tabs={TABS}
 							value={tab}
-							onValueChange={event => setTab(event.value)}>
-							<Tabs.List
-								border='none'
-								gap={1}
-								flexWrap='wrap'
-								mb={4}>
-								{TABS.map(item => (
-									<Tabs.Trigger
-										key={item.value}
-										value={item.value}
-										px={3}
-										fontSize='13px'
-										borderRadius={radius.PILL}
-										_selected={{ bg: 'bg.inverted', color: 'fg.inverted' }}>
-										{item.label}
-									</Tabs.Trigger>
-								))}
-							</Tabs.List>
+							onChange={setTab}>
 
 							<Tabs.Content
 								value='overview'
@@ -280,7 +259,7 @@ const HerokuAppPage = () => {
 										<Flex
 											direction='column'
 											gap={3}>
-											<Row
+											<DetailRow
 												label='Web URL'
 												value={
 													detail?.webUrl ? (
@@ -296,7 +275,7 @@ const HerokuAppPage = () => {
 													)
 												}
 											/>
-											<Row
+											<DetailRow
 												label='Git remote'
 												value={
 													detail?.gitUrl ? (
@@ -309,31 +288,31 @@ const HerokuAppPage = () => {
 													)
 												}
 											/>
-											<Row
+											<DetailRow
 												label='Buildpack'
 												value={detail?.buildpack || '—'}
 											/>
-											<Row
+											<DetailRow
 												label='Stack'
 												value={detail?.stack || '—'}
 											/>
-											<Row
+											<DetailRow
 												label='Region'
 												value={detail?.region || '—'}
 											/>
-											<Row
+											<DetailRow
 												label='Owner'
 												value={detail?.owner || '—'}
 											/>
-											<Row
+											<DetailRow
 												label='Team'
 												value={detail?.team || 'Personal'}
 											/>
-											<Row
+											<DetailRow
 												label='Slug size'
 												value={bytes(detail?.slugSize)}
 											/>
-											<Row
+											<DetailRow
 												label='Last released'
 												value={when(detail?.releasedAt)}
 											/>
@@ -396,7 +375,7 @@ const HerokuAppPage = () => {
 									maintenance={!!detail?.maintenance}
 								/>
 							</Tabs.Content>
-						</Tabs.Root>
+						</ConsoleTabs>
 					</>
 				)}
 			</Flex>
@@ -438,22 +417,5 @@ const HerokuAppPage = () => {
 	);
 };
 
-const Row = ({ label, value }: { label: string; value: any }) => (
-	<Flex
-		gap={4}
-		align='baseline'>
-		<Text
-			fontSize='13px'
-			color='fg.muted'
-			minW='140px'>
-			{label}
-		</Text>
-		<Flex
-			fontSize='13px'
-			minW={0}>
-			{value}
-		</Flex>
-	</Flex>
-);
 
 export default HerokuAppPage;

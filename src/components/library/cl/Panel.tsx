@@ -2,7 +2,7 @@
 
 import { FC, ReactNode } from 'react';
 import { Box, BoxProps, Flex, Text } from '@chakra-ui/react';
-import { radius } from '@/components/library';
+import { radius } from '../index';
 
 type PanelProps = BoxProps & {
 	title?: ReactNode;

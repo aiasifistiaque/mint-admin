@@ -16,15 +16,17 @@ import {
 	useGetHerokuConfigVarsQuery,
 	useUpdateHerokuConfigVarsMutation,
 	useDownloadHerokuConfigVarsMutation,
+	useCopyHerokuConfigVarsMutation,
 } from '@/components/library';
 import {
+	envFileBody,
 	Panel,
 	FilterInput,
 	ConfirmAction,
 	EmptyState,
 	ErrorState,
 	TableSkeleton,
-} from '../../../../_components';
+} from '@/components/library/cl';
 
 const MASK = '••••••••';
 
@@ -42,6 +44,8 @@ const ConfigVarsTab: FC<{ id: string; app: string }> = ({ id, app }) => {
 	const [commit, commitResult] = useUpdateHerokuConfigVarsMutation();
 	const [downloadEnv, envResult] = useDownloadHerokuConfigVarsMutation();
 	const [downloadJson, jsonResult] = useDownloadHerokuConfigVarsMutation();
+	const [copyVars, copyResult] = useCopyHerokuConfigVarsMutation();
+	const [copied, setCopied] = useState(false);
 
 	const [search, setSearch] = useState('');
 	const [revealed, setRevealed] = useState<Record<string, boolean>>({});
@@ -318,6 +322,20 @@ const ConfigVarsTab: FC<{ id: string; app: string }> = ({ id, app }) => {
 						</Button>
 						<Button size='sm' variant='outline' onClick={() => setPasting(true)}>
 							Paste .env
+						</Button>
+						<Button
+							size='sm'
+							variant='outline'
+							loading={copyResult.isLoading}
+							onClick={async () => {
+								const answer: any = await copyVars({ id, app });
+								if (typeof answer?.data !== 'string') return;
+
+								await navigator.clipboard.writeText(envFileBody(answer.data));
+								setCopied(true);
+								window.setTimeout(() => setCopied(false), 2000);
+							}}>
+							{copied ? 'Copied' : 'Copy all'}
 						</Button>
 						<Button
 							size='sm'

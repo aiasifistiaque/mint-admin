@@ -20,17 +20,44 @@ const TONE_COLOR: Record<StatusTone, string> = {
 	maintenance: 'blue.400',
 };
 
-/** Heroku's vocabulary is inconsistent across resources — map it in one place. */
+/**
+ * Every provider's state vocabulary, mapped in one place.
+ *
+ * Heroku is inconsistent across its own resources, and Vercel uses a different
+ * set again (`READY` / `BUILDING` / `QUEUED` / `ERROR` / `CANCELED`). Both live
+ * here rather than in two components, so a state that is not yet handled shows
+ * up as `idle` everywhere at once instead of as green on one page and grey on
+ * another.
+ *
+ * Note `queued` and `initializing`: on a Hobby plan only one build runs at a
+ * time, so a queued deployment is the normal case rather than an anomaly. It is
+ * `pending`, not `idle` — rendering a waiting build in the same grey as a
+ * cancelled one makes a working system look stalled.
+ */
 export const toneFor = (value?: string | null): StatusTone => {
 	const state = String(value || '').toLowerCase();
 
-	if (['up', 'succeeded', 'success', 'active', 'running', 'provisioned'].includes(state))
+	if (
+		['up', 'succeeded', 'success', 'active', 'running', 'provisioned', 'ready'].includes(state)
+	)
 		return 'running';
 	if (['crashed', 'failed', 'error', 'payment-failed'].includes(state)) return 'failed';
-	if (['starting', 'restarting', 'pending', 'building', 'provisioning', 'up-pending'].includes(state))
+	if (
+		[
+			'starting',
+			'restarting',
+			'pending',
+			'building',
+			'provisioning',
+			'up-pending',
+			'queued',
+			'initializing',
+		].includes(state)
+	)
 		return 'pending';
 	if (['maintenance'].includes(state)) return 'maintenance';
 
+	// Includes Vercel's `canceled`, which is genuinely inert rather than failed.
 	return 'idle';
 };
 

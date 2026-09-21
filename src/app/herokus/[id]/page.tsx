@@ -17,6 +17,9 @@ import {
 	useRotateHerokuKeyMutation,
 } from '@/components/library';
 import {
+	date,
+	DetailRow,
+	ConsoleTabs,
 	Panel,
 	PageHeader,
 	StatTile,
@@ -30,7 +33,7 @@ import {
 	DetailSkeleton,
 	Column,
 	SortDir,
-} from '../_components';
+} from '@/components/library/cl';
 
 const TABS = [
 	{ value: 'overview', label: 'Overview' },
@@ -39,9 +42,6 @@ const TABS = [
 	{ value: 'usage', label: 'Usage' },
 	{ value: 'activity', label: 'Activity' },
 ];
-
-const date = (value?: string | null) =>
-	value ? new Date(value).toLocaleDateString(undefined, { dateStyle: 'medium' }) : '—';
 
 /**
  * Invoice amounts arrive as integer cents — a total of 777 is $7.77 — so the
@@ -384,29 +384,10 @@ const HerokuAccountPage = () => {
 				)}
 
 				{!isInvalid && (
-					<Tabs.Root
-						size='sm'
-						variant='subtle'
-						lazyMount
+					<ConsoleTabs
+						tabs={TABS}
 						value={tab}
-						onValueChange={event => setTab(event.value)}>
-						<Tabs.List
-							border='none'
-							gap={1}
-							flexWrap='wrap'
-							mb={4}>
-							{TABS.map(item => (
-								<Tabs.Trigger
-									key={item.value}
-									value={item.value}
-									px={3}
-									fontSize='13px'
-									borderRadius={radius.PILL}
-									_selected={{ bg: 'bg.inverted', color: 'fg.inverted' }}>
-									{item.label}
-								</Tabs.Trigger>
-							))}
-						</Tabs.List>
+						onChange={setTab}>
 
 						<Tabs.Content
 							value='overview'
@@ -728,7 +709,7 @@ const HerokuAccountPage = () => {
 								)}
 							</Panel>
 						</Tabs.Content>
-					</Tabs.Root>
+					</ConsoleTabs>
 				)}
 			</Flex>
 
@@ -763,20 +744,6 @@ const HerokuAccountPage = () => {
 		</Layout>
 	);
 };
-
-const DetailRow = ({ label, value }: { label: string; value?: any }) => (
-	<Flex
-		gap={4}
-		align='baseline'>
-		<Text
-			fontSize='13px'
-			color='fg.muted'
-			minW='140px'>
-			{label}
-		</Text>
-		<Text fontSize='13px'>{value || '—'}</Text>
-	</Flex>
-);
 
 const TeamChip = ({
 	label,
