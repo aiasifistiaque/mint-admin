@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Table } from '@chakra-ui/react';
-import { useIsCardView, theme, shadow, Column } from '../../../..';
+import { useIsCardView, theme, Column } from '../../../..';
 
 const { TABLE } = theme;
 
@@ -32,7 +32,10 @@ const TableContainer = ({ children }: { children: ReactNode }) => {
 	// desktop can be in too.
 	const frame = isCardView
 		? { bg: 'transparent', borderWidth: 0, shadow: 'none' }
-		: { bg: TABLE.bg.light, borderWidth: TABLE.border.width, shadow: shadow.DASH };
+		// No shadow. A 1px border already separates the table from the page, and
+		// a drop shadow under a full-width block is what makes an admin look dated
+		// — the frame should be a hairline, not a raised card.
+		: { bg: TABLE.bg.light, borderWidth: TABLE.border.width, shadow: 'none' };
 
 	return (
 		<Container

@@ -7,7 +7,7 @@ const AlignBox: FC<any> = ({ children, isSelected, ...props }) => {
 			p={2}
 			h='32px'
 			w='44px'
-			fontSize='14px'
+			fontSize='13px'
 			fontWeight='600'
 			borderWidth={2}
 			cursor='pointer'

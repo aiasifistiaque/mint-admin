@@ -122,10 +122,22 @@ a {
   }
 }
 
-input,
-textarea,
-select {
-  font-size: 16px;
+/*
+ * iOS Safari zooms the whole page when you focus a control whose text is under
+ * 16px, so this floor exists for a real reason — but it was unscoped, and an
+ * unlayered element selector beats every layered Chakra recipe no matter how
+ * specific. That made it win over the design system on desktop too, pinning
+ * comboboxes, native selects and any input that takes its size from a recipe
+ * at 16px beside 13px fields.
+ *
+ * Limited to coarse pointers, which is exactly where the zoom happens.
+ */
+@media (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
 }
 
 /* Quill Image Resize Styles */

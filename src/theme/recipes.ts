@@ -72,8 +72,16 @@ export const buttonRecipe = defineRecipe({
 	},
 });
 
+// Every form control's text size. It lives on the base rather than only on the
+// `sm` size because Chakra sets `textStyle` on some sizes and not others — the
+// combobox input and the native select fell through to the browser's 16px
+// default, a full three steps larger than the fields beside them. The `sm`
+// size variant repeats it to win over that `textStyle` where it is set.
+const FIELD_FONT_SIZE = '13px';
+
 const fieldBase = {
 	borderRadius: 'l2',
+	fontSize: FIELD_FONT_SIZE,
 	transitionProperty: 'border-color, box-shadow, background-color',
 	transitionDuration: DURATION,
 	transitionTimingFunction: EASE,
@@ -90,14 +98,33 @@ const fieldOutline = {
 	focusRingWidth: '1px',
 };
 
+/**
+ * Form controls are `sm` (36px) by default, not Chakra's `md` (40px).
+ *
+ * Only some call sites passed `size='sm'`, so a drawer could show a 36px text
+ * input directly above a 40px select and read as slightly broken. 36px is also
+ * what the toolbar's search field, the filter chips and the drawer's own footer
+ * buttons resolve to, so one default lines the whole admin up.
+ *
+ * The matching `fontSize` override is deliberate: Chakra's `sm` size sets
+ * `textStyle: 'sm'` (14px), and a field a step larger than the 13px table cells
+ * underneath it is what made an open drawer look like a different app. Setting
+ * `fontSize` in the same size variant wins over `textStyle` while keeping its
+ * line-height.
+ */
+const fieldSizes = { sm: { fontSize: FIELD_FONT_SIZE } };
+const fieldDefaults = { size: 'sm' } as const;
+
 export const inputRecipe = defineRecipe({
 	base: fieldBase,
-	variants: { variant: { outline: fieldOutline } },
+	variants: { variant: { outline: fieldOutline }, size: fieldSizes },
+	defaultVariants: fieldDefaults,
 });
 
 export const textareaRecipe = defineRecipe({
 	base: { ...fieldBase, lineHeight: '1.6' },
-	variants: { variant: { outline: fieldOutline } },
+	variants: { variant: { outline: fieldOutline }, size: fieldSizes },
+	defaultVariants: fieldDefaults,
 });
 
 export const nativeSelectSlotRecipe = defineSlotRecipe({
@@ -110,6 +137,8 @@ export const nativeSelectSlotRecipe = defineSlotRecipe({
 		},
 		indicator: { color: 'fg.muted' },
 	},
+	variants: { size: { sm: { field: { fontSize: FIELD_FONT_SIZE } } } },
+	defaultVariants: fieldDefaults,
 });
 
 export const selectSlotRecipe = defineSlotRecipe({
@@ -142,6 +171,10 @@ export const selectSlotRecipe = defineSlotRecipe({
 			_highlighted: { bg: 'bg.emphasized/60' },
 		},
 	},
+	variants: {
+		size: { sm: { trigger: { fontSize: FIELD_FONT_SIZE }, item: { fontSize: FIELD_FONT_SIZE } } },
+	},
+	defaultVariants: fieldDefaults,
 });
 
 export const comboboxSlotRecipe = defineSlotRecipe({
@@ -172,6 +205,10 @@ export const comboboxSlotRecipe = defineSlotRecipe({
 			_highlighted: { bg: 'bg.emphasized/60' },
 		},
 	},
+	variants: {
+		size: { sm: { input: { fontSize: FIELD_FONT_SIZE }, item: { fontSize: FIELD_FONT_SIZE } } },
+	},
+	defaultVariants: fieldDefaults,
 });
 
 export const dialogSlotRecipe = defineSlotRecipe({

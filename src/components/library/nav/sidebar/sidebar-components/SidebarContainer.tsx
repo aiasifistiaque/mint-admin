@@ -34,8 +34,13 @@ const bodyCss: FlexProps = {
 	pl: sizes.SIDEBAR_PX,
 	mx: THEME == 'basic' ? 0 : 4,
 	zIndex: '9999',
-	borderRightWidth: 0,
-	borderRightColor: { base: 'container.borderLight', _dark: 'container.borderDark' },
+	// Separates the nav column from the page. Same width and colour as the
+	// navbar's bottom border (`styles.NAVBAR`) so the two rules read as one
+	// frame where they meet — `container.border*` is a shade darker (#e4e4e4
+	// vs #ebebeb) and showed as a mismatch at the corner. The header above
+	// carries this same border; see SidebarLogo.
+	borderRightWidth: 1,
+	borderRightColor: { base: 'navbar.border.light', _dark: 'navbar.border.dark' },
 };
 
 export default SidebarContainer;

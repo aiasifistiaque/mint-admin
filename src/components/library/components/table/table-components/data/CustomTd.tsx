@@ -63,7 +63,7 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 	return (
 		<>
 			<Container
-				{...tdCss(type, heading)}
+				{...tdCss(type, heading, isCardView)}
 				{...props}>
 				{type == 'image-text' && (
 					<Center {...imageBoxCss}>
@@ -111,9 +111,13 @@ const PADDING_X = TABLE.cell.paddingX;
 const IMG_SIZE = { base: '50px', md: '40px' };
 
 //CONTAINER CSS
-const tdCss = (type: any, heading: any): any => {
+const tdCss = (type: any, heading: any, isCardView?: boolean): any => {
 	return {
-		maxW: type == 'image-text' ? '240px' : '160px',
+		// A table cell caps its width so one long value can't dominate a column.
+		// A card field has no such neighbour to protect — the grid track is
+		// already `minmax(0, 1fr)`, so the cap only forced short values like an
+		// email address to wrap early inside a card that had room for them.
+		maxW: isCardView ? 'full' : type == 'image-text' ? '240px' : '160px',
 		// Grid items default to `min-width: auto`, so even with `maxW` set a
 		// long unbroken run (a URL, before the zero-width-space breaks below
 		// even get a chance) can still force its track wider than its 1fr
@@ -126,18 +130,18 @@ const tdCss = (type: any, heading: any): any => {
 		overflowWrap: 'break-word',
 		color: 'text.light',
 		_dark: { color: 'text.dark' },
-		py: PADDING_Y,
-		px: {
-			base: 0,
-			md: PADDING_X,
-		},
+		// No cell padding inside a card: the card supplies its own, and the field
+		// label above the value has none. Left on, the `md` branch fired for card
+		// view on a desktop and indented every value 12px past its own label.
+		py: isCardView ? 0 : PADDING_Y,
+		px: isCardView ? 0 : { base: 0, md: PADDING_X },
 
 		fontWeight: '400',
 		gap: heading ? 2 : { base: 4, md: 0 },
 		flexDir: heading ? 'column' : 'row',
 		fontSize: {
-			base: type == 'image-text' ? '1.2rem' : '1rem',
-			md: '.9rem',
+			base: type == 'image-text' ? '1.2rem' : TABLE.cell.fontSize.base,
+			md: TABLE.cell.fontSize.md,
 		},
 
 		// _notLast: {

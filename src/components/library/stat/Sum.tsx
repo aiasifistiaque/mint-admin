@@ -1,8 +1,7 @@
 'use client';
 import { FC } from 'react';
-import { Skeleton, Tooltip } from '@chakra-ui/react';
-import { Align, currency, Icon, useGetSumQuery } from '..';
-import { StatContainer, StatLabel, StatNumber } from './stat-components';
+import { currency, useGetSumQuery } from '..';
+import StatTile from './StatTile';
 
 type CountProps = {
 	title: string;
@@ -12,39 +11,32 @@ type CountProps = {
 	filters?: any;
 	tooltip?: string;
 	href?: string;
+	/** Small muted line under the number. */
+	hint?: string;
 };
 
-const Sum: FC<CountProps> = ({ title, path, field, price, tooltip, href, filters = {} }) => {
+/**
+ * A server-side aggregate as a stat card. Same `StatTile` as `Count`,
+ * `ShowSum` and the Heroku pages.
+ */
+const Sum: FC<CountProps> = ({ title, path, field, price, href, hint, filters = {} }) => {
 	const { data, isFetching, isError } = useGetSumQuery({ path, field, filters }, { skip: !path });
-	return (
-		<StatContainer href={href}>
-			<Align>
-				<StatLabel>{title}</StatLabel>
-				{/* {tooltip && (
-					<Tooltip
-						label={tooltip}
-						borderRadius='md'>
-						<span>
-							<Icon name='info' />
-						</span>
-					</Tooltip>
-				)} */}
-			</Align>
 
-			{/* <Skeleton
-				loading={isFetching}
-				w={!isFetching ? '100%' : '100px'}> */}
-			<StatNumber>
-				{isError
-					? '--'
-					: isFetching
-					? '--'
-					: price
-					? `${currency.symbol}${data?.total.toLocaleString()}`
-					: data?.total}
-			</StatNumber>
-			{/* </Skeleton> */}
-		</StatContainer>
+	const total = data?.total;
+	const value = price
+		? // Guarded: `total` is undefined until the request lands, and calling
+		  // `toLocaleString` on it threw rather than showing the skeleton.
+		  `${currency.symbol}${Number(total ?? 0).toLocaleString()}`
+		: total ?? '--';
+
+	return (
+		<StatTile
+			label={title}
+			href={href}
+			hint={hint}
+			isLoading={isFetching}
+			value={isError ? '--' : value}
+		/>
 	);
 };
 

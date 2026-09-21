@@ -15,6 +15,7 @@ import { FilterSectionContainer } from './filter-components';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { clearFilters, useGetFiltersQuery } from '../store';
 import { hasActiveFilters } from '../functions';
+import { sizes } from '../config';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 type FilterItemType = {
@@ -142,14 +143,24 @@ const DynamicFilters = ({ path }: { path: any }) => {
 					onClick={() => setExpanded(prev => !prev)}
 					variant='plain'
 					size='sm'
-					h='30px'
+					h={sizes.SEARCH_BAR_HEIGHT}
 					px={2}
 					gap={1}
 					color='fg.muted'
-					fontWeight='600'
-					fontSize='13px'
+					fontWeight='500'
+					fontSize='12px'
 					_hover={{ color: 'fg' }}>
-					{expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+					{expanded ? (
+						<ChevronUp
+							size={13}
+							strokeWidth={1.5}
+						/>
+					) : (
+						<ChevronDown
+							size={13}
+							strokeWidth={1.5}
+						/>
+					)}
 					{expanded ? 'Hide filters' : `Show ${hiddenCount} more filters`}
 				</Button>
 			)}
@@ -159,11 +170,11 @@ const DynamicFilters = ({ path }: { path: any }) => {
 					onClick={handleClearFilter}
 					variant='plain'
 					size='sm'
-					h='30px'
+					h={sizes.SEARCH_BAR_HEIGHT}
 					px={2}
 					color='fg.muted'
-					fontWeight='600'
-					fontSize='13px'
+					fontWeight='500'
+					fontSize='12px'
 					_hover={{ color: 'fg' }}>
 					Clear filters
 				</Button>

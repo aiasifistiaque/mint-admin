@@ -16,11 +16,13 @@ const FIlterContainer = ({ children }: { children: ReactNode }) => {
 				{children}
 			</Flex>
 			{hasActiveFilters(filters) && (
+				// A caption under the chips, not a heading. The chips themselves
+				// already invert to show which filters are on, so this repeats
+				// them for scanning and should sit behind them, not compete.
 				<Text
-					color='text.secondary.light'
-					_dark={{ color: 'text.secondary.dark' }}
+					color='fg.muted'
 					fontSize='12px'
-					fontWeight='600'>
+					fontWeight='400'>
 					Active Filters: {formatFilterKeys(filters)}
 				</Text>
 			)}

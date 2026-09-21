@@ -29,6 +29,17 @@ const createTableField = ({ key, field }: { key: string; field: any }): any => {
 		...(field?.copy && { copy: field.copy }),
 		...(field?.tooltip && { tooltip: field.tooltip }),
 		...(field?.colorTheme && { colorTheme: field.colorTheme }),
+		// Renders the cell at 600 instead of the table's default 400.
+		//
+		// Defaults on for `name` so a row's identifying column is bold
+		// everywhere without every schema opting in. The backend's /get/schema
+		// sets the same default, but this converter is also fed hand-written
+		// schemas from src/models and src/app/*/page.tsx that never touch the
+		// server — without the fallback here those tables would stay flat.
+		//
+		// `??`, not `||`: an explicit `bold: false` has to survive, and that is
+		// the documented way for a model to opt its name column out.
+		...((field?.bold ?? key === 'name') && { bold: true }),
 	};
 };
 

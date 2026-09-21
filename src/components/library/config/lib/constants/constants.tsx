@@ -43,8 +43,11 @@ export const sizes = {
 	NAV_HEIGHT: 14,
 	CARD_RADIUS: '8px',
 	SIDEBAR_PX: 3,
-	// Chakra's `sm` control is 36px; the toolbar used to sit at 38px, which
-	// left the search field a couple of pixels taller than the buttons beside it.
+	// Drives the whole toolbar row — search field, refresh, preferences, sort and
+	// the filter chips all read this, so they stay one height. 36px is Chakra's
+	// `sm` control height, which is what the buttons beside the search field
+	// resolve to; the row sat at 38px before that and left the field a couple of
+	// pixels proud of its neighbours.
 	SEARCH_BAR_HEIGHT: '36px',
 	CONTROL_HEIGHT: '36px',
 	CONTROL_HEIGHT_SM: '30px',
@@ -155,17 +158,21 @@ export const styles = {
 	},
 	// Shared form-control surface. Spread this instead of restating border,
 	// radius and focus colours on each input.
+	//
+	// 13px, matching the table cells and the Heroku panels' body text. At 14px
+	// the drawer's inputs sat a step larger than the data they were editing,
+	// which is what made a form opened over a table read as a different app.
 	FIELD: {
 		bg: 'field.bg',
 		color: 'fg',
 		borderWidth: 1,
 		borderColor: 'field.border',
 		borderRadius: radius.INPUT,
-		fontSize: '14px',
+		fontSize: '13px',
 		transitionProperty: 'border-color, box-shadow, background-color',
 		transitionDuration: '150ms',
 		transitionTimingFunction: 'cubic-bezier(.4, 0, .2, 1)',
-		_placeholder: { fontSize: '14px', color: 'field.placeholder' },
+		_placeholder: { fontSize: '13px', color: 'field.placeholder' },
 		_hover: { borderColor: 'field.borderHover' },
 		_focusVisible: {
 			borderColor: 'field.focusRing',
@@ -211,8 +218,13 @@ export const styles = {
 	// instead of the bottom sheet above, so full height and no top radius.
 	DRAWER_END: {
 		bg: 'menu.light',
+		// A hairline against the page, the same one the panels and tables use.
+		// The shadow alone left the drawer's edge indistinct over a light page.
+		borderLeftWidth: 1,
+		borderColor: 'border',
 		_dark: {
 			bg: 'menu.dark',
+			borderColor: 'border',
 		},
 		h: '100vh',
 		maxH: '100vh',

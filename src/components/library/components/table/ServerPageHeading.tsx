@@ -94,7 +94,24 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 					</Flex>
 				)}
 			</Flex>
-			{table?.subTitle && <Text {...subHeadingCss}>{table?.subTitle}</Text>}
+			{(table?.subTitle || table?.guideHref) && (
+				<Flex
+					align='center'
+					gap={2}
+					wrap='wrap'>
+					{table?.subTitle && <Text {...subHeadingCss}>{table?.subTitle}</Text>}
+					{table?.guideHref && (
+						<Link href={table.guideHref}>
+							<Text
+								{...subHeadingCss}
+								color='brand.500'
+								textDecoration='underline'>
+								{table?.guideLabel || 'View the guide'}
+							</Text>
+						</Link>
+					)}
+				</Flex>
+			)}
 		</Flex>
 	);
 };

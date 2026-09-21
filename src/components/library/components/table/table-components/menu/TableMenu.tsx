@@ -15,7 +15,6 @@ import {
 	ViewServerModal,
 	useGetConfigQuery,
 } from '../../../..';
-import Link from 'next/link';
 
 type TableMenuProps = {
 	data: any;
@@ -150,12 +149,11 @@ const TableMenu: FC<TableMenuProps> = ({
 
 						case 'view':
 							return (
-								<Link
-									as={MenuItem as any}
+								<MenuItem
 									key={i}
 									href={`/${path}/${id}`}>
 									{item?.title}
-								</Link>
+								</MenuItem>
 							);
 						case 'view-item':
 							return (

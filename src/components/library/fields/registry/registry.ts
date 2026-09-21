@@ -7,12 +7,22 @@ const descriptors = new Map<FieldTypeId, FieldTypeDescriptor>();
 
 /**
  * Register a descriptor. Called once per type from fields/registry/descriptors/*.ts
- * (WO-10). Throws on a duplicate id — that's always a bug, never intentional.
+ * (WO-10).
+ *
+ * A second registration for the same id is treated as a re-import of the same
+ * module, not a conflict: Turbopack's static-generation workers can end up
+ * loading fields/registry/descriptors/index.ts through two separate chunk
+ * files for the same worker process (its chunk graph is per-page, and a
+ * shared module can land in a page-specific chunk for one page and a shared
+ * chunk for another landing in the same worker) — this is bundler chunk
+ * splitting, triggered by the page count/shape, not anything about a given
+ * field type. `id` is typed off the same fixed union every descriptor file
+ * draws from, so two source-level definitions colliding on one id is already
+ * caught at the type level; re-registration in practice only ever means "this
+ * exact module ran twice." First registration wins; later ones are a no-op.
  */
 export const registerFieldType = (descriptor: FieldTypeDescriptor): void => {
-	if (descriptors.has(descriptor.id)) {
-		throw new Error(`[fieldTypeRegistry] duplicate descriptor registered for type "${descriptor.id}"`);
-	}
+	if (descriptors.has(descriptor.id)) return;
 	descriptors.set(descriptor.id, descriptor);
 };
 

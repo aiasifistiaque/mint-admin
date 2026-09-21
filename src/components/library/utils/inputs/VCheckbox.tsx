@@ -50,7 +50,7 @@ const VCheckbox: FC<InputContainerProps> = ({
 					<Checkbox.HiddenInput />
 					<Checkbox.Control />
 					<Checkbox.Label
-						fontSize='14px'
+						fontSize='13px'
 						textTransform='capitalize'
 						fontWeight='500'
 						cursor='pointer'>

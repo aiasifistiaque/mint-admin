@@ -1,9 +1,44 @@
 'use client';
 
 import { FC, ReactNode, useCallback } from 'react';
-import { Box, Button, Flex, Grid, Image, Input, SimpleGrid, Tabs, Text, Textarea } from '@chakra-ui/react';
+import {
+	Box,
+	Button,
+	Flex,
+	Grid,
+	Image,
+	SimpleGrid,
+	Tabs,
+	Text,
+	Textarea as ChakraTextarea,
+	TextareaProps,
+} from '@chakra-ui/react';
 
-import { FormControl, HelperText, Label, SelectContainer, UploadModal, VTags, VSwitch } from '../../..';
+import {
+	FormControl,
+	HelperText,
+	Input,
+	Label,
+	SelectContainer,
+	UploadModal,
+	VTags,
+	VSwitch,
+	styles,
+} from '../../..';
+
+/**
+ * Chakra's bare `Textarea` doesn't carry the shared field surface the way the
+ * library's `Input` does, so these rendered at the browser's default 16px on a
+ * screen where every other control is 13px. Wrapped once here rather than
+ * spreading the surface across all four call sites below; anything a call site
+ * passes still wins, which is how the JSON-LD box keeps its 12px mono.
+ */
+const Textarea = (props: TextareaProps) => (
+	<ChakraTextarea
+		{...(styles.FIELD as TextareaProps)}
+		{...props}
+	/>
+);
 import {
 	CHANGE_FREQUENCY_OPTIONS,
 	DESCRIPTION_HARD_MAX,

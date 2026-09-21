@@ -33,6 +33,7 @@ type CommonProps = {
 
 	// WO-03: keys the converters/inputs already read but that weren't declared here
 	tableLabel?: string; // Column header override, read by convertToTableFields
+	bold?: boolean; // Render this column's cells at 600. Defaults on for `name`.
 	editable?: boolean; // Inline-editable table cell
 	editType?: InputDataType; // Input type to use for inline edit, if different from `type`
 	colorTheme?: any; // Per-value colour map, read by convertToTableFields/TableData

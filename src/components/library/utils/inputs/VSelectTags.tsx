@@ -118,10 +118,12 @@ const VSelectTags: React.FC<InputContainerProps> = ({
 								))}
 							</NativeSelectField>
 						</NativeSelectRoot>
+						{/* Spans the field rather than assuming its pixel height, so the
+						    icon stays centred now that controls are 36px. */}
 						<Flex
 							position='absolute'
 							right={2}
-							h='32px'
+							h='full'
 							alignItems='center'>
 							<IconButton
 								onClick={addTag}

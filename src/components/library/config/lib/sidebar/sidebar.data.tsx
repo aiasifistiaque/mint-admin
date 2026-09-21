@@ -23,6 +23,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Shop Management',
+		sectionIcon: 'store',
 		title: 'Shops Management',
 		href: '/shops',
 		icon: 'shop',
@@ -62,6 +63,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Theme',
+		sectionIcon: 'palette',
 		title: 'Themes',
 		href: '/themes',
 		icon: 'product',
@@ -94,6 +96,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Project Management',
+		sectionIcon: 'folder-kanban',
 		title: 'Projects',
 		href: '/projects',
 		icon: 'project',
@@ -115,6 +118,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Admin Management',
+		sectionIcon: 'shield',
 		title: 'Admin List',
 		href: '/admins',
 		icon: 'customer',
@@ -154,6 +158,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Career',
+		sectionIcon: 'briefcase',
 		title: 'Job Posts',
 		href: '/jobposts',
 		icon: 'customer',
@@ -168,6 +173,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Accounts',
+		sectionIcon: 'wallet',
 		title: 'Invoices',
 		href: '/invoices',
 		icon: 'invoice',
@@ -194,6 +200,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'HR',
+		sectionIcon: 'users-round',
 		title: 'Employees',
 		href: '/employees',
 		icon: 'employee',
@@ -208,6 +215,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Framework Doc',
+		sectionIcon: 'book-open',
 		title: 'Components',
 		href: '/components',
 		icon: 'customer',
@@ -222,6 +230,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Planning',
+		sectionIcon: 'clipboard-list',
 		title: 'Plan Project',
 		href: '/plannedprojects',
 		icon: 'customer',
@@ -255,6 +264,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Website Settings',
+		sectionIcon: 'settings',
 		title: 'Content',
 		href: '/contents',
 		icon: 'blog',
@@ -294,6 +304,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Website Components',
+		sectionIcon: 'puzzle',
 		title: 'Service Offers',
 		href: '/offers',
 		icon: 'customer',
@@ -321,6 +332,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'TC Blog',
+		sectionIcon: 'rss',
 		title: 'Blog',
 		href: '/blogs',
 		icon: 'blog',
@@ -335,6 +347,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Resources',
+		sectionIcon: 'folder-open',
 		title: 'Dev Resources',
 		href: '/resources',
 		icon: 'settings-fill',
@@ -350,6 +363,7 @@ const sidebar: SidebarItemType[] = [
 	{
 		startOfSection: true,
 		sectionTitle: 'Account Settings',
+		sectionIcon: 'settings-2',
 		title: 'Settings',
 		href: '/settings',
 		icon: 'settings-fill',

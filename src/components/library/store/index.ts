@@ -16,5 +16,6 @@ export * from './services/authApi';
 export * from './services/adminInvitationApi';
 export * from './services/uploadApi';
 export * from './services/invoiceApi';
+export * from './services/herokuApi';
 
 export * from './store';

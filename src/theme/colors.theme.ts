@@ -215,6 +215,21 @@ export const colors: any = {
 			bgLight: '#fff',
 			bgDark: 'transparent',
 		},
+		// The vertical line down an expanded category. It has to sit a step
+		// lighter than the item text or it competes with the labels it is
+		// grouping — it marks the branch, it isn't content.
+		rail: {
+			light: '#e4e4e4',
+			dark: '#222',
+		},
+		// The hover underline. A step darker than the rail: the rail is a long
+		// continuous line and reads fine at #e4e4e4, but a short underline under
+		// one label at that value is invisible against the sidebar's own
+		// near-white. Still clearly faded against the selected row's #222.
+		hoverUnderline: {
+			light: '#c2c2c2',
+			dark: '#3d3d3d',
+		},
 
 		headerText: {
 			// light: '#111',na
@@ -356,10 +371,15 @@ export const colors: any = {
 			dark: BORDER_DARK,
 		},
 		head: {
-			bgLight: '#fafafa',
-			// Rows are #0A0A0A in dark mode, so the head needs its own value or
-			// the band disappears into the body.
-			bgDark: '#101010',
+			// Deliberately the same as the row background rather than a tinted
+			// band: the header should read as a label row separated by its bottom
+			// rule, not as a filled strip sitting on top of the data.
+			//
+			// It still has to be *opaque*, though — the header is `position:
+			// sticky`, so a transparent one lets rows scroll through it and the
+			// labels end up printed over the data.
+			bgLight: '#fff',
+			bgDark: '#0A0A0A',
 			textDark: '#8f8f8f',
 			// Column labels are small uppercase text; muted keeps them from
 			// competing with the data underneath.
@@ -374,8 +394,12 @@ export const colors: any = {
 			hoverDark: '#151515',
 		},
 	},
+	// Legacy alias for the form-control border. It used to be #ebebeb, a shade
+	// lighter than every input beside it, so a select in a drawer had a visibly
+	// fainter outline than the text field above it. Kept as a name (six call
+	// sites still reference it) but pointed at the same value as `field.border`.
 	selectBorder: {
-		light: '#ebebeb',
+		light: BORDER_LIGHT,
 		dark: BORDER_DARK,
 	},
 	//ecom-commers

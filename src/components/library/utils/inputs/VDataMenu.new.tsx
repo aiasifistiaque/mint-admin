@@ -72,7 +72,7 @@ const VDataMenu: FC<VDataMenuProps> = ({
 
 	const rowCss = {
 		borderRadius: 'l1',
-		fontSize: '14px',
+		fontSize: '13px',
 		fontWeight: '500',
 		px: '2',
 		py: '1.5',

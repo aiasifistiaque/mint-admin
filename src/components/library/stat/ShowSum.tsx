@@ -1,7 +1,7 @@
+'use client';
 import { FC } from 'react';
-import { Skeleton, Tooltip } from '@chakra-ui/react';
-import { currency, Align, Icon } from '..';
-import { StatContainer, StatLabel, StatNumber } from './stat-components';
+import { currency } from '..';
+import StatTile from './StatTile';
 
 type CountProps = {
 	title: string;
@@ -11,46 +11,37 @@ type CountProps = {
 	isError?: boolean;
 	tooltip?: string;
 	href?: string;
+	/** Small muted line under the number. */
+	hint?: string;
 };
 
+/**
+ * An arbitrary figure as a stat card. Shares `StatTile` with `Count` and the
+ * Heroku pages so every card in the admin is the same card.
+ */
 const ShowSum: FC<CountProps> = ({
 	title,
 	children,
 	price,
-	tooltip,
 	isLoading = false,
 	isError = false,
 	href,
+	hint,
 }) => {
-	return (
-		<StatContainer href={href}>
-			<Align>
-				<StatLabel>{title}</StatLabel>
-				{/* {tooltip && (
-					<Tooltip
-						label={tooltip}
-						borderRadius='md'>
-						<span>
-							<Icon name='info' />
-						</span>
-					</Tooltip>
-				)} */}
-			</Align>
+	const formatted = price
+		? // `toLocaleString` is only safe on a number — this used to be called on
+		  // whatever the caller passed, so a string amount threw.
+		  `${currency.symbol}${Number(children ?? 0).toLocaleString()}`
+		: children;
 
-			{/* <Skeleton
-				loading={isLoading}
-				w={!isLoading ? '100%' : '100px'}> */}
-			<StatNumber>
-				{isError
-					? '--'
-					: isLoading
-					? '--'
-					: price
-					? `${currency.symbol}${children.toLocaleString()}`
-					: children}
-			</StatNumber>
-			{/* </Skeleton> */}
-		</StatContainer>
+	return (
+		<StatTile
+			label={title}
+			href={href}
+			hint={hint}
+			isLoading={isLoading}
+			value={isError ? '--' : formatted}
+		/>
 	);
 };
 

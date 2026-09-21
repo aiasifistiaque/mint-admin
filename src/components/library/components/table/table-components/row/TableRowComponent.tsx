@@ -65,6 +65,7 @@ const TableRowComponent: FC<TableProps> = ({
 					colorPalette,
 					colorTheme,
 					copy,
+					bold,
 				} = val;
 				// A column is keyed by its dataKey, but not every column has one —
 				// the menu column is defined by `type` alone, so `key={dataKey}`
@@ -86,6 +87,10 @@ const TableRowComponent: FC<TableProps> = ({
 					if (!menu) return null;
 					else
 						return isCardView ? (
+							// The button pins itself to the card's top-right corner (see
+							// MenuButton) rather than flowing with the fields — the menu
+							// column sits at a different position in every table's schema,
+							// so in flow it landed somewhere different on each screen.
 							<TableMenu
 								path={path}
 								data={menu}
@@ -151,6 +156,11 @@ const TableRowComponent: FC<TableProps> = ({
 						<TableData
 							colorTheme={colorTheme}
 							copy={copy}
+							// Spread onto the cell after tdCss, so this wins over its
+							// default 400. Undefined when the column isn't bold, which
+							// leaves tdCss's value untouched rather than overriding it
+							// with another 400.
+							fontWeight={bold ? '600' : undefined}
 							toLocaleStr={toLocaleStr}
 							colorPalette={colorPalette}
 							type={type}
