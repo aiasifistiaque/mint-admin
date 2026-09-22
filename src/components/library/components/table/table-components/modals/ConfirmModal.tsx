@@ -1,89 +1,64 @@
 'use client';
 
-import { Dialog, Button, Flex, useDisclosure, Portal, Text, Box } from '@chakra-ui/react';
-import { useEffect, FC, useRef } from 'react';
+import { Dialog, Button, Flex, useDisclosure, Portal, Text, ButtonProps } from '@chakra-ui/react';
+import { useEffect, FC, ReactNode, useRef } from 'react';
 
-import {
-	useCustomToast,
-	MenuItem,
-	useDeleteByIdMutation,
-	useAppSelector,
-	useLazyGetAllQuery,
-	Align,
-	AlertDialogHeader,
-	AlertDialogContent,
-	styles,
-} from '../../../..';
+import { MenuItem, Align, AlertDialogHeader, AlertDialogContent, PromptType } from '../../../..';
 import DiscardButton from '../../../buttons/DiscardButton';
 
-type DeleteItemModalProps = {
+type ConfirmModalProps = {
 	title?: string;
-	id: string;
-	path: string;
-	item: any;
-	children?: React.ReactNode;
+	icon?: string;
+	prompt?: PromptType;
+	isLoading?: boolean;
+	isSuccess?: boolean;
+	colorPalette?: ButtonProps['colorPalette'];
+	onConfirm: (e: any) => void;
+	onClose?: () => void;
+	children?: ReactNode;
 	// Controlled mode: when `open` is passed, the dialog's open state is driven
 	// by the caller instead of an internal useDisclosure, and no trigger is
 	// rendered — used by TableMenu so the dialog lives outside the dropdown
 	// menu's own mount lifecycle.
 	open?: boolean;
-	onClose?: () => void;
 };
 
-const DeleteItemModal: FC<DeleteItemModalProps> = ({
+/**
+ * A generic "are you sure?" confirmation dialog for menu actions that aren't a
+ * delete (disable/enable, resend, renew, etc). Mirrors DeleteItemModal's dialog
+ * chrome so every confirm prompt in a table's row menu looks and behaves the same.
+ */
+const ConfirmModal: FC<ConfirmModalProps> = ({
 	title,
-	path,
-	id,
-	item,
+	icon,
+	prompt,
+	isLoading,
+	isSuccess,
+	colorPalette = 'blackAlpha',
+	onConfirm,
+	onClose,
 	children,
 	open: controlledOpen,
-	onClose: onControlledClose,
 }) => {
-	const { page, limit, search, sort, filters }: any = useAppSelector((state: any) => state.table);
 	const isControlled = controlledOpen !== undefined;
-	const { open: internalOpen, onOpen, onClose: internalOnClose } = useDisclosure();
+	const { open: internalOpen, onOpen, onClose: close } = useDisclosure();
 	const isOpen = isControlled ? controlledOpen : internalOpen;
 	const cancelRef = useRef<any>(undefined);
 
-	const [trigger, result] = useDeleteByIdMutation();
-	const [getAllTrigger, getAllResults] = useLazyGetAllQuery();
-
-	const { isSuccess, isError, isLoading, error } = result;
-
 	const closeItem = () => {
-		result?.reset();
-		if (isControlled) onControlledClose?.();
-		else internalOnClose();
-	};
-
-	const handleDelete = (e: any) => {
-		e.preventDefault();
-		trigger({ path: path, id: id, invalidate: [path, item?.invalidate] });
+		onClose?.();
+		if (!isControlled) close();
 	};
 
 	useEffect(() => {
 		if (isSuccess && !isLoading) {
-			getAllTrigger({
-				page,
-				limit,
-				search,
-				sort,
-				filters,
-				path,
-			});
 			closeItem();
 		}
-	}, [result?.isSuccess]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isSuccess]);
 
-	useCustomToast({
-		successText: item?.prompt?.successMsg || `${title ? title : 'Item'} Deleted Successfully`,
-		...result,
-	});
-
-	const titleText = item?.prompt?.title || 'Delete Item';
-	const bodyText =
-		item?.prompt?.body ||
-		"Are you sure you want to delete this item? You can't undo this action afterwards.";
+	const titleText = prompt?.title || 'Confirm Action';
+	const bodyText = prompt?.body || 'Are you sure you want to proceed?';
 
 	return (
 		<>
@@ -91,11 +66,9 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({
 				<Flex onClick={onOpen}>{children}</Flex>
 			) : (
 				<MenuItem
-					color='red.500'
-					_dark={{ color: 'red.300' }}
-					icon='delete-outline'
+					icon={icon}
 					onClick={onOpen}>
-					{title || 'Delete'}
+					{title || 'Confirm'}
 				</MenuItem>
 			)}
 			<Dialog.Root
@@ -131,14 +104,15 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({
 									</DiscardButton>
 
 									<Button
-										loadingText='Deleting...'
+										loadingText='Processing'
 										spinnerPlacement='start'
 										loading={isLoading}
-										colorPalette='red'
-										onClick={handleDelete}
+										ref={cancelRef}
+										colorPalette={colorPalette}
+										onClick={onConfirm}
 										px={3}
 										size='sm'>
-										Delete
+										{prompt?.btnText || 'Proceed'}
 									</Button>
 								</Align>
 							</Dialog.Footer>
@@ -150,4 +124,4 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({
 	);
 };
 
-export default DeleteItemModal;
+export default ConfirmModal;

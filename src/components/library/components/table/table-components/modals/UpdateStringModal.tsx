@@ -28,10 +28,27 @@ type UpdateKeyProps = {
 	};
 	doc?: any;
 	icon?: string;
+	// Controlled mode: when `open` is passed, the dialog's open state is driven
+	// by the caller instead of an internal useDisclosure, and no trigger is
+	// rendered — used by TableMenu so the dialog lives outside the dropdown
+	// menu's own mount lifecycle.
+	open?: boolean;
+	onClose?: () => void;
 };
 
-const UpdateStringModal: FC<UpdateKeyProps> = ({ item, doc, id, path, type, icon }) => {
-	const { open: isOpen, onOpen, onClose } = useDisclosure();
+const UpdateStringModal: FC<UpdateKeyProps> = ({
+	item,
+	doc,
+	id,
+	path,
+	type,
+	icon,
+	open: controlledOpen,
+	onClose: onControlledClose,
+}) => {
+	const isControlled = controlledOpen !== undefined;
+	const { open: internalOpen, onOpen, onClose: internalOnClose } = useDisclosure();
+	const isOpen = isControlled ? controlledOpen : internalOpen;
 	const { title, prompt, invalidate, dataPath, key } = item;
 
 	const cancelRef = useRef<any>(undefined);
@@ -43,7 +60,8 @@ const UpdateStringModal: FC<UpdateKeyProps> = ({ item, doc, id, path, type, icon
 	const closeItem = () => {
 		reset();
 		setValue(undefined);
-		onClose();
+		if (isControlled) onControlledClose?.();
+		else internalOnClose();
 	};
 
 	const handleSubmit = (e: any) => {
@@ -69,6 +87,13 @@ const UpdateStringModal: FC<UpdateKeyProps> = ({ item, doc, id, path, type, icon
 		setValue(doc?.[key]);
 	};
 
+	// Controlled path: there's no trigger onClick to hang initialization off
+	// of, so run it whenever the caller flips `open` to true.
+	useEffect(() => {
+		if (isControlled && controlledOpen) setValue(doc?.[key]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isControlled, controlledOpen]);
+
 	useCustomToast({
 		successText: prompt?.successMsg || `Item updated successfully`,
 		...result,
@@ -76,12 +101,13 @@ const UpdateStringModal: FC<UpdateKeyProps> = ({ item, doc, id, path, type, icon
 
 	return (
 		<>
-			<MenuItem
-				closeOnSelect={false}
-				icon={'update-key'}
-				onClick={onModalOpen}>
-				{title}
-			</MenuItem>
+			{!isControlled && (
+				<MenuItem
+					icon={'update-key'}
+					onClick={onModalOpen}>
+					{title}
+				</MenuItem>
+			)}
 
 			<Dialog.Root
 				placement='center'

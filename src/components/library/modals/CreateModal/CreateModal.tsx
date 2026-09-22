@@ -42,9 +42,16 @@ const CreateModal = (props: CreateModalProps) => {
 		populate,
 		layout,
 		icon,
+		open: controlledOpen,
+		onClose: onControlledClose,
 	} = props;
 
-	const { open: isOpen, onOpen, onClose } = useDisclosure();
+	// Controlled mode (see types.tsx): when `open` is passed, this dialog is
+	// rendered by the caller outside its own trigger's lifecycle — no internal
+	// trigger, no internal open state.
+	const isControlled = controlledOpen !== undefined;
+	const { open: internalOpen, onOpen, onClose: internalOnClose } = useDisclosure();
+	const isOpen = isControlled ? controlledOpen : internalOpen;
 
 	const [fetch, { data: prevData, isFetching, isUninitialized }] = useLazyGetByIdToEditQuery();
 	const [formData, setFormData] = useFormData<any>(data, populate || prevData);
@@ -59,8 +66,7 @@ const CreateModal = (props: CreateModalProps) => {
 		skip: !layout,
 	});
 
-	const onModalOpen = () => {
-		onOpen();
+	const initializeForm = () => {
 		let newFieldData = {};
 
 		data?.map(field => {
@@ -68,7 +74,7 @@ const CreateModal = (props: CreateModalProps) => {
 			if (field?.value) newFieldData = { ...newFieldData, [field.name]: field?.value };
 		});
 
-		setFormData({ ...formData, ...newFieldData });
+		setFormData((prev: any) => ({ ...prev, ...newFieldData }));
 		if (type == 'update') {
 			if (populate) {
 				setFormData(populate);
@@ -77,6 +83,19 @@ const CreateModal = (props: CreateModalProps) => {
 			fetch({ path, id });
 		}
 	};
+
+	// Uncontrolled path: the trigger's onClick calls this directly.
+	const onModalOpen = () => {
+		onOpen();
+		initializeForm();
+	};
+
+	// Controlled path: there's no trigger onClick to hang initialization off
+	// of, so run it whenever the caller flips `open` to true.
+	useEffect(() => {
+		if (isControlled && controlledOpen) initializeForm();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isControlled, controlledOpen]);
 
 	const { isSuccess, isLoading } = type === 'update' ? updateResult : result;
 
@@ -148,7 +167,8 @@ const CreateModal = (props: CreateModalProps) => {
 	const onModalClose = () => {
 		setFormData({});
 		result.reset();
-		onClose();
+		if (isControlled) onControlledClose?.();
+		else internalOnClose();
 	};
 
 	useEffect(() => {
@@ -183,10 +203,9 @@ const CreateModal = (props: CreateModalProps) => {
 
 	return (
 		<>
-			{isMenu ? (
+			{isControlled ? null : isMenu ? (
 				<MenuItem
 					asChild
-					closeOnSelect={false}
 					icon={icon}
 					onClick={onModalOpen}>
 					{children || trigger || title || path}

@@ -22,10 +22,27 @@ type Props = {
 	id: string;
 	path: string;
 	trigger?: any;
+	// Controlled mode: when `open` is passed, the dialog's open state is driven
+	// by the caller instead of an internal useDisclosure, and no trigger is
+	// rendered — used by TableMenu so the dialog lives outside the dropdown
+	// menu's own mount lifecycle.
+	open?: boolean;
+	onClose?: () => void;
 };
 
-const ViewItemModal: FC<Props> = ({ title, path, trigger, id }) => {
-	const { open: isOpen, onOpen, onClose } = useDisclosure();
+const ViewItemModal: FC<Props> = ({
+	title,
+	path,
+	trigger,
+	id,
+	open: controlledOpen,
+	onClose: onControlledClose,
+}) => {
+	const isControlled = controlledOpen !== undefined;
+	const { open: internalOpen, onOpen, onClose: internalOnClose } = useDisclosure();
+	const isOpen = isControlled ? controlledOpen : internalOpen;
+	const closeItem = () => (isControlled ? onControlledClose?.() : internalOnClose());
+
 	const [schema, setSchema] = useState<any>([]);
 
 	const { data: schemaData, isFetching: schemaLoading } = useGetConfigQuery(path, {
@@ -49,12 +66,12 @@ const ViewItemModal: FC<Props> = ({ title, path, trigger, id }) => {
 	const isMobile = useIsMobile();
 
 	const renderTrigger = () => {
+		if (isControlled) return null;
 		if (trigger) {
 			return <Flex onClick={onOpen}>{trigger}</Flex>;
 		} else {
 			return (
 				<MenuItem
-					closeOnSelect={false}
 					icon='view-outline'
 					onClick={onOpen}>
 					{title || 'View'}
@@ -68,7 +85,7 @@ const ViewItemModal: FC<Props> = ({ title, path, trigger, id }) => {
 			{renderTrigger()}
 			<Dialog
 				isOpen={isOpen}
-				onClose={() => onClose()}>
+				onClose={closeItem}>
 				<DialogHeader>{title || 'Item Details'}</DialogHeader>
 				<DialogCloseButton />
 

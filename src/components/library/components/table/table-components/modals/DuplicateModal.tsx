@@ -10,17 +10,32 @@ type DeleteItemModalProps = {
 	title?: string;
 	id: string;
 	path: string;
+	// Controlled mode: when `open` is passed, the dialog's open state is driven
+	// by the caller instead of an internal useDisclosure, and no trigger is
+	// rendered — used by TableMenu so the dialog lives outside the dropdown
+	// menu's own mount lifecycle.
+	open?: boolean;
+	onClose?: () => void;
 };
 
-const DuplicateModal: FC<DeleteItemModalProps> = ({ title, path, id }) => {
-	const { open: isOpen, onOpen, onClose } = useDisclosure();
+const DuplicateModal: FC<DeleteItemModalProps> = ({
+	title,
+	path,
+	id,
+	open: controlledOpen,
+	onClose: onControlledClose,
+}) => {
+	const isControlled = controlledOpen !== undefined;
+	const { open: internalOpen, onOpen, onClose: internalOnClose } = useDisclosure();
+	const isOpen = isControlled ? controlledOpen : internalOpen;
 	const cancelRef = useRef<any>(undefined);
 
 	const [trigger, result] = useCopyItemMutation();
 
 	const closeItem = () => {
 		result?.reset();
-		onClose();
+		if (isControlled) onControlledClose?.();
+		else internalOnClose();
 	};
 
 	const handleSubmit = (e: any) => {
@@ -44,12 +59,13 @@ const DuplicateModal: FC<DeleteItemModalProps> = ({ title, path, id }) => {
 
 	return (
 		<>
-			<MenuItem
-				closeOnSelect={false}
-				onClick={onOpen}
-				icon='duplicate'>
-				Make Copy
-			</MenuItem>
+			{!isControlled && (
+				<MenuItem
+					onClick={onOpen}
+					icon='duplicate'>
+					Make Copy
+				</MenuItem>
+			)}
 
 			<Dialog.Root
 				open={isOpen}

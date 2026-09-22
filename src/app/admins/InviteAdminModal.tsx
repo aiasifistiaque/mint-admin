@@ -1,12 +1,13 @@
 'use client';
 
-import { Button, useDisclosure, NativeSelect } from '@chakra-ui/react';
+import { Button, useDisclosure } from '@chakra-ui/react';
 import { useEffect, useState, ChangeEvent } from 'react';
 import { useColorMode } from '@/components/ui/color-mode';
 
 import {
 	VInput,
-	FormControl,
+	VSelect,
+	Column,
 	useCustomToast,
 	useGetAllQuery,
 	useInviteAdminMutation,
@@ -80,43 +81,34 @@ const InviteAdminModal = () => {
 						Invite Admin
 					</MenuModalHeader>
 					<MenuModalCloseButton />
-					<MenuModalBody
-						pt={4}
-						gap={4}>
-						<VInput
-							label='Email'
-							isRequired
-							size='md'
-							type='email'
-							placeholder='name@company.com'
-							value={email}
-							onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-							name='email'
-						/>
+					<MenuModalBody pt={4}>
+						<Column gap={4}>
+							<VInput
+								label='Email'
+								isRequired
+								type='email'
+								placeholder='name@company.com'
+								value={email}
+								onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+								name='email'
+							/>
 
-						<FormControl
-							label='Role'
-							isRequired>
-							<NativeSelect.Root size='sm'>
-								<NativeSelect.Field
-									value={role}
-									_light={{
-										borderColor: 'container.borderLight',
-										bg: 'container.newLight',
-									}}
-									onChange={(e: any) => setRole(e.target.value)}>
-									<option value=''>Select a role</option>
-									{roles.map((r: any) => (
-										<option
-											key={r._id}
-											value={r._id}>
-											{r.name}
-										</option>
-									))}
-								</NativeSelect.Field>
-								<NativeSelect.Indicator />
-							</NativeSelect.Root>
-						</FormControl>
+							<VSelect
+								label='Role'
+								isRequired
+								placeholder='Select a role'
+								value={role}
+								onChange={(e: any) => setRole(e.target.value)}
+								name='role'>
+								{roles.map((r: any) => (
+									<option
+										key={r._id}
+										value={r._id}>
+										{r.name}
+									</option>
+								))}
+							</VSelect>
+						</Column>
 					</MenuModalBody>
 					<MenuModalFooter>
 						<DiscardButton onClick={closeModal}>Discard</DiscardButton>

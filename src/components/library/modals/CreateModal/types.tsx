@@ -21,6 +21,12 @@ type CreateModalProps = {
 		btnText?: string;
 		successMsg?: string;
 	};
+	// Controlled mode: when `open` is passed (even `false`), the dialog's open
+	// state is driven by the caller instead of an internal useDisclosure, and no
+	// trigger is rendered — used by TableMenu so the dialog lives outside the
+	// dropdown menu's own mount lifecycle.
+	open?: boolean;
+	onClose?: () => void;
 };
 
 export default CreateModalProps;

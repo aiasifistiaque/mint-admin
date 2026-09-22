@@ -4,6 +4,7 @@ export { default as ExportManyModal } from '../../../modals/export/ExportManyMod
 export { default as ExportModal } from '../../../modals/export/ExportModal';
 
 export { default as DeleteItemModal } from './DeleteItemModel';
+export { default as ConfirmModal } from './ConfirmModal';
 export { default as ViewItemModal } from './ViewItemModal';
 export { default as EditManyModal } from './EditManyModal';
 export { default as EditManySelectModal } from './EditManySelectModal';

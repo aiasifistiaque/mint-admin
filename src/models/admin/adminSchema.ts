@@ -48,7 +48,7 @@ const schema: SchemaProps = {
 	},
 	isActive: {
 		label: 'Active Status',
-		type: 'tag',
+		type: 'checkbox',
 		displayInTable: true,
 	},
 	isDeleted: {

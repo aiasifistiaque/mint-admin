@@ -2,9 +2,15 @@
 
 import React from 'react';
 import { NextPage } from 'next';
-import { PageTable, TableObjectProps, convertToViewFields, convertToTableFields } from '@/components/library';
+import {
+	PageTable,
+	TableObjectProps,
+	convertToViewFields,
+	convertToTableFields,
+	createFormFields,
+} from '@/components/library';
 import { adminSchema as schema } from '@/models';
-import { fields, tableFields } from './config';
+import { fields, tableFields, formFields } from './config';
 import InviteAdminModal from './InviteAdminModal';
 
 const table: TableObjectProps = {
@@ -17,6 +23,48 @@ const table: TableObjectProps = {
 			title: 'View',
 			type: 'view-modal',
 			dataModel: convertToViewFields({ schema, fields }),
+		},
+		{
+			title: 'Edit',
+			type: 'edit-modal',
+			dataModel: createFormFields({ schema, layout: formFields }),
+			renderCondition: (data: any) => data?.invitationStatus !== 'pending',
+		},
+		{
+			type: 'update-api',
+			title: 'Disable',
+			body: { isActive: false },
+			invalidate: ['admins'],
+			renderCondition: (data: any) => data?.invitationStatus !== 'pending' && data?.isActive,
+			prompt: {
+				title: 'Disable Admin',
+				body: 'Are you sure you want to disable this admin? They will no longer be able to sign in.',
+				btnText: 'Disable',
+				successMsg: 'Admin disabled',
+			},
+		},
+		{
+			type: 'update-api',
+			title: 'Enable',
+			body: { isActive: true },
+			invalidate: ['admins'],
+			renderCondition: (data: any) => data?.invitationStatus !== 'pending' && !data?.isActive,
+			prompt: {
+				title: 'Enable Admin',
+				body: 'Are you sure you want to re-enable this admin?',
+				btnText: 'Enable',
+				successMsg: 'Admin enabled',
+			},
+		},
+		{
+			title: 'Delete',
+			type: 'delete',
+			renderCondition: (data: any) => data?.invitationStatus !== 'pending',
+			prompt: {
+				title: 'Delete Admin',
+				body: 'This will permanently remove this admin account. This action cannot be undone.',
+				successMsg: 'Admin deleted',
+			},
 		},
 		{
 			type: 'update-api',

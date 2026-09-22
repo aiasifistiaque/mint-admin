@@ -3,12 +3,8 @@ const tableFields = ['name', 'email', 'phone', 'role', 'invitationStatus', 'isAc
 
 const formFields = [
 	{
-		sectionTitle: 'Basic Details',
-		fields: ['name', ['email', 'phone'], ['password', 'role']],
-	},
-	{
-		sectionTitle: 'Advanced Details',
-		fields: ['github'],
+		sectionTitle: 'Admin Access',
+		fields: ['role', 'isActive'],
 	},
 ];
 

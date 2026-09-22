@@ -54,8 +54,12 @@ const Alert: FC<DeleteItemModalProps> = ({ prompt, loading, children, success, h
 				role='alertdialog'
 				initialFocusEl={() => cancelRef.current}>
 				<Portal>
-					<Dialog.Backdrop />
-					<Dialog.Positioner>
+					{/* Chakra assigns each Portal's z-index from a shared, order-dependent
+					counter, so this can tie with the row menu's (both land on 1500) and
+					leave the menu showing through next to the dialog. Pinning it above
+					any menu content makes the stacking deterministic. */}
+					<Dialog.Backdrop zIndex={1600} />
+					<Dialog.Positioner zIndex={1600}>
 						<AlertDialogContent>
 							<AlertDialogHeader>{prompt?.title}</AlertDialogHeader>
 
