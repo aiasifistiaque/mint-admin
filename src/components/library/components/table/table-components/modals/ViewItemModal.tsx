@@ -117,6 +117,8 @@ const ViewItemModal: FC<Props> = ({
 									type={type}
 									colorPalette={colorPalette}
 									path={model || path}
+									field={item}
+									doc={data}
 									key={i}>
 									{data && getValue({ dataKey, type, data })}
 								</ViewItem>

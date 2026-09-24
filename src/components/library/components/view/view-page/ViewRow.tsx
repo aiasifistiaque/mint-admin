@@ -6,6 +6,7 @@ import { Icon } from '../../../';
 import { renderViewItem as renderContent } from '../';
 import { SkeletonContent } from '../view-item/utils';
 import DetailRow from '../../../cl/DetailRow';
+import { linkFor } from '../utils/record-link/linked';
 
 type ViewRowProps = {
 	field: any;
@@ -17,6 +18,8 @@ type ViewRowProps = {
 	 * full width.
 	 */
 	block?: boolean;
+	/** The whole record — lets a linked value (a reference, the owner) render as a RecordLink. */
+	doc?: any;
 };
 
 /**
@@ -29,7 +32,7 @@ type ViewRowProps = {
  * value in a bordered two-column grid, so a view page looked like a different
  * product from the pages it sat beside.
  */
-const ViewRow: FC<ViewRowProps> = ({ field, value, isLoading, block }) => {
+const ViewRow: FC<ViewRowProps> = ({ field, value, isLoading, block, doc }) => {
 	const { title, type, colorPalette, path, model, originalType, copy, id } = field;
 	const { copy: onCopy, setValue, copied } = useClipboard();
 
@@ -48,6 +51,7 @@ const ViewRow: FC<ViewRowProps> = ({ field, value, isLoading, block }) => {
 		path: model || path,
 		originalType,
 		id,
+		link: !field.noLink && linkFor(field, doc),
 	});
 
 	const copyButton = copy && value !== 'n/a' && (

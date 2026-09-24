@@ -1,11 +1,13 @@
 import { Flex, Badge, Text, Link, Tag, Box } from '@chakra-ui/react';
 import { TextProps, LinkProps, Grid, Heading } from '@chakra-ui/react';
-import { Column, Align, RenderTag, Icon, FullScreenImage, ViewItemModal } from '../../../..';
+import { Column, Align, Icon, FullScreenImage, ViewItemModal } from '../../../..';
 import { PLACEHOLDER_IMAGE, ImageContainer } from '../../../..';
 import { JSONDisplay } from '../..';
 import { ExternalLink } from 'lucide-react';
 import moment from 'moment';
 import Price from '../../../../utils/texts/Price';
+import RecordLink from '../record-link/RecordLink';
+import { labelOf } from '../record-link/linked';
 
 const textCss: TextProps & LinkProps = {
 	fontSize: '.95rem',
@@ -14,7 +16,54 @@ const textCss: TextProps & LinkProps = {
 	overflow: 'hidden',
 };
 
-const renderContent = ({ type, children, colorPalette, path, originalType, id }: any) => {
+/** The last part of a file's address, readable — "File 2" when there's none. */
+const fileName = (url: string, i: number) => {
+	const last = String(url || '').split('?')[0].split('/').pop() || '';
+	try {
+		return decodeURIComponent(last) || `File ${i + 1}`;
+	} catch {
+		return last || `File ${i + 1}`;
+	}
+};
+
+/** Linked records as chips; without a route to open them in, just their names. */
+const linkedList = (items: any, route?: string) => (
+	<Align
+		py={'.5px'}
+		flexWrap='wrap'
+		gap={2}>
+		{Array.isArray(items) &&
+			items.map((item: any, i: number) =>
+				route ? (
+					<RecordLink
+						key={item?._id || item || i}
+						route={route}
+						item={item}
+					/>
+				) : (
+					<Badge key={i}>{labelOf(item) || String(item)}</Badge>
+				)
+			)}
+	</Align>
+);
+
+/** Types a single linked record's name can arrive as. */
+const LINKABLE = ['string', 'text', 'read-only', 'data-menu', undefined];
+
+/**
+ * `link` — the record this value is part of ({route, record}, from
+ * `linkOf`): the value then renders as a RecordLink chip naming it.
+ */
+const renderContent = ({ type, children, colorPalette, path, originalType, id, link }: any) => {
+	if (link?.route && link?.record && LINKABLE.includes(type))
+		return (
+			<RecordLink
+				route={link.route}
+				item={link.record}
+				label={typeof children === 'string' && children !== '--' && children !== 'n/a' ? children : undefined}
+			/>
+		);
+
 	switch (type) {
 		case 'section-data-array':
 			return (
@@ -52,19 +101,8 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id }:
 				</Flex>
 			);
 		case 'data-tag':
-			return (
-				<Align
-					flexWrap='wrap'
-					gap={2}>
-					{children?.map((item: any, i: number) => (
-						<RenderTag
-							key={i}
-							path={path || ''}
-							item={item}
-						/>
-					))}
-				</Align>
-			);
+		case 'data-array-tag':
+			return linkedList(children, path || link?.route);
 		case 'array-tag':
 			return (
 				<Align
@@ -123,21 +161,30 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id }:
 				</Flex>
 			);
 
-		case 'data-array-tag':
+		case 'file-array':
+			if (!Array.isArray(children) || !children.length) return null;
 			return (
-				<Align
-					py={'.5px'}
-					flexWrap='wrap'
-					gap={2}>
-					{Array.isArray(children) &&
-						children?.map((item: any, i: number) => (
-							<RenderTag
-								key={i}
-								path={path || ''}
-								item={item}
-							/>
-						))}
-				</Align>
+				<Flex
+					gap={2}
+					flexWrap='wrap'>
+					{children.map((url: string, i: number) => (
+						<Link
+							key={i}
+							href={url}
+							target='_blank'
+							rel='noopener noreferrer'>
+							<Tag.Root
+								size='md'
+								colorPalette='gray'>
+								<Tag.Label mr={1}>{fileName(url, i)}</Tag.Label>
+								<Icon
+									name='download'
+									size={16}
+								/>
+							</Tag.Root>
+						</Link>
+					))}
+				</Flex>
 			);
 
 		case 'tag':

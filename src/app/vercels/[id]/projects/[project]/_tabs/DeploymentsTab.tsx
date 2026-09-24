@@ -9,7 +9,6 @@ import {
 	IconButton,
 	Input,
 	Menu,
-	NativeSelect,
 	Portal,
 	Text,
 } from '@chakra-ui/react';
@@ -34,6 +33,7 @@ import {
 	ErrorState,
 	TableSkeleton,
 	Column,
+	Dropdown,
 } from '@/components/library/cl';
 
 const TARGETS = [
@@ -250,17 +250,14 @@ const DeploymentsTab = ({
 							value={branch}
 							onChange={event => setBranch(event.target.value)}
 						/>
-						<NativeSelect.Root
+						<Dropdown
 							size='sm'
-							width='160px'>
-							<NativeSelect.Field
-								value={branchTarget}
-								onChange={event => setBranchTarget(event.target.value)}>
-								<option value='preview'>Preview</option>
-								<option value='production'>Production</option>
-							</NativeSelect.Field>
-							<NativeSelect.Indicator />
-						</NativeSelect.Root>
+							width='160px'
+							value={branchTarget}
+							onChange={v => setBranchTarget(v)}>
+							<option value='preview'>Preview</option>
+							<option value='production'>Production</option>
+						</Dropdown>
 						<Button
 							size='sm'
 							loading={deployResult.isLoading}
@@ -286,38 +283,32 @@ const DeploymentsTab = ({
 				flush
 				actions={
 					<Flex gap={2}>
-						<NativeSelect.Root
+						<Dropdown
 							size='sm'
-							width='150px'>
-							<NativeSelect.Field
-								value={target}
-								onChange={event => setTarget(event.target.value)}>
-								{TARGETS.map(option => (
-									<option
-										key={option.value}
-										value={option.value}>
-										{option.label}
-									</option>
-								))}
-							</NativeSelect.Field>
-							<NativeSelect.Indicator />
-						</NativeSelect.Root>
-						<NativeSelect.Root
+							width='150px'
+							value={target}
+							onChange={v => setTarget(v)}>
+							{TARGETS.map(option => (
+								<option
+									key={option.value}
+									value={option.value}>
+									{option.label}
+								</option>
+							))}
+						</Dropdown>
+						<Dropdown
 							size='sm'
-							width='150px'>
-							<NativeSelect.Field
-								value={state}
-								onChange={event => setState(event.target.value)}>
-								{STATES.map(option => (
-									<option
-										key={option.value}
-										value={option.value}>
-										{option.label}
-									</option>
-								))}
-							</NativeSelect.Field>
-							<NativeSelect.Indicator />
-						</NativeSelect.Root>
+							width='150px'
+							value={state}
+							onChange={v => setState(v)}>
+							{STATES.map(option => (
+								<option
+									key={option.value}
+									value={option.value}>
+									{option.label}
+								</option>
+							))}
+						</Dropdown>
 					</Flex>
 				}>
 				{isFetching && !deployments.length ? (

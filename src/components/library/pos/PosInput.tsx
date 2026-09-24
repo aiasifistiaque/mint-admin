@@ -10,11 +10,10 @@ import {
 	TextareaProps,
 	TextProps,
 	Grid,
-	NativeSelectRoot,
-	NativeSelectField,
 } from '@chakra-ui/react';
 import { useColorMode } from '@/components/ui/color-mode';
 import { Price } from '..';
+import Dropdown from '../cl/Dropdown';
 
 type InputContainerProps = {
 	label: string;
@@ -96,24 +95,22 @@ const PosInput: FC<InputContainerProps> = ({
 						onChange={props.onChange}
 					/>
 				) : valueType == 'select' ? (
-					<NativeSelectRoot
+					<Dropdown
 						size='md'
-						disabled={props.disabled || props.isDisabled}>
-						<NativeSelectField
-							px={3}
-							borderRadius='sm'
-							color={textColor}
-							value={value}
-							onChange={props.onChange}>
-							{options?.map((option: any) => (
-								<option
-									key={option}
-									value={option}>
-									{option}
-								</option>
-							))}
-						</NativeSelectField>
-					</NativeSelectRoot>
+						disabled={props.disabled || props.isDisabled}
+						px={3}
+						borderRadius='sm'
+						color={textColor}
+						value={value}
+						onChange={v => props.onChange({ target: { value: v } } as any)}>
+						{options?.map((option: any) => (
+							<option
+								key={option}
+								value={option}>
+								{option}
+							</option>
+						))}
+					</Dropdown>
 				) : (
 					<Input
 						size='md'

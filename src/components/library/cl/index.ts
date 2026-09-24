@@ -27,6 +27,8 @@ export type { StatusTone } from './StatusDot';
 export { default as DataTable } from './DataTable';
 export type { Column, SortDir } from './DataTable';
 export { default as FilterInput } from './FilterInput';
+export { default as Dropdown } from './Dropdown';
+export type { DropdownItem, DropdownProps } from './Dropdown';
 export { default as ConfirmAction } from './ConfirmAction';
 export { default as CopyValue } from './CopyValue';
 export { default as PageHeader } from './PageHeader';

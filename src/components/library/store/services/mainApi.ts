@@ -21,6 +21,7 @@ const tags: string[] = [
 	'/sidebar/crm/server',
 	'/sidebar/crm/generic',
 	'adjustments/damages',
+	'access-users',
 	'adminroles',
 	'admins',
 	'auth',
@@ -57,6 +58,8 @@ const tags: string[] = [
 	'files/get/distinct/folder',
 	'filters',
 	'folders',
+	'builder',
+	'tableconfigs',
 	'formfields',
 	'groups',
 	'heroku-account',
@@ -147,6 +150,7 @@ const tags: string[] = [
 	'uploads',
 	'users',
 	'views',
+	'notifications',
 ];
 
 export const mainApi = createApi({

@@ -8,6 +8,7 @@ import {
 	VCatCollectionList,
 	VInput,
 } from '@/components/library/utils/inputs';
+import VSelectTags from '@/components/library/utils/inputs/VSelectTags';
 import { fontWeightOptions } from '@/components/library/data/fonts';
 import { registerFieldType } from '../registry';
 import { NotYetImplementedCell, NotYetImplementedView } from './_shared';
@@ -149,14 +150,15 @@ const CategoryCollectionArrayInput = ({ item, ...props }: any) => (
 	/>
 );
 
-// FormInput.tsx's 'select-tag' case is commented out (VSelectTags doesn't exist
-// yet) — it falls through to the default VInput branch today. Same here.
+// Several values picked from `options` — a multi-select (built models' multi-select
+// fields, and tags limited to allowed values).
 const SelectTagInput = ({ item, isRequired, type, ...props }: any) => (
-	<VInput
-		type={type}
+	<VSelectTags
 		isRequired={isRequired}
 		helper={item?.helper}
+		options={item?.options || []}
 		{...props}
+		value={Array.isArray(props.value) ? props.value : []}
 	/>
 );
 

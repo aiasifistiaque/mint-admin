@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
-import { Button, Flex, Input, NativeSelect, Text } from '@chakra-ui/react';
+import { Button, Flex, Input, Text } from '@chakra-ui/react';
 import {
 	Toast,
 	radius,
@@ -18,6 +18,7 @@ import {
 	EmptyState,
 	ErrorState,
 	TableSkeleton,
+	Dropdown,
 } from '@/components/library/cl';
 
 /** Heroku's current sizes. A size the account cannot use is rejected upstream
@@ -154,24 +155,22 @@ const DynosTab: FC<{ id: string; app: string }> = ({ id, app }) => {
 								label: 'Size',
 								width: '160px',
 								render: item => (
-									<NativeSelect.Root size='xs' w='150px'>
-										<NativeSelect.Field
-											borderRadius={radius.INPUT}
-											value={edits[item.type]?.size ?? item.size}
-											onChange={event =>
-												setEdits(prev => ({
-													...prev,
-													[item.type]: { ...prev[item.type], size: event.target.value },
-												}))
-											}>
-											{Array.from(new Set([item.size, ...DYNO_SIZES])).map(size => (
-												<option key={size} value={size}>
-													{size}
-												</option>
-											))}
-										</NativeSelect.Field>
-										<NativeSelect.Indicator />
-									</NativeSelect.Root>
+									<Dropdown
+										size='xs'
+										w='150px'
+										borderRadius={radius.INPUT}
+										value={edits[item.type]?.size ?? item.size}
+										onChange={v => setEdits(prev => ({
+												...prev,
+												[item.type]: { ...prev[item.type], size: v },
+											}))
+										}>
+										{Array.from(new Set([item.size, ...DYNO_SIZES])).map(size => (
+											<option key={size} value={size}>
+												{size}
+											</option>
+										))}
+									</Dropdown>
 								),
 							},
 							{

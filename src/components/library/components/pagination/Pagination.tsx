@@ -48,9 +48,7 @@ const Pagination: FC<PaginationProps> = ({ data, showPerPage = true }) => {
 			)}
 			<SelectContainer
 				size='xs'
-				px={2.5}
-				h='30px'
-				fontSize='13px'
+				w='76px'
 				value={limit}
 				onChange={(e: any) => update({ setLimit: e.target.value })}>
 				{SHOW_PER_PAGE_OPTIONS.map(({ value, label }) => (

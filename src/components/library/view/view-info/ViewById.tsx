@@ -40,6 +40,8 @@ const ViewById: FC<ViewByIdProps> = ({ path, id, schema, heading, ...props }) =>
 						type={type}
 						colorPalette={colorPalette}
 						path={path}
+						field={item}
+						doc={data}
 						key={i}>
 						{data && getValue({ dataKey, type, data })}
 					</ViewItem>

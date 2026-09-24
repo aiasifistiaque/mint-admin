@@ -19,5 +19,7 @@ export * from './services/invoiceApi';
 export * from './services/herokuApi';
 export * from './services/vercelApi';
 export * from './services/repoApi';
+export * from './services/builderApi';
+export * from './services/notificationsApi';
 
 export * from './store';

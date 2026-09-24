@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { Badge, Button, Flex, Grid, Input, NativeSelect, Tabs, Text } from '@chakra-ui/react';
+import { Badge, Button, Flex, Grid, Input, Tabs, Text } from '@chakra-ui/react';
 import {
 	Layout,
 	Toast,
@@ -35,6 +35,7 @@ import {
 	ResourceSection,
 	Column,
 	SortDir,
+	Dropdown,
 } from '@/components/library/cl';
 import UsageTab from './_tabs/UsageTab';
 import NewProject from './_tabs/NewProject';
@@ -307,23 +308,20 @@ const VercelAccountPage = () => {
 							{/* Rendered only when there is something to switch between.
 								A personal account has one scope and no switcher. */}
 							{teams.length > 1 && (
-								<NativeSelect.Root
+								<Dropdown
 									size='sm'
-									width='220px'>
-									<NativeSelect.Field
-										value={team}
-										onChange={event => switchTeam(event.target.value)}>
-										<option value=''>Personal account</option>
-										{teams.map((entry: any) => (
-											<option
-												key={entry.teamId}
-												value={entry.teamId}>
-												{entry.name || entry.slug}
-											</option>
-										))}
-									</NativeSelect.Field>
-									<NativeSelect.Indicator />
-								</NativeSelect.Root>
+									width='220px'
+									value={team}
+									onChange={v => switchTeam(v)}>
+									<option value=''>Personal account</option>
+									{teams.map((entry: any) => (
+										<option
+											key={entry.teamId}
+											value={entry.teamId}>
+											{entry.name || entry.slug}
+										</option>
+									))}
+								</Dropdown>
 							)}
 							<Button
 								size='sm'

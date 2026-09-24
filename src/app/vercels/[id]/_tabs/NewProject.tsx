@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Flex, Input, NativeSelect, Text } from '@chakra-ui/react';
+import { Button, Flex, Input, Text } from '@chakra-ui/react';
 import { Toast, radius, useCreateVercelProjectMutation } from '@/components/library';
-import { ConfirmAction } from '@/components/library/cl';
+import { ConfirmAction, Dropdown } from '@/components/library/cl';
 
 /** The frameworks Vercel detects without help. `null` lets it guess. */
 const FRAMEWORKS = [
@@ -134,20 +134,18 @@ const NewProject = ({ id, team, isOpen, onClose, onCreated }: Props) => {
 							color='fg.muted'>
 							Framework
 						</Text>
-						<NativeSelect.Root size='sm'>
-							<NativeSelect.Field
-								value={framework}
-								onChange={event => setFramework(event.target.value)}>
-								{FRAMEWORKS.map(option => (
-									<option
-										key={option.value}
-										value={option.value}>
-										{option.label}
-									</option>
-								))}
-							</NativeSelect.Field>
-							<NativeSelect.Indicator />
-						</NativeSelect.Root>
+						<Dropdown
+							size='sm'
+							value={framework}
+							onChange={v => setFramework(v)}>
+							{FRAMEWORKS.map(option => (
+								<option
+									key={option.value}
+									value={option.value}>
+									{option.label}
+								</option>
+							))}
+						</Dropdown>
 					</Flex>
 				</Flex>
 			</ConfirmAction>

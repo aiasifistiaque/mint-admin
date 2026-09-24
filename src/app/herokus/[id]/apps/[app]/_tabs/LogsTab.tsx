@@ -1,9 +1,9 @@
 'use client';
 
 import { FC, useState } from 'react';
-import { Box, Button, Flex, NativeSelect, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { radius, useGetHerokuLogsQuery } from '@/components/library';
-import { Panel, EmptyState, ErrorState, TableSkeleton } from '@/components/library/cl';
+import { Panel, EmptyState, ErrorState, TableSkeleton, Dropdown } from '@/components/library/cl';
 
 const LINE_OPTIONS = [100, 500, 1500];
 
@@ -39,31 +39,29 @@ const LogsTab: FC<{ id: string; app: string }> = ({ id, app }) => {
 			subtitle='Applications routinely print tokens and connection strings to stdout — treat anything here as a secret.'
 			actions={
 				<>
-					<NativeSelect.Root size='sm' w='110px'>
-						<NativeSelect.Field
-							borderRadius={radius.INPUT}
-							value={String(lines)}
-							onChange={event => setLines(Number(event.target.value))}>
-							{LINE_OPTIONS.map(option => (
-								<option key={option} value={option}>
-									{option} lines
-								</option>
-							))}
-						</NativeSelect.Field>
-						<NativeSelect.Indicator />
-					</NativeSelect.Root>
+					<Dropdown
+						size='sm'
+						w='110px'
+						borderRadius={radius.INPUT}
+						value={String(lines)}
+						onChange={v => setLines(Number(v))}>
+						{LINE_OPTIONS.map(option => (
+							<option key={option} value={option}>
+								{option} lines
+							</option>
+						))}
+					</Dropdown>
 
-					<NativeSelect.Root size='sm' w='130px'>
-						<NativeSelect.Field
-							borderRadius={radius.INPUT}
-							value={source}
-							onChange={event => setSource(event.target.value)}>
-							<option value=''>All sources</option>
-							<option value='app'>Application</option>
-							<option value='heroku'>Platform</option>
-						</NativeSelect.Field>
-						<NativeSelect.Indicator />
-					</NativeSelect.Root>
+					<Dropdown
+						size='sm'
+						w='130px'
+						borderRadius={radius.INPUT}
+						value={source}
+						onChange={v => setSource(v)}>
+						<option value=''>All sources</option>
+						<option value='app'>Application</option>
+						<option value='heroku'>Platform</option>
+					</Dropdown>
 
 					<Button size='sm' variant='outline' loading={isFetching} onClick={() => refetch()}>
 						Refresh

@@ -9,7 +9,6 @@ import {
 	IconButton,
 	Input,
 	Menu,
-	NativeSelect,
 	Portal,
 	Text,
 } from '@chakra-ui/react';
@@ -34,6 +33,7 @@ import {
 	ErrorState,
 	TableSkeleton,
 	Column,
+	Dropdown,
 } from '@/components/library/cl';
 
 const TARGETS = ['production', 'preview', 'development'] as const;
@@ -448,22 +448,19 @@ const EnvironmentTab = ({
 							meaningful for one target — the same key can hold three
 							different values — so the target is picked here and governs
 							both the .env download and the copy. */}
-						<NativeSelect.Root
+						<Dropdown
 							size='sm'
-							width='140px'>
-							<NativeSelect.Field
-								value={fileTarget}
-								onChange={event => setFileTarget(event.target.value)}>
-								{TARGETS.map(target => (
-									<option
-										key={target}
-										value={target}>
-										{target}
-									</option>
-								))}
-							</NativeSelect.Field>
-							<NativeSelect.Indicator />
-						</NativeSelect.Root>
+							width='140px'
+							value={fileTarget}
+							onChange={v => setFileTarget(v)}>
+							{TARGETS.map(target => (
+								<option
+									key={target}
+									value={target}>
+									{target}
+								</option>
+							))}
+						</Dropdown>
 
 						<Button
 							size='sm'

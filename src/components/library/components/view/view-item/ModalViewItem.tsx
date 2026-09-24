@@ -4,6 +4,7 @@ import { Icon } from '../../..';
 import { renderViewItem as renderContent } from '..';
 import { SkeletonContent, ViewItemProps } from './utils';
 import { useColorMode } from '@/components/ui/color-mode';
+import { linkFor } from '../utils/record-link/linked';
 
 const ViewItem: FC<ViewItemProps> = ({
 	title,
@@ -13,8 +14,14 @@ const ViewItem: FC<ViewItemProps> = ({
 	path,
 	copy,
 	isLoading = false,
+	field,
+	doc,
 	...props
 }) => {
+	// `field` (the view field) and `doc` (the record) let a linked value — a
+	// reference, the owner, people with access — render as RecordLink chips.
+	const link = field && doc ? linkFor(field, doc) : null;
+
 	const { copy: onCopy, value, setValue, copied: hasCopied } = useClipboard();
 
 	useEffect(() => {
@@ -44,7 +51,7 @@ const ViewItem: FC<ViewItemProps> = ({
 					align='center'>
 					{!isLoading &&
 						children &&
-						renderContent({ type, children, colorPalette, path, isLoading })}
+						renderContent({ type, children, colorPalette, path, isLoading, link })}
 					{copy && children && children != 'n/a' && (
 						<Tooltip.Root
 							openDelay={200}

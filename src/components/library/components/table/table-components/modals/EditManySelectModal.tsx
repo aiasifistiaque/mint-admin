@@ -1,9 +1,10 @@
 'use client';
 
-import { Dialog, Button, useDisclosure, Text, NativeSelect } from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Text } from '@chakra-ui/react';
 import { useEffect, useRef, FC, useState } from 'react';
 import { useCustomToast, MenuItem } from '../../../..';
 import { useUpdateManyMutation } from '../../../../store';
+import Dropdown from '../../../../cl/Dropdown';
 
 type EditManyModalType = {
 	title?: string;
@@ -89,26 +90,24 @@ const EditManySelectModal: FC<EditManyModalType> = ({
 
 							<Dialog.Body pt={4}>
 								<Text>{prompt?.body || 'Please select an option'}</Text>
-								<NativeSelect.Root
+								<Dropdown
 									size='sm'
-									mt={4}>
-									<NativeSelect.Field
-										value={value}
-										onChange={e => setValue(e.target.value)}>
+									mt={4}
+									value={value}
+									onChange={v => setValue(v)}>
+									<option
+										disabled
+										value=''>
+										Select option
+									</option>
+									{options?.map(({ label, value }: { label: string; value: any }, i: number) => (
 										<option
-											disabled
-											value=''>
-											Select option
+											key={i}
+											value={value}>
+											{label}
 										</option>
-										{options?.map(({ label, value }: { label: string; value: any }, i: number) => (
-											<option
-												key={i}
-												value={value}>
-												{label}
-											</option>
-										))}
-									</NativeSelect.Field>
-								</NativeSelect.Root>
+									))}
+								</Dropdown>
 							</Dialog.Body>
 
 							<Dialog.Footer>

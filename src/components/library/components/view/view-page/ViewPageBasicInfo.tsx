@@ -71,6 +71,7 @@ const ViewPageBasicInfo: FC<ViewPageBasicInfoProps> = ({ slug, id, schema, layou
 			gap={3}>
 			{items.map((field: any, index: number) => (
 				<ViewRow
+					doc={data}
 					key={`${field.dataKey}-${index}`}
 					field={{
 						...field,
@@ -92,6 +93,7 @@ const ViewPageBasicInfo: FC<ViewPageBasicInfoProps> = ({ slug, id, schema, layou
 				key={`block-${field.dataKey}-${index}`}
 				title={field.title}>
 				<ViewRow
+					doc={data}
 					field={{ ...field, title: '' }}
 					value={data && getValue({ dataKey: field.dataKey, type: field.type, data })}
 					isLoading={isFetching}

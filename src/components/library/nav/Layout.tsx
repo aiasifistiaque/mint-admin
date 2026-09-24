@@ -3,7 +3,7 @@
 import { FC, useEffect, ReactNode } from 'react';
 import { Flex, Heading, useMediaQuery, FlexProps, HeadingProps } from '@chakra-ui/react';
 
-import { SelfMenu, SearchMenu } from '../menu';
+import { SelfMenu, SearchMenu, NotificationMenu } from '../menu';
 import { AuthWrapper } from '../wrappers';
 import ColorMode from '../components/color-mode/ColorMode';
 import { LayoutWrapper, Navbar, Sidebar, Body, MainBody } from '../nav';
@@ -82,6 +82,7 @@ const Layout: FC<LayoutProps> = ({
 								iconSize={ICON_SIZE}
 							/>
 						)}
+						<NotificationMenu iconSize={ICON_SIZE} />
 						<SelfMenu iconSize={ICON_SIZE} />
 						{/* <CreateMenu /> */}
 					</Align>

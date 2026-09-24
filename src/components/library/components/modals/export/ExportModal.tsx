@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, useDisclosure, Text, Checkbox, Grid, NativeSelect } from '@chakra-ui/react';
+import { Button, useDisclosure, Text, Checkbox, Grid } from '@chakra-ui/react';
 import { useEffect, useState, useCallback } from 'react';
 import { useColorMode } from '@/components/ui/color-mode';
 
@@ -18,6 +18,7 @@ import {
 	ConfirmButton,
 	useIsMobile,
 } from '../../..';
+import Dropdown from '../../../cl/Dropdown';
 
 const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
@@ -112,19 +113,17 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 						gap={4}
 						rowGap={4}>
 						<Text fontWeight='600'>Export As:</Text>
-						<NativeSelect.Root
+						<Dropdown
 							_light={{
 								borderColor: 'container.borderLight',
 								bg: 'container.newLight',
 							}}
-							size='sm'>
-							<NativeSelect.Field
-								value={type}
-								onChange={(e: any) => setType(e.target.value)}>
-								<option value='csv'>CSV</option>
-								<option value='pdf'>Pdf</option>
-							</NativeSelect.Field>
-						</NativeSelect.Root>
+							size='sm'
+							value={type}
+							onChange={v => setType(v)}>
+							<option value='csv'>CSV</option>
+							<option value='pdf'>Pdf</option>
+						</Dropdown>
 					</Grid>
 				</MenuModalBody>
 				<MenuModalFooter>
