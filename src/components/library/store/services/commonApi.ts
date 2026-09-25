@@ -67,8 +67,9 @@ export const userApi = mainApi.injectEndpoints({
 		 * used, but not specified in `tagTypes`"). This tags them all as
 		 * 'history', so any write to the log refreshes every open timeline.
 		 */
-		getDocumentHistory: builder.query<any, { id: string; limit?: number }>({
-			query: ({ id, limit = 50 }): any => `history/g/document/${id}?limit=${limit}`,
+		getDocumentHistory: builder.query<any, { id: string; limit?: number; page?: number }>({
+			query: ({ id, limit = 50, page = 1 }): any =>
+				`history/g/document/${id}?limit=${limit}&page=${page}`,
 			providesTags: ['history'],
 		}),
 

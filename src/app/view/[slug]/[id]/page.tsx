@@ -10,6 +10,9 @@ import {
 	ViewTabTable,
 	useGetViewDocumentQuery,
 	useGetRouteQuery,
+	useGetDocumentHistoryQuery,
+	HistoryTimeline,
+	HISTORY_PAGE_SIZE,
 } from '@/components/library';
 import { ConsoleTabs, DetailSkeleton, PageHeader } from '@/components/library/cl';
 import { Layout, useGetSchemaQuery, useGetItemNameById, useGetConfigQuery } from '@/components/library';
@@ -46,7 +49,8 @@ const ViewPage = () => {
 	}, [slug]);
 
 	// Tabs after Overview: records of other routes that link to this one, as
-	// set in the route builder's view. The open tab lives in `?tab=`.
+	// set in the route builder's view, then History, which every record has.
+	// The open tab lives in `?tab=`.
 	const tabs: { index: number; title: string; route: string; total: number; allowed: boolean }[] =
 		configured?.tabs || [];
 	const [tab, setTab] = useState('overview');
@@ -61,7 +65,14 @@ const ViewPage = () => {
 		else url.searchParams.set('tab', t);
 		window.history.replaceState(null, '', url.toString());
 	};
-	const openTab = tabs.some(t => String(t.index) === tab) ? tab : 'overview';
+	const openTab = tab === 'history' || tabs.some(t => String(t.index) === tab) ? tab : 'overview';
+
+	// Same args as the tab's first page, so the count and the log share one request.
+	const { data: history } = useGetDocumentHistoryQuery(
+		{ id, limit: HISTORY_PAGE_SIZE },
+		{ skip: !id }
+	);
+	const historyTotal: number | undefined = history?.totalDocs;
 
 	// A route with a form layout in code edits through it; every other route —
 	// built models included — through its form config, the same drawer the
@@ -78,7 +89,8 @@ const ViewPage = () => {
 				data: [],
 				type: 'update',
 				doc: data,
-				invalidate: ['config'],
+				// 'history' so the History tab picks up the edit just saved.
+				invalidate: ['config', 'history'],
 		  }
 		: {
 				id,
@@ -86,7 +98,7 @@ const ViewPage = () => {
 				data: configForm,
 				title: 'Update',
 				type: 'update',
-				invalidate: ['config'],
+				invalidate: ['config', 'history'],
 		  };
 	const canEdit = hasModule || configForm.length > 0;
 
@@ -140,47 +152,63 @@ const ViewPage = () => {
 					}
 				/>
 
-				{tabs.length ? (
-					<ConsoleTabs
-						value={openTab}
-						onChange={goTo}
-						tabs={[
-							{ value: 'overview', label: 'Overview' },
-							...tabs.map(t => ({
-								value: String(t.index),
-								label: (
-									<>
-										{t.title}
-										{t.allowed && (
-											<Badge
-												ml={1.5}
-												size='xs'
-												variant='subtle'
-												borderRadius='full'>
-												{t.total.toLocaleString()}
-											</Badge>
-										)}
-									</>
-								),
-							})),
-						]}>
-						<Tabs.Content value='overview'>{overview}</Tabs.Content>
-						{tabs.map(t => (
-							<Tabs.Content
-								key={t.index}
-								value={String(t.index)}>
-								<ViewTabTable
-									path={slug}
-									id={id}
-									index={t.index}
-									title={t.title}
-								/>
-							</Tabs.Content>
-						))}
-					</ConsoleTabs>
-				) : (
-					overview
-				)}
+				<ConsoleTabs
+					value={openTab}
+					onChange={goTo}
+					tabs={[
+						{ value: 'overview', label: 'Overview' },
+						...tabs.map(t => ({
+							value: String(t.index),
+							label: (
+								<>
+									{t.title}
+									{t.allowed && (
+										<Badge
+											ml={1.5}
+											size='xs'
+											variant='subtle'
+											borderRadius='full'>
+											{t.total.toLocaleString()}
+										</Badge>
+									)}
+								</>
+							),
+						})),
+						{
+							value: 'history',
+							label: (
+								<>
+									History
+									{!!historyTotal && (
+										<Badge
+											ml={1.5}
+											size='xs'
+											variant='subtle'
+											borderRadius='full'>
+											{historyTotal.toLocaleString()}
+										</Badge>
+									)}
+								</>
+							),
+						},
+					]}>
+					<Tabs.Content value='overview'>{overview}</Tabs.Content>
+					{tabs.map(t => (
+						<Tabs.Content
+							key={t.index}
+							value={String(t.index)}>
+							<ViewTabTable
+								path={slug}
+								id={id}
+								index={t.index}
+								title={t.title}
+							/>
+						</Tabs.Content>
+					))}
+					<Tabs.Content value='history'>
+						<HistoryTimeline id={id} />
+					</Tabs.Content>
+				</ConsoleTabs>
 			</Column>
 		</Layout>
 	);
