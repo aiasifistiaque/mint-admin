@@ -1,27 +1,33 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import {
 	Column,
-	SpaceBetween,
 	CreateModal,
-	Breadcrumbs,
 	ViewByIdPage,
 	ConfiguredView,
+	ViewTabTable,
 	useGetViewDocumentQuery,
+	useGetRouteQuery,
 } from '@/components/library';
-import { DetailSkeleton } from '@/components/library/cl';
+import { ConsoleTabs, DetailSkeleton, PageHeader } from '@/components/library/cl';
 import { Layout, useGetSchemaQuery, useGetItemNameById, useGetConfigQuery } from '@/components/library';
-import { Button, FlexProps } from '@chakra-ui/react';
+import { Badge, Button, FlexProps, Tabs } from '@chakra-ui/react';
 import { Pencil } from 'lucide-react';
 import getFieldModule from '@/layouts';
 
+const humanize = (s: string) => (s || '').replace(/[-_]+/g, ' ').replace(/^./, c => c.toUpperCase());
+
 const ViewPage = () => {
 	const { id, slug }: { id: string; slug: string } = useParams();
-	const { data, isFetching, isError } = useGetSchemaQuery(slug, { skip: !slug });
+	const { data } = useGetSchemaQuery(slug, { skip: !slug });
 
-	const { display } = useGetItemNameById({ path: slug, id: id });
+	const { name, code } = useGetItemNameById({ path: slug, id: id });
+	// The list page's own title, for the breadcrumb back to it.
+	const { data: routeInfo } = useGetRouteQuery(slug, { skip: !slug });
+	const routeTitle = routeInfo?.title || humanize(slug);
+
 	// A view config published in the route builder lays the page out; without
 	// one this 404s and the page keeps the layout it always had.
 	const {
@@ -39,11 +45,23 @@ const ViewPage = () => {
 		fetchModule();
 	}, [slug]);
 
-	const breadCrumbData = [
-		{ href: '/', title: 'Home' },
-		{ href: `/${slug}`, title: slug },
-		{ href: '#', title: display },
-	];
+	// Tabs after Overview: records of other routes that link to this one, as
+	// set in the route builder's view. The open tab lives in `?tab=`.
+	const tabs: { index: number; title: string; route: string; total: number; allowed: boolean }[] =
+		configured?.tabs || [];
+	const [tab, setTab] = useState('overview');
+	useEffect(() => {
+		const t = new URLSearchParams(window.location.search).get('tab');
+		if (t) setTab(t);
+	}, []);
+	const goTo = (t: string) => {
+		setTab(t);
+		const url = new URL(window.location.href);
+		if (t === 'overview') url.searchParams.delete('tab');
+		else url.searchParams.set('tab', t);
+		window.history.replaceState(null, '', url.toString());
+	};
+	const openTab = tabs.some(t => String(t.index) === tab) ? tab : 'overview';
 
 	// A route with a form layout in code edits through it; every other route —
 	// built models included — through its form config, the same drawer the
@@ -72,42 +90,96 @@ const ViewPage = () => {
 		  };
 	const canEdit = hasModule || configForm.length > 0;
 
+	const title = name || code || id;
+
+	// Overview: the configured sections, or the default layout when the view
+	// config only adds tabs (or there's none at all).
+	const overview =
+		!slug || !id || !data ? null : configuredLoading ? (
+			<DetailSkeleton />
+		) : configured?.sections?.length ? (
+			<ConfiguredView
+				slug={slug}
+				schema={data}
+				view={configured}
+				isLoading={configuredFetching}
+			/>
+		) : (
+			<ViewByIdPage
+				layout={moduleData}
+				schema={data}
+				slug={slug}
+				id={id}
+			/>
+		);
+
 	return (
 		<Layout
-			title={slug?.toUpperCase()}
+			title={routeTitle}
 			path={slug}>
 			<Column {...containerCss}>
-				<SpaceBetween>
-					<Breadcrumbs data={breadCrumbData} />
+				<PageHeader
+					breadcrumbs={[
+						{ href: '/dashboard', title: 'Home' },
+						{ href: `/${slug}`, title: routeTitle },
+						{ href: '#', title },
+					]}
+					title={title}
+					meta={name && code ? code : undefined}
+					actions={
+						canEdit ? (
+							<CreateModal {...modalProps}>
+								<Button
+									size='sm'
+									variant='outline'>
+									<Pencil size={14} />
+									Edit
+								</Button>
+							</CreateModal>
+						) : undefined
+					}
+				/>
 
-					{canEdit && (
-						<CreateModal {...modalProps}>
-							<Button {...editButtonCss}>
-								<Pencil size={12} />
-								Edit
-							</Button>
-						</CreateModal>
-					)}
-				</SpaceBetween>
-
-				{slug && id && data && configuredLoading && <DetailSkeleton />}
-
-				{slug && id && data && !configuredLoading && configured && (
-					<ConfiguredView
-						slug={slug}
-						schema={data}
-						view={configured}
-						isLoading={configuredFetching}
-					/>
-				)}
-
-				{slug && id && data && !configuredLoading && !configured && (
-					<ViewByIdPage
-						layout={moduleData}
-						schema={data}
-						slug={slug}
-						id={id}
-					/>
+				{tabs.length ? (
+					<ConsoleTabs
+						value={openTab}
+						onChange={goTo}
+						tabs={[
+							{ value: 'overview', label: 'Overview' },
+							...tabs.map(t => ({
+								value: String(t.index),
+								label: (
+									<>
+										{t.title}
+										{t.allowed && (
+											<Badge
+												ml={1.5}
+												size='xs'
+												variant='subtle'
+												borderRadius='full'>
+												{t.total.toLocaleString()}
+											</Badge>
+										)}
+									</>
+								),
+							})),
+						]}>
+						<Tabs.Content value='overview'>{overview}</Tabs.Content>
+						{tabs.map(t => (
+							<Tabs.Content
+								key={t.index}
+								value={String(t.index)}>
+								<ViewTabTable
+									path={slug}
+									id={id}
+									index={t.index}
+									title={t.title}
+								/>
+							</Tabs.Content>
+						))}
+					</ConsoleTabs>
+				) : (
+					overview
 				)}
 			</Column>
 		</Layout>
@@ -116,14 +188,7 @@ const ViewPage = () => {
 
 const containerCss: FlexProps = {
 	pt: 4,
-	gap: 4,
-};
-
-const editButtonCss: any = {
-	variant: 'white',
-	size: 'xs',
-	px: 4,
-	h: '24px',
+	gap: 5,
 };
 
 export default ViewPage;

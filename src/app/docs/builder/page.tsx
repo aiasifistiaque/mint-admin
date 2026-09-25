@@ -629,6 +629,17 @@ const BuilderDocs = () => {
 							too. The detail page&apos;s <em>Edit</em> button opens the same edit drawer as the
 							table&apos;s row menu.
 						</P>
+						<H3>Tabs</H3>
+						<P>
+							The detail page opens on <em>Overview</em> — the sections above, or the default layout when
+							there are none. Below the sections, <em>Tabs</em> adds one tab per link to records of another
+							route that point at this one: on an author, <em>Blogs via author</em> lists that
+							author&apos;s blogs. Only routes with a reference field to this model are offered; a route
+							linking in two ways (author, editor) offers both. Each tab has a title, the columns to show
+							and how many rows per page (5–100). Tabs appear in the order set here, each with a count, and
+							their rows open their own page. Like related lists, a tab only lists records the reader may
+							see; without view permission on that route it says so instead.
+						</P>
 					</Section>
 
 					<Section
@@ -983,7 +994,9 @@ const BuilderDocs = () => {
 								[<C key='d'>POST …/publish · reset · restore</C>, 'Publish, delete the copy, load a version as draft.'],
 								[<C key='e'>GET …/versions · compare</C>, 'History; published copy vs the file.'],
 								[<C key='f'>PUT /admin/api/builder/state · source</C>, 'The global switch; a route’s pin.'],
-								[<C key='g'>GET /admin/api/&lt;route&gt;/get/view/:id</C>, 'A record laid out by its view config (404 when there is none).'],
+								[<C key='g'>GET /admin/api/&lt;route&gt;/get/view/:id</C>, 'A record laid out by its view config, with its tabs and their counts (404 when there is neither).'],
+								[<C key='gt'>GET /admin/api/&lt;route&gt;/get/view/:id/tab/:index</C>, 'One page of a view tab (?page=, ?limit= up to 100).'],
+								[<C key='bl'>GET /admin/api/builder/backlinks/:model</C>, 'Routes whose model has a field referencing that model — what a tab can list.'],
 								[<C key='h'>GET · POST /admin/api/builder/models</C>, 'List built models; create one (registers it at once).'],
 								[<C key='i'>GET · PUT · DELETE …/models/:id</C>, 'One model; change it; delete it (?dropData=true also drops its records).'],
 								[<C key='j'>GET …/models/check?name=</C>, 'The name, route and collection a model would get.'],

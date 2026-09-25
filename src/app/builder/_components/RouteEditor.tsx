@@ -32,6 +32,7 @@ import { EditableFilter, ModelField, fromServer, humanize, toServer, validate } 
 import { BulkActionsPanel, PageOptionsPanel, RowMenuPanel } from './PagePanels';
 import FiltersPanel, { VISIBLE_BEFORE_MORE } from './FiltersPanel';
 import ViewLayoutPanel from './ViewLayoutPanel';
+import ViewTabsEditor, { tabProblems } from './ViewTabsEditor';
 import { DocLink, viewProblems } from './ui';
 import SettingsEditor, { SettingsField } from './SettingsEditor';
 import SectionsEditor from './SectionsEditor';
@@ -268,7 +269,7 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 			setEditingUid(Object.keys(errors)[0]);
 			return false;
 		}
-		const vp = viewProblems(working.rest.view);
+		const vp = [...viewProblems(working.rest.view), ...tabProblems(working.rest.viewTabs)];
 		if (vp.length) {
 			goTo('view');
 			toaster.create({ title: 'The view is incomplete', description: vp.join(' · '), type: 'error' });
@@ -378,6 +379,7 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 
 	const formSections: any[] = working.rest.form || [];
 	const viewSections: any[] = working.rest.view || [];
+	const viewTabs: any[] = working.rest.viewTabs || [];
 	const countFields = (sections: any[]) =>
 		sections.reduce((n, s) => n + (s.fields || []).flat().filter((x: any) => typeof x === 'string').length, 0);
 	const settingsDiff = compare?.settings?.published;
@@ -483,12 +485,17 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 				description='The record’s detail page: sections of fields, linked records, and lists of related records.'
 				doc='view'
 				lines={
-					viewSections.length
-						? [
-								`${viewSections.length} sections · ${countFields(viewSections)} fields${relatedCount ? ` · ${relatedCount} related lists` : ''}`,
-								viewSections.map(s => s.title || 'Untitled').join(', '),
-						  ]
-						: ['No view config — the detail page uses its default layout']
+					[
+						...(viewSections.length
+							? [
+									`${viewSections.length} sections · ${countFields(viewSections)} fields${relatedCount ? ` · ${relatedCount} related lists` : ''}`,
+									viewSections.map(s => s.title || 'Untitled').join(', '),
+							  ]
+							: ['No view sections — the detail page uses its default layout']),
+						...(viewTabs.length
+							? [`Tabs: Overview, ${viewTabs.map(t => t.title || t.related).join(', ')}`]
+							: []),
+					]
 				}
 				onOpen={() => goTo('view')}
 			/>
@@ -542,22 +549,38 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 			</Text>
 		</Panel>
 	) : (
-		<ViewLayoutPanel
-			sections={viewSections}
-			onChange={view => {
-				if (view) setRest({ view });
-				else {
-					const { view: _removed, ...rest } = working.rest;
-					setWorking(w => ({ ...w, rest }));
-				}
-			}}
-			formSections={formSections}
-			allKeys={settingsWorking.filter(f => !f.exclude).map(f => f.key)}
-			fields={tableFields}
-			modelFields={modelFields}
-			routes={routeOptions}
-			model={data.model}
-		/>
+		<Flex
+			direction='column'
+			gap={5}>
+			<ViewLayoutPanel
+				sections={viewSections}
+				onChange={view => {
+					if (view) setRest({ view });
+					else {
+						const { view: _removed, ...rest } = working.rest;
+						setWorking(w => ({ ...w, rest }));
+					}
+				}}
+				formSections={formSections}
+				allKeys={settingsWorking.filter(f => !f.exclude).map(f => f.key)}
+				fields={tableFields}
+				modelFields={modelFields}
+				routes={routeOptions}
+				model={data.model}
+			/>
+			<ViewTabsEditor
+				tabs={viewTabs}
+				onChange={tabs => {
+					if (tabs.length) setRest({ viewTabs: tabs });
+					else {
+						const { viewTabs: _removed, ...rest } = working.rest;
+						setWorking(w => ({ ...w, rest }));
+					}
+				}}
+				model={data.model}
+				routes={routeOptions}
+			/>
+		</Flex>
 	);
 
 	return (

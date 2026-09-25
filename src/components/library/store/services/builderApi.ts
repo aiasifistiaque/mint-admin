@@ -29,6 +29,12 @@ export const builderApi = mainApi.injectEndpoints({
 		getBuilderModelFields: builder.query<any, string>({
 			query: name => `builder/model/${encodeURIComponent(name)}`,
 		}),
+		// Routes whose model has a field referencing model `name` — what a view
+		// tab or related list on that model's detail page can list.
+		getBuilderBacklinks: builder.query<{ doc: { route: string; model: string; fields: string[] }[] }, string>({
+			query: name => `builder/backlinks/${encodeURIComponent(name)}`,
+			providesTags: ['builder'],
+		}),
 		saveBuilderDraft: builder.mutation<any, { route: string; kind: Kind; draft: any }>({
 			query: body => ({ url: 'builder/draft', method: 'PUT', body }),
 			invalidatesTags: ['builder'],
@@ -49,6 +55,14 @@ export const builderApi = mainApi.injectEndpoints({
 		// 'config' so a publish (which invalidates it) re-renders open pages.
 		getViewDocument: builder.query<any, { path: string; id: string }>({
 			query: ({ path, id }) => `${path}/get/view/${id}`,
+			providesTags: ['config'],
+		}),
+		// One page of a view tab (records of another route that reference this one).
+		getViewTab: builder.query<any, { path: string; id: string; index: number; page?: number; limit?: number }>({
+			query: ({ path, id, index, page = 1, limit }) => ({
+				url: `${path}/get/view/${id}/tab/${index}`,
+				params: { page, ...(limit && { limit }) },
+			}),
 			providesTags: ['config'],
 		}),
 		getBuilderState: builder.query<any, void>({
@@ -120,6 +134,7 @@ export const {
 	useGetBuilderRouteQuery,
 	useGetBuilderVersionsQuery,
 	useGetBuilderModelFieldsQuery,
+	useLazyGetBuilderModelFieldsQuery,
 	useSaveBuilderDraftMutation,
 	useDiscardBuilderDraftMutation,
 	usePublishBuilderRouteMutation,
@@ -127,6 +142,8 @@ export const {
 	useRestoreBuilderVersionMutation,
 	useGetBuilderStateQuery,
 	useGetViewDocumentQuery,
+	useGetViewTabQuery,
+	useGetBuilderBacklinksQuery,
 	useCompareBuilderRouteQuery,
 	useSetBuilderStateMutation,
 	useSetBuilderSourceMutation,

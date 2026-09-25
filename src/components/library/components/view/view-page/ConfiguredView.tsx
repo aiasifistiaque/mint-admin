@@ -8,6 +8,7 @@ import Panel from '../../../cl/Panel';
 import DataTable from '../../../cl/DataTable';
 import { DetailSkeleton } from '../../../cl/States';
 import ViewRow from './ViewRow';
+import { cellText as cell } from './cells';
 
 /**
  * A record laid out by its route's `view` config — the sections, titles and
@@ -26,16 +27,6 @@ const BLOCK_TYPES = ['editor', 'textarea'];
 
 const typeFromInstance = (instance?: string) =>
 	instance === 'Date' ? 'date' : instance === 'Number' ? 'number' : instance === 'Boolean' ? 'boolean' : 'text';
-
-/** A related row's cell: a populated reference shows its name, not an id. */
-const cell = (value: any): string => {
-	if (value === null || value === undefined || value === '') return '—';
-	if (Array.isArray(value)) return value.map(cell).join(', ');
-	if (typeof value === 'object') return value.name || value.title || value.code || value._id || '—';
-	if (typeof value === 'boolean') return value ? 'Yes' : 'No';
-	if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value)) return new Date(value).toLocaleDateString();
-	return String(value);
-};
 
 type Props = {
 	slug: string;
