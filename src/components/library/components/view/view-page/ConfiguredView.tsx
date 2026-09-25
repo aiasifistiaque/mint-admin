@@ -8,7 +8,7 @@ import Panel from '../../../cl/Panel';
 import DataTable from '../../../cl/DataTable';
 import { DetailSkeleton } from '../../../cl/States';
 import ViewRow from './ViewRow';
-import { cellText as cell } from './cells';
+import { cellNode } from './cells';
 
 /**
  * A record laid out by its route's `view` config — the sections, titles and
@@ -134,13 +134,7 @@ const ConfiguredView: FC<Props> = ({ slug, schema, view, isLoading }) => {
 										columns={item.columns.map((c: any) => ({
 											key: c.key,
 											label: c.label,
-											render: (r: any) => (
-												<Text
-													fontSize='sm'
-													truncate>
-													{cell(r[c.key])}
-												</Text>
-											),
+											render: (r: any) => cellNode(r[c.key], c.kind),
 										}))}
 										rows={item.rows}
 										rowKey={(r: any) => r._id}

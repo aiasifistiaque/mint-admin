@@ -25,6 +25,7 @@ import {
 } from '../..';
 
 import CreateModalProps from './types';
+import { withoutHidden } from '../../functions/formRules';
 
 const CreateModal = (props: CreateModalProps) => {
 	const {
@@ -160,8 +161,11 @@ const CreateModal = (props: CreateModalProps) => {
 			if (field.name in toPostData) delete toPostData[field.name];
 		});
 
-		if (type === 'update') updateApi({ path, id: id || 'id', body: changedData, invalidate });
-		else callApi({ path, body: toPostData, invalidate });
+		// Fields hidden by their conditions aren't sent (the server drops them too).
+		const shownFields = layout ? convertToFormFields({ schema: schemaData, layout: layout }) : data;
+		if (type === 'update')
+			updateApi({ path, id: id || 'id', body: withoutHidden(changedData, shownFields, formData), invalidate });
+		else callApi({ path, body: withoutHidden(toPostData, shownFields, formData), invalidate });
 	};
 
 	const onModalClose = () => {

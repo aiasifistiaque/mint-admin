@@ -33,6 +33,7 @@ import { BulkActionsPanel, PageOptionsPanel, RowMenuPanel } from './PagePanels';
 import FiltersPanel, { VISIBLE_BEFORE_MORE } from './FiltersPanel';
 import ViewLayoutPanel from './ViewLayoutPanel';
 import ViewTabsEditor, { tabProblems } from './ViewTabsEditor';
+import FormRulesPanel, { RuleField, formRuleProblems } from './FormRulesPanel';
 import { DocLink, viewProblems } from './ui';
 import SettingsEditor, { SettingsField } from './SettingsEditor';
 import SectionsEditor from './SectionsEditor';
@@ -220,6 +221,21 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 	// The settings being edited, not the published ones — a field added in the
 	// Settings panel can be a column straight away.
 	const settingsFields: any[] = settingsWorking;
+	const ruleFields: RuleField[] = (() => {
+		const inForm = new Set<string>(
+			(working.rest.form || []).flatMap((sec: any) => (sec.fields || []).flat()).filter((k: any) => typeof k === 'string')
+		);
+		return settingsWorking
+			.filter(f => !inForm.size || inForm.has(f.key))
+			.map(f => ({
+				key: f.key,
+				label: f.schema?.label || f.title,
+				input: f.schema?.type,
+				type: f.type,
+				options: Array.isArray(f.schema?.options) ? f.schema.options : undefined,
+				required: !!f.required,
+			}));
+	})();
 	const tableFields: TableField[] = settingsFields.map((f: any) => ({
 		key: f.key,
 		label: f.schema?.label || f.title || f.key,
@@ -267,6 +283,12 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 	const save = async () => {
 		if (errorCount) {
 			setEditingUid(Object.keys(errors)[0]);
+			return false;
+		}
+		const fp = formRuleProblems(working.rest.formRules, ruleFields);
+		if (fp.length) {
+			goTo('form');
+			toaster.create({ title: 'A conditional field is incomplete', description: fp.join(' · '), type: 'error' });
 			return false;
 		}
 		const vp = [...viewProblems(working.rest.view), ...tabProblems(working.rest.viewTabs)];
@@ -475,7 +497,12 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 				doc='form'
 				lines={
 					formSections.length
-						? [`${formSections.length} sections · ${countFields(formSections)} fields`, formSections.map(s => s.sectionTitle || 'Untitled').join(', ')]
+						? [
+								`${formSections.length} sections · ${countFields(formSections)} fields${
+									Object.keys(working.rest.formRules || {}).length ? ` · ${Object.keys(working.rest.formRules).length} conditional` : ''
+								}`,
+								formSections.map(s => s.sectionTitle || 'Untitled').join(', '),
+						  ]
 						: [isGeneric ? 'No form sections' : 'Part of the table config']
 				}
 				onOpen={() => goTo('form')}
@@ -512,6 +539,25 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 			/>
 		</Grid>
 	);
+
+	// Conditional fields: the ones in the form (every settings field when the form is hand-written).
+	const inheritedRules: Record<string, any> = Object.fromEntries(
+		settingsWorking.filter(f => f.schema?.renderIf?.field).map(f => [f.key, f.schema.renderIf])
+	);
+	const rulesPanel = hasSettings ? (
+		<FormRulesPanel
+			rules={working.rest.formRules || {}}
+			inherited={inheritedRules}
+			fields={ruleFields}
+			onChange={formRules => {
+				if (formRules) setRest({ formRules });
+				else {
+					const { formRules: _removed, ...rest } = working.rest;
+					setWorking(w => ({ ...w, rest }));
+				}
+			}}
+		/>
+	) : null;
 
 	const formPanel = !isGeneric ? (
 		needsTableConfig
@@ -578,6 +624,7 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 					}
 				}}
 				model={data.model}
+				modelFields={modelFields}
 				routes={routeOptions}
 			/>
 		</Flex>
@@ -840,7 +887,14 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 
 					</Flex>
 					)}
-					{tab === 'form' && formPanel}
+					{tab === 'form' && (
+						<Flex
+							direction='column'
+							gap={5}>
+							{formPanel}
+							{rulesPanel}
+						</Flex>
+					)}
 					{tab === 'view' && viewPanel}
 					{tab === 'source' && (
 					<Flex

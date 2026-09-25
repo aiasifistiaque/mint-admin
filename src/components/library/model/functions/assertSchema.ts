@@ -46,6 +46,7 @@ const ALLOWED_FIELD_KEYS = new Set([
 	'hasImage',
 	'helper',
 	'renderIf',
+	'formula',
 	'displayValue',
 	'path',
 	'min',

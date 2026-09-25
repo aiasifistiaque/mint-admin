@@ -1,8 +1,8 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Badge, Box, Button, Flex, IconButton, Input, Text } from '@chakra-ui/react';
-import { ArrowDown, ArrowUp, Link2, Plus, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, LayoutGrid, Link2, Plus, Table2, Trash2 } from 'lucide-react';
 import {
 	radius,
 	useGetBuilderBacklinksQuery,
@@ -15,60 +15,114 @@ import { DocLink } from './ui';
 
 /**
  * The detail page's tabs — the config's `viewTabs`. The page opens on
- * Overview (the view sections); each tab after it lists the records of
- * another route that link to this one: an author's blogs, a client's
- * invoices. Only routes with a field referencing this model can be linked,
- * so the choices come from the server's backlinks.
+ * Overview (the view sections); each tab after it lists records of any other
+ * route linked to this one, either way round:
+ *
+ * - their field points at this record (Blog.author → an author's blogs), or
+ * - this record's field holds them (Author.books → the books it lists).
+ *
+ * Each tab has a name, a description, the columns to show, table or card
+ * display, and a page size. The page adds search and paging.
  */
 
-export type ViewTab = { related: string; foreignField: string; title?: string; columns: string[]; pageSize?: number };
+export type ViewTab = {
+	related: string;
+	foreignField?: string;
+	localField?: string;
+	title?: string;
+	description?: string;
+	display?: 'table' | 'cards';
+	columns: string[];
+	pageSize?: number;
+};
 
 type RouteOption = { route: string; model: string | null; title?: string | null };
 
 type Props = {
 	tabs: ViewTab[];
 	onChange: (tabs: ViewTab[]) => void;
-	/** This route's model name — what the linked routes reference. */
+	/** This route's model name, and its fields — the two ends a link can start from. */
 	model: string;
+	modelFields: ModelField[];
 	routes: RouteOption[];
 };
 
 const ICON = { size: 14, strokeWidth: 1.75 };
+const IMAGE_NAME = /(^|[._-])(image|img|photo|avatar|logo|thumbnail|thumb|picture|banner|cover|icon)s?$/i;
 const PREFERRED = ['code', 'name', 'title', 'status', 'price', 'total', 'createdAt'];
+const usable = (f: ModelField) => !['_id', '__v'].includes(f.key) && !f.key.includes('.');
 
-/** A new tab's columns: the usual naming/summary fields the related model has, else its first few. */
-const defaultColumns = (fields: ModelField[], foreignField: string) => {
-	const keys = fields.map(f => f.key).filter(k => k !== '_id' && k !== '__v' && k !== foreignField && !k.includes('.'));
+/** A new tab's columns: an image if there is one, then the usual naming/summary fields. */
+const defaultColumns = (fields: ModelField[], skip?: string) => {
+	const keys = fields.filter(usable).map(f => f.key).filter(k => k !== skip);
+	const image = keys.find(k => IMAGE_NAME.test(k));
 	const picked = PREFERRED.filter(k => keys.includes(k)).slice(0, 4);
-	return picked.length ? picked : keys.slice(0, 3);
+	const cols = picked.length ? picked : keys.filter(k => k !== image).slice(0, 3);
+	return image ? [image, ...cols] : cols;
+};
+
+/** The ways two routes can be linked: their fields referencing this model, this model's referencing theirs. */
+const linksBetween = (model: string, modelFields: ModelField[], relatedModel: string | undefined, relatedFields: ModelField[]) => ({
+	theirs: relatedFields.filter(f => f.ref === model).map(f => f.key),
+	ours: relatedModel ? modelFields.filter(f => f.ref === relatedModel).map(f => f.key) : [],
+});
+
+const linkValue = (t: ViewTab) => (t.foreignField ? `f:${t.foreignField}` : t.localField ? `l:${t.localField}` : '');
+const withLink = (t: ViewTab, v: string): ViewTab => {
+	const { foreignField: _f, localField: _l, ...rest } = t;
+	if (v.startsWith('f:')) return { ...rest, foreignField: v.slice(2) };
+	if (v.startsWith('l:')) return { ...rest, localField: v.slice(2) };
+	return rest;
 };
 
 export const tabProblems = (tabs: ViewTab[] = []) => {
 	const out: string[] = [];
 	tabs.forEach((t, i) => {
-		const where = t.title || `tab ${i + 1}`;
-		if (!t.foreignField) out.push(`${where}: pick the field linking ${t.related}`);
-		if (!t.columns?.length) out.push(`${where}: pick columns`);
+		const where = t.title || `tab ${i + 2}`;
+		if (!t.related) out.push(`${where}: pick the records to show`);
+		else if (!t.foreignField && !t.localField) out.push(`${where}: pick how ${t.related} links to this record`);
+		if (t.related && !t.columns?.length) out.push(`${where}: pick at least one column`);
 	});
 	return out;
 };
+
+const Row: FC<{ label: string; children: ReactNode }> = ({ label, children }) => (
+	<Flex
+		align='center'
+		gap={2}
+		flexWrap='wrap'>
+		<Text
+			fontSize='xs'
+			color='fg.muted'
+			w='92px'
+			flexShrink={0}>
+			{label}
+		</Text>
+		{children}
+	</Flex>
+);
 
 const TabCard: FC<{
 	tab: ViewTab;
 	index: number;
 	count: number;
+	model: string;
+	modelFields: ModelField[];
+	routes: RouteOption[];
 	titleOf: (route: string) => string;
-	links: string[];
 	onChange: (t: ViewTab) => void;
+	onPickRoute: (route: string) => void;
 	onMove: (to: number) => void;
 	onRemove: () => void;
-	relatedModel?: string;
-}> = ({ tab, index, count, titleOf, links, onChange, onMove, onRemove, relatedModel }) => {
+}> = ({ tab, index, count, model, modelFields, routes, titleOf, onChange, onPickRoute, onMove, onRemove }) => {
+	const relatedModel = routes.find(r => r.route === tab.related)?.model || undefined;
 	const { data } = useGetBuilderModelFieldsQuery(relatedModel as string, { skip: !relatedModel });
-	const fields: ModelField[] = (data?.fields || []).filter(
-		(f: ModelField) => !['_id', '__v'].includes(f.key) && f.key !== tab.foreignField && !f.key.includes('.')
-	);
+	const relatedFields: ModelField[] = (data?.fields || []).filter(usable);
+	const { theirs, ours } = linksBetween(model, modelFields, relatedModel, relatedFields);
+	const columnChoices = relatedFields.filter(f => f.key !== tab.foreignField);
 	const problems = tabProblems([tab]).map(p => p.replace(/^[^:]*: /, ''));
+	const display = tab.display || 'table';
+	const name = tab.related ? titleOf(tab.related) : 'records';
 
 	return (
 		<Box
@@ -77,160 +131,251 @@ const TabCard: FC<{
 			borderRadius='md'
 			p={3}>
 			<Flex
-				align='center'
-				gap={2}
-				flexWrap='wrap'
-				mb={3}>
-				<Badge
-					variant='outline'
-					fontSize='10px'>
-					Tab {index + 2}
-				</Badge>
-				<Input
-					size='xs'
-					w='200px'
-					placeholder={titleOf(tab.related)}
-					value={tab.title || ''}
-					onChange={e => onChange({ ...tab, title: e.target.value || undefined })}
-				/>
-				<Text
-					fontSize='xs'
-					color='fg.muted'>
-					lists {titleOf(tab.related)} where
-				</Text>
-				<Dropdown
-					size='xs'
-					w='160px'
-					value={tab.foreignField}
-					placeholder='Link field'
-					onChange={(v: string) => onChange({ ...tab, foreignField: v })}>
-					{links.map(k => (
-						<option
-							key={k}
-							value={k}>
-							{k}
-						</option>
-					))}
-				</Dropdown>
-				<Text
-					fontSize='xs'
-					color='fg.muted'>
-					is this record
-				</Text>
+				direction='column'
+				gap={2.5}>
 				<Flex
-					ml='auto'
-					gap={1}>
-					<IconButton
-						size='2xs'
-						variant='ghost'
-						aria-label='Move left'
-						title='Earlier'
-						disabled={index === 0}
-						onClick={() => onMove(index - 1)}>
-						<ArrowUp {...ICON} />
-					</IconButton>
-					<IconButton
-						size='2xs'
-						variant='ghost'
-						aria-label='Move right'
-						title='Later'
-						disabled={index === count - 1}
-						onClick={() => onMove(index + 1)}>
-						<ArrowDown {...ICON} />
-					</IconButton>
-					<IconButton
-						size='2xs'
-						variant='ghost'
-						color='red.fg'
-						aria-label='Remove tab'
-						title='Remove'
-						onClick={onRemove}>
-						<Trash2 {...ICON} />
-					</IconButton>
-				</Flex>
-			</Flex>
-
-			<Text
-				fontSize='xs'
-				fontWeight='600'
-				mb={1.5}>
-				Columns
-			</Text>
-			<Flex
-				gap={1}
-				flexWrap='wrap'
-				mb={3}>
-				{fields.map(f => {
-					const on = tab.columns.includes(f.key);
-					return (
-						<Button
-							key={f.key}
+					align='center'
+					gap={2}>
+					<Badge
+						variant='outline'
+						fontSize='10px'>
+						Tab {index + 2}
+					</Badge>
+					<Input
+						size='xs'
+						flex='1'
+						maxW='260px'
+						placeholder={tab.related ? titleOf(tab.related) : 'Tab name'}
+						value={tab.title || ''}
+						onChange={e => onChange({ ...tab, title: e.target.value || undefined })}
+					/>
+					<Flex
+						ml='auto'
+						gap={1}>
+						<IconButton
 							size='2xs'
-							variant={on ? 'solid' : 'outline'}
-							onClick={() =>
-								onChange({ ...tab, columns: on ? tab.columns.filter(k => k !== f.key) : [...tab.columns, f.key] })
-							}>
-							{f.key}
-						</Button>
-					);
-				})}
-			</Flex>
+							variant='ghost'
+							aria-label='Move earlier'
+							title='Earlier'
+							disabled={index === 0}
+							onClick={() => onMove(index - 1)}>
+							<ArrowUp {...ICON} />
+						</IconButton>
+						<IconButton
+							size='2xs'
+							variant='ghost'
+							aria-label='Move later'
+							title='Later'
+							disabled={index === count - 1}
+							onClick={() => onMove(index + 1)}>
+							<ArrowDown {...ICON} />
+						</IconButton>
+						<IconButton
+							size='2xs'
+							variant='ghost'
+							color='red.fg'
+							aria-label='Remove tab'
+							title='Remove'
+							onClick={onRemove}>
+							<Trash2 {...ICON} />
+						</IconButton>
+					</Flex>
+				</Flex>
 
-			<Flex
-				align='center'
-				gap={2}>
-				<Text
-					fontSize='xs'
-					color='fg.muted'>
-					Rows per page
-				</Text>
-				<Input
-					size='xs'
-					w='64px'
-					type='number'
-					min={5}
-					max={100}
-					value={tab.pageSize ?? 20}
-					onChange={e => onChange({ ...tab, pageSize: Math.min(100, Math.max(5, Number(e.target.value) || 20)) })}
-				/>
-			</Flex>
+				<Row label='Description'>
+					<Input
+						size='xs'
+						flex='1'
+						placeholder='Shown under the tab’s heading (optional)'
+						value={tab.description || ''}
+						maxLength={300}
+						onChange={e => onChange({ ...tab, description: e.target.value || undefined })}
+					/>
+				</Row>
 
-			{problems.length > 0 && (
-				<Text
-					mt={2}
-					fontSize='11px'
-					color='red.fg'>
-					{problems.join(' · ')}
-				</Text>
-			)}
+				<Row label='Records from'>
+					<Dropdown
+						size='xs'
+						w='220px'
+						value={tab.related}
+						placeholder='Pick a route'
+						onChange={(v: string) => onPickRoute(v)}>
+						{routes.map(r => (
+							<option
+								key={r.route}
+								value={r.route}>
+								{`${r.title || r.route} (${r.route})`}
+							</option>
+						))}
+					</Dropdown>
+				</Row>
+
+				{tab.related && (
+					<Row label='Linked by'>
+						{theirs.length || ours.length ? (
+							<Dropdown
+								size='xs'
+								w='320px'
+								value={linkValue(tab)}
+								placeholder='Pick the link'
+								onChange={(v: string) => onChange(withLink(tab, v))}>
+								{theirs.length > 0 && (
+									<optgroup label={`${name} pointing at this record`}>
+										{theirs.map(k => (
+											<option
+												key={`f:${k}`}
+												value={`f:${k}`}>
+												{`${name} whose ${k} is this record`}
+											</option>
+										))}
+									</optgroup>
+								)}
+								{ours.length > 0 && (
+									<optgroup label={`This record's fields`}>
+										{ours.map(k => (
+											<option
+												key={`l:${k}`}
+												value={`l:${k}`}>
+												{`${name} listed in this record’s ${k}`}
+											</option>
+										))}
+									</optgroup>
+								)}
+							</Dropdown>
+						) : (
+							<Text
+								fontSize='xs'
+								color='red.fg'>
+								{relatedModel
+									? `No field links ${name} and ${model}. Add a reference field between them first.`
+									: 'Loading…'}
+							</Text>
+						)}
+					</Row>
+				)}
+
+				{tab.related && (
+					<>
+						<Row label='Show as'>
+							<Flex gap={1}>
+								<Button
+									size='2xs'
+									variant={display === 'table' ? 'solid' : 'outline'}
+									onClick={() => onChange({ ...tab, display: 'table' })}>
+									<Table2 {...ICON} />
+									Table
+								</Button>
+								<Button
+									size='2xs'
+									variant={display === 'cards' ? 'solid' : 'outline'}
+									onClick={() => onChange({ ...tab, display: 'cards' })}>
+									<LayoutGrid {...ICON} />
+									Cards
+								</Button>
+							</Flex>
+							<Text
+								fontSize='11px'
+								color='fg.muted'>
+								{display === 'cards'
+									? 'The first image column is the picture, the next column the heading, the rest details.'
+									: 'Image columns show the image.'}
+							</Text>
+						</Row>
+
+						<Row label={display === 'cards' ? 'Card fields' : 'Columns'}>
+							<Flex
+								gap={1}
+								flexWrap='wrap'
+								flex='1'>
+								{columnChoices.map(f => {
+									const at = tab.columns.indexOf(f.key);
+									return (
+										<Button
+											key={f.key}
+											size='2xs'
+											variant={at >= 0 ? 'solid' : 'outline'}
+											title={at >= 0 ? 'Click to remove' : 'Click to add at the end'}
+											onClick={() =>
+												onChange({
+													...tab,
+													columns: at >= 0 ? tab.columns.filter(k => k !== f.key) : [...tab.columns, f.key],
+												})
+											}>
+											{at >= 0 && <Text as='span' opacity={0.7}>{at + 1}</Text>}
+											{f.key}
+										</Button>
+									);
+								})}
+							</Flex>
+						</Row>
+
+						<Row label='Per page'>
+							<Input
+								size='xs'
+								w='64px'
+								type='number'
+								min={5}
+								max={100}
+								value={tab.pageSize ?? 20}
+								onChange={e => onChange({ ...tab, pageSize: Math.min(100, Math.max(5, Number(e.target.value) || 20)) })}
+							/>
+							<Text
+								fontSize='11px'
+								color='fg.muted'>
+								The tab has a search box and pages through the rest.
+							</Text>
+						</Row>
+					</>
+				)}
+
+				{problems.length > 0 && (
+					<Text
+						fontSize='11px'
+						color='red.fg'>
+						{problems.join(' · ')}
+					</Text>
+				)}
+			</Flex>
 		</Box>
 	);
 };
 
-const ViewTabsEditor: FC<Props> = ({ tabs, onChange, model, routes }) => {
-	const { data: backlinks, isLoading } = useGetBuilderBacklinksQuery(model, { skip: !model });
+const ViewTabsEditor: FC<Props> = ({ tabs, onChange, model, modelFields, routes }) => {
+	const { data: backlinks } = useGetBuilderBacklinksQuery(model, { skip: !model });
 	const [loadFields] = useLazyGetBuilderModelFieldsQuery();
-	const linked = backlinks?.doc || [];
 
 	const titleOf = (route: string) => routes.find(r => r.route === route)?.title || route;
+	const modelOf = (route: string) => routes.find(r => r.route === route)?.model || backlinks?.doc.find(l => l.route === route)?.model;
 	const has = (route: string, field: string) => tabs.some(t => t.related === route && t.foreignField === field);
-	const suggestions = linked.flatMap(l => l.fields.map(f => ({ route: l.route, model: l.model, field: f }))).filter(s => !has(s.route, s.field));
+	// Quick picks: routes that already point at this model.
+	const suggestions = (backlinks?.doc || [])
+		.flatMap(l => l.fields.map(f => ({ route: l.route, field: f, many: l.fields.length > 1 })))
+		.filter(s => !has(s.route, s.field));
 
-	const add = async (s: { route: string; model: string; field: string }) => {
-		const res: any = await loadFields(s.model, true).unwrap().catch(() => null);
-		const columns = defaultColumns(res?.fields || [], s.field);
-		// Two links from the same route (e.g. author, editor) need telling apart.
-		const twoWays = linked.find(l => l.route === s.route)!.fields.length > 1;
-		onChange([
-			...tabs,
-			{
-				related: s.route,
-				foreignField: s.field,
-				...(twoWays && { title: `${titleOf(s.route)} (${s.field})` }),
-				columns,
-				pageSize: 20,
-			},
-		]);
+	const setTab = (i: number, t: ViewTab) => onChange(tabs.map((x, j) => (j === i ? t : x)));
+
+	/** A tab for `route`: the link filled in when there's only one way, and default columns. */
+	const build = async (route: string, base: Partial<ViewTab> = {}): Promise<ViewTab> => {
+		const relatedModel = modelOf(route);
+		const res: any = relatedModel ? await loadFields(relatedModel, true).unwrap().catch(() => null) : null;
+		const fields: ModelField[] = res?.fields || [];
+		const { theirs, ours } = linksBetween(model, modelFields, relatedModel, fields);
+		const link =
+			base.foreignField || base.localField
+				? {}
+				: theirs.length + ours.length === 1
+				? theirs.length
+					? { foreignField: theirs[0] }
+					: { localField: ours[0] }
+				: {};
+		const t: ViewTab = { related: route, display: 'table', pageSize: 20, ...base, ...link, columns: [] };
+		t.columns = defaultColumns(fields, t.foreignField);
+		return t;
+	};
+
+	const pickRoute = async (i: number, route: string) => {
+		const { title, description, display, pageSize } = tabs[i];
+		setTab(i, await build(route, { title, description, display, pageSize }));
 	};
 
 	const move = (from: number, to: number) => {
@@ -243,7 +388,7 @@ const ViewTabsEditor: FC<Props> = ({ tabs, onChange, model, routes }) => {
 	return (
 		<Panel
 			title='Tabs'
-			subtitle='The detail page opens on Overview — the sections above. Each tab after it lists records of another route that link to this one, like an author’s blogs.'
+			subtitle='The detail page opens on Overview — the sections above. Each tab after it lists records of another route linked to this one, as a searchable table or cards.'
 			actions={<DocLink section='view' />}>
 			<Flex
 				direction='column'
@@ -252,7 +397,7 @@ const ViewTabsEditor: FC<Props> = ({ tabs, onChange, model, routes }) => {
 				<Flex
 					gap={1}
 					flexWrap='wrap'>
-					{['Overview', ...tabs.map(t => t.title || titleOf(t.related))].map((label, i) => (
+					{['Overview', ...tabs.map(t => t.title || (t.related ? titleOf(t.related) : 'New tab'))].map((label, i) => (
 						<Box
 							key={i}
 							px={3}
@@ -268,47 +413,56 @@ const ViewTabsEditor: FC<Props> = ({ tabs, onChange, model, routes }) => {
 
 				{tabs.map((tab, i) => (
 					<TabCard
-						key={`${tab.related}-${tab.foreignField}-${i}`}
+						key={i}
 						tab={tab}
 						index={i}
 						count={tabs.length}
+						model={model}
+						modelFields={modelFields}
+						routes={routes}
 						titleOf={titleOf}
-						links={linked.find(l => l.route === tab.related)?.fields || (tab.foreignField ? [tab.foreignField] : [])}
-						relatedModel={routes.find(r => r.route === tab.related)?.model || linked.find(l => l.route === tab.related)?.model}
-						onChange={t => onChange(tabs.map((x, j) => (j === i ? t : x)))}
+						onChange={t => setTab(i, t)}
+						onPickRoute={route => pickRoute(i, route)}
 						onMove={to => move(i, to)}
 						onRemove={() => onChange(tabs.filter((_, j) => j !== i))}
 					/>
 				))}
 
-				<Box>
-					<Flex
-						align='center'
-						gap={1.5}
-						mb={1.5}>
-						<Link2 size={13} />
-						<Text
-							fontSize='xs'
-							fontWeight='600'>
-							Add a tab
-						</Text>
-					</Flex>
-					{isLoading ? (
-						<Text
-							fontSize='xs'
-							color='fg.muted'>
-							Looking for routes that link here…
-						</Text>
-					) : suggestions.length ? (
-						<Flex
-							gap={1.5}
-							flexWrap='wrap'>
+				<Flex
+					align='center'
+					gap={1.5}
+					flexWrap='wrap'>
+					<Button
+						size='xs'
+						variant='outline'
+						onClick={() => onChange([...tabs, { related: '', display: 'table', pageSize: 20, columns: [] }])}>
+						<Plus {...ICON} />
+						Add a tab
+					</Button>
+					{suggestions.length > 0 && (
+						<>
+							<Flex
+								align='center'
+								gap={1}
+								ml={2}
+								color='fg.muted'>
+								<Link2 size={12} />
+								<Text fontSize='xs'>Linking here:</Text>
+							</Flex>
 							{suggestions.map(s => (
 								<Button
 									key={`${s.route}-${s.field}`}
 									size='xs'
-									variant='outline'
-									onClick={() => add(s)}>
+									variant='ghost'
+									onClick={async () =>
+										onChange([
+											...tabs,
+											await build(s.route, {
+												foreignField: s.field,
+												...(s.many && { title: `${titleOf(s.route)} (${s.field})` }),
+											}),
+										])
+									}>
 									<Plus {...ICON} />
 									{titleOf(s.route)}
 									<Text
@@ -318,17 +472,9 @@ const ViewTabsEditor: FC<Props> = ({ tabs, onChange, model, routes }) => {
 									</Text>
 								</Button>
 							))}
-						</Flex>
-					) : (
-						<Text
-							fontSize='xs'
-							color='fg.muted'>
-							{linked.length
-								? 'Every route that links here already has a tab.'
-								: `No route links to ${model} yet. Add a reference field pointing at ${model} to another model, and it shows up here.`}
-						</Text>
+						</>
 					)}
-				</Box>
+				</Flex>
 			</Flex>
 		</Panel>
 	);

@@ -83,8 +83,10 @@ const ReadOnlyInput = ({ item, isRequired, type, ...props }: any) => (
 		type={type}
 		isRequired={isRequired}
 		helper={item?.helper}
-		isReadOnly={true}
 		{...props}
+		// Chakra v3's prop — `isReadOnly` was v2's and is ignored, which left these typeable.
+		readOnly
+		bg='bg.muted'
 	/>
 );
 

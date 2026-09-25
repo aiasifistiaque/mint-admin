@@ -15,6 +15,7 @@ import { Dropdown, PageHeader, Panel } from '@/components/library/cl';
 import { toaster } from '@/components/ui/toaster';
 import SettingsEditor, { SettingsField } from '@/app/builder/_components/SettingsEditor';
 import SectionsEditor from '@/app/builder/_components/SectionsEditor';
+import FormRulesPanel from '@/app/builder/_components/FormRulesPanel';
 import TableColumnsEditor, { TableField } from '@/app/builder/_components/TableColumnsEditor';
 import { BulkActionsPanel, PageOptionsPanel, RowMenuPanel } from '@/app/builder/_components/PagePanels';
 import FiltersPanel from '@/app/builder/_components/FiltersPanel';
@@ -716,6 +717,30 @@ const ModelWizard = () => {
 									onChange={form => setRest({ form })}
 								/>
 							</Panel>
+						)}
+						{key === 'form' && (
+							<FormRulesPanel
+								rules={config.rest.formRules || {}}
+								inherited={Object.fromEntries(
+									settings.filter((f: any) => f.schema?.renderIf?.field).map((f: any) => [f.key, f.schema.renderIf])
+								)}
+								fields={(() => {
+									const inForm = new Set<string>(
+										(config.rest.form || []).flatMap((sec: any) => (sec.fields || []).flat()).filter((k: any) => typeof k === 'string')
+									);
+									return settings
+										.filter((f: any) => !inForm.size || inForm.has(f.key))
+										.map((f: any) => ({
+											key: f.key,
+											label: f.schema?.label || f.title,
+											input: f.schema?.type,
+											type: f.type,
+											options: Array.isArray(f.schema?.options) ? f.schema.options : undefined,
+											required: !!f.required,
+										}));
+								})()}
+								onChange={formRules => setRest({ formRules })}
+							/>
 						)}
 
 						{key === 'table' && (

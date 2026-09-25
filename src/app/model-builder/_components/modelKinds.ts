@@ -1,3 +1,5 @@
+import { FieldInfo, checkFormula } from '@/components/library/functions/formula';
+
 /**
  * The field kinds the model builder offers — the same list the backend
  * compiles (library/functions/dynamicModels.function.ts, FIELD_KINDS). Each
@@ -12,6 +14,7 @@ export type FieldKind =
 	| 'email'
 	| 'url'
 	| 'number'
+	| 'formula'
 	| 'boolean'
 	| 'date'
 	| 'select'
@@ -34,6 +37,12 @@ export const KINDS: { value: FieldKind; label: string; hint: string; group: stri
 	{ value: 'url', label: 'Link', hint: 'A web address, shown as a link', group: 'Text' },
 	{ value: 'color', label: 'Color', hint: 'A colour, picked with a colour picker', group: 'Text' },
 	{ value: 'number', label: 'Number', hint: 'Sortable; can have a minimum and maximum', group: 'Values' },
+	{
+		value: 'formula',
+		label: 'Formula',
+		hint: 'A number calculated from other number fields — e.g. due = total - paid. Read-only',
+		group: 'Values',
+	},
 	{ value: 'boolean', label: 'Yes / No', hint: 'A checkbox, with a Yes/No filter', group: 'Values' },
 	{ value: 'date', label: 'Date', hint: 'With a date filter', group: 'Values' },
 	// One entry in the kind picker: "Options". Whether one or several can be
@@ -68,8 +77,8 @@ export const ENUM_KINDS: FieldKind[] = ['text', 'number', 'select', 'multiselect
 export const NEEDS_OPTIONS: FieldKind[] = ['select', 'multiselect'];
 /** Kinds stored as a list — their default is a list too. */
 export const ARRAY_KINDS: FieldKind[] = ['multiselect', 'tags', 'images', 'files', 'references'];
-export const NO_DEFAULT_KINDS: FieldKind[] = ['reference', 'references'];
-const CANT_BE_UNIQUE: FieldKind[] = ['boolean', 'editor', 'textarea', ...ARRAY_KINDS];
+export const NO_DEFAULT_KINDS: FieldKind[] = ['reference', 'references', 'formula'];
+const CANT_BE_UNIQUE: FieldKind[] = ['boolean', 'editor', 'textarea', 'formula', ...ARRAY_KINDS];
 export const canBeUnique = (kind: FieldKind) => !CANT_BE_UNIQUE.includes(kind);
 export const hasLength = (kind: FieldKind) => ['text', 'email', 'url', 'textarea', 'editor'].includes(kind);
 export const hasOptions = (f: Pick<EditableField, 'kind' | 'options'>) =>
@@ -103,6 +112,8 @@ export type EditableField = {
 	showInTable?: boolean;
 	searchable?: boolean;
 	helper?: string;
+	/** The formula kind's calculation, e.g. `total - paid`. */
+	formula?: string;
 	/** Editor-only: the key follows the label until it's typed by hand. */
 	keyTouched?: boolean;
 };
@@ -149,6 +160,12 @@ export const toServer = (fields: EditableField[]) =>
 		else out.options = (f.options || []).filter(o => o.value?.trim());
 		if (!out.options?.length) delete out.options;
 		if (!REFERENCE_KINDS.includes(f.kind)) delete out.ref;
+		if (f.kind !== 'formula') delete out.formula;
+		else {
+			// Calculated, never typed.
+			delete out.required;
+			delete out.unique;
+		}
 		if (out.min === null || out.min === undefined || Number.isNaN(out.min)) delete out.min;
 		if (out.max === null || out.max === undefined || Number.isNaN(out.max)) delete out.max;
 		if (!canBeUnique(f.kind)) delete out.unique;
@@ -165,8 +182,19 @@ const defaultValues = (f: EditableField): string[] =>
 	f.default === undefined || f.default === null || f.default === '' ? [] : (Array.isArray(f.default) ? f.default : [f.default]).map(String);
 
 /** Which input a field problem is about — where it's shown, and which input turns red. */
-export type FieldErrorOn = 'key' | 'ref' | 'options' | 'default' | 'range';
+export type FieldErrorOn = 'key' | 'ref' | 'options' | 'default' | 'range' | 'formula';
 export type FieldError = { message: string; on: FieldErrorOn };
+
+/** What a formula may use: the model's fields, and which hold numbers. */
+export const formulaFieldsOf = (fields: EditableField[]): FieldInfo[] =>
+	fields
+		.filter(f => f.key)
+		.map(f => ({
+			key: f.key,
+			label: f.label,
+			numeric: f.kind === 'number' || f.kind === 'formula',
+			...(f.kind === 'formula' && { formula: f.formula }),
+		}));
 
 /** Keys access control adds to every record; no field may use them while it's on. */
 export const ACCESS_KEYS = ['privacy', 'access', 'addedBy'];
@@ -198,6 +226,11 @@ export const validateFields = (fields: EditableField[], { accessEnabled = false 
 			if (outside.length) return fail(f.uid, 'default', `${outside.join(', ')} isn’t one of the options`);
 		}
 		if (typeof f.min === 'number' && typeof f.max === 'number' && f.min > f.max) return fail(f.uid, 'range', 'Min is above max');
+		if (f.kind === 'formula') {
+			if (!f.formula?.trim()) return fail(f.uid, 'formula', 'Write its formula');
+			const checked = checkFormula(f.formula, formulaFieldsOf(fields), f.key);
+			if (!checked.ok) return fail(f.uid, 'formula', checked.errors.map(e => e.message).join('; '));
+		}
 	});
 	return errors;
 };

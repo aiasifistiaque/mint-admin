@@ -58,10 +58,13 @@ export const builderApi = mainApi.injectEndpoints({
 			providesTags: ['config'],
 		}),
 		// One page of a view tab (records of another route that reference this one).
-		getViewTab: builder.query<any, { path: string; id: string; index: number; page?: number; limit?: number }>({
-			query: ({ path, id, index, page = 1, limit }) => ({
+		getViewTab: builder.query<
+			any,
+			{ path: string; id: string; index: number; page?: number; limit?: number; search?: string }
+		>({
+			query: ({ path, id, index, page = 1, limit, search }) => ({
 				url: `${path}/get/view/${id}/tab/${index}`,
-				params: { page, ...(limit && { limit }) },
+				params: { page, ...(limit && { limit }), ...(search && { search }) },
 			}),
 			providesTags: ['config'],
 		}),

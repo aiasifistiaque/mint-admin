@@ -444,6 +444,28 @@ const BuilderDocs = () => {
 							<C>boolean</C>, <C>date</C>, <C>date-only</C>, <C>object</C>, <C>array</C>, <C>array-string</C>,{' '}
 							<C>array-number</C>, <C>array-object</C>, <C>tag</C>, <C>mixed</C>, <C>profit</C>.
 						</P>
+						<H3>Formula fields</H3>
+						<P>
+							Any number field can be calculated instead of typed — an order&apos;s <C>due</C> from its{' '}
+							<C>total</C> and <C>paid</C>, a line&apos;s <C>amount</C> from <C>price * qty</C>. In Settings,
+							pick <strong>formula</strong> as the field&apos;s data type (or <em>Formula (calculated)</em> as
+							its input); it&apos;s offered on every field the model stores as a number. In the model builder,
+							add the field with the <strong>Formula</strong> kind instead of Number. Either way the formula
+							window opens. Build it from the field list, the operator buttons (+ − × ÷ %,
+							brackets) and the functions (<C>round</C>, <C>floor</C>, <C>ceil</C>, <C>abs</C>, <C>min</C>,{' '}
+							<C>max</C>), or type it — e.g. <C>total - paid</C> or <C>round(price * qty * 1.05, 2)</C>. It&apos;s
+							checked as you go: a name that isn&apos;t a field, a field that isn&apos;t a number, a formula that
+							uses itself (directly or through another formula) or a typo is pointed at, and <em>Try it</em>{' '}
+							works it out on sample numbers.
+						</P>
+						<P>
+							A formula field is read-only and never required: forms show the result live as the fields it
+							uses are typed, and the server calculates the stored value on every create, edit and bulk edit —
+							a value sent for it is ignored. An empty field counts as 0; dividing by 0 leaves it empty.
+							Publishing a new or changed formula recalculates every existing record. The field must be a
+							number on the model. A model-builder Formula field is stored as a number, and changing its formula
+							there recalculates existing records too.
+						</P>
 						<H3>Expanded options</H3>
 						<Terms
 							rows={[
@@ -580,6 +602,27 @@ const BuilderDocs = () => {
 							on create) in Settings, or the API will refuse it.
 						</P>
 						<P>Hand-written routes get a form once they have a table config.</P>
+						<H3>Conditional fields</H3>
+						<P>
+							Below the form, <em>Conditional fields</em> shows a field only when others hold certain values.
+							Pick <em>Make a field conditional…</em>, then its conditions: a field, a test (is, is not, is one
+							of, is none of, more / less than, is filled in, is empty, is on, is off) and a value — picked
+							from the field&apos;s options when it has them. Several conditions can all have to hold, or any
+							one. Each rule reads back in words, e.g. &ldquo;Shown when Type is Business&rdquo;.
+						</P>
+						<P>
+							Rules chain: a hidden field counts as empty to the rules that depend on it. With &ldquo;Company
+							name when Type is Business&rdquo; and &ldquo;VAT number when Company name is filled in&rdquo;,
+							choosing Personal hides both — even if a company name was typed before. Conditions that depend
+							on each other in a loop are flagged and can&apos;t be saved.
+						</P>
+						<P>
+							The server applies the same rules on save: a hidden field&apos;s value isn&apos;t stored, and a
+							required field is only required while it&apos;s shown. Editing a record so that a field hides
+							leaves its old value as it was. Rules also apply to hand-written forms, and a condition set in
+							the settings (<C>renderIf</C>, like the access picker&apos;s) shows as <em>from settings</em>{' '}
+							until replaced here.
+						</P>
 					</Section>
 
 					<Section
@@ -632,13 +675,20 @@ const BuilderDocs = () => {
 						<H3>Tabs</H3>
 						<P>
 							The detail page opens on <em>Overview</em> — the sections above, or the default layout when
-							there are none. Below the sections, <em>Tabs</em> adds one tab per link to records of another
-							route that point at this one: on an author, <em>Blogs via author</em> lists that
-							author&apos;s blogs. Only routes with a reference field to this model are offered; a route
-							linking in two ways (author, editor) offers both. Each tab has a title, the columns to show
-							and how many rows per page (5–100). Tabs appear in the order set here, each with a count, and
-							their rows open their own page. Like related lists, a tab only lists records the reader may
-							see; without view permission on that route it says so instead.
+							there are none. Below the sections, <em>Tabs</em> adds tabs after it, each listing records of any
+							other route linked to this one. Pick the route under <em>Records from</em>, then how they link
+							(<em>Linked by</em>): either their field points at this record (an author&apos;s blogs, via 
+							<C>author</C>) or this record&apos;s field lists them (an author&apos;s <C>favoriteBooks</C>).
+							Routes already pointing here are offered as quick picks.
+						</P>
+						<P>
+							Each tab has a name, an optional description, the columns to show (in the order clicked), rows
+							per page (5–100), and <em>Table</em> or <em>Cards</em>. Cards use the first image column as the
+							picture, the next column as the heading and the rest as details. Images always show as images,
+							linked records by their names. Every tab has a search box (the route&apos;s searchable text
+							fields and the text columns shown) and pages through the rest; rows and cards open their own
+							page. A tab only lists records the reader may see, and says so when they can&apos;t view that
+							route at all.
 						</P>
 					</Section>
 
@@ -995,7 +1045,7 @@ const BuilderDocs = () => {
 								[<C key='e'>GET …/versions · compare</C>, 'History; published copy vs the file.'],
 								[<C key='f'>PUT /admin/api/builder/state · source</C>, 'The global switch; a route’s pin.'],
 								[<C key='g'>GET /admin/api/&lt;route&gt;/get/view/:id</C>, 'A record laid out by its view config, with its tabs and their counts (404 when there is neither).'],
-								[<C key='gt'>GET /admin/api/&lt;route&gt;/get/view/:id/tab/:index</C>, 'One page of a view tab (?page=, ?limit= up to 100).'],
+								[<C key='gt'>GET /admin/api/&lt;route&gt;/get/view/:id/tab/:index</C>, 'One page of a view tab (?page=, ?limit= up to 100, ?search=).'],
 								[<C key='bl'>GET /admin/api/builder/backlinks/:model</C>, 'Routes whose model has a field referencing that model — what a tab can list.'],
 								[<C key='h'>GET · POST /admin/api/builder/models</C>, 'List built models; create one (registers it at once).'],
 								[<C key='i'>GET · PUT · DELETE …/models/:id</C>, 'One model; change it; delete it (?dropData=true also drops its records).'],

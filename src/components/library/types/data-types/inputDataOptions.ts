@@ -16,6 +16,8 @@ export const inputDataOptions = [
 	'category-collection-array',
 	'textarea',
 	'read-only',
+	// Calculated from other number fields (settings `schema.formula`); shown, never typed.
+	'formula',
 	'editor',
 	'select',
 	'data-select',

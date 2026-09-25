@@ -2,11 +2,13 @@
 
 import { DragEvent, FC, useState } from 'react';
 import { Badge, Box, Button, Flex, Grid, IconButton, Input, Text, Textarea } from '@chakra-ui/react';
-import { ChevronDown, ChevronRight, GripVertical, Link2, Lock, Plus, RotateCcw, Trash2 } from 'lucide-react';
+import { Calculator, ChevronDown, ChevronRight, GripVertical, Link2, Lock, Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { inputDataOptions, radius } from '@/components/library';
 import { TABLE_CELLS } from '@/components/library/fields/registry/tableCells';
 import { ModelField } from './filterTypes';
 import { Dropdown } from '@/components/library/cl';
+import { FieldInfo, checkFormula } from '@/components/library/functions/formula';
+import FormulaModal from './FormulaModal';
 
 /**
  * A route's settings file, field by field — the same properties the file
@@ -57,6 +59,7 @@ const INPUTS: { value: string; label: string; group: string; data?: string }[] =
 	{ value: 'read-only', label: 'Read only', group: 'Text' },
 	{ value: 'view-only', label: 'View only', group: 'Text' },
 	{ value: 'number', label: 'Number', group: 'Values', data: 'number' },
+	{ value: 'formula', label: 'Formula (calculated)', group: 'Values', data: 'number' },
 	{ value: 'slider', label: 'Slider', group: 'Values', data: 'number' },
 	{ value: 'checkbox', label: 'Checkbox', group: 'Values', data: 'boolean' },
 	{ value: 'switch', label: 'Switch', group: 'Values', data: 'boolean' },
@@ -242,12 +245,50 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 	const pickInput = (key: string, input: string) => {
 		const f = fields.find(x => x.key === key)!;
 		const data = INPUTS.find(i => i.value === input)?.data;
+		if (input === 'formula') {
+			// Calculated, never typed: a number, not editable, not required.
+			set(key, {
+				type: 'number',
+				edit: undefined,
+				required: undefined,
+				schema: clean({ ...(f.schema || {}), type: 'formula', formula: f.schema?.formula || '', tableType: 'number', viewType: 'number' }),
+			});
+			setSchemaRev(r => r + 1);
+			setFormulaFor(key);
+			return;
+		}
+		const { formula: _dropped, ...schema } = f.schema || {};
 		set(key, {
-			schema: clean({ ...(f.schema || {}), type: input || undefined }),
+			schema: clean({
+				...schema,
+				type: input || undefined,
+				// The number cells a formula set, not a choice of their own.
+				...(f.schema?.type === 'formula' && { tableType: undefined, viewType: undefined }),
+			}),
 			...(data && data !== f.type && { type: data }),
 		});
 		setSchemaRev(r => r + 1);
 	};
+
+	/** A data type; `formula` makes it a calculated number, and any other type undoes that. */
+	const pickType = (key: string, type: string) => {
+		const f = fields.find(x => x.key === key)!;
+		if (type === 'formula') return pickInput(key, 'formula');
+		if (f.schema?.type !== 'formula') return set(key, { type });
+		const { formula: _dropped, type: _input, tableType: _t, viewType: _v, ...schema } = f.schema || {};
+		set(key, { type, schema: clean(schema) });
+		setSchemaRev(r => r + 1);
+	};
+
+	// Formula fields: what a formula may use, and which field's formula is being edited.
+	const [formulaFor, setFormulaFor] = useState<string | null>(null);
+	const formulaInfo: FieldInfo[] = shown.map(f => ({
+		key: f.key,
+		label: f.title,
+		numeric: f.type === 'number' || f.schema?.type === 'formula' || modelByKey.get(f.key)?.instance === 'Number',
+		...(f.schema?.type === 'formula' && { formula: f.schema?.formula }),
+	}));
+	const formulaField = formulaFor ? fields.find(f => f.key === formulaFor) : undefined;
 
 	const drop = (index: number) => {
 		if (dragIndex !== null && dragIndex !== index) {
@@ -372,9 +413,13 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 								size='xs'
 								w='130px'
 								disabled={readOnly || system}
-								title={system ? 'Fixed on a system field' : undefined}
-								value={f.type || 'string'}
-								onChange={v => set(f.key, { type: v })}>
+								title={
+									system
+										? 'Fixed on a system field'
+										: 'How the value is stored and validated. “formula”: a number calculated from other number fields'
+								}
+								value={f.schema?.type === 'formula' ? 'formula' : f.type || 'string'}
+								onChange={v => pickType(f.key, v)}>
 								{DATA_TYPES.map(t => (
 									<option
 										key={t}
@@ -382,6 +427,10 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 										{t}
 									</option>
 								))}
+								{/* Offered where the model stores a number — a formula's result has to fit. */}
+								{(f.type === 'number' || f.schema?.type === 'formula' || modelByKey.get(f.key)?.instance === 'Number') && (
+									<option value='formula'>formula</option>
+								)}
 							</Dropdown>
 							{link ? (
 								<Flex
@@ -412,13 +461,37 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 									{inputOptions(f.schema?.type)}
 								</Dropdown>
 							)}
+							{f.schema?.type === 'formula' &&
+								(() => {
+									const c = checkFormula(f.schema?.formula || '', formulaInfo, f.key);
+									const empty = !String(f.schema?.formula || '').trim();
+									return (
+										<Button
+											size='xs'
+											variant='outline'
+											maxW='240px'
+											disabled={readOnly}
+											borderColor={c.ok ? undefined : 'red.solid'}
+											color={c.ok ? undefined : 'red.fg'}
+											title={c.ok ? 'Edit the formula' : empty ? 'Set the formula' : c.errors.map(e => e.message).join('; ')}
+											onClick={() => setFormulaFor(f.key)}>
+											<Calculator size={12} />
+											<Text
+												as='span'
+												fontFamily='mono'
+												truncate>
+												{empty ? 'Set formula' : `= ${c.formatted || f.schema.formula}`}
+											</Text>
+										</Button>
+									);
+								})()}
 							<Flex
 								gap={1}
 								flexWrap='wrap'
 								flex='1'>
 								{FLAGS.map(flag => {
 									const on = !!f[flag.prop];
-									const fixed = system;
+									const fixed = system || (f.schema?.type === 'formula' && (flag.prop === 'edit' || flag.prop === 'required'));
 									const blocked = fixed || unsafe(f, flag.prop, !on);
 									return (
 										<Button
@@ -428,7 +501,9 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 											disabled={readOnly || blocked}
 											title={
 												fixed
-													? `${flag.label}: fixed on a system field`
+													? f.schema?.type === 'formula' && !system
+														? `${flag.label}: a formula is calculated, never typed`
+														: `${flag.label}: fixed on a system field`
 													: blocked
 													? `${flag.label}: not allowed on a sensitive field`
 													: flag.hint
@@ -658,6 +733,19 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 					</Button>
 				</Flex>
 			)}
+
+			<FormulaModal
+				isOpen={!!formulaField}
+				onClose={() => setFormulaFor(null)}
+				fieldKey={formulaField?.key || ''}
+				fieldTitle={formulaField?.title}
+				formula={formulaField?.schema?.formula || ''}
+				fields={formulaInfo}
+				onSave={formula => {
+					if (formulaField) setSchema(formulaField.key, { formula });
+					setFormulaFor(null);
+				}}
+			/>
 		</Flex>
 	);
 };

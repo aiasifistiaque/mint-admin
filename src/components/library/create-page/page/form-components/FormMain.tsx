@@ -8,6 +8,7 @@ import {
 	FormItemAccordion,
 } from '../../..';
 import { Accordion, Text } from '@chakra-ui/react';
+import { hiddenFormFields } from '../../../functions/formRules';
 
 type FormMainType = {
 	fields: any;
@@ -101,17 +102,10 @@ const FormMain: FC<FormMainType> = ({
 		);
 	};
 
-	const evaluateCondition = (item: any, formData: any) => {
-		const condition = item?.renderIf;
-		if (!condition) return false;
-		const { field, operator, value } = condition;
-		switch (operator) {
-			case 'eq':
-				return formData[field] !== value;
-			default:
-				return true;
-		}
-	};
+	// Conditional fields (functions/formRules.ts): hidden while their rule
+	// doesn't hold. Rules chain — a hidden field reads as empty to the rules
+	// that depend on it — so if A shows B and B shows C, clearing A hides both.
+	const hidden = hiddenFormFields(fields, formData);
 
 	return (
 		<Accordion.Root
@@ -128,7 +122,7 @@ const FormMain: FC<FormMainType> = ({
 						<FormItemAccordion
 							collapsible={true}
 							isHidden={
-								evaluateCondition(item, formData) ||
+								hidden.has(item?.name) ||
 								(item?.renderCondition && !item?.renderCondition(formData))
 							}
 							item={item}

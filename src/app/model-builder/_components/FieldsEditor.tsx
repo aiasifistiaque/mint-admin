@@ -2,7 +2,7 @@
 
 import { DragEvent, FC, ReactNode, useState } from 'react';
 import { Badge, Box, Button, Flex, Grid, IconButton, Input, Switch, Text } from '@chakra-ui/react';
-import { AlertTriangle, ChevronDown, ChevronRight, GripVertical, Plus, Trash2, X } from 'lucide-react';
+import { AlertTriangle, Calculator, ChevronDown, ChevronRight, GripVertical, Plus, Trash2, X } from 'lucide-react';
 import { radius } from '@/components/library';
 import { Dropdown } from '@/components/library/cl';
 import {
@@ -18,11 +18,14 @@ import {
 	REFERENCE_KINDS,
 	SELF,
 	canBeUnique,
+	formulaFieldsOf,
 	hasLength,
 	hasOptions,
 	newUid,
 	toKey,
 } from './modelKinds';
+import FormulaModal from '@/app/builder/_components/FormulaModal';
+import { checkFormula } from '@/components/library/functions/formula';
 
 /**
  * The model's fields, in order — the order they take in the generated form,
@@ -350,6 +353,9 @@ const OptionsInput: FC<{
 
 const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, savedKinds = {}, hasRecords }) => {
 	const [open, setOpen] = useState<string | null>(null);
+	// The formula field whose formula is being written.
+	const [formulaFor, setFormulaFor] = useState<string | null>(null);
+	const formulaField = formulaFor ? fields.find(f => f.uid === formulaFor) : undefined;
 	const [dragIndex, setDragIndex] = useState<number | null>(null);
 	const [overIndex, setOverIndex] = useState<number | null>(null);
 
@@ -387,8 +393,12 @@ const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, 
 			kind,
 			...(!ENUM_KINDS.includes(kind) && { options: undefined }),
 			...(!canBeUnique(kind) && { unique: false }),
-			default: nextDefault,
+			// A formula is calculated: never required, no default.
+			...(kind === 'formula' && { required: false }),
+			default: kind === 'formula' ? undefined : nextDefault,
 		});
+		// Choosing Formula opens the formula window.
+		if (kind === 'formula') setFormulaFor(f.uid);
 		// Choosing Options opens the input to type them in.
 		if (toOptions) setTimeout(() => document.getElementById(`options-${f.uid}`)?.focus(), 0);
 	};
@@ -528,13 +538,40 @@ const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, 
 									{error?.on === 'ref' && <FieldMessage>{error.message}</FieldMessage>}
 								</Box>
 							)}
-							<Flex {...CELL}>
-								<Check
-									label='Required'
-									checked={!!f.required}
-									onChange={v => set(f.uid, { required: v })}
-								/>
-							</Flex>
+							{f.kind === 'formula' ? (
+								<Box maxW='280px'>
+									{(() => {
+										const c = f.formula?.trim() ? checkFormula(f.formula, formulaFieldsOf(fields), f.key) : null;
+										return (
+											<Button
+												size='xs'
+												variant='outline'
+												maxW='280px'
+												borderColor={error?.on === 'formula' ? 'red.solid' : undefined}
+												color={error?.on === 'formula' ? 'red.fg' : undefined}
+												title='Write the formula'
+												onClick={() => setFormulaFor(f.uid)}>
+												<Calculator size={12} />
+												<Text
+													as='span'
+													fontFamily='mono'
+													truncate>
+													{c ? `= ${c.formatted || f.formula}` : 'Set formula'}
+												</Text>
+											</Button>
+										);
+									})()}
+									{error?.on === 'formula' && <FieldMessage>{error.message}</FieldMessage>}
+								</Box>
+							) : (
+								<Flex {...CELL}>
+									<Check
+										label='Required'
+										checked={!!f.required}
+										onChange={v => set(f.uid, { required: v })}
+									/>
+								</Flex>
+							)}
 							<Flex
 								{...CELL}
 								gap={2}
@@ -807,6 +844,19 @@ const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, 
 					Add field
 				</Button>
 			</Box>
+
+			<FormulaModal
+				isOpen={!!formulaField}
+				onClose={() => setFormulaFor(null)}
+				fieldKey={formulaField?.key || ''}
+				fieldTitle={formulaField?.label || formulaField?.key}
+				formula={formulaField?.formula || ''}
+				fields={formulaFieldsOf(fields)}
+				onSave={formula => {
+					if (formulaField) set(formulaField.uid, { formula });
+					setFormulaFor(null);
+				}}
+			/>
 		</Flex>
 	);
 };

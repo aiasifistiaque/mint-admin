@@ -31,6 +31,7 @@ const OPTIONAL_FIELD_PROPS = [
 	'menuAddOnKey',
 	'style',
 	'renderIf',
+	'formula',
 	'folder',
 	'labelKey',
 	'valueKey',
