@@ -62,11 +62,19 @@ const FilterSelect: FC<FilterSelectProps> = ({ children, value, name, onChange, 
 			<Select.Control>
 				<Select.Trigger
 					boxShadow='none'
+					// `minH` too: the select recipe's own min-height (36px at size
+					// sm) otherwise wins over `h`, leaving it 4px taller than a
+					// `FilterInput` beside it.
 					h={FILTER_CONTROL_HEIGHT}
+					minH={FILTER_CONTROL_HEIGHT}
+					fontSize='13px'
 					px={2.5}
 					borderRadius={radius.INPUT}
 					cursor='pointer'>
-					<Select.ValueText placeholder={placeholderOption?.label as any} />
+					<Select.ValueText
+						fontSize='13px'
+						placeholder={placeholderOption?.label as any}
+					/>
 				</Select.Trigger>
 				<Select.IndicatorGroup>
 					<Select.Indicator color='fg.muted'>
@@ -77,14 +85,20 @@ const FilterSelect: FC<FilterSelectProps> = ({ children, value, name, onChange, 
 			<Portal>
 				<Select.Positioner>
 					<Select.Content>
-						{options.map(option => (
-							<Select.Item
-								item={option}
-								key={option.value}>
-								<Select.ItemText>{option.label}</Select.ItemText>
-								<Select.ItemIndicator />
-							</Select.Item>
-						))}
+						{/* The placeholder option only labels the empty trigger; listing it
+						    too just adds a dead, greyed-out row. */}
+						{options
+							// Only a disabled one: an enabled `value=''` option is a real
+							// choice (e.g. "All") and must stay pickable.
+							.filter(option => !(option === placeholderOption && option.disabled))
+							.map(option => (
+								<Select.Item
+									item={option}
+									key={option.value}>
+									<Select.ItemText>{option.label}</Select.ItemText>
+									<Select.ItemIndicator />
+								</Select.Item>
+							))}
 					</Select.Content>
 				</Select.Positioner>
 			</Portal>

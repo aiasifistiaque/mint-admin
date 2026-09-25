@@ -1,21 +1,22 @@
 'use client';
-import { ChangeEvent, FC, useState } from 'react';
+import { FC, useState } from 'react';
 
-import { Flex, PopoverTrigger, useDisclosure } from '@chakra-ui/react';
-import { applyFilters, FilterButton, FilterSelect } from '../..';
+import { Flex, PopoverTrigger, RadioGroup, Text, useDisclosure } from '@chakra-ui/react';
 
 import {
 	useIsMobile,
 	useAppDispatch,
 	useAppSelector,
-	Column,
+	applyFilters,
 	Filter,
 	FilterInput,
+	FilterRadio,
+	FilterOptionList,
 	PopModal,
 	PopModalHeader,
 	PopModalBody,
 	PopModalCloseButton,
-	FilterCheckbox,
+	PopModalFooterLink,
 } from '../..';
 
 type OptionType = {
@@ -30,30 +31,33 @@ type FilterProps = {
 	options: OptionType[];
 };
 
-const SelectFilter: FC<FilterProps> = ({ title, field, options, label }) => {
+// Short lists read at a glance; a search box only earns its place past this.
+const SEARCH_THRESHOLD = 7;
+
+const SelectFilter: FC<FilterProps> = ({ title, field, options = [], label }) => {
 	const { onOpen, onClose, open: isOpen } = useDisclosure();
 	const dispatch: any = useAppDispatch();
 	const { filters } = useAppSelector((state: any) => state.table);
 
-	const [val, setVal] = useState<string | undefined>(filters[field] || '');
+	const [val, setVal] = useState<string>(filters[field] || '');
+	const [search, setSearch] = useState<string>('');
 
-	const ifFieldExists = (): boolean => {
-		return Object.keys(filters).some(
-			key => key.startsWith(field) && filters[key] !== null && filters[key] !== ''
-		);
-	};
+	const applied: string = filters[field] || '';
+	const showSearch = options.length > SEARCH_THRESHOLD;
 
-	const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-		setVal(e.target.value);
-	};
+	const visibleOptions = options.filter(option =>
+		option?.label?.toLowerCase()?.includes(search.toLowerCase())
+	);
 
 	const open = () => {
-		setVal(filters[field] || '');
+		setVal(applied);
+		setSearch('');
 		onOpen();
 	};
 
 	const popClose = () => {
-		setVal('');
+		setVal(applied);
+		setSearch('');
 		onClose();
 	};
 
@@ -68,22 +72,8 @@ const SelectFilter: FC<FilterProps> = ({ title, field, options, label }) => {
 	};
 	const isMobile = useIsMobile();
 
-	const getLabelsFromFilters = (): string => {
-		const filterValue = filters[field];
-		// Split the filter value into an array of strings
-		const valuesArray = filterValue.split(',');
-
-		// Map the values to their corresponding labels
-		const labelsArray = valuesArray
-			.map((value: any) => {
-				const option = options.find(option => option?.value === value?.trim());
-				return option ? option?.label : '';
-			})
-			.filter((label: any) => label !== ''); // Filter out any empty labels
-
-		// Join the labels into a comma-separated string
-		return labelsArray.join(', ');
-	};
+	const labelOf = (value: string): string =>
+		options.find(option => option?.value === value)?.label ?? value;
 
 	const onFilterReset = (e: any) => {
 		e.stopPropagation();
@@ -99,14 +89,10 @@ const SelectFilter: FC<FilterProps> = ({ title, field, options, label }) => {
 	const button = (
 		<span>
 			<Filter
-				isActive={ifFieldExists()}
+				isActive={!!applied}
 				onCancel={onFilterReset}>
-				{label}{' '}
-				{ifFieldExists() && (
-					// A bare `<span>` picks up the global `span { color }` rule instead
-					// of the chip's own color — see BooleanFilter.tsx for the full story.
-					<span style={{ color: 'inherit' }}> | {getLabelsFromFilters()}</span>
-				)}
+				{/* Plain string rather than a `<span>` — see BooleanFilter.tsx. */}
+				{label} {applied && `| ${labelOf(applied)}`}
 			</Filter>
 		</span>
 	);
@@ -117,9 +103,17 @@ const SelectFilter: FC<FilterProps> = ({ title, field, options, label }) => {
 			onOpen={open}
 			onClose={popClose}
 			isOpen={isOpen}
+			width='330px'
+			footerStart={
+				<PopModalFooterLink
+					onClick={() => setVal('')}
+					disabled={!val}>
+					Clear
+				</PopModalFooterLink>
+			}
 			trigger={
 				isMobile ? (
-					<Flex onClick={onOpen}>{button}</Flex>
+					<Flex onClick={open}>{button}</Flex>
 				) : (
 					<PopoverTrigger>{button}</PopoverTrigger>
 				)
@@ -127,27 +121,43 @@ const SelectFilter: FC<FilterProps> = ({ title, field, options, label }) => {
 			<PopModalHeader isMobile={isMobile}>{title}</PopModalHeader>
 			<PopModalCloseButton isMobile={isMobile} />
 			<PopModalBody isMobile={isMobile}>
-				<Column
-					gap={3}
-					pb={1}>
-					<FilterSelect
-						value={val}
-						onChange={handleChange}>
-						<option
-							value=''
-							disabled>
-							Select an option
-						</option>
+				{showSearch && (
+					<FilterInput
+						type='text'
+						placeholder='Search'
+						value={search}
+						onChange={e => setSearch(e.target.value)}
+					/>
+				)}
 
-						{options.map((option, i) => (
-							<option
-								key={i}
-								value={option.value}>
-								{option.label}
-							</option>
+				<RadioGroup.Root
+					size={{ base: 'md', md: 'sm' }}
+					colorPalette='gray'
+					value={val || null}
+					onValueChange={e => setVal(e.value ?? '')}>
+					<FilterOptionList
+						// Pulls the list up into the body's 12px gap below the search box.
+						mt={showSearch ? -1.5 : 0}
+						maxH={{ base: 'auto', md: '240px' }}
+						overflowY='auto'>
+						{visibleOptions.length === 0 && (
+							<Text
+								px={2}
+								py={2}
+								fontSize={{ base: '15px', md: '13px' }}
+								color='fg.muted'>
+								{options.length === 0 ? 'No options available' : 'No matches'}
+							</Text>
+						)}
+						{visibleOptions.map((option, i) => (
+							<FilterRadio
+								key={option?.value ?? i}
+								value={option?.value}>
+								{option?.label}
+							</FilterRadio>
 						))}
-					</FilterSelect>
-				</Column>
+					</FilterOptionList>
+				</RadioGroup.Root>
 			</PopModalBody>
 		</PopModal>
 	);

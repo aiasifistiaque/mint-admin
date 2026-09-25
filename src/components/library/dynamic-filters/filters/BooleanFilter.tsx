@@ -1,20 +1,27 @@
 'use client';
 
-import { useState, ChangeEvent, FC } from 'react';
-import { Flex, PopoverTrigger, useDisclosure } from '@chakra-ui/react';
+import { useState, FC } from 'react';
+import { Flex, PopoverTrigger, RadioGroup, useDisclosure } from '@chakra-ui/react';
 
 import {
 	PopModal,
 	PopModalHeader,
 	PopModalBody,
 	PopModalCloseButton,
+	PopModalFooterLink,
+	FilterOptionList,
+	FilterRadio,
 	useIsMobile,
 	useAppDispatch,
 	useAppSelector,
 	Filter,
-	FilterSelect,
 	applyFilters,
 } from '../..';
+
+const OPTIONS = [
+	{ value: 'true', label: 'True' },
+	{ value: 'false', label: 'False' },
+];
 
 type IsActiveFilterProps = {
 	title: string;
@@ -30,15 +37,15 @@ const BooleanFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 	const { filters } = useAppSelector((state: any) => state.table);
 
 	const [val, setVal] = useState<string | undefined>(filters[field] || '');
-	const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-		setVal(e.target.value);
+	const handleChange = (value: string | null) => {
+		setVal(value ?? '');
 	};
 	const open = () => {
 		setVal(filters[field] || '');
 		onOpen();
 	};
 	const popClose = () => {
-		setVal('');
+		setVal(filters[field] || '');
 		onClose();
 	};
 	const handleClick = () => {
@@ -73,15 +80,10 @@ const BooleanFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 			<Filter
 				isActive={ifFieldExists()}
 				onCancel={onFilterReset}>
-				{label}{' '}
-				{ifFieldExists() && (
-					// A bare `<span>` picks up the global `span { color }` rule (light
-					// text meant for a dark page) instead of inheriting the chip's own
-					// color, which is black-on-white once the chip is active — hence
-					// near-invisible. `color: inherit` (highest-specificity inline
-					// style) forces it back to the parent's actual color.
-					<span style={{ color: 'inherit' }}> | {filters[field]}</span>
-				)}
+				{/* A plain string, not a `<span>`: a span picks up the global
+				    `span { color; font-size }` rule instead of the chip's own text
+				    style, so the value rendered in a different color and size. */}
+				{label} {ifFieldExists() && `| ${filters[field]}`}
 			</Filter>
 		</span>
 	);
@@ -93,9 +95,17 @@ const BooleanFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 			onOpen={open}
 			onClose={popClose}
 			isOpen={isOpen}
+			width='330px'
+			footerStart={
+				<PopModalFooterLink
+					onClick={() => setVal('')}
+					disabled={!val}>
+					Clear
+				</PopModalFooterLink>
+			}
 			trigger={
 				isMobile ? (
-					<Flex onClick={onOpen}>{button}</Flex>
+					<Flex onClick={open}>{button}</Flex>
 				) : (
 					<PopoverTrigger>{button}</PopoverTrigger>
 				)
@@ -104,17 +114,21 @@ const BooleanFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 
 			<PopModalCloseButton isMobile={isMobile} />
 			<PopModalBody isMobile={isMobile}>
-				<FilterSelect
-					value={val}
-					onChange={handleChange}>
-					<option
-						value=''
-						disabled>
-						Select an option
-					</option>
-					<option value='true'>True</option>
-					<option value='false'>False</option>
-				</FilterSelect>
+				<RadioGroup.Root
+					size={{ base: 'md', md: 'sm' }}
+					colorPalette='gray'
+					value={val || null}
+					onValueChange={e => handleChange(e.value)}>
+					<FilterOptionList>
+						{OPTIONS.map(option => (
+							<FilterRadio
+								key={option.value}
+								value={option.value}>
+								{option.label}
+							</FilterRadio>
+						))}
+					</FilterOptionList>
+				</RadioGroup.Root>
 			</PopModalBody>
 		</PopModal>
 	);

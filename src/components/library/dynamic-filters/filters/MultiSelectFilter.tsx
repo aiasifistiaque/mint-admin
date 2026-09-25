@@ -1,20 +1,21 @@
 'use client';
 import { FC, useState } from 'react';
 
-import { Flex, PopoverTrigger, useDisclosure } from '@chakra-ui/react';
+import { Flex, PopoverTrigger, Text, useDisclosure } from '@chakra-ui/react';
 import { applyFilters } from '../..';
 
 import {
 	useIsMobile,
 	useAppDispatch,
 	useAppSelector,
-	Column,
+	FilterOptionList,
 	Filter,
 	FilterInput,
 	PopModal,
 	PopModalHeader,
 	PopModalBody,
 	PopModalCloseButton,
+	PopModalFooterLink,
 	FilterCheckbox,
 } from '../..';
 
@@ -48,6 +49,26 @@ const MultiSelectFilter: FC<FilterProps> = ({ title, field, options, label }) =>
 	const handleToggle = (value: string) => {
 		setVal(val => (val.includes(value) ? val.filter(item => item !== value) : [...val, value]));
 	};
+
+	const visibleOptions = options.filter(option =>
+		option?.label?.toLowerCase()?.includes(search?.toLowerCase())
+	);
+
+	// Both act on what the search currently shows, so "Select all" after typing
+	// picks the matches rather than every option behind them.
+	const allVisibleSelected =
+		visibleOptions.length > 0 && visibleOptions.every(option => val.includes(option?.value));
+
+	const selectAll = () => {
+		setVal(val => Array.from(new Set([...val, ...visibleOptions.map(option => option?.value)])));
+	};
+
+	const clearAll = () => {
+		const visible = new Set(visibleOptions.map(option => option?.value));
+		setVal(val => val.filter(item => !visible.has(item)));
+	};
+
+	const hasVisibleSelection = visibleOptions.some(option => val.includes(option?.value));
 
 	const open = () => {
 		setVal(filters[field] ? filters[field].split(',') : []);
@@ -120,9 +141,24 @@ const MultiSelectFilter: FC<FilterProps> = ({ title, field, options, label }) =>
 			onOpen={open}
 			onClose={popClose}
 			isOpen={isOpen}
+			width='330px'
+			footerStart={
+				<>
+					<PopModalFooterLink
+						onClick={clearAll}
+						disabled={!hasVisibleSelection}>
+						Clear all
+					</PopModalFooterLink>
+					<PopModalFooterLink
+						onClick={selectAll}
+						disabled={allVisibleSelected || visibleOptions.length === 0}>
+						Select all
+					</PopModalFooterLink>
+				</>
+			}
 			trigger={
 				isMobile ? (
-					<Flex onClick={onOpen}>{button}</Flex>
+					<Flex onClick={open}>{button}</Flex>
 				) : (
 					<PopoverTrigger>{button}</PopoverTrigger>
 				)
@@ -132,31 +168,49 @@ const MultiSelectFilter: FC<FilterProps> = ({ title, field, options, label }) =>
 			<PopModalBody isMobile={isMobile}>
 				<FilterInput
 					type='text'
+					placeholder='Search'
 					value={search}
 					onChange={handleSearch}
 				/>
 
-				<Column
-					maxH={{ base: 'auto', md: '180px' }}
-					overflowY='auto'
-					gap={2}>
-					{options?.length === 0 && <FilterCheckbox>No options available</FilterCheckbox>}
-					{options
-						.filter(option => option?.label?.toLowerCase()?.includes(search?.toLowerCase()))
-						.map((option: any, i: number) => (
-							// `checked`, not Chakra v2's `isChecked` — that name is not a
-							// prop in v3, so it fell through to the DOM (the "React does
-							// not recognize the `isChecked` prop" warning) and left
-							// `checked` undefined, i.e. the box was uncontrolled and never
-							// showed the filter that was actually applied.
-							<FilterCheckbox
-								checked={val.includes(option?.value)}
-								onCheckedChange={() => handleToggle(option?.value)}
-								key={option?.value ?? i}>
-								{option?.label}
-							</FilterCheckbox>
-						))}
-				</Column>
+				<FilterOptionList
+					// Pulls the list up into the body's 12px gap below the search box.
+					mt={-1.5}
+					maxH={{ base: 'auto', md: '240px' }}
+					overflowY='auto'>
+					{visibleOptions.length === 0 && (
+						<Text
+							px={2}
+							py={2}
+							fontSize={{ base: '16px', md: '14px' }}
+							color='fg.muted'>
+							{options?.length === 0 ? 'No options available' : 'No matches'}
+						</Text>
+					)}
+					{visibleOptions.map((option: any, i: number) => (
+						// `checked`, not Chakra v2's `isChecked` — that name is not a
+						// prop in v3, so it fell through to the DOM (the "React does
+						// not recognize the `isChecked` prop" warning) and left
+						// `checked` undefined, i.e. the box was uncontrolled and never
+						// showed the filter that was actually applied.
+						<FilterCheckbox
+							checked={val.includes(option?.value)}
+							onCheckedChange={() => handleToggle(option?.value)}
+							w='full'
+							gap={2.5}
+							px={2}
+							py={{ base: 2, md: 1 }}
+							borderRadius='md'
+							cursor='pointer'
+							transition='background-color 120ms'
+							_hover={{ bg: 'bg.muted' }}
+							controlProps={{ borderRadius: '4px' }}
+							labelProps={{ fontSize: { base: '15px', md: '13px' }, fontWeight: '400' }}
+							key={option?.value ?? i}>
+							{option?.label}
+						</FilterCheckbox>
+					))}
+				</FilterOptionList>
 			</PopModalBody>
 		</PopModal>
 	);

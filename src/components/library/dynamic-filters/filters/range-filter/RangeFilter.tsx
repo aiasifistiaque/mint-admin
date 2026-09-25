@@ -1,89 +1,91 @@
 'use client';
-import { useState, ChangeEvent, FC } from 'react';
+import { useState, FC } from 'react';
 
 import { Flex, PopoverTrigger, useDisclosure } from '@chakra-ui/react';
 import BetweenValues from './BetweenValues';
+import { readApplied, applyOperator } from '../operatorFilter';
 
 import {
 	useIsMobile,
 	FilterInput,
 	PopModalCloseButton,
-	FilterSelect,
 	useAppDispatch,
 	useAppSelector,
 	Filter,
 	PopModal,
 	PopModalHeader,
 	PopModalBody,
+	PopModalFooterLink,
+	FilterSelect,
 	applyFilters,
 } from '../../..';
 
-type DateFilterProps = {
+type RangeFilterProps = {
 	field: string;
 	title?: string;
 	label?: string;
 };
 
-const RangeFilter: FC<DateFilterProps> = ({ title, field, label }) => {
+type Operator = 'eq' | 'btwn' | 'gte' | 'lte';
+
+// The backend's `gte` / `lte` are inclusive, hence "at least" / "at most"
+// rather than the "greater than" / "less than" the old dropdown said.
+const OPERATORS: { value: Operator; label: string }[] = [
+	{ value: 'eq', label: 'Is equal to' },
+	{ value: 'btwn', label: 'Is between' },
+	{ value: 'gte', label: 'Is at least' },
+	{ value: 'lte', label: 'Is at most' },
+];
+
+const isComplete = (operator: Operator, value: string): boolean =>
+	operator === 'btwn' ? value.split('_').every(v => v !== '') : value !== '';
+
+const describe = (operator: Operator, value: string): string => {
+	if (operator === 'btwn') return value.split('_').join(' – ');
+	if (operator === 'gte') return `≥ ${value}`;
+	if (operator === 'lte') return `≤ ${value}`;
+	return value;
+};
+
+const RangeFilter: FC<RangeFilterProps> = ({ title, field, label }) => {
 	const { onOpen, onClose, open: isOpen } = useDisclosure();
 	const dispatch = useAppDispatch();
 	const { filters } = useAppSelector((state: any) => state.table);
 
-	const [display, setDisplay] = useState<string | undefined>();
-	const [value, setValue] = useState<number | undefined | string>();
-	const [operator, setOperator] = useState<string>('eq');
-	const [persistOperator, setPersistOperator] = useState<string>('eq');
+	const applied = readApplied(
+		filters,
+		field,
+		OPERATORS.map(op => op.value)
+	);
 
-	const handleOperatorChange = (e: ChangeEvent<HTMLSelectElement>): void => {
-		setOperator(e.target.value);
-		setValue(undefined);
+	const [operator, setOperator] = useState<Operator | null>(null);
+	const [value, setValue] = useState<string>('');
+
+	const handleOperatorChange = (next: string | null): void => {
+		if (!next) return;
+		setOperator(next as Operator);
+		setValue(applied?.operator === next ? applied.value : next === 'btwn' ? '_' : '');
 	};
 
-	const reset = (): void => {
-		setOperator(persistOperator);
-	};
-
+	// Opens on "is equal to" when nothing is applied, as the old dropdown did.
+	// Clear empties the dropdown, and applying that removes the filter.
 	const open = (): void => {
-		const displayValues: any = {
-			last: `last ${value}`,
-			eq: `${value}`,
-			btwn: `between ${value}`,
-			gte: `on or after ${value}`,
-			lte: `before ${value}`,
-		};
-
-		if (value || operator !== 'eq') setDisplay(displayValues[operator]);
-		else setDisplay(undefined);
-
+		setOperator(applied?.operator ?? 'eq');
+		setValue(applied?.value ?? '');
 		onOpen();
 	};
 
-	const popClose = (): void => {
-		reset();
-		onClose();
+	const clear = (): void => {
+		setOperator(null);
+		setValue('');
 	};
 
 	const handleClick = (): void => {
-		const operatorValue = operator === 'eq' ? field : `${field}_${operator}`;
-		setPersistOperator(() => operator);
-
-		dispatch(
-			applyFilters({
-				key: operatorValue,
-				value: value,
-			})
-		);
-
+		applyOperator(dispatch, field, operator, value);
 		onClose();
 	};
 
 	const isMobile = useIsMobile();
-
-	const ifFieldExists = (): boolean => {
-		return Object.keys(filters).some(
-			key => key.startsWith(field) && filters[key] !== null && filters[key] !== ''
-		);
-	};
 
 	const onFilterReset = (e: any) => {
 		e.stopPropagation();
@@ -99,14 +101,10 @@ const RangeFilter: FC<DateFilterProps> = ({ title, field, label }) => {
 	const button = (
 		<span>
 			<Filter
-				isActive={ifFieldExists()}
+				isActive={!!applied}
 				onCancel={onFilterReset}>
-				{label}{' '}
-				{ifFieldExists() && (
-					// A bare `<span>` picks up the global `span { color }` rule instead
-					// of the chip's own color — see BooleanFilter.tsx for the full story.
-					<span style={{ color: 'inherit' }}> | {filters[field]}</span>
-				)}
+				{/* Plain string rather than a `<span>` — see BooleanFilter.tsx. */}
+				{label} {applied && `| ${describe(applied.operator, applied.value)}`}
 			</Filter>
 		</span>
 	);
@@ -115,12 +113,21 @@ const RangeFilter: FC<DateFilterProps> = ({ title, field, label }) => {
 		<PopModal
 			isMobile={isMobile}
 			onOpen={open}
-			onClose={popClose}
+			onClose={onClose}
 			isOpen={isOpen}
 			handleClick={handleClick}
+			width='330px'
+			applyDisabled={!!operator && !isComplete(operator, value)}
+			footerStart={
+				<PopModalFooterLink
+					onClick={clear}
+					disabled={!operator}>
+					Clear
+				</PopModalFooterLink>
+			}
 			trigger={
 				isMobile ? (
-					<Flex onClick={onOpen}>{button}</Flex>
+					<Flex onClick={open}>{button}</Flex>
 				) : (
 					<PopoverTrigger>{button}</PopoverTrigger>
 				)
@@ -129,33 +136,32 @@ const RangeFilter: FC<DateFilterProps> = ({ title, field, label }) => {
 			<PopModalCloseButton isMobile={isMobile} />
 			<PopModalBody isMobile={isMobile}>
 				<FilterSelect
-					value={operator}
-					onChange={handleOperatorChange}>
-					<option value='eq'>is equal to</option>
-					<option value='btwn'>is between</option>
-					<option value='gte'>is greater than</option>
-					<option value='lte'>is less than</option>
+					value={operator ?? ''}
+					onChange={(e: { target: { value: string } }) => handleOperatorChange(e.target.value)}>
+					<option
+						value=''
+						disabled>
+						Choose a condition
+					</option>
+					{OPERATORS.map(option => (
+						<option
+							key={option.value}
+							value={option.value}>
+							{option.label}
+						</option>
+					))}
 				</FilterSelect>
 
-				{operator === 'eq' && (
-					<FilterInput
-						type='number'
+				{operator === 'btwn' && (
+					<BetweenValues
 						value={value}
-						onChange={e => setValue(e.target.value)}
+						setVal={setValue}
 					/>
 				)}
-
-				{operator === 'btwn' && <BetweenValues setVal={setValue} />}
-				{operator === 'gte' && (
+				{operator && operator !== 'btwn' && (
 					<FilterInput
 						type='number'
-						value={value}
-						onChange={e => setValue(e.target.value)}
-					/>
-				)}
-				{operator === 'lte' && (
-					<FilterInput
-						type='number'
+						placeholder='Value'
 						value={value}
 						onChange={e => setValue(e.target.value)}
 					/>

@@ -8,6 +8,7 @@ import {
 	PopModalHeader,
 	PopModalBody,
 	PopModalCloseButton,
+	PopModalFooterLink,
 	useIsMobile,
 	useAppDispatch,
 	useAppSelector,
@@ -73,12 +74,8 @@ const TextFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 			<Filter
 				isActive={ifFieldExists()}
 				onCancel={onFilterReset}>
-				{label}{' '}
-				{ifFieldExists() && (
-					// A bare `<span>` picks up the global `span { color }` rule instead
-					// of the chip's own color — see BooleanFilter.tsx for the full story.
-					<span style={{ color: 'inherit' }}> | {filters[field]}</span>
-				)}
+				{/* Plain string rather than a `<span>` — see BooleanFilter.tsx. */}
+				{label} {ifFieldExists() && `| ${filters[field]}`}
 			</Filter>
 		</span>
 	);
@@ -90,9 +87,17 @@ const TextFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 			onOpen={open}
 			onClose={popClose}
 			isOpen={isOpen}
+			width='330px'
+			footerStart={
+				<PopModalFooterLink
+					onClick={() => setVal('')}
+					disabled={!val}>
+					Clear
+				</PopModalFooterLink>
+			}
 			trigger={
 				isMobile ? (
-					<Flex onClick={onOpen}>{button}</Flex>
+					<Flex onClick={open}>{button}</Flex>
 				) : (
 					<PopoverTrigger>{button}</PopoverTrigger>
 				)
@@ -104,6 +109,8 @@ const TextFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 				<FilterInput
 					value={val}
 					onChange={handleChange}
+					// Enter applies, as it would in any search box.
+					onKeyDown={e => e.key === 'Enter' && handleClick()}
 					placeholder='Search value'
 				/>
 			</PopModalBody>

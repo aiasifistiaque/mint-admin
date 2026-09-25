@@ -8,10 +8,18 @@ type FilterCheckboxProps = {
 	defaultChecked?: boolean;
 	disabled?: boolean;
 	onChange?: (e: any) => void;
+	labelProps?: Checkbox.LabelProps;
+	controlProps?: Checkbox.ControlProps;
 	[key: string]: any;
 };
 
-const FilterCheckbox: FC<FilterCheckboxProps> = ({ children, checked, ...props }) => {
+const FilterCheckbox: FC<FilterCheckboxProps> = ({
+	children,
+	checked,
+	labelProps,
+	controlProps,
+	...props
+}) => {
 	return (
 		<Checkbox.Root
 			colorPalette='gray'
@@ -20,10 +28,11 @@ const FilterCheckbox: FC<FilterCheckboxProps> = ({ children, checked, ...props }
 			checked={checked}
 			{...props}>
 			<Checkbox.HiddenInput />
-			<Checkbox.Control />
+			<Checkbox.Control {...controlProps} />
 			<Checkbox.Label
 				fontSize={{ base: '16px', md: '14px' }}
-				textTransform='capitalize'>
+				textTransform='capitalize'
+				{...labelProps}>
 				{children}
 			</Checkbox.Label>
 		</Checkbox.Root>
