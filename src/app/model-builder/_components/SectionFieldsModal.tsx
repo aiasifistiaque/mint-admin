@@ -2,7 +2,7 @@
 
 import { FC, useEffect, useMemo, useState } from 'react';
 import { Badge, Box, Button, CloseButton, Dialog, Flex, Input, Portal, Text } from '@chakra-ui/react';
-import { AlertDialogContent, AlertDialogHeader, Align } from '@/components/library';
+import { AlertDialogContent, AlertDialogHeader, ModalFooter } from '@/components/library';
 import DiscardButton from '@/components/library/components/buttons/DiscardButton';
 import { DocLink } from '@/app/builder/_components/ui';
 import FieldsEditor from './FieldsEditor';
@@ -24,9 +24,15 @@ type Props = {
 	onClose: () => void;
 	field?: EditableField;
 	onSave: (patch: Pick<EditableField, 'fields' | 'addLabel'>) => void;
+	/**
+	 * The row (or section) paths the model stores, when it's fixed — a code
+	 * model's sub-schema, edited from the route builder. A field outside it
+	 * would be dropped on save, so it's refused; a formula needs a number.
+	 */
+	stored?: { key: string; instance?: string }[];
 };
 
-const SectionFieldsModal: FC<Props> = ({ isOpen, onClose, field, onSave }) => {
+const SectionFieldsModal: FC<Props> = ({ isOpen, onClose, field, onSave, stored }) => {
 	const [fields, setFields] = useState<EditableField[]>([]);
 	const [addLabel, setAddLabel] = useState('');
 	const [tried, setTried] = useState(false);
@@ -39,7 +45,23 @@ const SectionFieldsModal: FC<Props> = ({ isOpen, onClose, field, onSave }) => {
 		}
 	}, [isOpen, field]);
 
-	const errors = useMemo(() => validateFields(fields, { sub: true }), [fields]);
+	const errors = useMemo(() => {
+		const found = validateFields(fields, { sub: true });
+		if (!stored) return found;
+		const byKey = new Map(stored.map(x => [x.key, x]));
+		for (const f of fields) {
+			if (found[f.uid] || !f.key) continue;
+			const path = byKey.get(f.key);
+			if (!path)
+				found[f.uid] = {
+					on: 'key',
+					message: `The model doesn’t store “${f.key}” — use one of ${stored.map(x => x.key).join(', ')}`,
+				};
+			else if ((f.kind === 'formula' || f.kind === 'number') && path.instance && path.instance !== 'Number')
+				found[f.uid] = { on: 'key', message: `The model stores “${f.key}” as ${String(path.instance).toLowerCase()}, not a number` };
+		}
+		return found;
+	}, [fields, stored]);
 	const isList = field?.kind === 'sectionlist';
 	const name = field?.label || field?.key || 'Section';
 	const key = field?.key || 'items';
@@ -85,6 +107,7 @@ const SectionFieldsModal: FC<Props> = ({ isOpen, onClose, field, onSave }) => {
 									{!isList && (
 										<Text
 											as='span'
+											fontSize='inherit'
 											fontFamily='mono'>
 											{key}.field
 										</Text>
@@ -92,6 +115,21 @@ const SectionFieldsModal: FC<Props> = ({ isOpen, onClose, field, onSave }) => {
 									{!isList && '.'}{' '}
 									<DocLink section='models-sections' />
 								</Text>
+
+								{stored && (
+									<Text
+										fontSize='xs'
+										color='fg.muted'>
+										This model is defined in code: its {isList ? 'rows' : 'section'} can hold{' '}
+										<Text
+											as='span'
+											fontSize='inherit'
+											fontFamily='mono'>
+											{stored.map(x => x.key).join(', ')}
+										</Text>
+										. Relabel, reorder, change inputs or make a number a formula here; a new field needs the model changed first.
+									</Text>
+								)}
 
 								<FieldsEditor
 									fields={fields}
@@ -155,24 +193,15 @@ const SectionFieldsModal: FC<Props> = ({ isOpen, onClose, field, onSave }) => {
 							</Flex>
 						</Dialog.Body>
 
-						<Dialog.Footer
-							borderBottomRadius='xl'
-							borderTopWidth='1px'
-							borderTopColor='border'
-							bg='menu.light'
-							_dark={{ bg: 'menu.dark' }}>
-							<Align
-								gap={2}
-								p={4}>
-								<DiscardButton onClick={onClose}>Cancel</DiscardButton>
-								<Button
-									size='sm'
-									px={3}
-									onClick={save}>
-									Save fields
-								</Button>
-							</Align>
-						</Dialog.Footer>
+						<ModalFooter>
+							<DiscardButton onClick={onClose}>Cancel</DiscardButton>
+							<Button
+								size='sm'
+								px={3}
+								onClick={save}>
+								Save fields
+							</Button>
+						</ModalFooter>
 					</AlertDialogContent>
 				</Dialog.Positioner>
 			</Portal>

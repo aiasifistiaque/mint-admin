@@ -468,6 +468,17 @@ const BuilderDocs = () => {
 							number on the model. A model-builder Formula field is stored as a number, and changing its formula
 							there recalculates existing records too.
 						</P>
+						<H3>Section fields</H3>
+						<P>
+							A field whose input is <strong>Section list (rows of fields)</strong> or <strong>Section (a group of
+							fields)</strong> gets a &ldquo;5 fields: …&rdquo; button beside the input. It opens the same field
+							builder the model builder uses (see <NextLink href='#models-sections'>Sections and section lists</NextLink>),
+							loaded with the section&apos;s current fields: relabel, reorder, change an input, or make a number a
+							formula of its row — an invoice line&apos;s <C>total = quantity * rate</C>. The record&apos;s own
+							formulas can then add the rows up: <C>sum(items.total) + shipping</C>. On a model defined in code
+							the rows can only hold what its schema stores; a new row field needs the model changed first, and
+							publishing refuses one it would drop.
+						</P>
 						<H3>Expanded options</H3>
 						<Terms
 							rows={[

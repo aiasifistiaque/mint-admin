@@ -2,13 +2,15 @@
 
 import { DragEvent, FC, memo, useMemo, useRef, useState } from 'react';
 import { Badge, Box, Button, Flex, Grid, IconButton, Input, Text, Textarea } from '@chakra-ui/react';
-import { Calculator, ChevronDown, ChevronRight, GripVertical, Link2, Lock, Plus, RotateCcw, Trash2 } from 'lucide-react';
+import { Calculator, ChevronDown, ChevronRight, GripVertical, Link2, ListTree, Lock, Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { inputDataOptions, radius } from '@/components/library';
 import { TABLE_CELLS } from '@/components/library/fields/registry/tableCells';
 import { ModelField } from './filterTypes';
 import { Dropdown } from '@/components/library/cl';
 import { FieldInfo, checkFormula } from '@/components/library/functions/formula';
 import FormulaModal from './FormulaModal';
+import SectionFieldsModal from '@/app/model-builder/_components/SectionFieldsModal';
+import { dataModelOf, editableSection, isSectionInput, sectionFormulaInfo, withSection } from './sectionDataModel';
 
 /**
  * A route's settings file, field by field — the same properties the file
@@ -82,6 +84,9 @@ const INPUTS: { value: string; label: string; group: string; data?: string }[] =
 	{ value: 'nested-data-menu', label: 'Pick a record (nested)', group: 'Links to records' },
 	{ value: 'seo', label: 'SEO', group: 'Structured', data: 'object' },
 	{ value: 'custom-attribute', label: 'Attributes', group: 'Structured' },
+	// Fields of their own, chosen in the section field builder (the button beside the input).
+	{ value: 'section-data-array', label: 'Section list (rows of fields)', group: 'Structured', data: 'array' },
+	{ value: 'section-object', label: 'Section (a group of fields)', group: 'Structured', data: 'object' },
 	{ value: 'array-string', label: 'List of texts', group: 'Structured', data: 'array-string' },
 ];
 const INPUT_GROUPS = [...new Set(INPUTS.map(i => i.group))];
@@ -214,6 +219,7 @@ type RowActions = {
 	remove: (key: string) => void;
 	toggle: (key: string) => void;
 	editFormula: (key: string) => void;
+	editSection: (key: string) => void;
 	dragStart: (index: number) => void;
 	dragOver: (index: number) => void;
 	drop: (index: number) => void;
@@ -431,6 +437,28 @@ const FieldRow = memo(function FieldRow({
 							<option value=''>Input: from the data type</option>
 							{inputOptions(f.schema?.type)}
 						</Dropdown>
+					)}
+					{isSectionInput(f.schema?.type) && (
+						// A section's own fields: opens the section field builder.
+						<Button
+							size='xs'
+							variant='outline'
+							maxW='240px'
+							justifyContent='flex-start'
+							disabled={readOnly || system}
+							title='Choose the section’s fields'
+							onClick={() => actions.editSection(f.key)}>
+							<ListTree size={12} />
+							<Text
+								as='span'
+								truncate>
+								{dataModelOf(f).length
+									? `${dataModelOf(f).length} fields: ${dataModelOf(f)
+											.map((x: any) => x.label || x.name)
+											.join(', ')}`
+									: 'Choose fields'}
+							</Text>
+						</Button>
 					)}
 					<Flex
 						gap={1}
@@ -691,6 +719,19 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 			setFormulaFor(key);
 			return;
 		}
+		if (isSectionInput(input)) {
+			// A section starts from its fields as they are (a list's row fields
+			// carry over between the two), or the preset; the builder opens on it.
+			const from = { ...f, schema: { ...(f.schema || {}), type: input } };
+			const { formula: _f, ...next }: any = withSection(from, editableSection(f.schema?.type ? f : from).fields as any);
+			set(key, {
+				schema: clean({ ...next, ...(f.schema?.type === 'formula' && { tableType: undefined, viewType: undefined }) }),
+				...(data && data !== f.type && { type: data }),
+			});
+			setSchemaRev(r => r + 1);
+			setSectionFor(key);
+			return;
+		}
 		const { formula: _dropped, ...schema } = f.schema || {};
 		set(key, {
 			schema: clean({
@@ -716,13 +757,35 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 
 	// Formula fields: what a formula may use, and which field's formula is being edited.
 	const [formulaFor, setFormulaFor] = useState<string | null>(null);
-	const formulaInfo: FieldInfo[] = shown.map(f => ({
-		key: f.key,
-		label: f.title,
-		numeric: f.type === 'number' || f.schema?.type === 'formula' || modelByKey.get(f.key)?.instance === 'Number',
-		...(f.schema?.type === 'formula' && { formula: f.schema?.formula }),
-	}));
+	const formulaInfo: FieldInfo[] = shown.flatMap((f): FieldInfo[] => {
+		// A list is used through sum() / avg() / count(); a section's values as `billing.fee`.
+		const inside = sectionFormulaInfo(f);
+		if (inside.some(x => x.list)) return inside;
+		return [
+			{
+				key: f.key,
+				label: f.title,
+				numeric: f.type === 'number' || f.schema?.type === 'formula' || modelByKey.get(f.key)?.instance === 'Number',
+				...(f.schema?.type === 'formula' && { formula: f.schema?.formula }),
+			},
+			...inside,
+		];
+	});
 	const formulaField = formulaFor ? fields.find(f => f.key === formulaFor) : undefined;
+
+	// Section fields: which one's own fields are being chosen, and what the model stores under it.
+	const [sectionFor, setSectionFor] = useState<string | null>(null);
+	const sectionField = sectionFor ? fields.find(f => f.key === sectionFor) : undefined;
+	const sectionEditable = useMemo(() => (sectionField ? editableSection(sectionField) : undefined), [sectionField]);
+	const sectionStored = useMemo(() => {
+		if (!sectionFor) return undefined;
+		const subs = modelFields
+			.filter(m => m.key.startsWith(`${sectionFor}.`))
+			.map(m => ({ key: m.key.slice(sectionFor.length + 1), instance: m.instance }))
+			.filter(m => !m.key.includes('.'));
+		// Only when the model fixes them (a sub-schema); a free-form value can hold any.
+		return subs.length ? subs : undefined;
+	}, [sectionFor, modelFields]);
 
 	const drop = (index: number) => {
 		if (dragIndex !== null && dragIndex !== index) {
@@ -752,6 +815,7 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 			remove: key => latest.current.onChange(latest.current.fields.filter(x => x.key !== key)),
 			toggle: key => setOpen(o => (o === key ? null : key)),
 			editFormula: key => setFormulaFor(key),
+			editSection: key => setSectionFor(key),
 			dragStart: index => setDragIndex(index),
 			dragOver: index => setOverIndex(o => (o === index ? o : index)),
 			drop: index => latest.current.drop(index),
@@ -838,6 +902,20 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 					</Button>
 				</Flex>
 			)}
+
+			<SectionFieldsModal
+				isOpen={!!sectionField}
+				onClose={() => setSectionFor(null)}
+				field={sectionEditable}
+				stored={sectionStored}
+				onSave={({ fields: sub, addLabel }) => {
+					if (sectionField) {
+						set(sectionField.key, { schema: clean(withSection(sectionField, (sub || []) as any, addLabel)) });
+						setSchemaRev(r => r + 1);
+					}
+					setSectionFor(null);
+				}}
+			/>
 
 			<FormulaModal
 				isOpen={!!formulaField}
