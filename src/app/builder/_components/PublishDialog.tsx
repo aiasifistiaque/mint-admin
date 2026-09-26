@@ -1,9 +1,12 @@
 'use client';
 
 import { FC, useState } from 'react';
-import { Button, Dialog, Input, Portal, Text } from '@chakra-ui/react';
+import { Button, Dialog, Portal, Text, Textarea } from '@chakra-ui/react';
 import { AlertDialogContent, AlertDialogHeader, ModalFooter } from '@/components/library';
 import DiscardButton from '@/components/library/components/buttons/DiscardButton';
+
+/** A notch smaller than the usual size sm, like the section modals' buttons. */
+const COMPACT = { size: 'xs', h: '28px', px: 3 } as const;
 
 type Props = {
 	isOpen: boolean;
@@ -13,7 +16,8 @@ type Props = {
 	route: string;
 	/** Unsaved edits are saved before publishing — said so in the text. */
 	isDirty: boolean;
-	isLoading?: boolean;
+	/** Where the publish is: saving the unsaved edits, then publishing. */
+	step?: 'saving' | 'publishing' | null;
 };
 
 /**
@@ -25,8 +29,9 @@ type Props = {
  * editor — which is what made typing in the old prompt lag. The content is
  * mounted only while open, so a fresh note each time and no hidden DOM.
  */
-const PublishDialog: FC<Props> = ({ isOpen, onClose, onConfirm, route, isDirty, isLoading }) => {
+const PublishDialog: FC<Props> = ({ isOpen, onClose, onConfirm, route, isDirty, step }) => {
 	const [note, setNote] = useState('');
+	const isLoading = !!step;
 
 	const close = () => {
 		setNote('');
@@ -58,28 +63,40 @@ const PublishDialog: FC<Props> = ({ isOpen, onClose, onConfirm, route, isDirty, 
 								The draft{isDirty ? ' (including your unsaved changes)' : ''} goes live: the table, its filters
 								and buttons change for every admin straight away. The current version is kept and can be restored.
 							</Text>
-							<Input
+							<Textarea
 								mt={3}
 								size='sm'
+								rows={4}
 								autoFocus
-								placeholder='Note for the version history (optional)'
+								resize='vertical'
+								placeholder='Note for the version history (optional) — what changed and why'
 								value={note}
+								disabled={isLoading}
 								onChange={e => setNote(e.target.value)}
-								onKeyDown={e => e.key === 'Enter' && !isLoading && onConfirm(note.trim() || undefined)}
+								// Enter is a new line; Ctrl/⌘+Enter publishes.
+								onKeyDown={e =>
+									e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !isLoading && onConfirm(note.trim() || undefined)
+								}
 							/>
+							<Text
+								mt={1}
+								fontSize='xs'
+								color='fg.subtle'>
+								Ctrl/⌘ + Enter to publish
+							</Text>
 						</Dialog.Body>
 
 						<ModalFooter>
 							<DiscardButton
+								{...COMPACT}
 								disabled={isLoading}
 								onClick={close}>
 								Cancel
 							</DiscardButton>
 							<Button
-								size='sm'
-								px={3}
+								{...COMPACT}
 								loading={isLoading}
-								loadingText='Publishing'
+								loadingText={step === 'saving' ? 'Saving' : 'Publishing'}
 								spinnerPlacement='start'
 								onClick={() => onConfirm(note.trim() || undefined)}>
 								Publish

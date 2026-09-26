@@ -143,6 +143,8 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 	const [saveDraft, { isLoading: saving }] = useSaveBuilderDraftMutation();
 	const [discardDraft, { isLoading: discarding }] = useDiscardBuilderDraftMutation();
 	const [publish, { isLoading: publishing }] = usePublishBuilderRouteMutation();
+	/** Where a publish from the dialog is: saving the unsaved edits first, then publishing. */
+	const [publishStep, setPublishStep] = useState<'saving' | 'publishing' | null>(null);
 	const [reset, { isLoading: resetting }] = useResetBuilderRouteMutation();
 	const [restore] = useRestoreBuilderVersionMutation();
 
@@ -344,9 +346,16 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 	};
 
 	const onPublish = async (note?: string) => {
-		if (isDirty && !(await save())) return setConfirm(null);
+		// Shown on the dialog's button only — the page's own buttons stay still.
+		setPublishStep(isDirty ? 'saving' : 'publishing');
+		if (isDirty && !(await save())) {
+			setPublishStep(null);
+			return setConfirm(null);
+		}
+		setPublishStep('publishing');
 		try {
 			const res = await publish({ route, note }).unwrap();
+			setPublishStep(null);
 			setConfirm(null);
 			toaster.create({
 				title: 'Published',
@@ -354,6 +363,7 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 				type: 'success',
 			});
 		} catch (e: any) {
+			setPublishStep(null);
 			toastError('Could not publish', e);
 		}
 	};
@@ -719,14 +729,13 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 								size='sm'
 								variant='outline'
 								disabled={!isDirty || busy}
-								loading={saving && !publishing}
+								loading={saving && !publishStep}
 								onClick={onSaveDraft}>
 								Save draft
 							</Button>
 							<Button
 								size='sm'
 								disabled={(!isDirty && !hasDraft) || busy}
-								loading={publishing}
 								onClick={() => setConfirm('publish')}>
 								Publish
 							</Button>
@@ -1093,7 +1102,8 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 										<Text
 											fontSize='xs'
 											color='fg.muted'
-											truncate>
+											truncate
+											title={v.note || undefined}>
 											{[when(v.createdAt), v.publishedBy?.name, v.note].filter(Boolean).join(' · ')}
 										</Text>
 									</Flex>
@@ -1119,7 +1129,7 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 				onConfirm={onPublish}
 				route={route}
 				isDirty={isDirty}
-				isLoading={publishing}
+				step={publishStep}
 			/>
 
 			<ConfirmAction
