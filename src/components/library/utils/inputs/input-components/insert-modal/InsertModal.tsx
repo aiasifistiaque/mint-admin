@@ -12,13 +12,17 @@ type InsertModalProps = {
 	[key: string]: any;
 };
 
+/**
+ * A portalled dialog: backdrop and positioner. Its children go in an
+ * InsertModalContent — that's the one box, so it isn't drawn here too.
+ */
 const InsertModal: FC<InsertModalProps> = ({
 	children,
 	open,
 	isOpen,
 	onClose,
 	onOpenChange,
-	size = '6xl',
+	size = 'lg',
 	...props
 }) => {
 	// Handle both v2 and v3 prop patterns
@@ -33,17 +37,15 @@ const InsertModal: FC<InsertModalProps> = ({
 
 	return (
 		<Dialog.Root
-			lazyMount
-			unmountOnExit
 			size={size as any}
+			placement='center'
+			scrollBehavior='inside'
 			open={isDialogOpen}
 			onOpenChange={handleOpenChange}
 			{...props}>
 			<Portal>
 				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<Dialog.Content>{children}</Dialog.Content>
-				</Dialog.Positioner>
+				<Dialog.Positioner>{children}</Dialog.Positioner>
 			</Portal>
 		</Dialog.Root>
 	);

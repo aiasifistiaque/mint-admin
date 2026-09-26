@@ -1,7 +1,7 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
-import { Image, Stack, Flex, Text, Heading } from '@chakra-ui/react';
-import { HelperText, Label, ImageContainer, Column, SpaceBetween } from '../../..';
+import { Image, Stack, Flex, Text } from '@chakra-ui/react';
+import { HelperText, Column, SpaceBetween } from '../../..';
 import DeleteSection from './DeleteSection';
 import AddSectionDataModal from './AddSectionDataModal';
 import { SectionRows } from '../../../components/view/utils/render-view-item/SectionValues';
@@ -31,56 +31,55 @@ const VSectionDataArray: FC<FormDataType> = ({
 	section,
 	...props
 }) => {
-	const imageComponent = (
-		<ImageContainer>
-			<Image
-				h='100%'
-				w='100%'
-				objectFit='contain'
-				src={value}
-			/>
-		</ImageContainer>
-	);
-
-	if (isDisabled) return imageComponent;
 	return (
 		<Stack>
-			<Stack w='full'>
-				<Label fontSize='22px'>
-					{label}{' '}
-					{isRequired && (
-						<Text
-							as='span'
-							color='red.500'>
-							*
-						</Text>
-					)}
-				</Label>
+			<Stack
+				w='full'
+				gap={2}>
+				{label && (
+					<Text
+						fontSize='sm'
+						fontWeight='600'>
+						{label}
+						{isRequired && (
+							<Text
+								as='span'
+								color='red.500'>
+								{' '}
+								*
+							</Text>
+						)}
+					</Text>
+				)}
 				{/* A model builder list: its rows as a table, number columns added up. */}
 				{section?.table && Array.isArray(value) && value.length > 0 && (
 					<SectionRows
 						rows={value}
 						dataModel={section?.dataModel || []}
-						actions={i => (
-							<Flex gap={1}>
-								<AddSectionDataModal
-									value={value}
-									type='edit'
-									handleDataChange={onChange}
-									name={name}
-									index={i}
-									prevVal={value[i]}
-									section={section}
-									dataModel={section?.dataModel}
-								/>
-								<DeleteSection
-									idx={i}
-									handleDataChange={onChange}
-									name={name}
-									value={value}
-								/>
-							</Flex>
-						)}
+						actions={
+							isDisabled
+								? undefined
+								: i => (
+										<Flex gap={1}>
+											<AddSectionDataModal
+												value={value}
+												type='edit'
+												handleDataChange={onChange}
+												name={name}
+												index={i}
+												prevVal={value[i]}
+												section={section}
+												dataModel={section?.dataModel}
+											/>
+											<DeleteSection
+												idx={i}
+												handleDataChange={onChange}
+												name={name}
+												value={value}
+											/>
+										</Flex>
+								  )
+						}
 					/>
 				)}
 				<Column
@@ -105,8 +104,14 @@ const VSectionDataArray: FC<FormDataType> = ({
 								gap={4}
 								w='full'>
 								<SpaceBetween>
-									<Heading size='md'>{item?.[section?.display?.title]}</Heading>
-									<Flex gap={1}>
+									<Text
+										fontSize='sm'
+										fontWeight='600'>
+										{item?.[section?.display?.title]}
+									</Text>
+									<Flex
+										gap={1}
+										display={isDisabled ? 'none' : undefined}>
 										<AddSectionDataModal
 											value={value}
 											type='edit'
@@ -131,7 +136,7 @@ const VSectionDataArray: FC<FormDataType> = ({
 						</Flex>
 					))}
 				</Column>
-				{value && value?.length >= limit ? null : (
+				{isDisabled || (value && value?.length >= limit) ? null : (
 					<Flex>
 						<AddSectionDataModal
 							value={value}

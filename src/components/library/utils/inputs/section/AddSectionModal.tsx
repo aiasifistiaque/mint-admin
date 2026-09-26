@@ -1,11 +1,10 @@
 'use client';
-import { Button, Flex, IconButton, useDisclosure } from '@chakra-ui/react';
-import { FC, ReactNode, useState } from 'react';
+import { Button, IconButton, useDisclosure } from '@chakra-ui/react';
+import { FC, useState } from 'react';
+import { Plus } from 'lucide-react';
 
 import {
 	Column,
-	createFormFields,
-	DeleteImageButton,
 	Icon,
 	InsertModal,
 	InsertModalBody,
@@ -13,217 +12,122 @@ import {
 	InsertModalContent,
 	InsertModalFooter,
 	InsertModalHeader,
-	InsertModalOverlay,
 	VImage,
 	VInput,
 	VTextarea,
 } from '../../..';
+import { SECTION_BUTTON } from './sectionButtons';
+
+type Item = { image?: string; title: string; description: string };
 
 type UploadModalProps = {
-	trigger?: ReactNode;
 	handleDataChange: any;
-	type?: 'add' | 'edit' | 'delete';
+	type?: 'add' | 'edit';
 	multiple?: boolean;
-	handleDelete?: any;
-	value: { image?: string; title: string; description: string }[];
+	value: Item[];
 	name: string;
-	prevVal?: { image?: string; title: string; description: string };
+	prevVal?: Item;
 	index?: number;
-	dataModel?: any;
 	hasImage?: boolean;
 	section?: any;
 };
 
-const AddSectionModal: FC<UploadModalProps> = ({
-	multiple,
-	trigger,
-	handleDataChange,
-	handleDelete,
-	type = 'add',
-	value,
-	name,
-	prevVal,
-	index = 0,
-	dataModel,
-	hasImage,
-	section,
-}) => {
+const empty = (hasImage?: boolean): Item => (hasImage ? { image: '', title: '', description: '' } : { title: '', description: '' });
+
+/** Adds or edits one entry of a custom section list: a title, a description, and an image when the field has one. */
+const AddSectionModal: FC<UploadModalProps> = ({ handleDataChange, type = 'add', value, name, prevVal, index = 0, hasImage, section }) => {
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
-
-	const [val, setVal] = useState<{
-		image?: string;
-		title: string;
-		description: string;
-	}>(
-		prevVal || {
-			image: '',
-			title: '',
-			description: '',
-		}
-	);
-
-	const closeModal = () => {
-		hasImage
-			? setVal({
-					image: '',
-					title: '',
-					description: '',
-			  })
-			: setVal({
-					title: '',
-					description: '',
-			  });
-
-		onClose();
-	};
+	const [val, setVal] = useState<Item>(prevVal || empty(hasImage));
 
 	const openModal = () => {
-		if (hasImage) setVal(prevVal || { image: '', title: '', description: '' });
-		else setVal(prevVal || { title: '', description: '' });
+		setVal(prevVal || empty(hasImage));
 		onOpen();
 	};
 
 	const handleChange = (e: any) => {
 		const { name, value } = e.target;
-		setVal(prevVal => ({ ...prevVal, [name]: value }));
+		setVal(prev => ({ ...prev, [name]: value }));
 	};
 
-	const handleImage = (e: any) => {
-		setVal(prevVal => ({ ...prevVal, image: e }));
-	};
+	const isValid = !!val.title?.trim() && !!val.description?.trim();
 
-	const handleAddSection = () => {
-		if (!val.title || !val.description) return;
-		const newArr = [...(Array.isArray(value) ? value : []), val];
-		if (handleDataChange) {
-			const event = {
-				target: {
-					name: name,
-					value: newArr,
-				},
-			} as any;
-			handleDataChange(event);
-		}
-
-		setVal({ title: '', description: '' });
+	const handleSubmit = () => {
+		if (!isValid) return;
+		const newArr = Array.isArray(value) ? [...value] : [];
+		if (type == 'add') newArr.push(val);
+		else if (index >= 0 && index < newArr.length) newArr[index] = val;
+		handleDataChange?.({ target: { name, value: newArr } });
 		onClose();
 	};
 
-	const handleEditSection = () => {
-		if (!val.title || !val.description) return;
-
-		const newArr = Array.isArray(value) ? [...value] : [];
-		if (index >= 0 && index < newArr.length) {
-			newArr[index] = val;
-		}
-
-		if (handleDataChange) {
-			const event = {
-				target: {
-					name: name,
-					value: newArr,
-				},
-			} as any;
-			handleDataChange(event);
-		}
-		closeModal();
-	};
-
-	const handleSubmit = type == 'add' ? handleAddSection : handleEditSection;
-
-	const buttonTypes = {
-		add: (
-			<Button
-				size='sm'
-				colorPalette='brand'>
-				{section?.addBtnText || 'Add Item'}
-			</Button>
-		),
-		edit: (
-			<IconButton
-				variant='outline'
-				aria-label='edit-section'
-				size='xs'
-				colorPalette='brand'>
-				<Icon name='edit' />
-			</IconButton>
-		),
-		delete: <DeleteImageButton onClick={handleDelete} />,
-	};
-
-	let triggerButton = (buttonTypes[type] as any) || trigger;
-
-	const getDataModel = () => {
-		if (!section?.dataModel) return null;
-		const model = createFormFields({
-			schema: section?.dataModel,
-			layout: section?.layout,
-		});
-		return model;
-	};
+	const title = section?.title || (type == 'edit' ? 'Edit entry' : 'Add entry');
 
 	return (
 		<>
-			{type == 'delete' ? (
-				<DeleteImageButton onClick={handleDelete} />
+			{type == 'edit' ? (
+				<IconButton
+					variant='outline'
+					aria-label='Edit'
+					size='xs'
+					onClick={openModal}>
+					<Icon name='edit' />
+				</IconButton>
 			) : (
-				<Flex onClick={openModal}>{triggerButton}</Flex>
+				<Button
+					size='sm'
+					variant='outline'
+					onClick={openModal}>
+					<Plus size={14} />
+					{section?.addBtnText || 'Add item'}
+				</Button>
 			)}
 			<InsertModal
 				isOpen={isOpen}
-				onClose={closeModal}>
-				<InsertModalOverlay />
+				onClose={onClose}>
 				<InsertModalContent>
-					<InsertModalHeader>
-						{section?.title ? section?.title : type == 'edit' ? 'Update Section' : 'Add Section'}
-					</InsertModalHeader>
+					<InsertModalHeader>{title}</InsertModalHeader>
 					<InsertModalCloseButton />
-					<InsertModalBody flex={1}>
+					<InsertModalBody>
 						<Column gap={4}>
-							{/* <Text>{JSON.stringify(section)}</Text> */}
-							{section?.dataModel && <></>}
 							{hasImage && (
 								<VImage
 									name='image'
 									label='Image'
 									value={val?.image}
-									onChange={handleImage}
+									onChange={(image: any) => setVal(prev => ({ ...prev, image }))}
 								/>
 							)}
 							<VInput
 								name='title'
 								label='Title'
+								isRequired
 								value={val?.title}
 								onChange={handleChange}
 							/>
 							<VTextarea
 								name='description'
 								label='Description'
+								isRequired
 								value={val?.description}
-								h='full'
-								minH='300px'
+								minH='180px'
 								onChange={handleChange}
 							/>
 						</Column>
 					</InsertModalBody>
 
 					<InsertModalFooter>
-						<Flex
-							gap={2}
-							flex={1}>
-							<Button
-								size='sm'
-								disabled={!val.title || !val.description}
-								onClick={handleSubmit}>
-								{type == 'add' ? 'Add' : 'Update'}
-							</Button>
-							<Button
-								colorPalette='gray'
-								size='sm'
-								onClick={onClose}>
-								Cancel
-							</Button>
-						</Flex>
+						<Button
+							{...SECTION_BUTTON}
+							variant='outline'
+							onClick={onClose}>
+							Cancel
+						</Button>
+						<Button
+							{...SECTION_BUTTON}
+							disabled={!isValid}
+							onClick={handleSubmit}>
+							{type == 'add' ? 'Add' : 'Save'}
+						</Button>
 					</InsertModalFooter>
 				</InsertModalContent>
 			</InsertModal>

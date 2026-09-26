@@ -1,10 +1,11 @@
 'use client';
 
-import { Button, IconButton, useDisclosure, Dialog, Portal } from '@chakra-ui/react';
+import { Button, CloseButton, IconButton, useDisclosure, Dialog, Portal } from '@chakra-ui/react';
 import { FC, useRef } from 'react';
 
-import { Icon } from '../../..';
+import { Icon, radius } from '../../..';
 import ModalFooter from '../../../modals/modal-components/CustomModalFooter';
+import { SECTION_BUTTON } from './sectionButtons';
 
 type DeleteItemModalProps = {
 	idx: number;
@@ -43,46 +44,61 @@ const DeleteSection: FC<DeleteItemModalProps> = ({ value, handleDataChange, name
 		<>
 			<IconButton
 				variant='outline'
-				aria-label='delete-section'
+				aria-label='Delete'
 				size='xs'
 				colorPalette='red'
 				onClick={onOpen}>
-				<Icon
-					name='delete'
-					color='red'
-				/>
+				<Icon name='delete' />
 			</IconButton>
 
 			<Dialog.Root
-				lazyMount
-				unmountOnExit
+				size='sm'
+				placement='center'
 				open={isOpen}
 				onOpenChange={e => (e.open ? onOpen() : closeItem())}
 				role='alertdialog'>
 				<Portal>
 					<Dialog.Backdrop />
 					<Dialog.Positioner>
-						<Dialog.Content>
-							<Dialog.Header>Delete Section</Dialog.Header>
-							<Dialog.CloseTrigger />
+						<Dialog.Content
+							borderRadius={radius.MODAL}
+							bg='bg.panel'
+							borderWidth='1px'
+							borderColor='border'>
+							<Dialog.Header
+								px={{ base: 4, md: 6 }}
+								pt={{ base: 4, md: 5 }}
+								pb={{ base: 3, md: 4 }}>
+								<Dialog.Title fontSize='16px'>Delete this entry?</Dialog.Title>
+							</Dialog.Header>
+							<Dialog.CloseTrigger
+								asChild
+								top={3}
+								right={3}>
+								<CloseButton size='sm' />
+							</Dialog.CloseTrigger>
 
-							<Dialog.Body>Are you sure? You {`can't`} undo this action afterwards.</Dialog.Body>
+							<Dialog.Body
+								px={{ base: 4, md: 6 }}
+								pt={0}
+								pb={{ base: 4, md: 5 }}
+								fontSize='sm'>
+								It&apos;s removed from the list; the change is kept when you save the record.
+							</Dialog.Body>
 
 							<ModalFooter>
 								<Button
+									{...SECTION_BUTTON}
 									ref={cancelRef}
 									onClick={closeItem}
-									px={3}
-									size='sm'
 									variant='outline'>
-									Discard
+									Cancel
 								</Button>
 
 								<Button
+									{...SECTION_BUTTON}
 									colorPalette='red'
-									onClick={handleDelete}
-									px={3}
-									size='sm'>
+									onClick={handleDelete}>
 									Delete
 								</Button>
 							</ModalFooter>

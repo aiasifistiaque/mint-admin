@@ -27,6 +27,19 @@ const fileName = (url: string, i: number) => {
 	}
 };
 
+/**
+ * Where a link value opens: as given with a scheme (https:, mailto:), with
+ * https:// when it has none — `example.com` would otherwise open relative to
+ * the admin. Nothing for empty values, placeholders or script URLs.
+ */
+const linkHref = (value: any): string | null => {
+	if (typeof value !== 'string') return null;
+	const v = value.trim();
+	if (!v || v === '--' || v === 'n/a') return null;
+	if (/^(javascript|data|vbscript):/i.test(v)) return null;
+	return /^[a-z][a-z0-9+.-]*:/i.test(v) ? v : `https://${v.replace(/^\/+/, '')}`;
+};
+
 /** Linked records as chips; without a route to open them in, just their names. */
 const linkedList = (items: any, route?: string) => (
 	<Align
@@ -48,6 +61,25 @@ const linkedList = (items: any, route?: string) => (
 	</Align>
 );
 
+/**
+ * Types whose value is a list. An empty field reaches the renderer as the
+ * '--' placeholder (getValue), and bad data can be anything — `.map` on
+ * either crashed the whole page, so a non-list value reads as empty.
+ * (`tag` isn't here: it also draws a single value as a badge.)
+ */
+const LIST_TYPES = [
+	'section-data-array',
+	'custom-section-array',
+	'data-tag',
+	'data-array-tag',
+	'array-tag',
+	'file-array',
+	'custom-attribute',
+	'image-array',
+];
+/** Types whose value is one object of its own fields. */
+const OBJECT_TYPES = ['section-object'];
+
 /** Types a single linked record's name can arrive as. */
 const LINKABLE = ['string', 'text', 'read-only', 'data-menu', undefined];
 
@@ -64,6 +96,12 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id, l
 				label={typeof children === 'string' && children !== '--' && children !== 'n/a' ? children : undefined}
 			/>
 		);
+
+	if (
+		(LIST_TYPES.includes(type) && (!Array.isArray(children) || !children.length)) ||
+		(OBJECT_TYPES.includes(type) && (!children || typeof children !== 'object' || Array.isArray(children)))
+	)
+		return <Text {...textCss}>--</Text>;
 
 	switch (type) {
 		case 'section-data-array':
@@ -102,19 +140,47 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id, l
 			);
 		case 'custom-section-array':
 			return (
-				<Flex
-					flexWrap='wrap'
-					gap={4}
-					alignItems='center'>
-					{children?.map((item: any, i: number) => (
-						<Column
-							gap={2}
-							key={i}>
-							<Heading size='xs'>{item?.title}</Heading>
-							<Text fontSize='.9rem'>{item?.description}</Text>
-						</Column>
+				<Column
+					gap={0}
+					w='full'
+					borderWidth='1px'
+					borderRadius='md'
+					overflow='hidden'>
+					{children.map((item: any, i: number) => (
+						<Flex
+							key={i}
+							gap={3}
+							p={3}
+							align='flex-start'
+							borderTopWidth={i ? '1px' : 0}>
+							{item?.image && (
+								<ImageContainer
+									size={48}
+									src={item.image}
+								/>
+							)}
+							<Box
+								flex={1}
+								minW={0}>
+								<Text
+									fontSize='sm'
+									fontWeight='600'
+									wordBreak='break-word'>
+									{item?.title || '--'}
+								</Text>
+								{item?.description && (
+									<Text
+										fontSize='sm'
+										color='fg.muted'
+										whiteSpace='pre-line'
+										wordBreak='break-word'>
+										{item.description}
+									</Text>
+								)}
+							</Box>
+						</Flex>
 					))}
-				</Flex>
+				</Column>
 			);
 		case 'data-tag':
 		case 'data-array-tag':
@@ -136,26 +202,35 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id, l
 				</Align>
 			);
 		case 'external-link':
-			if (!children) return null;
+		case 'uri':
+		case 'url': {
+			// Empty arrives as the '--' placeholder: no link, no icon.
+			const href = linkHref(children);
+			if (!href) return <Text {...textCss}>{typeof children === 'string' && children.trim() ? children : '--'}</Text>;
 			return (
-				<Flex gap={2}>
-					<Link
-						cursor='pointer'
-						href={children || '#'}
-						{...(children ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-						<Flex
-							align='center'
-							gap={2}>
-							<Text
-								{...textCss}
-								color='accent.fg'>
-								{children}
-							</Text>
-							<ExternalLink size={16} />
-						</Flex>
-					</Link>
-				</Flex>
+				<Link
+					href={href}
+					target='_blank'
+					rel='noopener noreferrer'
+					title='Opens in a new tab'
+					color='accent.fg'
+					display='inline-flex'
+					alignItems='center'
+					gap={1.5}
+					maxW='full'>
+					<Text
+						{...textCss}
+						color='inherit'>
+						{children}
+					</Text>
+					<ExternalLink
+						size={14}
+						style={{ flexShrink: 0 }}
+						aria-hidden
+					/>
+				</Link>
 			);
+		}
 		case 'file':
 			if (!children || children == '--') return null;
 			return (
@@ -204,6 +279,8 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id, l
 			);
 
 		case 'tag':
+			// Empty: the plain placeholder, not a badge reading "--".
+			if (children === '--' || (Array.isArray(children) && !children.length)) return <Text {...textCss}>--</Text>;
 			return (
 				<Flex
 					alignItems='center'
