@@ -1,8 +1,10 @@
 'use client';
-import { FC, useMemo, useState } from 'react';
-import { Combobox, createListCollection, Portal, Tag, Wrap } from '@chakra-ui/react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { Box, Combobox, createListCollection, Flex, Portal, Tag, Wrap } from '@chakra-ui/react';
 import { MdClose } from 'react-icons/md';
-import { FormControl, Icon, useGetSelectDataQuery } from '../..';
+import { FormControl, Icon, useGetAllQuery } from '../..';
+import { humanizeKey, optionPrefill, optionQuery } from '../../functions/optionFilters';
+import QuickAdd from './QuickAdd';
 
 const EMPTY: any[] = [];
 
@@ -21,9 +23,9 @@ type InputContainerProps = any & {
 
 // Multi-select sibling of VDataMenu — same Combobox shell, `multiple` turned
 // on, and the selected values rendered as removable Tags underneath instead
-// of a single value in the trigger. `useGetSelectDataQuery` already fetches
-// the full (up to 1000-item) list in one shot, so filtering as the user
-// types happens locally against that list rather than re-querying per key.
+// of a single value in the trigger. The full (up to 1000-item) list is fetched
+// in one shot — narrowed by the field's optionFilters, like VDataMenu's — so
+// filtering as the user types happens locally rather than re-querying per key.
 const VDataTags: FC<InputContainerProps> = ({
 	label,
 	isRequired,
@@ -36,11 +38,20 @@ const VDataTags: FC<InputContainerProps> = ({
 	size = 'sm',
 	disabled,
 	onChange,
+	// FormInput's form-state props — not DOM attributes, so keep them out of `...props`.
+	// formData also feeds the conditions on which records are offered.
+	formData,
+	setFormData: _setFormData,
+	setChangedData: _setChangedData,
 	...props
 }: any) => {
 	const [search, setSearch] = useState('');
-	const { data } = useGetSelectDataQuery(model);
-	const docs: any[] = data?.doc || EMPTY;
+	const { params, waitingFor } = optionQuery(item?.optionFilters, formData);
+	const { data, currentData, isFetching } = useGetAllQuery(
+		{ path: model, limit: '1000', sort: 'name', filters: params },
+		{ skip: !model || !!waitingFor }
+	);
+	const docs: any[] = (!waitingFor && data?.doc) || EMPTY;
 
 	// WO-05: valueKey is what createFormFields emits; valKey kept as a deprecated fallback.
 	const valueKey = item?.valueKey || item?.valKey || '_id';
@@ -82,6 +93,20 @@ const VDataTags: FC<InputContainerProps> = ({
 
 	const emit = (nextValue: string[]) => onChange?.({ target: { name, value: nextValue } });
 
+	// When what's offered changes because the form changed, choices that no
+	// longer fit are dropped — once the new list is in.
+	const offerKey = JSON.stringify(params) + (waitingFor || '');
+	const lastOfferKey = useRef(offerKey);
+	useEffect(() => {
+		if (offerKey === lastOfferKey.current) return;
+		if (!waitingFor && (isFetching || !currentData)) return;
+		lastOfferKey.current = offerKey;
+		const list: any[] = waitingFor ? [] : currentData?.doc || [];
+		const kept = selected.filter((id: string) => list.some((d: any) => String(d?.[valueKey]) === String(id)));
+		if (kept.length !== selected.length) emit(kept);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [offerKey, isFetching, currentData]);
+
 	const removeTag = (id: string) => emit(selected.filter((v: string) => v !== id));
 
 	return (
@@ -89,45 +114,65 @@ const VDataTags: FC<InputContainerProps> = ({
 			isRequired={isRequired}
 			label={label}
 			helper={helper}>
-			<Combobox.Root
-				lazyMount
-				collection={collection}
-				size={size}
-				disabled={disabled}
-				multiple
-				value={selected}
-				openOnClick
-				positioning={{ sameWidth: true }}
-				onInputValueChange={details => setSearch(details.inputValue)}
-				onValueChange={details => {
-					emit(details.value);
-					setSearch('');
-				}}
-				{...props}>
-				<Combobox.Control>
-					<Combobox.Input placeholder={placeholder || `Select ${label}`} />
-					<Combobox.IndicatorGroup>
-						<Combobox.Trigger>
-							<Icon name='select' />
-						</Combobox.Trigger>
-					</Combobox.IndicatorGroup>
-				</Combobox.Control>
-				<Portal>
-					<Combobox.Positioner>
-						<Combobox.Content>
-							<Combobox.Empty>No results</Combobox.Empty>
-							{collection.items.map((doc: any) => (
-								<Combobox.Item
-									item={doc}
-									key={doc?.[valueKey]}>
-									<Combobox.ItemText>{displayLabel(doc)}</Combobox.ItemText>
-									<Combobox.ItemIndicator />
-								</Combobox.Item>
-							))}
-						</Combobox.Content>
-					</Combobox.Positioner>
-				</Portal>
-			</Combobox.Root>
+			<Flex
+				gap={2}
+				align='center'
+				w='full'>
+				<Box
+					flex='1'
+					minW={0}>
+					<Combobox.Root
+						lazyMount
+						collection={collection}
+						size={size}
+						disabled={disabled}
+						multiple
+						value={selected}
+						openOnClick
+						positioning={{ sameWidth: true }}
+						onInputValueChange={details => setSearch(details.inputValue)}
+						onValueChange={details => {
+							emit(details.value);
+							setSearch('');
+						}}
+						{...props}>
+						<Combobox.Control>
+							<Combobox.Input placeholder={placeholder || `Select ${label}`} />
+							<Combobox.IndicatorGroup>
+								<Combobox.Trigger>
+									<Icon name='select' />
+								</Combobox.Trigger>
+							</Combobox.IndicatorGroup>
+						</Combobox.Control>
+						<Portal>
+							<Combobox.Positioner>
+								<Combobox.Content>
+									<Combobox.Empty>
+										{waitingFor ? `Pick ${humanizeKey(waitingFor).toLowerCase()} first` : 'No results'}
+									</Combobox.Empty>
+									{collection.items.map((doc: any) => (
+										<Combobox.Item
+											item={doc}
+											key={doc?.[valueKey]}>
+											<Combobox.ItemText>{displayLabel(doc)}</Combobox.ItemText>
+											<Combobox.ItemIndicator />
+										</Combobox.Item>
+									))}
+								</Combobox.Content>
+							</Combobox.Positioner>
+						</Portal>
+					</Combobox.Root>
+				</Box>
+				{item?.addItem && (
+					<QuickAdd
+						model={model}
+						label={label}
+						disabled={disabled}
+						prefill={optionPrefill(item?.optionFilters, formData)}
+						onCreated={(doc: any) => doc?.[valueKey] && emit([...selected, String(doc[valueKey])])}
+					/>
+				)}
+			</Flex>
 			{selectedDocs.length > 0 && (
 				<Wrap
 					gap={1.5}

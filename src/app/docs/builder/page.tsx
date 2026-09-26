@@ -479,6 +479,61 @@ const BuilderDocs = () => {
 							the rows can only hold what its schema stores; a new row field needs the model changed first, and
 							publishing refuses one it would drop.
 						</P>
+						<H3>Linked records: which are offered, and adding new ones</H3>
+						<Box
+							id='settings-linked'
+							scrollMarginTop='24px'
+						/>
+						<P>
+							A field whose input picks records — <strong>Pick a record</strong>, <strong>Pick records</strong> or
+							the nested picker — gets a <em>Linked records</em> panel in its expanded options.{' '}
+							<strong>Linked model</strong> is the route its records come from (<C>clients</C>,{' '}
+							<C>categories</C>, <C>admins</C>).
+						</P>
+						<P>
+							<strong>Add new from the form</strong> puts a <strong>+</strong> beside the input. It opens a modal
+							with the linked model&apos;s own form; the record added is picked straight away. Entering a
+							product whose category doesn&apos;t exist yet: + , name the category, add — it&apos;s the
+							product&apos;s category. The new record starts with the values the conditions below ask for, so
+							it&apos;s one the picker offers. Adding needs permission to create on the linked route.
+						</P>
+						<P>
+							<strong>Which records are offered</strong> narrows the list with conditions on the linked
+							model&apos;s fields — <em>is</em>, <em>is not</em> or <em>is one of</em> — each compared with{' '}
+							<strong>a fixed value</strong> or with <strong>another field of this form</strong>. Records must
+							match every condition.
+						</P>
+						<Terms
+							head={['Condition', 'Offers']}
+							rows={[
+								[
+									<>
+										Projects: <C>client</C> is this form&apos;s <C>client</C>
+									</>,
+									'On an invoice, only the projects of the client picked above. Pick another client and a project that no longer fits is cleared.',
+								],
+								[
+									<>
+										Admins: <C>isActive</C> is Yes
+									</>,
+									'Only active admins — for an assignee, or who a record is shared with.',
+								],
+								[
+									<>
+										Categories: <C>type</C> is one of <C>product, service</C>
+									</>,
+									'Only categories of those types.',
+								],
+							]}
+						/>
+						<P>
+							With another field, <em>While empty</em> decides what&apos;s offered before that field is
+							filled in: every record, or none (the list then says which field to pick first). Conditions can
+							use any field of the linked route that isn&apos;t hidden or a secret. They&apos;re saved in the
+							field&apos;s schema as <C>optionFilters</C> (and the + as <C>addItem</C>), so a settings file can
+							declare them too:{' '}
+							<C>{`optionFilters: [{ field: 'client', from: 'client' }, { field: 'isActive', value: true }]`}</C>.
+						</P>
 						<H3>Expanded options</H3>
 						<Terms
 							rows={[
@@ -491,6 +546,10 @@ const BuilderDocs = () => {
 								['In the table by default', 'Whether the column shows before an admin changes their preferences.'],
 								['Min / Max', 'Length for text, value for numbers.'],
 								['Populate path / fields', 'Join the referenced record in, and which of its fields to bring.'],
+								[
+									'Linked records',
+									'Record pickers only: the linked model, a + to add one from the form, and which records are offered (see above).',
+								],
 								['All presentation options', 'The field’s full schema as JSON, for options without a control of their own.'],
 							]}
 						/>

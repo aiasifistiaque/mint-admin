@@ -43,6 +43,9 @@ const OPTIONAL_FIELD_PROPS = [
 	'renderCondition',
 	'tooltip',
 	'colorTheme',
+	// Record pickers: a + to add a linked record, and which records are offered.
+	'addItem',
+	'optionFilters',
 ] as const;
 
 const createResolvedField = ({

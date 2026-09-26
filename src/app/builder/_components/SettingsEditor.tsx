@@ -11,6 +11,7 @@ import { FieldInfo, checkFormula } from '@/components/library/functions/formula'
 import FormulaModal from './FormulaModal';
 import SectionFieldsModal from '@/app/model-builder/_components/SectionFieldsModal';
 import { dataModelOf, editableSection, isSectionInput, sectionFormulaInfo, withSection } from './sectionDataModel';
+import LinkedRecordsEditor, { RECORD_INPUTS } from './LinkedRecordsEditor';
 
 /**
  * A route's settings file, field by field — the same properties the file
@@ -254,6 +255,8 @@ type RowProps = {
 	formulaOk?: boolean;
 	/** Remounts the JSON editor when a control changes `schema`. */
 	schemaRev: number;
+	/** Every field's key and title — what a record picker's conditions can read. */
+	formFields: { key: string; title?: string }[];
 	actions: RowActions;
 };
 
@@ -277,6 +280,7 @@ const FieldRow = memo(function FieldRow({
 	formulaTitle,
 	formulaOk,
 	schemaRev,
+	formFields,
 	actions,
 }: RowProps) {
 	const sensitive = SENSITIVE.test(f.key);
@@ -637,6 +641,16 @@ const FieldRow = memo(function FieldRow({
 							</Box>
 						</Grid>
 
+						{RECORD_INPUTS.includes(f.schema?.type) && (
+							<LinkedRecordsEditor
+								schema={f.schema}
+								formFields={formFields}
+								fieldKey={f.key}
+								disabled={readOnly || system}
+								onChange={patch => actions.setSchema(f.key, patch)}
+							/>
+						)}
+
 						<Box>
 							<Small>All presentation options (schema)</Small>
 							<SchemaJson
@@ -675,6 +689,13 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 	const [schemaRev, setSchemaRev] = useState(0);
 
 	const codeByKey = new Map(codeFields.map(f => [f.key, f]));
+	// Stable while keys and titles don't change, so memoized rows don't re-render.
+	const formFieldsKey = fields.map(f => `${f.key}\u0000${f.title || ''}`).join('\u0001');
+	const formFields = useMemo(
+		() => fields.map(f => ({ key: f.key, title: f.title })),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[formFieldsKey]
+	);
 	const modelByKey = new Map(modelFields.map(f => [f.key, f]));
 	const restricted = ACCESS_FIELD_KEYS.every(k => modelByKey.has(k));
 	/** Generated and read-only. */
@@ -856,6 +877,7 @@ const SettingsEditor: FC<Props> = ({ fields, codeFields, modelFields, readOnly, 
 						}
 						formulaOk={check?.ok}
 						schemaRev={isOpen ? schemaRev : 0}
+						formFields={formFields}
 						actions={actions}
 					/>
 				);
