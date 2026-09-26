@@ -16,6 +16,10 @@ type InputContainerProps = InputProps & {
 	value: string | number | undefined;
 	placeholder?: any;
 	options: number[];
+	// FormInput hands these to every field input; stripped before the DOM spread.
+	formData?: any;
+	setFormData?: any;
+	setChangedData?: any;
 };
 
 const VFontSize: FC<InputContainerProps> = ({
@@ -25,6 +29,10 @@ const VFontSize: FC<InputContainerProps> = ({
 	value,
 	helper,
 	options,
+	// FormInput's form-state props — not DOM attributes, so keep them out of `...props`.
+	formData: _formData,
+	setFormData: _setFormData,
+	setChangedData: _setChangedData,
 	...props
 }) => {
 	return (

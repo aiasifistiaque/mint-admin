@@ -8,6 +8,10 @@ type InputContainerProps = TextareaProps & {
 	isRequired?: boolean;
 	helper?: string;
 	placeholder?: any;
+	// FormInput hands these to every field input; stripped before the DOM spread.
+	formData?: any;
+	setFormData?: any;
+	setChangedData?: any;
 };
 
 const MIN_H = '180px';
@@ -18,6 +22,10 @@ const VTextarea: FC<InputContainerProps> = ({
 	placeholder,
 	value,
 	helper,
+	// FormInput's form-state props — not DOM attributes, so keep them out of `...props`.
+	formData: _formData,
+	setFormData: _setFormData,
+	setChangedData: _setChangedData,
 	...props
 }) => {
 	return (

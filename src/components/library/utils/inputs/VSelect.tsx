@@ -50,6 +50,10 @@ const VSelect: FC<InputContainerProps> = ({
 	size = 'sm',
 	disabled,
 	onChange,
+	// FormInput's form-state props — not DOM attributes, so keep them out of `...props`.
+	formData: _formData,
+	setFormData: _setFormData,
+	setChangedData: _setChangedData,
 	...props
 }) => {
 	// `children` is a fresh array of element objects on every parent render

@@ -24,6 +24,10 @@ type VDataMenuProps = InputProps & {
 	helper?: string;
 	hideNew?: boolean;
 	unselect?: boolean;
+	// FormInput hands these to every field input; stripped before the DOM spread.
+	formData?: any;
+	setFormData?: any;
+	setChangedData?: any;
 };
 
 const VFont: FC<VDataMenuProps> = ({
@@ -35,6 +39,10 @@ const VFont: FC<VDataMenuProps> = ({
 	hideNew = false,
 	type = 'value',
 	unselect = true,
+	// FormInput's form-state props — not DOM attributes, so keep them out of `...props`.
+	formData: _formData,
+	setFormData: _setFormData,
+	setChangedData: _setChangedData,
 	...props
 }) => {
 	const { onOpen, onClose, open: isOpen } = useDisclosure();
@@ -152,7 +160,7 @@ const searchInputCSS: any = {
 const selectInputCSS = {
 	h: '1px',
 	color: 'transparent',
-	focusBorderColor: 'transparent',
+	// focusBorderColor: 'transparent', // Chakra v2 prop — v3 forwards it to the DOM
 	border: 'none',
 };
 

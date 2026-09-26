@@ -12,6 +12,10 @@ type InputContainerProps = InputProps & {
 	helper?: string;
 	value: string | undefined;
 	placeholder?: any;
+	// FormInput hands these to every field input; stripped before the DOM spread.
+	formData?: any;
+	setFormData?: any;
+	setChangedData?: any;
 };
 
 const VColor: FC<InputContainerProps> = ({
@@ -20,6 +24,10 @@ const VColor: FC<InputContainerProps> = ({
 	placeholder,
 	value,
 	helper,
+	// FormInput's form-state props — not DOM attributes, so keep them out of `...props`.
+	formData: _formData,
+	setFormData: _setFormData,
+	setChangedData: _setChangedData,
 	...props
 }) => {
 	const [prevValue, setPrevValue] = useState(value);
