@@ -10,6 +10,7 @@ import {
 	useUpdateManyMutation,
 } from '../../../../store';
 import { IoThermometerSharp } from 'react-icons/io5';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type EditManyModalType = {
 	title?: string;
@@ -160,14 +161,15 @@ const CalculateModal: FC<any> = ({
 								)}
 							</Dialog.Body>
 
-							<Dialog.Footer>
+							<ModalFooter>
 								<Button
 									ref={cancelRef}
 									onClick={closeItem}
+									px={3}
 									size='sm'>
 									Close
 								</Button>
-							</Dialog.Footer>
+							</ModalFooter>
 						</Dialog.Content>
 					</Dialog.Positioner>
 				</Portal>

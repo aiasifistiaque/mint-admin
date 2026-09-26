@@ -4,6 +4,7 @@ import { Button, IconButton, useDisclosure, Dialog, Portal } from '@chakra-ui/re
 import { FC, useRef } from 'react';
 
 import { Icon } from '../../..';
+import ModalFooter from '../../../modals/modal-components/CustomModalFooter';
 
 type DeleteItemModalProps = {
 	idx: number;
@@ -67,23 +68,24 @@ const DeleteSection: FC<DeleteItemModalProps> = ({ value, handleDataChange, name
 
 							<Dialog.Body>Are you sure? You {`can't`} undo this action afterwards.</Dialog.Body>
 
-							<Dialog.Footer>
+							<ModalFooter>
 								<Button
 									ref={cancelRef}
 									onClick={closeItem}
+									px={3}
 									size='sm'
-									colorPalette='gray'>
+									variant='outline'>
 									Discard
 								</Button>
 
 								<Button
 									colorPalette='red'
 									onClick={handleDelete}
-									ml={2}
+									px={3}
 									size='sm'>
 									Delete
 								</Button>
-							</Dialog.Footer>
+							</ModalFooter>
 						</Dialog.Content>
 					</Dialog.Positioner>
 				</Portal>

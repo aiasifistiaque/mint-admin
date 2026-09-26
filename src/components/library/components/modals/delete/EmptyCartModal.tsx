@@ -2,6 +2,7 @@
 
 import { Dialog, Button, Flex, useDisclosure, Portal } from '@chakra-ui/react';
 import { FC, useRef } from 'react';
+import ModalFooter from '../../../modals/modal-components/CustomModalFooter';
 
 type DeleteItemModalProps = {
 	title?: string;
@@ -45,12 +46,13 @@ const EmptyCartModal: FC<DeleteItemModalProps> = ({ trigger, title, description,
 								{description || `Are you sure? You can't undo this action afterwards.`}
 							</Dialog.Body>
 
-							<Dialog.Footer>
+							<ModalFooter>
 								<Dialog.CloseTrigger asChild>
 									<Button
 										ref={cancelRef}
+										px={3}
 										size='sm'
-										colorPalette='gray'>
+										variant='outline'>
 										Discard
 									</Button>
 								</Dialog.CloseTrigger>
@@ -58,11 +60,11 @@ const EmptyCartModal: FC<DeleteItemModalProps> = ({ trigger, title, description,
 								<Button
 									colorPalette='red'
 									onClick={handleDelete}
-									ml={2}
+									px={3}
 									size='sm'>
 									Proceed
 								</Button>
-							</Dialog.Footer>
+							</ModalFooter>
 						</Dialog.Content>
 					</Dialog.Positioner>
 				</Portal>

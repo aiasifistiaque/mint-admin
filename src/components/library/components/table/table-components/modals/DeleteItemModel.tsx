@@ -15,6 +15,7 @@ import {
 	styles,
 } from '../../../..';
 import DiscardButton from '../../../buttons/DiscardButton';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type DeleteItemModalProps = {
 	title?: string;
@@ -118,32 +119,24 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({
 								<Text>{bodyText}</Text>
 							</Dialog.Body>
 
-							<Dialog.Footer
-								borderBottomRadius='2xl'
-								borderTop='1px solid border.light'
-								bg='menu.light'
-								_dark={{ bg: 'menu.dark', borderTop: '1px solid', borderTopColor: 'border' }}>
-								<Align
-									gap={2}
-									p={4}>
-									<DiscardButton
-										disabled={isLoading}
-										onClick={closeItem}>
-										Discard
-									</DiscardButton>
+							<ModalFooter>
+								<DiscardButton
+									disabled={isLoading}
+									onClick={closeItem}>
+									Discard
+								</DiscardButton>
 
-									<Button
-										loadingText='Deleting...'
-										spinnerPlacement='start'
-										loading={isLoading}
-										colorPalette='red'
-										onClick={handleDelete}
-										px={3}
-										size='sm'>
-										Delete
-									</Button>
-								</Align>
-							</Dialog.Footer>
+								<Button
+									loadingText='Deleting...'
+									spinnerPlacement='start'
+									loading={isLoading}
+									colorPalette='red'
+									onClick={handleDelete}
+									px={3}
+									size='sm'>
+									Delete
+								</Button>
+							</ModalFooter>
 						</AlertDialogContent>
 					</Dialog.Positioner>
 				</Portal>

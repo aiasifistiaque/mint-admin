@@ -13,6 +13,7 @@ import {
 	Input,
 	AlertDialogHeader,
 } from '../../../..';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type UpdateKeyProps = {
 	id: string;
@@ -136,9 +137,7 @@ const UpdateStringModal: FC<UpdateKeyProps> = ({
 									</Column>
 								</Dialog.Body>
 
-								<Dialog.Footer
-									px={6}
-									py={4}>
+								<ModalFooter>
 									{!isLoading && (
 										// <Dialog.CloseTrigger asChild>
 										<Button
@@ -156,7 +155,7 @@ const UpdateStringModal: FC<UpdateKeyProps> = ({
 										loading={isLoading}>
 										{prompt?.btnText || 'Update'}
 									</AlertSubmitButton>
-								</Dialog.Footer>
+								</ModalFooter>
 							</form>
 						</Dialog.Content>
 					</Dialog.Positioner>

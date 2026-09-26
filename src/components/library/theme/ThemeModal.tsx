@@ -7,6 +7,7 @@ import { useTheme } from 'next-themes';
 import { radius } from '../config';
 import { Palette, Theme, THEMES } from '@/theme/palettes';
 import useAdminTheme from './useAdminTheme';
+import ModalFooter from '../modals/modal-components/CustomModalFooter';
 
 /** A link into the themes guide, opened beside the window rather than in place of it. */
 const GuideLink: FC<{ section: string; label: string }> = ({ section, label }) => (
@@ -288,12 +289,7 @@ const ThemeModal: FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onCl
 							</Grid>
 						</Dialog.Body>
 
-						<Dialog.Footer
-							px={{ base: 4, md: 6 }}
-							py={3}
-							borderTopWidth='1px'
-							borderColor='border.muted'
-							bg='bg.subtle'>
+						<ModalFooter>
 							<Flex
 								w='full'
 								justify='space-between'
@@ -314,12 +310,13 @@ const ThemeModal: FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onCl
 									/>
 								</Flex>
 								<Button
+									px={3}
 									size='sm'
 									onClick={onClose}>
 									Done
 								</Button>
 							</Flex>
-						</Dialog.Footer>
+						</ModalFooter>
 					</Dialog.Content>
 				</Dialog.Positioner>
 			</Portal>

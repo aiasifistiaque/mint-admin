@@ -1,8 +1,6 @@
-import { ReactNode } from 'react';
-import { Dialog } from '@chakra-ui/react';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
-const InsertModalFooter = ({ children, ...props }: { children: ReactNode; [key: string]: any }) => {
-	return <Dialog.Footer {...props}>{children}</Dialog.Footer>;
-};
+/** The shared modal footer (ModalFooter), under its insert-modal name. */
+const InsertModalFooter = ModalFooter;
 
 export default InsertModalFooter;

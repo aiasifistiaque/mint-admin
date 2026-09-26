@@ -5,6 +5,7 @@ import { useEffect, useRef, FC } from 'react';
 import { MenuItem } from '../../../..';
 import { useUpdateManyMutation } from '../../../../store';
 import { useCustomToast } from '../../../../hooks';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type EditManyModalType = {
 	title?: string;
@@ -97,14 +98,15 @@ const EditManyModal: FC<EditManyModalType> = ({
 								{prompt?.body || 'Are you sure you want to edit these items?'}
 							</Dialog.Body>
 
-							<Dialog.Footer>
+							<ModalFooter>
 								{!isLoading && (
 									<Dialog.CloseTrigger asChild>
 										<Button
 											ref={cancelRef}
 											onClick={closeItem}
+											px={3}
 											size='sm'
-											colorPalette='gray'>
+											variant='outline'>
 											Discard
 										</Button>
 									</Dialog.CloseTrigger>
@@ -113,11 +115,11 @@ const EditManyModal: FC<EditManyModalType> = ({
 									loading={isLoading}
 									colorPalette='brand'
 									onClick={handleSubmit}
-									ml={2}
+									px={3}
 									size='sm'>
 									Edit
 								</Button>
-							</Dialog.Footer>
+							</ModalFooter>
 						</Dialog.Content>
 					</Dialog.Positioner>
 				</Portal>

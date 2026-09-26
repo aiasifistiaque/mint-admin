@@ -11,6 +11,7 @@ import {
 	useUpdateByIdMutation,
 	PromptType,
 } from '../../../..';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type UpdateKeyProps = {
 	id: string;
@@ -110,13 +111,14 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({
 									/>
 								</Dialog.Body>
 
-								<Dialog.Footer>
+								<ModalFooter>
 									{!isLoading && (
 										<Dialog.CloseTrigger asChild>
 											<Button
 												ref={cancelRef}
+												px={3}
 												size='sm'
-												colorPalette='gray'>
+												variant='outline'>
 												Discard
 											</Button>
 										</Dialog.CloseTrigger>
@@ -126,7 +128,7 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({
 										isLoading={isLoading}>
 										{prompt?.btnText || 'Update'}
 									</AlertSubmitButton>
-								</Dialog.Footer>
+								</ModalFooter>
 							</Dialog.Content>
 						</form>
 					</Dialog.Positioner>

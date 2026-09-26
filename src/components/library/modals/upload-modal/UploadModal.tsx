@@ -189,11 +189,7 @@ const UploadModal: FC<UploadModalProps> = ({
 						</Tabs.Root>
 					</GenericModalBody>
 
-					<MFooter
-						px={{ base: 4, md: 6 }}
-						border='1px solid'
-						borderBottomRadius='md'
-						borderColor={{ _light: 'border.light', _dark: 'border.dark' }}>
+					<MFooter>
 						<Button
 							px={3}
 							size='sm'

@@ -2,7 +2,7 @@
 
 import { FC, useState } from 'react';
 import { Button, Dialog, Input, Portal, Text } from '@chakra-ui/react';
-import { AlertDialogContent, AlertDialogHeader, Align } from '@/components/library';
+import { AlertDialogContent, AlertDialogHeader, ModalFooter } from '@/components/library';
 import DiscardButton from '@/components/library/components/buttons/DiscardButton';
 
 type Props = {
@@ -69,31 +69,22 @@ const PublishDialog: FC<Props> = ({ isOpen, onClose, onConfirm, route, isDirty, 
 							/>
 						</Dialog.Body>
 
-						<Dialog.Footer
-							borderBottomRadius='2xl'
-							borderTopWidth='1px'
-							borderTopColor='border'
-							bg='menu.light'
-							_dark={{ bg: 'menu.dark' }}>
-							<Align
-								gap={2}
-								p={4}>
-								<DiscardButton
-									disabled={isLoading}
-									onClick={close}>
-									Cancel
-								</DiscardButton>
-								<Button
-									size='sm'
-									px={3}
-									loading={isLoading}
-									loadingText='Publishing'
-									spinnerPlacement='start'
-									onClick={() => onConfirm(note.trim() || undefined)}>
-									Publish
-								</Button>
-							</Align>
-						</Dialog.Footer>
+						<ModalFooter>
+							<DiscardButton
+								disabled={isLoading}
+								onClick={close}>
+								Cancel
+							</DiscardButton>
+							<Button
+								size='sm'
+								px={3}
+								loading={isLoading}
+								loadingText='Publishing'
+								spinnerPlacement='start'
+								onClick={() => onConfirm(note.trim() || undefined)}>
+								Publish
+							</Button>
+						</ModalFooter>
 					</AlertDialogContent>
 				</Dialog.Positioner>
 			</Portal>

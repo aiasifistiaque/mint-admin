@@ -5,6 +5,7 @@ import { useEffect, FC, useRef } from 'react';
 
 import { useCopyItemMutation } from '../../../../store';
 import { useCustomToast, MenuItem } from '../../../..';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type DeleteItemModalProps = {
 	title?: string;
@@ -83,14 +84,15 @@ const DuplicateModal: FC<DeleteItemModalProps> = ({
 
 							<Dialog.Body>Are you sure you want to make a copy of this item?</Dialog.Body>
 
-							<Dialog.Footer>
+							<ModalFooter>
 								{!result?.isLoading && (
 									<Dialog.CloseTrigger asChild>
 										<Button
 											ref={cancelRef}
 											onClick={closeItem}
+											px={3}
 											size='sm'
-											colorPalette='white'>
+											variant='outline'>
 											Discard
 										</Button>
 									</Dialog.CloseTrigger>
@@ -98,11 +100,11 @@ const DuplicateModal: FC<DeleteItemModalProps> = ({
 								<Button
 									loading={result?.isLoading}
 									onClick={handleSubmit}
-									ml={2}
+									px={3}
 									size='sm'>
 									Proceed
 								</Button>
-							</Dialog.Footer>
+							</ModalFooter>
 						</Dialog.Content>
 					</Dialog.Positioner>
 				</Portal>

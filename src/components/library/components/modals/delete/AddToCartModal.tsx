@@ -16,6 +16,7 @@ import { ReactNode, useState, FC, useRef } from 'react';
 
 import { Column, useAppDispatch, addToCart, Label, Price, useQtyInCart } from '../../..';
 import CardContainer from '../../../pos/pos-card/CardContainer';
+import ModalFooter from '../../../modals/modal-components/CustomModalFooter';
 
 type DeleteItemModalProps = {
 	item: any;
@@ -123,12 +124,13 @@ const AddToCartModal: FC<DeleteItemModalProps> = ({ children, item }) => {
 									</Column>
 								</Dialog.Body>
 
-								<Dialog.Footer>
+								<ModalFooter>
 									<Dialog.CloseTrigger asChild>
 										<Button
 											ref={cancelRef}
+											px={3}
 											size='sm'
-											colorPalette='gray'>
+											variant='outline'>
 											Discard
 										</Button>
 									</Dialog.CloseTrigger>
@@ -137,7 +139,7 @@ const AddToCartModal: FC<DeleteItemModalProps> = ({ children, item }) => {
 										<Button
 											colorPalette='brand'
 											disabled
-											ml={2}
+											px={3}
 											size='sm'>
 											Out Of Stock
 										</Button>
@@ -145,12 +147,12 @@ const AddToCartModal: FC<DeleteItemModalProps> = ({ children, item }) => {
 										<Button
 											colorPalette='brand'
 											type='submit'
-											ml={2}
+											px={3}
 											size='sm'>
 											Add To Cart
 										</Button>
 									)}
-								</Dialog.Footer>
+								</ModalFooter>
 							</form>
 						</Dialog.Content>
 					</Dialog.Positioner>

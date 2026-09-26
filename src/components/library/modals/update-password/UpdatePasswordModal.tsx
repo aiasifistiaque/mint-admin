@@ -11,6 +11,7 @@ import {
 	Align,
 } from '../..';
 import DiscardButton from '../../components/buttons/DiscardButton';
+import ModalFooter from '../modal-components/CustomModalFooter';
 
 const EMPTY = { oldPassword: '', password: '', confirm: '' };
 
@@ -146,31 +147,22 @@ const UpdatePasswordModal = ({ trigger, path }: { trigger?: any; path?: any }) =
 									</ModalFormSection>
 								</Dialog.Body>
 
-								<Dialog.Footer
-									borderBottomRadius='xl'
-									borderTopWidth='1px'
-									borderTopColor='border'
-									bg='menu.light'
-									_dark={{ bg: 'menu.dark' }}>
-									<Align
-										gap={2}
-										p={4}>
-										<DiscardButton
-											disabled={result.isLoading}
-											onClick={onModalClose}>
-											Cancel
-										</DiscardButton>
-										<Button
-											size='sm'
-											px={3}
-											type='submit'
-											loading={result.isLoading}
-											loadingText='Updating'
-											spinnerPlacement='start'>
-											Update password
-										</Button>
-									</Align>
-								</Dialog.Footer>
+								<ModalFooter>
+									<DiscardButton
+										disabled={result.isLoading}
+										onClick={onModalClose}>
+										Cancel
+									</DiscardButton>
+									<Button
+										size='sm'
+										px={3}
+										type='submit'
+										loading={result.isLoading}
+										loadingText='Updating'
+										spinnerPlacement='start'>
+										Update password
+									</Button>
+								</ModalFooter>
 							</form>
 						</AlertDialogContent>
 					</Dialog.Positioner>

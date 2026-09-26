@@ -3,7 +3,7 @@
 import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Badge, Box, Button, CloseButton, Dialog, Flex, Grid, Input, Portal, Text, Textarea } from '@chakra-ui/react';
 import { Calculator, CheckCircle2, CircleAlert } from 'lucide-react';
-import { AlertDialogContent, AlertDialogHeader, Align } from '@/components/library';
+import { AlertDialogContent, AlertDialogHeader, ModalFooter } from '@/components/library';
 import DiscardButton from '@/components/library/components/buttons/DiscardButton';
 import { Dropdown } from '@/components/library/cl';
 import { AGGREGATES, FUNCTIONS, FieldInfo, checkFormula, evaluate } from '@/components/library/functions/formula';
@@ -377,25 +377,16 @@ const FormulaModal: FC<Props> = ({ isOpen, onClose, onSave, fieldKey, fieldTitle
 							</Flex>
 						</Dialog.Body>
 
-						<Dialog.Footer
-							borderBottomRadius='xl'
-							borderTopWidth='1px'
-							borderTopColor='border'
-							bg='menu.light'
-							_dark={{ bg: 'menu.dark' }}>
-							<Align
-								gap={2}
-								p={4}>
-								<DiscardButton onClick={onClose}>Cancel</DiscardButton>
-								<Button
-									size='sm'
-									px={3}
-									disabled={!checked?.ok}
-									onClick={() => checked?.formatted && onSave(checked.formatted)}>
-									Save formula
-								</Button>
-							</Align>
-						</Dialog.Footer>
+						<ModalFooter>
+							<DiscardButton onClick={onClose}>Cancel</DiscardButton>
+							<Button
+								size='sm'
+								px={3}
+								disabled={!checked?.ok}
+								onClick={() => checked?.formatted && onSave(checked.formatted)}>
+								Save formula
+							</Button>
+						</ModalFooter>
 					</AlertDialogContent>
 				</Dialog.Positioner>
 			</Portal>

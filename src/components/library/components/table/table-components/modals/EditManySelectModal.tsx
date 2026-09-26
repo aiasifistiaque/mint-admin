@@ -5,6 +5,7 @@ import { useEffect, useRef, FC, useState } from 'react';
 import { useCustomToast, MenuItem } from '../../../..';
 import { useUpdateManyMutation } from '../../../../store';
 import Dropdown from '../../../../cl/Dropdown';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type EditManyModalType = {
 	title?: string;
@@ -113,13 +114,14 @@ const EditManySelectModal: FC<EditManyModalType> = ({
 									</Dropdown>
 								</Dialog.Body>
 
-								<Dialog.Footer>
+								<ModalFooter>
 									{!isLoading && (
 										<Dialog.CloseTrigger asChild>
 											<Button
 												ref={cancelRef}
+												px={3}
 												size='sm'
-												colorPalette='gray'>
+												variant='outline'>
 												Discard
 											</Button>
 										</Dialog.CloseTrigger>
@@ -129,11 +131,11 @@ const EditManySelectModal: FC<EditManyModalType> = ({
 										disabled={!value}
 										loading={isLoading}
 										colorPalette='brand'
-										ml={2}
+										px={3}
 										size='sm'>
 										Edit
 									</Button>
-								</Dialog.Footer>
+								</ModalFooter>
 							</Dialog.Content>
 						</form>
 					</Dialog.Positioner>

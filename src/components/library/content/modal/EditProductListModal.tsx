@@ -254,7 +254,6 @@ const EditProductListModal = ({
 								</Dialog.Body>
 								<ModalFooter>
 									<DiscardButton
-										mr={2}
 										onClick={onModalClose}>
 										Discard
 									</DiscardButton>

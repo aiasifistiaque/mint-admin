@@ -3,8 +3,9 @@
 import { Dialog, Button, Flex, useDisclosure, Portal, Text, ButtonProps } from '@chakra-ui/react';
 import { useEffect, FC, ReactNode, useRef } from 'react';
 
-import { MenuItem, Align, AlertDialogHeader, AlertDialogContent, PromptType } from '../../../..';
+import { MenuItem, AlertDialogHeader, AlertDialogContent, PromptType } from '../../../..';
 import DiscardButton from '../../../buttons/DiscardButton';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type ConfirmModalProps = {
 	title?: string;
@@ -91,33 +92,25 @@ const ConfirmModal: FC<ConfirmModalProps> = ({
 								<Text>{bodyText}</Text>
 							</Dialog.Body>
 
-							<Dialog.Footer
-								borderBottomRadius='2xl'
-								borderTop='1px solid border.light'
-								bg='menu.light'
-								_dark={{ bg: 'menu.dark', borderTop: '1px solid', borderTopColor: 'border' }}>
-								<Align
-									gap={2}
-									p={4}>
-									<DiscardButton
-										disabled={isLoading}
-										onClick={closeItem}>
-										Discard
-									</DiscardButton>
+							<ModalFooter>
+								<DiscardButton
+									disabled={isLoading}
+									onClick={closeItem}>
+									Discard
+								</DiscardButton>
 
-									<Button
-										loadingText='Processing'
-										spinnerPlacement='start'
-										loading={isLoading}
-										ref={cancelRef}
-										colorPalette={colorPalette}
-										onClick={onConfirm}
-										px={3}
-										size='sm'>
-										{prompt?.btnText || 'Proceed'}
-									</Button>
-								</Align>
-							</Dialog.Footer>
+								<Button
+									loadingText='Processing'
+									spinnerPlacement='start'
+									loading={isLoading}
+									ref={cancelRef}
+									colorPalette={colorPalette}
+									onClick={onConfirm}
+									px={3}
+									size='sm'>
+									{prompt?.btnText || 'Proceed'}
+								</Button>
+							</ModalFooter>
 						</AlertDialogContent>
 					</Dialog.Positioner>
 				</Portal>

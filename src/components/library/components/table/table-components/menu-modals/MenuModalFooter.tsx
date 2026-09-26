@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { useIsMobile } from '../../../..';
+import { styles } from '../../../../config';
 import { Drawer, Dialog } from '@chakra-ui/react';
 import { useResolvedModalLayout } from './ModalLayoutContext';
 
@@ -8,19 +9,9 @@ type MenuModalFooterProps = {
 	[key: string]: any;
 };
 
-// The footer is a quiet ledge under the body: a hairline, a tinted surface and
-// enough room that the buttons aren't pinned to the edge.
-const footerCss = {
-	w: 'full',
-	gap: 2,
-	px: { base: 4, md: 6 },
-	py: 3,
-	borderTopWidth: 1,
-	borderColor: 'border.muted',
-	bg: 'bg.subtle',
-	justifyContent: 'flex-end',
-	alignItems: 'center',
-};
+// The shared modal footer look (styles.MODAL_FOOTER), in a drawer too —
+// inset like this modal's header and body.
+const footerCss = { ...(styles.MODAL_FOOTER as any), px: { base: 4, md: 6 } };
 
 const MenuModalFooter: FC<MenuModalFooterProps> = ({ children, ...props }) => {
 	const isMobile = useIsMobile();

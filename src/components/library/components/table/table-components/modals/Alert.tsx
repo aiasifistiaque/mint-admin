@@ -4,6 +4,7 @@ import { Dialog, Button, Flex, Portal } from '@chakra-ui/react';
 import { ReactNode, useEffect, FC, useState, useRef } from 'react';
 
 import { AlertDialogHeader, AlertDialogContent } from '../../../..';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type DeleteItemModalProps = {
 	prompt?: {
@@ -67,13 +68,14 @@ const Alert: FC<DeleteItemModalProps> = ({ prompt, loading, children, success, h
 
 							<Dialog.Body>{prompt?.body}</Dialog.Body>
 
-							<Dialog.Footer>
+							<ModalFooter>
 								<Button
 									disabled={isLoading}
 									ref={cancelRef}
 									onClick={closeItem}
+									px={3}
 									size='sm'
-									colorPalette='gray'>
+									variant='outline'>
 									Discard
 								</Button>
 
@@ -82,11 +84,11 @@ const Alert: FC<DeleteItemModalProps> = ({ prompt, loading, children, success, h
 									loadingText='Processing'
 									colorPalette='red'
 									onClick={handleDelete}
-									ml={2}
+									px={3}
 									size='sm'>
 									{prompt?.btnText || 'Proceed'}
 								</Button>
-							</Dialog.Footer>
+							</ModalFooter>
 						</AlertDialogContent>
 					</Dialog.Positioner>
 				</Portal>

@@ -6,6 +6,7 @@ import { radius } from '@/components/library';
 import { Section } from './draft';
 import { Toggle } from './ItemDialog';
 import { DocLink, IconField, Label } from './ui';
+import { ModalFooter } from '@/components/library';
 
 type Props = {
 	section: Section | null;
@@ -127,29 +128,26 @@ const SectionDialog: FC<Props> = ({ section, isNew, onClose, onSave }) => {
 							</Flex>
 						</Dialog.Body>
 
-						<Dialog.Footer
-							px={{ base: 4, md: 6 }}
-							py={3}
-							borderTopWidth='1px'
-							borderColor='border.muted'
-							bg='bg.subtle'>
+						<ModalFooter>
 							<Flex
 								gap={2}
 								justify='flex-end'
 								w='full'>
 								<Button
+									px={3}
 									size='sm'
 									variant='outline'
 									onClick={onClose}>
 									Cancel
 								</Button>
 								<Button
+									px={3}
 									size='sm'
 									onClick={save}>
 									{isNew ? 'Add section' : 'Done'}
 								</Button>
 							</Flex>
-						</Dialog.Footer>
+						</ModalFooter>
 					</Dialog.Content>
 				</Dialog.Positioner>
 			</Portal>

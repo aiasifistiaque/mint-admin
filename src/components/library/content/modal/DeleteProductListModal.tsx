@@ -115,6 +115,7 @@ import { Dialog } from '@chakra-ui/react';
 import { useEffect, ReactNode, FC, useRef } from 'react';
 
 import { useCustomToast, useDeleteByIdMutation, useDeleteProductlistByKeyIdMutation } from '../..';
+import ModalFooter from '../../modals/modal-components/CustomModalFooter';
 
 type DeleteItemModalProps = {
 	title?: string;
@@ -206,13 +207,14 @@ const DeleteProductListModal: FC<DeleteItemModalProps> = ({
 
 							<Dialog.Body>Are you sure? You {`can't`} undo this action afterwards.</Dialog.Body>
 
-							<Dialog.Footer>
+							<ModalFooter>
 								{!result?.isLoading && (
 									<Dialog.ActionTrigger asChild>
 										<Button
 											onClick={closeItem}
+											px={3}
 											size='sm'
-											colorPalette='gray'>
+											variant='outline'>
 											Discard
 										</Button>
 									</Dialog.ActionTrigger>
@@ -221,11 +223,11 @@ const DeleteProductListModal: FC<DeleteItemModalProps> = ({
 									loading={result?.isLoading}
 									colorPalette='red'
 									onClick={handleDelete}
-									ml={2}
+									px={3}
 									size='sm'>
 									Delete
 								</Button>
-							</Dialog.Footer>
+							</ModalFooter>
 						</Dialog.Content>
 					</Dialog.Positioner>
 				</Portal>

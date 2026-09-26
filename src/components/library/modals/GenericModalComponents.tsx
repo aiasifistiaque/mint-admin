@@ -39,25 +39,8 @@ export const ModalBody: FC<{ children: ReactNode } & any> = ({ children, ...prop
 	);
 };
 
-/**
- * ModalFooter - Generic modal footer component
- */
-export const ModalFooter: FC<{ children: ReactNode } & any> = ({ children, ...props }) => {
-	return (
-		<Dialog.Footer
-			px={{ base: 4, md: 6 }}
-			py={3}
-			gap={2}
-			borderTopWidth={1}
-			borderColor='border.muted'
-			bg='bg.subtle'
-			justifyContent='flex-end'
-			alignItems='center'
-			{...props}>
-			{children}
-		</Dialog.Footer>
-	);
-};
+/** ModalFooter - the shared modal footer (modal-components/CustomModalFooter). */
+export { default as ModalFooter } from './modal-components/CustomModalFooter';
 
 /**
  * ModalCloseButton - Generic modal close button

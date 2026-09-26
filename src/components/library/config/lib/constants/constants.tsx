@@ -192,6 +192,20 @@ export const styles = {
 		},
 		borderRadius: '6px',
 	},
+	// Every modal's footer (ModalFooter): a hairline, a tinted ledge, the
+	// actions on the right — padded like the header, and no more.
+	MODAL_FOOTER: {
+		w: 'full',
+		gap: 2,
+		px: 4,
+		py: 3,
+		borderTopWidth: 1,
+		borderColor: 'border.muted',
+		bg: 'bg.subtle',
+		justifyContent: 'flex-end',
+		alignItems: 'center',
+		flexWrap: 'wrap',
+	},
 	MODAL: {
 		bg: 'menu.light',
 		borderWidth: 1,
