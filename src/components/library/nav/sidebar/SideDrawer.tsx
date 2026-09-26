@@ -18,6 +18,8 @@ const SideDrawer = () => {
 
 	return (
 		<Drawer.Root
+			lazyMount
+			unmountOnExit
 			open={isOpen}
 			placement='start'
 			size='full'

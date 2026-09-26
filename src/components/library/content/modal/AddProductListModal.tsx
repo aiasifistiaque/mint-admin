@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState, MouseEvent, ReactNode } from 'react';
-import { Flex, useDisclosure, Dialog } from '@chakra-ui/react';
+import { Flex, useDisclosure, Dialog, Portal } from '@chakra-ui/react';
 
 import {
 	ModalFormSection,
@@ -88,40 +88,44 @@ const AddProductListModal = ({
 			<Flex onClick={onModalOpen}>{children || title || path}</Flex>
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				size='xl'
 				open={isOpen}
 				onOpenChange={(e: any) => (e.open ? onOpen() : onModalClose())}
 				closeOnInteractOutside={false}>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<Dialog.Content onClick={(e: MouseEvent) => e.stopPropagation()}>
-						<Dialog.Header>
-							<Dialog.Title>{`Update ${title}`}</Dialog.Title>
-						</Dialog.Header>
-						<Dialog.CloseTrigger />
-						<form onSubmit={handleSubmit}>
-							<Dialog.Body px={6}>
-								<ModalFormSection>
-									<FormMain
-										fields={dataModel}
-										formData={formData}
-										setFormData={setFormData}
-										setChangedData={setChangedData}
-										isModal={true}
-									/>
-								</ModalFormSection>
-							</Dialog.Body>
-							<ModalFooter>
-								<DiscardButton
-									mr={2}
-									onClick={onModalClose}>
-									Discard
-								</DiscardButton>
-								<ModalSubmitButton isLoading={isLoading}>Confirm</ModalSubmitButton>
-							</ModalFooter>
-						</form>
-					</Dialog.Content>
-				</Dialog.Positioner>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<Dialog.Content onClick={(e: MouseEvent) => e.stopPropagation()}>
+							<Dialog.Header>
+								<Dialog.Title>{`Update ${title}`}</Dialog.Title>
+							</Dialog.Header>
+							<Dialog.CloseTrigger />
+							<form onSubmit={handleSubmit}>
+								<Dialog.Body px={6}>
+									<ModalFormSection>
+										<FormMain
+											fields={dataModel}
+											formData={formData}
+											setFormData={setFormData}
+											setChangedData={setChangedData}
+											isModal={true}
+										/>
+									</ModalFormSection>
+								</Dialog.Body>
+								<ModalFooter>
+									<DiscardButton
+										mr={2}
+										onClick={onModalClose}>
+										Discard
+									</DiscardButton>
+									<ModalSubmitButton isLoading={isLoading}>Confirm</ModalSubmitButton>
+								</ModalFooter>
+							</form>
+						</Dialog.Content>
+					</Dialog.Positioner>
+				</Portal>
 			</Dialog.Root>
 		</>
 	);

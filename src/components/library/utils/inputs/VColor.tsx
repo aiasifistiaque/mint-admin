@@ -132,7 +132,7 @@ const VColor: FC<InputContainerProps> = ({
 
 const inputGroupCss = (colorMode: string): any => ({
 	borderRadius: 'lg',
-	borderColor: colorMode === 'dark' ? 'brand.200' : 'container.borderLight',
+	borderColor: 'border',
 	borderWidth: 1,
 });
 

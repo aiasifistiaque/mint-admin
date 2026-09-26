@@ -145,7 +145,7 @@ const VDataTags: React.FC<InputContainerProps> = ({
 								colorPalette='gray'
 								px={2.5}
 								py={1}
-								bg='gray.100'
+								bg='bg.muted'
 								borderRadius='md'
 								alignItems='center'
 								gap={2}>
@@ -155,8 +155,7 @@ const VDataTags: React.FC<InputContainerProps> = ({
 									{getNameById(item)}
 								</Flex>
 								<Flex
-									color='black'
-									_dark={{ color: 'white' }}
+									color='fg'
 									as='button'
 									onClick={() => deleteTag(item)}
 									cursor='pointer'

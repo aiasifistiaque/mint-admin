@@ -107,7 +107,7 @@ const containerCss: any = {
 	_dark: {
 		bgColor: 'transparent',
 		_focusWithin: {
-			borderColor: '#4a4a4a',
+			borderColor: 'border.emphasized',
 			boxShadow: `0 0 0 3px ${FOCUS_RING_DARK}`,
 		},
 	},

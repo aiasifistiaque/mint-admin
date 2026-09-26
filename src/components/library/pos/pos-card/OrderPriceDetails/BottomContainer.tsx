@@ -8,7 +8,7 @@ const BottomContainer = ({ children, ...props }: FlexProps & { children: ReactNo
 		w='full'
 		py={2}
 		borderTop='1px dashed'
-		borderTopColor='#bbb'
+		borderTopColor='border.emphasized'
 		_dark={{ borderTopColor: 'stroke.deepD' }}
 		{...props}>
 		{children}

@@ -40,7 +40,7 @@ const ImageContainer: FC<ImageContainerProps> = ({
 			borderRadius='4px'
 			h={`${boxSize}px`}
 			w={`${boxSize}px`}
-			bg='whitesmoke'
+			bg='bg.muted'
 			_dark={{ bg: 'background.dark' }}
 			{...props}>
 			{innerComponent}

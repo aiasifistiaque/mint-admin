@@ -102,7 +102,7 @@ const Details: FC<DetailProps> = ({
 
 	const styleProps = {
 		borderRadius: 'md',
-		color: 'text.500',
+		color: 'fg',
 		size: 'sm',
 		px: 3,
 		fontSize: '13px',
@@ -130,8 +130,8 @@ const Details: FC<DetailProps> = ({
 				disabled
 				readOnly
 				cursor='not-allowed'
-				bg={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
-				color={{ _light: 'gray.500', _dark: 'gray.500' }}
+				bg='bg.muted'
+				color='fg.muted'
 				{...props}
 			/>
 		) : (

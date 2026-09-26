@@ -62,7 +62,7 @@ const PosFilters = ({ path, filter }: { path: string; filter: string }) => {
 			onOpenChange={e => (e.open ? null : close())}>
 			<ButtonOfMenu
 				w={{ base: '100%', md: 'inherit' }}
-				bg='white'>
+				bg='bg.panel'>
 				{title}
 			</ButtonOfMenu>
 			<MenuContainer w={WIDTH}>

@@ -48,6 +48,8 @@ const MenuModal: FC<MenuModalProps> = ({
 		// Still use Drawer for mobile - Chakra v3 Drawer
 		return (
 			<Drawer.Root
+				lazyMount
+				unmountOnExit
 				preventScroll
 				placement='bottom'
 				size='full'
@@ -69,6 +71,8 @@ const MenuModal: FC<MenuModalProps> = ({
 	if (layout === 'drawer') {
 		return (
 			<Drawer.Root
+				lazyMount
+				unmountOnExit
 				preventScroll
 				placement='end'
 				size='xl'

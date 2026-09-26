@@ -9,12 +9,8 @@ export const toolTipStyle: any = {
 	fontSize: '12px',
 	fontWeight: '600',
 	textAlign: 'center',
-	bg: 'brand.500',
-	color: 'white',
-	_dark: {
-		bg: 'whitesmoke',
-		color: 'brand.500',
-	},
+	bg: 'accent.solid',
+	color: 'accent.contrast',
 };
 
 export const labelStyle: any = {
@@ -26,8 +22,8 @@ export const labelStyle: any = {
 
 export const variables = {
 	height: '72px',
-	track: '#888',
-	filledTrack: 'brand.500',
+	track: 'border.emphasized',
+	filledTrack: 'accent.solid',
 	boxSize: 6,
 };
 

@@ -49,6 +49,8 @@ const Alert: FC<DeleteItemModalProps> = ({ prompt, loading, children, success, h
 			<Flex onClick={openItem}>{children}</Flex>
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				open={isOpen}
 				onOpenChange={details => setIsOpen(details.open)}
 				role='alertdialog'

@@ -29,10 +29,7 @@ const FormItemAccordion: FC<FormItemProps> = ({
 				<GridItem
 					colSpan={2}
 					borderTop='1px solid'
-					borderColor='gray.200'
-					_dark={{
-						color: 'gray.700',
-					}}
+					borderColor='border'
 					my={2}
 				/>
 			)}

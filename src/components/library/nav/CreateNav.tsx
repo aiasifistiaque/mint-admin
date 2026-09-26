@@ -21,7 +21,7 @@ const CreateNav: FC<CreateNavProps> = ({ title, path, isLoading }) => {
 		<>
 			<CloseButton
 				colorPalette='brand'
-				color='white'
+				color='accent.contrast'
 				onClick={handleBackClick}
 			/>
 			<Separator
@@ -29,7 +29,7 @@ const CreateNav: FC<CreateNavProps> = ({ title, path, isLoading }) => {
 				orientation='vertical'
 			/>
 			<Heading
-				color='white'
+				color='accent.contrast'
 				size='xs'>
 				{title}
 			</Heading>
@@ -56,7 +56,7 @@ const CreateNav: FC<CreateNavProps> = ({ title, path, isLoading }) => {
 
 	return (
 		<Navbar
-			bg={THEME == 'basic' ? 'navbar.400' : 'navbar.light'}
+			bg={THEME == 'basic' ? 'accent.solid' : 'navbar.light'}
 			px={6}
 			justify='space-between'>
 			<Flex

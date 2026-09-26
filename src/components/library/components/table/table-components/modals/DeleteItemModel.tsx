@@ -99,6 +99,8 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({
 				</MenuItem>
 			)}
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				placement='center'
 				open={isOpen}
 				onOpenChange={(e: any) => !e.open && closeItem()}>
@@ -107,7 +109,7 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({
 					<Dialog.Positioner>
 						<AlertDialogContent
 							border='1px solid border.light'
-							_dark={{ bg: 'background.dark', border: '1px solid #222' }}>
+							_dark={{ bg: 'background.dark', border: '1px solid', borderColor: 'border' }}>
 							<AlertDialogHeader>{titleText}</AlertDialogHeader>
 
 							<Dialog.Body
@@ -120,7 +122,7 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({
 								borderBottomRadius='2xl'
 								borderTop='1px solid border.light'
 								bg='menu.light'
-								_dark={{ bg: 'menu.dark', borderTop: '1px solid #222' }}>
+								_dark={{ bg: 'menu.dark', borderTop: '1px solid', borderTopColor: 'border' }}>
 								<Align
 									gap={2}
 									p={4}>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, Button, useDisclosure, Text } from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Text, Portal } from '@chakra-ui/react';
 import { useEffect, useRef, FC, useState } from 'react';
 import { useCustomToast, MenuItem } from '../../../..';
 import { useUpdateManyMutation } from '../../../../store';
@@ -82,63 +82,67 @@ const EditSelectedModal: FC<EditManyModalType> = ({
 			<MenuItem onClick={onOpen}>{title}</MenuItem>
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				open={isOpen}
 				onOpenChange={e => !e.open && closeItem()}
 				role='alertdialog'>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<form onSubmit={handleSubmit}>
-						<Dialog.Content>
-							<Dialog.Header>
-								<Dialog.Title>{prompt?.title || `Edit Item`}</Dialog.Title>
-							</Dialog.Header>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<form onSubmit={handleSubmit}>
+							<Dialog.Content>
+								<Dialog.Header>
+									<Dialog.Title>{prompt?.title || `Edit Item`}</Dialog.Title>
+								</Dialog.Header>
 
-							<Dialog.Body pt={4}>
-								<Text>{prompt?.body || 'Please select an option'}</Text>
-								<Dropdown
-									size='sm'
-									mt={4}
-									value={value}
-									onChange={v => setValue(v)}>
-									<option
-										disabled
-										value=''>
-										Select option
-									</option>
-									{options?.map(({ label, value }: { label: string; value: any }, i: number) => (
+								<Dialog.Body pt={4}>
+									<Text>{prompt?.body || 'Please select an option'}</Text>
+									<Dropdown
+										size='sm'
+										mt={4}
+										value={value}
+										onChange={v => setValue(v)}>
 										<option
-											key={i}
-											value={value}>
-											{label}
+											disabled
+											value=''>
+											Select option
 										</option>
-									))}
-								</Dropdown>
-							</Dialog.Body>
+										{options?.map(({ label, value }: { label: string; value: any }, i: number) => (
+											<option
+												key={i}
+												value={value}>
+												{label}
+											</option>
+										))}
+									</Dropdown>
+								</Dialog.Body>
 
-							<Dialog.Footer>
-								{!isLoading && (
-									<Dialog.CloseTrigger asChild>
-										<Button
-											ref={cancelRef}
-											size='sm'
-											colorPalette='gray'>
-											Discard
-										</Button>
-									</Dialog.CloseTrigger>
-								)}
-								<Button
-									type='submit'
-									disabled={!value}
-									loading={isLoading}
-									colorPalette='brand'
-									ml={2}
-									size='sm'>
-									Edit
-								</Button>
-							</Dialog.Footer>
-						</Dialog.Content>
-					</form>
-				</Dialog.Positioner>
+								<Dialog.Footer>
+									{!isLoading && (
+										<Dialog.CloseTrigger asChild>
+											<Button
+												ref={cancelRef}
+												size='sm'
+												colorPalette='gray'>
+												Discard
+											</Button>
+										</Dialog.CloseTrigger>
+									)}
+									<Button
+										type='submit'
+										disabled={!value}
+										loading={isLoading}
+										colorPalette='brand'
+										ml={2}
+										size='sm'>
+										Edit
+									</Button>
+								</Dialog.Footer>
+							</Dialog.Content>
+						</form>
+					</Dialog.Positioner>
+				</Portal>
 			</Dialog.Root>
 		</>
 	);

@@ -8,7 +8,7 @@ const Container = ({ children, ...props }: FlexProps & { children: ReactNode }) 
 		pr={3}
 		py={2}
 		borderTop='1px dashed'
-		borderTopColor='#bbb'
+		borderTopColor='border.emphasized'
 		_dark={{ borderTopColor: 'stroke.deepD' }}
 		{...props}>
 		{children}

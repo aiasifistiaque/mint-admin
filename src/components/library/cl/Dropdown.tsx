@@ -127,6 +127,11 @@ const Dropdown = ({
 
 	return (
 		<Select.Root
+			// The option list is built only while open: a settings row holds
+			// several dropdowns, and every closed list kept in the DOM was
+			// re-rendered on each change to the page.
+			lazyMount
+			unmountOnExit
 			ref={rootRef}
 			collection={collection}
 			size={size}
@@ -134,7 +139,9 @@ const Dropdown = ({
 			onValueChange={d => d.value[0] !== undefined && onChange(d.value[0])}
 			positioning={{ sameWidth: false, fitViewport: true }}
 			{...props}>
-			<Select.HiddenSelect />
+			{/* The native twin only matters for a form post, and it writes every
+			    option into the page — 2,000+ nodes on a settings page. */}
+			{props.name && <Select.HiddenSelect />}
 			<Select.Control>
 				<Select.Trigger>
 					{!hideValue && <Select.ValueText placeholder={placeholder} />}

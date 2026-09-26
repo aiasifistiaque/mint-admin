@@ -31,7 +31,7 @@ const Attendance: FC<AttendanceProps> = ({
 				onSubmit={handleSubmit}
 				style={{ width: '100%' }}>
 				<Center
-					bg='white'
+					bg='bg.panel'
 					_dark={{ bg: 'sidebar.dark' }}
 					p={{ base: 4, md: 8 }}
 					flexDir='column'

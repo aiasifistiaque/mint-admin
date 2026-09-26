@@ -126,6 +126,8 @@ const SearchMenu = ({
 	return (
 		<>
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				trapFocus
 				preventScroll
 				placement='center'
@@ -220,10 +222,7 @@ const SearchMenu = ({
 											href={item?.href}>
 											<Flex
 												{...itemContainerCss}
-												bg={{
-													base: selectedIndex === i ? 'whitesmoke' : 'transparent',
-													_dark: selectedIndex === i ? '#181818' : 'transparent',
-												}}
+												bg={selectedIndex === i ? 'bg.muted' : 'transparent'}
 												onMouseEnter={() => setSelectedIndex(i)}>
 												<Flex
 													gap={2}

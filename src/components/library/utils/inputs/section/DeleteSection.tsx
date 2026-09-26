@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, IconButton, useDisclosure, Dialog } from '@chakra-ui/react';
+import { Button, IconButton, useDisclosure, Dialog, Portal } from '@chakra-ui/react';
 import { FC, useRef } from 'react';
 
 import { Icon } from '../../..';
@@ -53,36 +53,40 @@ const DeleteSection: FC<DeleteItemModalProps> = ({ value, handleDataChange, name
 			</IconButton>
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				open={isOpen}
 				onOpenChange={e => (e.open ? onOpen() : closeItem())}
 				role='alertdialog'>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<Dialog.Content>
-						<Dialog.Header>Delete Section</Dialog.Header>
-						<Dialog.CloseTrigger />
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<Dialog.Content>
+							<Dialog.Header>Delete Section</Dialog.Header>
+							<Dialog.CloseTrigger />
 
-						<Dialog.Body>Are you sure? You {`can't`} undo this action afterwards.</Dialog.Body>
+							<Dialog.Body>Are you sure? You {`can't`} undo this action afterwards.</Dialog.Body>
 
-						<Dialog.Footer>
-							<Button
-								ref={cancelRef}
-								onClick={closeItem}
-								size='sm'
-								colorPalette='gray'>
-								Discard
-							</Button>
+							<Dialog.Footer>
+								<Button
+									ref={cancelRef}
+									onClick={closeItem}
+									size='sm'
+									colorPalette='gray'>
+									Discard
+								</Button>
 
-							<Button
-								colorPalette='red'
-								onClick={handleDelete}
-								ml={2}
-								size='sm'>
-								Delete
-							</Button>
-						</Dialog.Footer>
-					</Dialog.Content>
-				</Dialog.Positioner>
+								<Button
+									colorPalette='red'
+									onClick={handleDelete}
+									ml={2}
+									size='sm'>
+									Delete
+								</Button>
+							</Dialog.Footer>
+						</Dialog.Content>
+					</Dialog.Positioner>
+				</Portal>
 			</Dialog.Root>
 		</>
 	);

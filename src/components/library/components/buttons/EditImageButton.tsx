@@ -10,7 +10,7 @@ const buttonStyle = {
 
 const EditImageButton = ({ onDelete }: { onDelete?: any }) => {
 	const { colorMode } = useColorMode();
-	const color = colorMode === 'light' ? 'white' : 'black';
+	const color = 'accent.contrast';
 
 	return (
 		<Flex

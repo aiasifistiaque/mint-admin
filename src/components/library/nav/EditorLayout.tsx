@@ -103,10 +103,7 @@ const EditorLayout: FC<LayoutProps> = ({
 	const iconContainer = {
 		borderRadius: 4,
 		p: '2px',
-		bg: '#eee',
-		_dark: {
-			bg: 'black',
-		},
+		bg: 'bg.muted',
 		h: '36px',
 		align: 'center',
 	};
@@ -118,10 +115,10 @@ const EditorLayout: FC<LayoutProps> = ({
 		w: '44px',
 		// size: 'lg',
 		borderRadius: 4,
-		_hover: { bg: 'white' },
+		_hover: { bg: 'bg.panel' },
 		_dark: {
 			bg: 'navbar.dark',
-			_hover: { bg: 'black' },
+			_hover: { bg: 'bg.muted' },
 		},
 	};
 
@@ -149,10 +146,7 @@ const EditorLayout: FC<LayoutProps> = ({
 									{...iconStyle}
 									aria-label='large display'
 									onClick={largeDisplay}
-									bg={display == 'lg' ? 'white' : '#eee'}
-									_dark={{
-										bg: display == 'lg' ? 'black' : '#333',
-									}}
+									bg={display == 'lg' ? 'bg.panel' : 'bg.muted'}
 									borderRightRadius={0}>
 									<Icon name='desktop' />
 								</IconButton>
@@ -160,10 +154,7 @@ const EditorLayout: FC<LayoutProps> = ({
 									{...iconStyle}
 									aria-label='small display'
 									onClick={smallDisplay}
-									bg={display == 'sm' ? 'white' : '#eee'}
-									_dark={{
-										bg: display == 'sm' ? 'black' : '#333',
-									}}
+									bg={display == 'sm' ? 'bg.panel' : 'bg.muted'}
 									borderLeftRadius={0}>
 									<Icon name='mobile' />
 								</IconButton>
@@ -190,7 +181,7 @@ const EditorLayout: FC<LayoutProps> = ({
 				</EditorNavbar>
 				<Body
 					_light={{
-						bg: 'white',
+						bg: 'bg.panel',
 					}}>
 					{type == 'default' && (
 						<EditorSidebar
@@ -233,7 +224,7 @@ const mainProps: FlexProps = {
 	overflowY: 'hidden',
 	h: `calc(100vh - ${sizes.NAV_HEIGHT})`,
 	borderTopRightRadius: { base: `0`, md: THEME == 'basic' ? 0 : 'xl' },
-	bg: { base: 'white', md: 'white' },
+	bg: 'bg.panel',
 	_dark: { bg: 'background.dark', borderTopRightRadius: 0 },
 	pb: '32px',
 	w: 'full',

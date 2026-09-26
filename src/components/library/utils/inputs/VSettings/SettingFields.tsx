@@ -141,13 +141,13 @@ const gridRowSingle: GridProps = {
 const cardContainerCss = {
 	p: 4,
 	border: '1px solid',
-	borderColor: 'gray.200',
+	borderColor: 'border',
 	borderRadius: 'md',
 };
 
 const previewBoxCss = {
 	p: 4,
-	bg: 'gray.50',
+	bg: 'bg.subtle',
 	borderRadius: 'md',
 	mt: 6,
 };

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useDisclosure, Flex, Heading, Drawer } from '@chakra-ui/react';
+import { useDisclosure, Flex, Heading, Drawer, Portal } from '@chakra-ui/react';
 import { useColorMode } from '@/components/ui/color-mode';
 
 import PosInput from './PosInput';
@@ -48,7 +48,7 @@ const ViewOrderModal = ({ id }: { id: string }) => {
 	}, [isFetching]);
 
 	const { colorMode } = useColorMode();
-	const borderColor = colorMode === 'light' ? '#bbb' : 'stroke.deepD';
+	const borderColor = colorMode === 'light' ? 'border.emphasized' : 'stroke.deepD';
 
 	const onUpdate = () => {
 		trigger({ id: id, body: { status }, path: 'orders' });
@@ -190,13 +190,17 @@ const ViewOrderModal = ({ id }: { id: string }) => {
 
 			{isSmallScreen ? (
 				<Drawer.Root
+					lazyMount
+					unmountOnExit
 					open={isOpen}
 					placement='bottom'
 					onOpenChange={e => (e.open ? onOpen() : onModalClose())}>
-					<Drawer.Backdrop />
-					<Drawer.Positioner>
-						<Drawer.Content>{drawerContent}</Drawer.Content>
-					</Drawer.Positioner>
+					<Portal>
+						<Drawer.Backdrop />
+						<Drawer.Positioner>
+							<Drawer.Content>{drawerContent}</Drawer.Content>
+						</Drawer.Positioner>
+					</Portal>
 				</Drawer.Root>
 			) : (
 				<GenericModal

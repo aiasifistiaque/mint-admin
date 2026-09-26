@@ -29,7 +29,7 @@ const EditorNav: React.FC<CreateNavProps> = ({ title, path, isDisabled, isLoadin
 				}}>
 				<CloseButton
 					colorPalette='brand'
-					color='white'
+					color='accent.contrast'
 				/>
 			</DecisionAlert>
 
@@ -39,7 +39,7 @@ const EditorNav: React.FC<CreateNavProps> = ({ title, path, isDisabled, isLoadin
 			/>
 			<Heading
 				fontWeight='400'
-				color='white'
+				color='accent.contrast'
 				size='sm'>
 				{truncate(title, isMobile ? 25 : 100)}
 			</Heading>
@@ -63,7 +63,7 @@ const EditorNav: React.FC<CreateNavProps> = ({ title, path, isDisabled, isLoadin
 
 	return (
 		<Navbar
-			bg={THEME == 'basic' ? 'navbar.400' : 'navbar.light'}
+			bg={THEME == 'basic' ? 'accent.solid' : 'navbar.light'}
 			px={4}
 			gap={2}
 			justify='space-between'>

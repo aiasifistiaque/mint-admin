@@ -149,7 +149,7 @@ const VModelFields: FC<InputContainerProps> = ({
 								<Flex
 									px={2.5}
 									py={1}
-									bg='gray.100'
+									bg='bg.muted'
 									borderRadius='md'
 									userSelect='none'
 									alignItems='center'

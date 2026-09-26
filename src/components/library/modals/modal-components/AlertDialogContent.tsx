@@ -13,7 +13,7 @@ const AlertDialogContent = ({ children, ...props }: AlertDialogContentProps) => 
 			borderRadius='xl'
 			bg='menu.light'
 			_dark={{
-				bg: 'bg.dark',
+				bg: 'menu.dark',
 			}}
 			{...props}>
 			{children}

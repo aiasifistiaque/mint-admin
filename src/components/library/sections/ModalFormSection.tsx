@@ -19,10 +19,7 @@ const ModalFormSection: FC<FormContainerProps> = ({ title, children, ...props })
 		<Column
 			_notLast={{
 				borderBottom: '1px solid',
-				borderColor: 'gray.200',
-				_dark: {
-					borderColor: 'gray.700',
-				},
+				borderColor: 'border',
 			}}
 			h='fit-content'
 			mx='auto'

@@ -45,7 +45,7 @@ const accordionCss = (isModal: boolean, colorMode: string): any => {
 				: 'menu.light'
 			: colorMode === 'dark'
 			? 'background.dark'
-			: 'white',
+			: 'bg.panel',
 		borderColor: colorMode === 'dark' ? 'border.dark' : 'border.light',
 		mb: 4,
 		borderRadius: { base: 'none', md: radius.MODAL },

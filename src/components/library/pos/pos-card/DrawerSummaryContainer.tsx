@@ -8,7 +8,7 @@ const DrawerSummaryContainer = ({ children, ...props }: FlexProps & { children: 
 		<Flex
 			flexDir='column'
 			h={HEIGHT}
-			bg='white'
+			bg='bg.panel'
 			_dark={{ bg: 'background.dark' }}
 			{...props}>
 			{children}

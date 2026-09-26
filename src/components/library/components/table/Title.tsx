@@ -86,7 +86,7 @@ export const Title: FC<TitleProps> = ({
 		);
 
 	const tooltip = item?.tooltip && (
-		<Tooltip.Root>
+		<Tooltip.Root lazyMount>
 			<Tooltip.Trigger asChild>
 				<span>
 					<BsInfoCircle />

@@ -33,6 +33,8 @@ const InsertModal: FC<InsertModalProps> = ({
 
 	return (
 		<Dialog.Root
+			lazyMount
+			unmountOnExit
 			size={size as any}
 			open={isDialogOpen}
 			onOpenChange={handleOpenChange}

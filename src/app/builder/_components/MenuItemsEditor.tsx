@@ -318,6 +318,7 @@ const MenuItemsEditor: FC<Props> = ({ items, types, fields, onChange, addLabel =
 						}}
 						borderWidth='1px'
 						borderStyle={isTarget ? 'dashed' : 'solid'}
+						data-menu-invalid={errors[i] ? '' : undefined}
 						borderColor={errors[i] ? 'red.500' : isTarget ? 'fg' : 'border'}
 						borderRadius={radius.CONTAINER}
 						bg='bg.panel'

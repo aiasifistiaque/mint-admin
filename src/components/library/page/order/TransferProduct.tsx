@@ -35,7 +35,7 @@ const TransferProduct: FC<PurchaseProductProps> = ({ item, i, setItem, isMobile,
 			onClick={() => deleteItem(item?._id)}>
 			<Icon
 				name='delete'
-				color='crimson'
+				color='fg.error'
 			/>
 		</Box>
 	);

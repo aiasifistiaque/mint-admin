@@ -49,6 +49,7 @@ const FilterSelect: FC<FilterSelectProps> = ({ children, value, name, onChange, 
 
 	return (
 		<Select.Root
+			lazyMount
 			collection={collection}
 			size='sm'
 			w='full'

@@ -10,7 +10,7 @@ const CartPriceContainer = ({ children }: { children: ReactNode }) => {
 			mt={0}
 			border='1px dashed'
 			borderRadius={8}
-			bg='#f7f7f7'
+			bg='bg.subtle'
 			_dark={{
 				bg: 'sidebar.dark',
 				borderColor: 'stroke.deepD',

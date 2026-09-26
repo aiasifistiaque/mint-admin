@@ -1,4 +1,4 @@
-import { Drawer, Popover, Button, Flex } from '@chakra-ui/react';
+import { Drawer, Popover, Button, Flex, Portal } from '@chakra-ui/react';
 
 import { FC, ReactNode } from 'react';
 import { Column } from '../../../..';
@@ -40,33 +40,37 @@ const PopModal: FC<MenuModalProps> = ({
 			<>
 				{trigger}
 				<Drawer.Root
+					lazyMount
+					unmountOnExit
 					placement='bottom'
 					onOpenChange={e => !e.open && onClose()}
 					open={isOpen}>
-					<Drawer.Backdrop />
-					<Drawer.Positioner>
-						<DrawerContentContainer>
-							{children}
-							<Drawer.Footer
-								px={4}
-								py={3}
-								pb={5}
-								borderTopWidth={1}
-								borderColor='border.muted'
-								bg='bg.subtle'
-								justifyContent={footerStart ? 'space-between' : undefined}>
-								{footerStart && <Flex gap={1}>{footerStart}</Flex>}
-								<Button
-									w={footerStart ? 'auto' : 'full'}
-									px={footerStart ? 8 : undefined}
-									size='md'
-									disabled={applyDisabled}
-									onClick={handleClick}>
-									Apply
-								</Button>
-							</Drawer.Footer>
-						</DrawerContentContainer>
-					</Drawer.Positioner>
+					<Portal>
+						<Drawer.Backdrop />
+						<Drawer.Positioner>
+							<DrawerContentContainer>
+								{children}
+								<Drawer.Footer
+									px={4}
+									py={3}
+									pb={5}
+									borderTopWidth={1}
+									borderColor='border.muted'
+									bg='bg.subtle'
+									justifyContent={footerStart ? 'space-between' : undefined}>
+									{footerStart && <Flex gap={1}>{footerStart}</Flex>}
+									<Button
+										w={footerStart ? 'auto' : 'full'}
+										px={footerStart ? 8 : undefined}
+										size='md'
+										disabled={applyDisabled}
+										onClick={handleClick}>
+										Apply
+									</Button>
+								</Drawer.Footer>
+							</DrawerContentContainer>
+						</Drawer.Positioner>
+					</Portal>
 				</Drawer.Root>
 			</>
 		);

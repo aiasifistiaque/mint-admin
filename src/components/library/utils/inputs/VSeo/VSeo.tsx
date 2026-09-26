@@ -151,14 +151,11 @@ const VSeo: FC<Props> = ({ value, onChange, name, label, helper, formData }) => 
 							borderRadius='full'
 							px={3}
 							{...tone(TEXT_MUTED)}
-							// Literal colours, not the theme's colour scale: a selected
-							// pill mixing theme tokens with this field's literal-hex
-							// text colours can end up unreadable in one colour mode, so
-							// the selected state is pinned the same way.
+							// The accent pair, which a colour theme keeps readable
+							// against each other in both modes.
 							_selected={{
-								bg: '#171717',
-								color: 'white',
-								_dark: { bg: '#F5F5F5', color: '#111' },
+								bg: 'accent.solid',
+								color: 'accent.contrast',
 							}}>
 							{tabLabel}
 						</Tabs.Trigger>
@@ -626,7 +623,7 @@ const ImageField: FC<{
 				w='200px'
 				h='110px'
 				borderWidth='1px'
-				borderColor='gray.200'
+				borderColor='border'
 				_dark={{ borderColor: 'whiteAlpha.300' }}
 				borderRadius='md'
 				overflow='hidden'>
@@ -717,7 +714,7 @@ const SeoChecklist: FC<{ seo: any; fallbackTitle: string; fallbackDescription: s
 	return (
 		<Box
 			borderWidth='1px'
-			borderColor='gray.200'
+			borderColor='border'
 			_dark={{ borderColor: 'whiteAlpha.300' }}
 			borderRadius='lg'
 			p={4}>

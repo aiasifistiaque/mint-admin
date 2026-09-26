@@ -2,7 +2,7 @@
 
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Badge, Box, Button, Flex, Grid, Input, SegmentGroup, Text } from '@chakra-ui/react';
+import { Badge, Box, Button, Flex, Grid, SegmentGroup, Text } from '@chakra-ui/react';
 import { History, RotateCcw, Sparkles } from 'lucide-react';
 import {
 	Layout,
@@ -37,6 +37,7 @@ import FormRulesPanel, { RuleField, formRuleProblems } from './FormRulesPanel';
 import { DocLink, viewProblems } from './ui';
 import SettingsEditor, { SettingsField } from './SettingsEditor';
 import SectionsEditor from './SectionsEditor';
+import PublishDialog from './PublishDialog';
 import { BULK_MENU_TYPES, DEFAULT_ROW_MENU, ROW_MENU_TYPES, validateMenu } from './menuTypes';
 
 const DEFAULT_ADD_BUTTON = { title: 'Add Item', isModal: true };
@@ -149,7 +150,6 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 	const [baseline, setBaseline] = useState('');
 	const [editingUid, setEditingUid] = useState<string | null>(null);
 	const [confirm, setConfirm] = useState<null | 'publish' | 'reset-config' | 'reset-settings' | 'discard' | 'import'>(null);
-	const [note, setNote] = useState('');
 	const [showVersions, setShowVersions] = useState(false);
 	const [versionKind, setVersionKind] = useState<'config' | 'settings'>('config');
 	const [settingsWorking, setSettingsWorking] = useState<SettingsField[]>([]);
@@ -201,7 +201,10 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 
 	const current = useMemo(() => JSON.stringify(join(working)), [working]);
 	const configDirty = !!baseline && current !== baseline;
-	const settingsDirty = !!settingsBaseline && JSON.stringify(settingsWorking) !== settingsBaseline;
+	const settingsDirty = useMemo(
+		() => !!settingsBaseline && JSON.stringify(settingsWorking) !== settingsBaseline,
+		[settingsWorking, settingsBaseline]
+	);
 	const isDirty = configDirty || settingsDirty;
 
 	useEffect(() => {
@@ -212,9 +215,26 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 	}, [isDirty]);
 
 	const { errors, warnings } = useMemo(() => validate(working.filters), [working.filters]);
-	const menuErrors =
-		Object.keys(validateMenu(working.rest.route?.menu || [], ROW_MENU_TYPES)).length +
-		Object.keys(validateMenu(working.rest.route?.select?.menu || [], BULK_MENU_TYPES)).length;
+	// Named problems, so the toast can say which item and what it needs. Bulk
+	// actions only count while row selection is on: with it off the editor
+	// isn't shown and the menu isn't used, so an item there can't block a save.
+	const menuProblems = useMemo(() => {
+		const describe = (label: string, items: any[], errs: Record<number, string>) =>
+			Object.entries(errs).map(([i, msg]) => `${label} “${items[+i]?.title || `item ${+i + 1}`}”: ${msg.toLowerCase()}`);
+		const row = working.rest.route?.menu || [];
+		const bulk = working.rest.route?.select?.show ? working.rest.route?.select?.menu || [] : [];
+		return [
+			...describe('Row menu', row, validateMenu(row, ROW_MENU_TYPES)),
+			...describe('Bulk action', bulk, validateMenu(bulk, BULK_MENU_TYPES)),
+		];
+	}, [working.rest.route]);
+	const menuErrors = menuProblems.length;
+	// Bumped by a save blocked on a menu item: once the Table tab has rendered,
+	// scroll to the first item marked in red — it can be far down the page.
+	const [revealMenuError, setRevealMenuError] = useState(0);
+	useEffect(() => {
+		if (revealMenuError) document.querySelector('[data-menu-invalid]')?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+	}, [revealMenuError]);
 	const errorCount = Object.keys(errors).length;
 
 	// Columns can only be settings fields — getConfig renders cells from them.
@@ -298,7 +318,14 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 			return false;
 		}
 		if (menuErrors) {
-			toaster.create({ title: 'A menu item is incomplete', description: 'Fix the items marked in red first', type: 'error' });
+			// The menus are edited on the Table tab — go there, to the item marked in red.
+			goTo('table');
+			setRevealMenuError(n => n + 1);
+			toaster.create({
+				title: menuErrors === 1 ? 'A menu item is incomplete' : `${menuErrors} menu items are incomplete`,
+				description: `${menuProblems.join(' · ')}. It’s marked in red on the Table tab.`,
+				type: 'error',
+			});
 			return false;
 		}
 		try {
@@ -316,12 +343,11 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 		if (await save()) toaster.create({ title: 'Draft saved', description: 'Not live until published', type: 'success' });
 	};
 
-	const onPublish = async () => {
-		setConfirm(null);
-		if (isDirty && !(await save())) return;
+	const onPublish = async (note?: string) => {
+		if (isDirty && !(await save())) return setConfirm(null);
 		try {
-			const res = await publish({ route, note: note.trim() || undefined }).unwrap();
-			setNote('');
+			const res = await publish({ route, note }).unwrap();
+			setConfirm(null);
 			toaster.create({
 				title: 'Published',
 				description: res.published.map((p: any) => `${p.kind} v${p.version}`).join(', ') + ` — /${route} is live`,
@@ -1087,22 +1113,14 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 				</ConsoleTabs>
 			</Flex>
 
-			<ConfirmAction
+			<PublishDialog
 				isOpen={confirm === 'publish'}
 				onClose={() => setConfirm(null)}
 				onConfirm={onPublish}
-				title={`Publish /${route}?`}
-				consequence={`The draft${isDirty ? ' (including your unsaved changes)' : ''} goes live: the table, its filters and buttons change for every admin straight away. The current version is kept and can be restored.`}
-				confirmLabel='Publish'
-				isLoading={publishing}>
-				<Input
-					mt={3}
-					size='sm'
-					placeholder='Note for the version history (optional)'
-					value={note}
-					onChange={e => setNote(e.target.value)}
-				/>
-			</ConfirmAction>
+				route={route}
+				isDirty={isDirty}
+				isLoading={publishing}
+			/>
 
 			<ConfirmAction
 				isOpen={confirm === 'discard'}

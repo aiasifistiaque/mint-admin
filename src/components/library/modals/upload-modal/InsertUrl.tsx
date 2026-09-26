@@ -25,7 +25,7 @@ const imageContainerCss: FlexProps = {
 	gap: 1,
 	h: '300px',
 	w: '400px',
-	bg: 'gray.300',
+	bg: 'bg.muted',
 };
 
 const bodyContainerCss: FlexProps = {
@@ -33,7 +33,7 @@ const bodyContainerCss: FlexProps = {
 	flexDir: 'column',
 	textAlign: 'center',
 	flex: 1,
-	color: 'gray.400',
+	color: 'fg.muted',
 };
 
 const InsertUrl = ({ handleSelect }: { handleSelect: any }) => {

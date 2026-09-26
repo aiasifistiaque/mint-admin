@@ -110,7 +110,7 @@
 
 'use client';
 
-import { Button, Flex, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, useDisclosure, Portal } from '@chakra-ui/react';
 import { Dialog } from '@chakra-ui/react';
 import { useEffect, ReactNode, FC, useRef } from 'react';
 
@@ -191,40 +191,44 @@ const DeleteProductListModal: FC<DeleteItemModalProps> = ({
 			<Flex onClick={onOpen}>{children}</Flex>
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				open={isOpen}
 				onOpenChange={(e: any) => (e.open ? onOpen() : closeItem())}
 				role='alertdialog'>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<Dialog.Content>
-						<Dialog.Header>
-							<Dialog.Title>Delete {title}</Dialog.Title>
-						</Dialog.Header>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<Dialog.Content>
+							<Dialog.Header>
+								<Dialog.Title>Delete {title}</Dialog.Title>
+							</Dialog.Header>
 
-						<Dialog.Body>Are you sure? You {`can't`} undo this action afterwards.</Dialog.Body>
+							<Dialog.Body>Are you sure? You {`can't`} undo this action afterwards.</Dialog.Body>
 
-						<Dialog.Footer>
-							{!result?.isLoading && (
-								<Dialog.ActionTrigger asChild>
-									<Button
-										onClick={closeItem}
-										size='sm'
-										colorPalette='gray'>
-										Discard
-									</Button>
-								</Dialog.ActionTrigger>
-							)}
-							<Button
-								loading={result?.isLoading}
-								colorPalette='red'
-								onClick={handleDelete}
-								ml={2}
-								size='sm'>
-								Delete
-							</Button>
-						</Dialog.Footer>
-					</Dialog.Content>
-				</Dialog.Positioner>
+							<Dialog.Footer>
+								{!result?.isLoading && (
+									<Dialog.ActionTrigger asChild>
+										<Button
+											onClick={closeItem}
+											size='sm'
+											colorPalette='gray'>
+											Discard
+										</Button>
+									</Dialog.ActionTrigger>
+								)}
+								<Button
+									loading={result?.isLoading}
+									colorPalette='red'
+									onClick={handleDelete}
+									ml={2}
+									size='sm'>
+									Delete
+								</Button>
+							</Dialog.Footer>
+						</Dialog.Content>
+					</Dialog.Positioner>
+				</Portal>
 			</Dialog.Root>
 		</>
 	);

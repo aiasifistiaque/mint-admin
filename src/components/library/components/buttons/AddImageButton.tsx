@@ -23,7 +23,7 @@ const AddImageButton: FC<AddImageButtonProps> = ({ children, h, w, size, ...prop
 				size={30}
 			/>
 			<Heading
-				color='#ccc'
+				color='fg.subtle'
 				size='xs'>
 				{children || 'Add Image'}
 			</Heading>
@@ -35,12 +35,9 @@ const imageCss: CenterProps = {
 	cursor: 'pointer',
 	flexDir: 'column',
 	border: '2px dashed',
-	borderColor: 'border.light',
-	_dark: {
-		borderColor: 'border.dark',
-	},
+	borderColor: 'border',
 	borderRadius: '8px',
-	color: '#ccc',
+	color: 'fg.subtle',
 	userSelect: 'none',
 	gap: 2,
 };

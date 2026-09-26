@@ -17,7 +17,7 @@ const Success: FC<SuccessProps> = ({ children, title, ...props }) => {
 			px={4}
 			flexDirection='column'>
 			<Center
-				bg='white'
+				bg='bg.panel'
 				_dark={{ bg: 'sidebar.dark' }}
 				p={{ base: 4, md: 8 }}
 				flexDir='column'

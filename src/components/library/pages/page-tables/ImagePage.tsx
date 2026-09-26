@@ -158,9 +158,9 @@ const ImagePage: FC<TableProps> = ({ route, title, folder }) => {
 							align='center'
 							justify='center'
 							borderRadius='md'
-							border='2px dashed #4A90E2'
-							backgroundColor='blue.50'
-							_dark={{ backgroundColor: 'whiteAlpha.100' }}
+							border='2px dashed'
+							borderColor='accent.solid'
+							backgroundColor='accent.subtle'
 							pointerEvents='none'>
 							<Text fontSize='lg'>Drop images to upload</Text>
 						</Flex>

@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { Menu, Heading, Tag, Center } from '@chakra-ui/react';
 
 import CustomMenuItem from './CustomMenuItem';
@@ -7,61 +8,74 @@ import { Icon } from '../icon';
 import { useGetSelfQuery, logout } from '../store';
 import { useAppDispatch } from '../hooks';
 import { useColorMode } from '@/components/ui/color-mode';
+import ThemeModal from '../theme/ThemeModal';
 
 const SelfMenu = ({ iconSize }: { iconSize?: number }) => {
 	const { data } = useGetSelfQuery({});
 	const dispatch = useAppDispatch();
 	const { colorMode } = useColorMode();
+	const [themesOpen, setThemesOpen] = useState(false);
 	const handleLogout = () => {
 		dispatch(logout());
 	};
 	const red = colorMode === 'light' ? 'red.500' : 'red.300';
 	return (
-		<Menu.Root>
-			{/* <MenuButton as={MenuIconContainer}> */}
-			<MenuIconContainer asChild>
-				<Menu.Trigger>
-					<Center>
-						<Icon
-							color='inherit'
-							name='user-outline'
-							size={iconSize || 16}
-						/>
-					</Center>
-				</Menu.Trigger>
-			</MenuIconContainer>
-			{/* </MenuButton> */}
+		<>
+			<Menu.Root>
+				{/* <MenuButton as={MenuIconContainer}> */}
+				<MenuIconContainer asChild>
+					<Menu.Trigger>
+						<Center>
+							<Icon
+								color='inherit'
+								name='user-outline'
+								size={iconSize || 16}
+							/>
+						</Center>
+					</Menu.Trigger>
+				</MenuIconContainer>
+				{/* </MenuButton> */}
 
-			<MenuContainer>
-				<Menu.ItemGroup>
-					<Menu.Item {...menuItemCss}>
-						<Heading
-							size='xs'
-							mb={2}>
-							{data?.name}
-						</Heading>
-						<Tag.Root size='sm'>
-							<Tag.Label>Role: {data?.role?.name}</Tag.Label>
-						</Tag.Root>
-					</Menu.Item>
-				</Menu.ItemGroup>
-				<Menu.Separator />
-				<CustomMenuItem
-					icon='config'
-					href='/settings'>
-					Settings
-				</CustomMenuItem>
-				{/* <MenuDivider /> */}
-				{/* <MenuGroup> */}
-				<CustomMenuItem
-					color={red}
-					icon='logout'
-					onClick={handleLogout}>
-					Logout
-				</CustomMenuItem>
-				{/* </MenuGroup> */}
-			</MenuContainer>
-		</Menu.Root>
+				<MenuContainer>
+					<Menu.ItemGroup>
+						<Menu.Item {...menuItemCss}>
+							<Heading
+								size='xs'
+								mb={2}>
+								{data?.name}
+							</Heading>
+							<Tag.Root size='sm'>
+								<Tag.Label>Role: {data?.role?.name}</Tag.Label>
+							</Tag.Root>
+						</Menu.Item>
+					</Menu.ItemGroup>
+					<Menu.Separator />
+					<CustomMenuItem
+						icon='config'
+						href='/settings'>
+						Settings
+					</CustomMenuItem>
+					<CustomMenuItem
+						icon='palette'
+						onClick={() => setThemesOpen(true)}>
+						Themes
+					</CustomMenuItem>
+					{/* <MenuDivider /> */}
+					{/* <MenuGroup> */}
+					<CustomMenuItem
+						color={red}
+						icon='logout'
+						onClick={handleLogout}>
+						Logout
+					</CustomMenuItem>
+					{/* </MenuGroup> */}
+				</MenuContainer>
+			</Menu.Root>
+			<ThemeModal
+				isOpen={themesOpen}
+				onClose={() => setThemesOpen(false)}
+			/>
+		</>
 	);
 };
 

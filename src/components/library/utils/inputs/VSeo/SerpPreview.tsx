@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Box, Flex, Text } from '@chakra-ui/react';
 
 import { CARD_BG, CARD_BORDER, SITE_URL, TEXT_BODY, TEXT_FAINT, TEXT_MUTED, tone } from './constants';
@@ -17,7 +17,11 @@ type Props = {
  * its job is to catch truncation and empty fields, not to be a mock.
  */
 const SerpPreview: FC<Props> = ({ title, description, path }) => {
-	const host = SITE_URL.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+	// The server can't know the browser's host: render the fallback first and
+	// swap in the real one after mount, or hydration fails on this text.
+	const [site, setSite] = useState(process.env.NEXT_PUBLIC_WEBSITE_URL || 'https://example.com');
+	useEffect(() => setSite(SITE_URL), []);
+	const host = site.replace(/^https?:\/\//, '').replace(/\/+$/, '');
 	const crumb = (path || '/').split('/').filter(Boolean).join(' › ');
 
 	const shownTitle = title?.trim() || 'Your meta title will appear here';

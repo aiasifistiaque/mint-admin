@@ -12,7 +12,7 @@ const TableRefresh = () => {
 	};
 
 	return (
-		<Tooltip.Root positioning={{ placement: 'top' }}>
+		<Tooltip.Root lazyMount positioning={{ placement: 'top' }}>
 			<Tooltip.Trigger asChild>
 				<IconButton
 					aria-label='Refresh'

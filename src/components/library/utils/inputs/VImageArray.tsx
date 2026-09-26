@@ -145,12 +145,12 @@ const VImageArray: FC<FormDataType> = ({
 										position='absolute'
 										top='2'
 										left='2'
-										bg='white'
+										bg='bg.panel'
 										borderRadius='md'
 										p='1'
 										boxShadow='sm'
 										fontSize='xs'
-										color='gray.600'
+										color='fg.muted'
 										opacity='0.8'
 										pointerEvents='none'>
 										⋮⋮

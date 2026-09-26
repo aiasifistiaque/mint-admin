@@ -174,7 +174,7 @@ const FormFields: FC<FormFieldsProps> = ({
 									<SpaceBetween mb={2}>
 										<Text
 											fontSize='sm'
-											color='gray.600'>
+											color='fg.muted'>
 											Row {i + 1}
 										</Text>
 										<Flex gap={1}>
@@ -254,7 +254,7 @@ const FormFields: FC<FormFieldsProps> = ({
 									<SpaceBetween mb={2}>
 										<Text
 											fontSize='sm'
-											color='gray.600'>
+											color='fg.muted'>
 											Field {i + 1}
 										</Text>
 										<Flex gap={1}>
@@ -323,7 +323,7 @@ const FormFields: FC<FormFieldsProps> = ({
 					<Box
 						textAlign='center'
 						py={8}
-						color='gray.500'>
+						color='fg.muted'>
 						<Text>No fields added yet</Text>
 						<Text fontSize='sm'>{`Click "Add Field" or "Add Row" to get started`}</Text>
 					</Box>
@@ -355,13 +355,13 @@ const TagButton = ({ children, ...props }: any & { children: React.ReactNode }) 
 const cardContainerCss = {
 	p: 4,
 	border: '1px solid',
-	borderColor: 'gray.200',
+	borderColor: 'border',
 	borderRadius: 'md',
 };
 
 const previewBoxCss = {
 	p: 4,
-	bg: 'gray.50',
+	bg: 'bg.subtle',
 	borderRadius: 'md',
 	mt: 6,
 };

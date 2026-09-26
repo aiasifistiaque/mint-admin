@@ -92,7 +92,7 @@ const VSelectTags: React.FC<InputContainerProps> = ({
 							<Flex
 								px={2.5}
 								py={1}
-								bg='gray.100'
+								bg='bg.muted'
 								borderRadius='md'
 								alignItems='center'
 								gap={2}>

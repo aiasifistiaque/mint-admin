@@ -78,6 +78,7 @@ const VSelect: FC<InputContainerProps> = ({
 			label={label}
 			helper={helper}>
 			<Select.Root
+				lazyMount
 				collection={collection}
 				size={size}
 				value={selected}

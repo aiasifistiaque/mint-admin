@@ -48,12 +48,9 @@ const ImageComponent = ({
 			onMouseLeave={handleMouseLeave}
 			position='relative'
 			border='2px solid'
-			borderColor={isSelected ? 'brand.500' : '#ddd'}
+			borderColor={isSelected ? 'accent.solid' : 'border'}
 			bg='background.light'
-			_dark={{
-				bg: 'background.dark',
-				borderColor: isSelected ? 'brand.200' : 'border.dark',
-			}}
+			_dark={{ bg: 'background.dark' }}
 			{...props}>
 			{isSelected && Array.isArray(selected) && (
 				<Box
@@ -61,11 +58,10 @@ const ImageComponent = ({
 					top={1}
 					right={1}
 					zIndex={1}
-					bg='brand.500'
-					color='white'
+					bg='accent.solid'
+					color='accent.contrast'
 					borderRadius='full'
-					p='2px'
-					_dark={{ bg: 'brand.200', color: 'black' }}>
+					p='2px'>
 					<Icon
 						name='check'
 						size={14}

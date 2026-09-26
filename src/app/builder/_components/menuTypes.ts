@@ -106,9 +106,11 @@ export const BULK_MENU_TYPES: MenuType[] = [
 	},
 	{
 		value: 'calculate',
-		label: 'Sum a field',
-		hint: 'Totals a numeric field across the selected rows',
-		params: [{ name: 'key', label: 'Field', kind: 'field', required: true }],
+		label: 'Sum fields',
+		// No field to configure: CalculateModal lists the route's number fields
+		// and the admin picks which to total. A required `key` here blocked every
+		// save of a route whose code config has this action (invoices).
+		hint: 'Totals the number fields the admin picks, across the selected rows',
 	},
 	{ value: 'marketing-sms', label: 'Send SMS', hint: 'Sends a bulk SMS to the selected customers' },
 ];

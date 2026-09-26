@@ -68,6 +68,8 @@ const DuplicateModal: FC<DeleteItemModalProps> = ({
 			)}
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				open={isOpen}
 				onOpenChange={(e: any) => !e.open && closeItem()}
 				placement='center'>

@@ -9,7 +9,7 @@ type FormDivisionProps = FlexProps & {
 const FormDivision: FC<FormDivisionProps> = ({ children, isModal = false, ...props }) => {
 	return (
 		<Flex
-			bg={isModal ? 'menu.light' : 'white'}
+			bg={isModal ? 'menu.light' : 'bg.panel'}
 			boxShadow={isModal ? 'none' : 'md'}
 			borderWidth={1}
 			_dark={{ bg: isModal ? 'menu.dark' : 'background.dark' }}

@@ -84,6 +84,8 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({
 			{!isControlled && <MenuItem onClick={onOpen}>{title}</MenuItem>}
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				open={isOpen}
 				onOpenChange={e => !e.open && closeItem()}>
 				<Portal>

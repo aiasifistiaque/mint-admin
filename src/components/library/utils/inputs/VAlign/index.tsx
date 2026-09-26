@@ -51,7 +51,7 @@ const VAlignment: FC<InputContainerProps> = ({
 				align='center'
 				gap={1}>
 				{options.map((item: any, i: number) => (
-					<Tooltip.Root key={i}>
+					<Tooltip.Root lazyMount key={i}>
 						<Tooltip.Trigger asChild>
 							<AlignBox
 								onClick={() => onChange(item.value)}

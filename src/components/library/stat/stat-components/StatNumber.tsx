@@ -4,8 +4,7 @@ import { Stat } from '@chakra-ui/react';
 const StatNumber = ({ children, ...props }: any & { children: ReactNode }) => {
 	return (
 		<Stat.ValueText
-			color='text.light'
-			_dark={{ color: 'white' }}
+			color='fg'
 			fontSize='1.4rem'
 			{...props}>
 			{children}

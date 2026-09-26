@@ -54,6 +54,7 @@ const ViewItem: FC<ViewItemProps> = ({
 						renderContent({ type, children, colorPalette, path, isLoading, link })}
 					{copy && children && children != 'n/a' && (
 						<Tooltip.Root
+							lazyMount
 							openDelay={200}
 							closeDelay={100}
 							positioning={{ placement: 'top' }}>

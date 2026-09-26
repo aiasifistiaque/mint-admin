@@ -2,7 +2,7 @@ import { InputProps } from '@chakra-ui/react';
 
 export const styles = {
 	input: {
-		color: 'text.500',
+		color: 'fg',
 		border: 'none',
 		borderRadius: 'none',
 		_placeholder: { fontSize: 16, fontWeight: '500' },

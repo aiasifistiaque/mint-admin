@@ -147,7 +147,7 @@ const ToEditButton: FC<ButtonProps & { children: ReactNode }> = ({ children, ...
 			{...props}>
 			<Icon
 				name='edit'
-				color='brand.500'
+				color='accent.fg'
 			/>
 			{children}
 		</Button>

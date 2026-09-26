@@ -37,7 +37,7 @@ const BackendPageHeading: FC<PageHeadingProps> = ({
 	...props
 }) => {
 	const { colorMode } = useColorMode();
-	const iconColor = colorMode === 'light' ? '#fafafa' : '#171717';
+	const iconColor = 'accent.contrast';
 	const btn = (
 		<Button size='sm'>
 			<Icon

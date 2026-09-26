@@ -8,8 +8,7 @@ type PopoverHeaderPropsType = PopoverHeaderProps & {
 export const PopoverHeader: FC<PopoverHeaderPropsType> = ({ children, ...props }) => {
 	return (
 		<PHeader
-			color='header.500'
-			_dark={{ color: 'header.200' }}
+			color='fg'
 			fontSize='.875rem'
 			fontWeight='700'
 			border='none'

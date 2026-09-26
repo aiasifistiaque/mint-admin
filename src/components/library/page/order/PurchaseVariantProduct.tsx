@@ -74,8 +74,8 @@ const PurchaseVariantProduct: FC<PurchaseProductProps> = ({
 	};
 
 	const { colorMode } = useColorMode();
-	const borderColor = colorMode === 'dark' ? 'brand.200' : 'brand.500';
-	const textColor = colorMode === 'dark' ? 'gray.300' : 'text.500';
+	const borderColor = 'accent.solid';
+	const textColor = 'fg';
 
 	if (isMobile)
 		return (

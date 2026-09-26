@@ -56,6 +56,7 @@ const ViewRow: FC<ViewRowProps> = ({ field, value, isLoading, block, doc }) => {
 
 	const copyButton = copy && value !== 'n/a' && (
 		<Tooltip.Root
+			lazyMount
 			openDelay={200}
 			closeDelay={100}
 			positioning={{ placement: 'top' }}>

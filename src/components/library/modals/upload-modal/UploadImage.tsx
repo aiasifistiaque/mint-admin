@@ -124,11 +124,9 @@ const UploadImage = ({
 			py='16px'
 			w='100%'
 			borderRadius='8px'
-			border={isDragOver ? '2px dashed #4A90E2' : '2px dashed #ddd'}
-			_dark={{
-				borderColor: isDragOver ? 'brand.500' : 'border.dark',
-			}}
-			backgroundColor={isDragOver ? 'blue.50' : 'transparent'}
+			border='2px dashed'
+			borderColor={isDragOver ? 'accent.solid' : 'border'}
+			backgroundColor={isDragOver ? 'accent.subtle' : 'transparent'}
 			gap={2}
 			onDragOver={handleDragOver}
 			onDragLeave={handleDragLeave}

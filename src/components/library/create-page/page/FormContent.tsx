@@ -128,7 +128,7 @@ const FormContent: FC<FormPageType> = ({
 			borderWidth={0}
 			p={0}
 			bg='transparent'
-			_dark={{ bg: 'trasnparent' }}>
+			_dark={{ bg: 'transparent' }}>
 			{section?.map((item: any, i: number) => (
 				<FormItem
 					item={item}

@@ -19,7 +19,7 @@ const EditablePriceItem = ({ title, ...props }: EditablePriceItemProps) => {
 				size='xs'
 				borderRadius='md'
 				type='number'
-				bg='white'
+				bg='bg.panel'
 				_dark={{
 					bg: 'background.dark',
 				}}

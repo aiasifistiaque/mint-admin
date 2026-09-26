@@ -20,7 +20,7 @@ const Filter: FC<FilterProps> = ({ children, isActive = false, onCancel, ...prop
 			mr={0.5}
 			mb={0.5}
 			borderColor='text.secondary.dark'
-			color='gray.600'
+			color='fg.muted'
 			fontWeight='600'
 			_dark={{
 				borderColor: 'border.dark',

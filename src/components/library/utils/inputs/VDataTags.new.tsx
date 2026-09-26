@@ -90,6 +90,7 @@ const VDataTags: FC<InputContainerProps> = ({
 			label={label}
 			helper={helper}>
 			<Combobox.Root
+				lazyMount
 				collection={collection}
 				size={size}
 				disabled={disabled}

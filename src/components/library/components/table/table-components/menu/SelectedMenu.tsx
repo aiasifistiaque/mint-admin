@@ -24,7 +24,11 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 	if (hide) return null;
 
 	return (
-		<Menu.Root>
+		// The bulk actions' dialogs are rendered inside the menu's items. Chakra's
+		// Menu unmounts its content when it closes (lazyMount + unmountOnExit by
+		// default), which took the dialog an item just opened with it — Calculate,
+		// Edit and the rest opened for a moment or not at all. Mounted once, kept.
+		<Menu.Root unmountOnExit={false}>
 			<Menu.Trigger
 				as={Button}
 				{...buttonCss}
@@ -34,8 +38,8 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 			<Portal>
 				<MenuContainer>
 					{data?.map((item: any, i: number) => {
+						// `key` goes on each element directly: React warns when it's spread in.
 						const commonProps = {
-							key: i,
 							path,
 							items,
 							title: item?.title,
@@ -48,6 +52,7 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 							case 'calculate':
 								return (
 									<CalculateModal
+										key={i}
 										{...commonProps}
 										keys={item?.key}
 										value={item?.value}
@@ -56,6 +61,7 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 							case 'edit':
 								return (
 									<EditManyModal
+										key={i}
 										{...commonProps}
 										keys={item?.key}
 										value={item?.value}
@@ -64,6 +70,7 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 							case 'update-api':
 								return (
 									<EditManyModal
+										key={i}
 										{...commonProps}
 										keys={item?.key}
 										value={item?.value}
@@ -73,6 +80,7 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 							case 'edit-select':
 								return (
 									<EditManySelectModal
+										key={i}
 										{...commonProps}
 										keys={item?.key}
 										options={item?.options}
@@ -81,6 +89,7 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 							case 'edit-many':
 								return (
 									<EditManySelectModal
+										key={i}
 										{...commonProps}
 										keys={item?.key}
 										options={item?.options}
@@ -105,6 +114,7 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 							case 'edit-data-select':
 								return (
 									<EditDataSelectModal
+										key={i}
 										{...commonProps}
 										dataModel={item?.dataModel}
 										keys={item?.key}

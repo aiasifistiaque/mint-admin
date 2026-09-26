@@ -58,7 +58,7 @@ const Item = ({ name }: { name: string }) => {
 
 const bodyCss: FlexProps = {
 	flex: 1,
-	bg: '#fafafa',
+	bg: 'bg.subtle',
 	w: '100vw',
 	minH: '100vh',
 	py: '32px',
@@ -70,7 +70,7 @@ const bodyCss: FlexProps = {
 const iconBox: CenterProps = {
 	w: { base: '100%', md: '600px' },
 	// h: '300px',
-	bg: 'white',
+	bg: 'bg.panel',
 	flexDir: 'column',
 	p: 4,
 	gap: 4,

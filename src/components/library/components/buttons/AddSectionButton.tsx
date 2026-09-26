@@ -16,9 +16,10 @@ const AddSectionButton: FC<AddImageButtonProps> = ({ children, size, ...props })
 			flexDir='column'
 			h={size || DEFAULT_IMAGE_SIZE}
 			w='full'
-			border='2px dashed #ccc'
+			border='2px dashed'
+			borderColor='border.emphasized'
 			borderRadius='8px'
-			color='#ccc'
+			color='fg.subtle'
 			userSelect='none'
 			gap={2}
 			{...props}>
@@ -27,7 +28,7 @@ const AddSectionButton: FC<AddImageButtonProps> = ({ children, size, ...props })
 				size={30}
 			/>
 			<Heading
-				color='#ccc'
+				color='fg.subtle'
 				size='xs'>
 				{children || 'Add Image'}
 			</Heading>

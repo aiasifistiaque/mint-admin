@@ -160,11 +160,7 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 							<Flex
 								{...styles.imageWrapperCss}
 								borderColor={
-									selectedItems.includes(item?.id)
-										? colorMode === 'dark'
-											? 'brand.200'
-											: 'brand.500'
-										: 'transparent'
+									selectedItems.includes(item?.id) ? 'accent.solid' : 'transparent'
 								}
 								// Long press event handlers
 								// onMouseDown={() => startLongPress(item)}
@@ -183,7 +179,7 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 										justify='space-between'
 										w='full'>
 										<Flex
-											bg='white'
+											bg='bg.panel'
 											_dark={{
 												bg: 'background.dark',
 											}}
@@ -209,6 +205,7 @@ const ImageGridData = ({ data, isLoading }: { data: any; isLoading?: boolean }) 
 							</Flex>
 
 							<Tooltip.Root
+								lazyMount
 								positioning={{ placement: 'top' }}
 								openDelay={200}>
 								<Tooltip.Trigger asChild>
@@ -235,7 +232,7 @@ const styles: any = {
 	},
 	menuWrapper: {
 		border: '1px solid',
-		bg: 'white',
+		bg: 'bg.panel',
 		borderColor: 'border.light',
 		_dark: {
 			borderColor: 'border.dark',
@@ -253,9 +250,9 @@ const styles: any = {
 		h: '30px',
 		w: '30px',
 		size: 'sm',
-		borderColor: 'white',
+		borderColor: 'bg.panel',
 		borderWidth: 2,
-		bg: 'white',
+		bg: 'bg.panel',
 		borderRadius: '8px',
 		_hover: { bg: 'image.50' },
 		_dark: { borderColor: 'background.dark', bg: 'container.dark', _hover: { bg: 'image.800' } },

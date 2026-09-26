@@ -102,7 +102,7 @@ const VPermissions: FC<VDataMenuProps> = ({
 				data?.map((item: any, i: number) => (
 					<Flex
 						{...sectionColumnCss}
-						borderColor={areAllFieldsSelected(item) ? 'brand.500' : 'border.light'}
+						borderColor={areAllFieldsSelected(item) ? 'accent.solid' : 'border'}
 						_dark={{
 							borderColor: areAllFieldsSelected(item) ? 'border.light' : 'border.dark',
 						}}
@@ -155,7 +155,7 @@ const itemCheckboxCss = (isSelected: boolean): any => {
 		size: 'sm',
 		colorPalette: 'brand',
 		fontWeight: isSelected ? '600' : '400',
-		borderColor: isSelected ? 'brand.500' : 'border.light',
+		borderColor: isSelected ? 'accent.solid' : 'border',
 		bg: isSelected ? 'background.light' : 'transparent',
 		_dark: {
 			borderColor: isSelected ? 'border.light' : 'border.dark',

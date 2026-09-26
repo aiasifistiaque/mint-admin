@@ -16,6 +16,7 @@ type SquareButtonProps = CenterProps & {
 const SquareButton: FC<SquareButtonProps> = ({ children, label, disabled, ...props }) => {
 	return (
 		<Tooltip.Root
+			lazyMount
 			openDelay={300}
 			closeDelay={80}
 			disabled={disabled}

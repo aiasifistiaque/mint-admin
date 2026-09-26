@@ -25,6 +25,7 @@ import {
 	LuAlignVerticalJustifyCenter,
 	LuImagePlus,
 	LuSettings2,
+	LuPalette,
 } from 'react-icons/lu';
 import { DiNpm } from 'react-icons/di';
 
@@ -155,6 +156,7 @@ import {
 
 import { RxSpaceBetweenHorizontally, RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import iconOptionsArrayData from './iconOptionsArrayData';
+import iconColor from './iconColor';
 import { FiEdit, FiFilter, FiImage, FiUser } from 'react-icons/fi';
 import { TfiLayoutSidebarRight } from 'react-icons/tfi';
 
@@ -269,6 +271,7 @@ const icons: any = {
 	options: IoIosOptions,
 	'settings-fill': RiSettings3Fill,
 	config: LuSettings2,
+	palette: LuPalette,
 	sidebaritems: PiSidebarFill,
 	sidebarcategories: TfiLayoutSidebarRight,
 	shop: BsShop,
@@ -320,11 +323,14 @@ const Icon: FC<IconProps> = ({ name, ...props }) => {
 	const IconComponent = icons[name] || GrStatusUnknown;
 	// const brandColor = useColorModeValue('brand.light', 'brand.dark');
 	// const defaultColor = useColorModeValue('#4a4a4a', 'white');
+	// react-icons writes `color` into the svg's style, so a token has to be its
+	// CSS variable to apply; with none the icon takes the text colour around it.
+	const { color, ...rest } = props as any;
 	return (
 		<IconComponent
+			{...rest}
 			size={props.size}
-			color={name == 'arrow' ? 'brand.light' : props.color ? props.color : '#4a4a4a'}
-			{...props}
+			color={iconColor(name == 'arrow' ? 'accent.fg' : color) || 'currentColor'}
 		/>
 	);
 };

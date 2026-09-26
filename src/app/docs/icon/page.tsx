@@ -24,7 +24,7 @@ const IconPage = () => {
 
 const bodyCss: FlexProps = {
 	flex: 1,
-	bg: '#fafafa',
+	bg: 'bg.subtle',
 	w: '100vw',
 	minH: '100vh',
 	py: '32px',
@@ -36,7 +36,7 @@ const bodyCss: FlexProps = {
 const iconBox: CenterProps = {
 	w: '120px',
 	h: '100px',
-	bg: 'white',
+	bg: 'bg.panel',
 	flexDir: 'column',
 	gap: 4,
 	boxShadow: 'md',

@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, Button, useDisclosure, Checkbox, Grid, Flex } from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Checkbox, Grid, Flex, Portal } from '@chakra-ui/react';
 import { useEffect, useRef, FC, useState } from 'react';
 import { useCustomToast, MenuItem } from '../../../..';
 import {
@@ -108,67 +108,69 @@ const CalculateModal: FC<any> = ({
 			<MenuItem onClick={onOpen}>{title}</MenuItem>
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				open={isOpen}
 				onOpenChange={(e: any) => !e.open && closeItem()}>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<Dialog.Content
-						boxShadow='lg'
-						borderRadius='xl'
-						bg='menu.light'
-						_dark={{
-							bg: 'menu.dark',
-						}}>
-						<Dialog.Header>
-							<Dialog.Title>Get Total Values</Dialog.Title>
-						</Dialog.Header>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<Dialog.Content
+							boxShadow='lg'
+							borderRadius='xl'
+							bg='menu.light'
+							_dark={{
+								bg: 'menu.dark',
+							}}>
+							<Dialog.Header>
+								<Dialog.Title>Get Total Values</Dialog.Title>
+							</Dialog.Header>
 
-						<Dialog.Body pt={4}>
-							<Grid
-								templateColumns='repeat(2, 1fr)'
-								gap={4}>
-								{checkboxes}
-							</Grid>
+							<Dialog.Body pt={4}>
+								<Grid
+									templateColumns='repeat(2, 1fr)'
+									gap={4}>
+									{checkboxes}
+								</Grid>
 
-							{selected.length > 0 && (
-								<Flex
-									flexDir='column'
-									mt='10px'
-									pt='10px'
-									borderTop='1px solid #e2e8f0'>
-									{selected.map((field: any, index: number) => (
-										<div
-											key={index}
-											style={{ marginBottom: '10px', fontSize: '14px' }}>
-											<strong>
-												{field.label} value for {items?.length} items is:{' '}
-											</strong>
-											<ShowValue
-												key={field.value}
-												path={path}
-												ids={items}
-												field={field.value}
-												filters={{}}
-											/>
-										</div>
-									))}
-								</Flex>
-							)}
-						</Dialog.Body>
+								{selected.length > 0 && (
+									<Flex
+										flexDir='column'
+										mt='10px'
+										pt='10px'
+										borderTopWidth='1px'
+										borderTopColor='border'>
+										{selected.map((field: any, index: number) => (
+											<div
+												key={index}
+												style={{ marginBottom: '10px', fontSize: '14px' }}>
+												<strong>
+													{field.label} value for {items?.length} items is:{' '}
+												</strong>
+												<ShowValue
+													key={field.value}
+													path={path}
+													ids={items}
+													field={field.value}
+													filters={{}}
+												/>
+											</div>
+										))}
+									</Flex>
+								)}
+							</Dialog.Body>
 
-						<Dialog.Footer>
-							<Dialog.CloseTrigger asChild>
+							<Dialog.Footer>
 								<Button
 									ref={cancelRef}
 									onClick={closeItem}
-									size='sm'
-									colorPalette='brand'>
+									size='sm'>
 									Close
 								</Button>
-							</Dialog.CloseTrigger>
-						</Dialog.Footer>
-					</Dialog.Content>
-				</Dialog.Positioner>
+							</Dialog.Footer>
+						</Dialog.Content>
+					</Dialog.Positioner>
+				</Portal>
 			</Dialog.Root>
 		</>
 	);

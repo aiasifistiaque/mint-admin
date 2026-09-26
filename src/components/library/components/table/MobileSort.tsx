@@ -89,7 +89,7 @@ const MobileSort = ({ tableData, show = false }: { tableData: any; show?: boolea
 					/>
 				</IconButton>
 			) : (
-				<Tooltip.Root positioning={{ placement: 'bottom' }}>
+				<Tooltip.Root lazyMount positioning={{ placement: 'bottom' }}>
 					<Tooltip.Trigger asChild>
 						<IconButton
 							onClick={onOpen}

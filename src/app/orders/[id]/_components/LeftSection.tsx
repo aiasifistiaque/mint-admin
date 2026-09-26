@@ -10,7 +10,7 @@ const LeftSection = ({ data }: { data: any }) => {
 				py={3}
 				borderBottom='1px dashed'
 				borderTop='1px dashed'
-				borderColor={'#bbb'}>
+				borderColor='border.emphasized'>
 				<Heading size='sm'>Billing Details</Heading>
 			</Align>
 

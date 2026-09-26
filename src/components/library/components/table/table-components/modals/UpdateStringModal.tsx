@@ -110,6 +110,8 @@ const UpdateStringModal: FC<UpdateKeyProps> = ({
 			)}
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				placement='center'
 				open={isOpen}
 				onOpenChange={e => !e.open && closeItem()}>

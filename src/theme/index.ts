@@ -36,6 +36,21 @@ export const system = createSystem(defaultConfig, {
 					focusRing: { value: '{colors.blue.500}' },
 				},
 
+				// The theme's accent — primary actions, links, selection. Components
+				// use these rather than `brand.*` or a literal colour so a colour
+				// theme (applyTheme.ts) recolours them; the defaults are the
+				// neutral black/white accent this admin has always had.
+				accent: {
+					solid: { value: { _light: '#171717', _dark: '#fafafa' } },
+					contrast: { value: { _light: '#ffffff', _dark: '#0a0a0a' } },
+					// Accent-coloured text on the page: links, selected labels.
+					fg: { value: { _light: '#171717', _dark: '#fafafa' } },
+					// A faint accent tint behind selected rows and chips.
+					subtle: { value: { _light: '{colors.neutral.100}', _dark: '#171717' } },
+					muted: { value: { _light: '{colors.neutral.200}', _dark: '#222222' } },
+					focusRing: { value: { _light: '#171717', _dark: '#d4d4d4' } },
+				},
+
 				// Chakra derives bg/fg/border from the `gray` scale, and this theme
 				// collapses that scale onto a few brand values — which left muted
 				// text and every default border black-on-black in dark mode. These
@@ -130,12 +145,11 @@ export const system = createSystem(defaultConfig, {
 		},
 	},
 	globalCss: {
+		// `fg` resolves to the same #171717 / text.dark pair this used to spell
+		// out, but through a token, so a colour theme (applyTheme.ts) reaches it.
 		'body, p, span': {
-			color: '#171717',
+			color: 'fg',
 			fontSize: '15px',
-			_dark: {
-				color: '{colors.text.dark}',
-			},
 		},
 		'h1, h2, h3, h4, h5, h6': {
 			color: '{colors.text.light}',
@@ -154,9 +168,8 @@ export const system = createSystem(defaultConfig, {
 			backgroundClip: 'content-box',
 		},
 		'*:hover::-webkit-scrollbar-thumb': {
-			bg: '{colors.neutral.300}',
+			bg: 'border.emphasized',
 			backgroundClip: 'content-box',
-			_dark: { bg: '#2e2e2e' },
 		},
 	},
 });

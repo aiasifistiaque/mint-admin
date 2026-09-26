@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useEffect, ReactNode } from 'react';
+import { FC, memo, useEffect, ReactNode } from 'react';
 import { Flex, Heading, useMediaQuery, FlexProps, HeadingProps } from '@chakra-ui/react';
 
 import { SelfMenu, SearchMenu, NotificationMenu } from '../menu';
@@ -13,6 +13,35 @@ import { unselectAll, useGetQuery, navigate } from '../store';
 import { padding, sizes } from '../config';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
+const ICON_SIZE = 17;
+
+/*
+ * Every page renders inside Layout and keeps its own state above it, so each
+ * change on a page (a keystroke in the route builder, a toggle) re-rendered
+ * the whole sidebar and the navbar menus with it. Memoized, they re-render
+ * only on their own state — the sidebar data, the signed-in admin.
+ */
+const MemoSidebar = memo(Sidebar);
+
+const NavActions = memo(function NavActions({ sidebarData }: { sidebarData: any }) {
+	return (
+		<Align gap={1}>
+			<ColorMode
+				size={ICON_SIZE}
+				position='navbar'
+			/>
+			{sidebarData && (
+				<SearchMenu
+					sidebarData={sidebarData}
+					iconSize={ICON_SIZE}
+				/>
+			)}
+			<NotificationMenu iconSize={ICON_SIZE} />
+			<SelfMenu iconSize={ICON_SIZE} />
+			{/* <CreateMenu /> */}
+		</Align>
+	);
+});
 
 export type FlexPropsType = FlexProps & {
 	children?: ReactNode;
@@ -58,8 +87,6 @@ const Layout: FC<LayoutProps> = ({
 
 	const { data, isFetching, isError } = useGetQuery({ path: `/sidebar/crm/${sidebarType}` });
 
-	const ICON_SIZE = 17;
-
 	return (
 		<AuthWrapper>
 			<LayoutWrapper>
@@ -71,24 +98,10 @@ const Layout: FC<LayoutProps> = ({
 					<SpaceBetween>
 						<Heading {...titleCss}>{title}</Heading>
 					</SpaceBetween>
-					<Align gap={1}>
-						<ColorMode
-							size={ICON_SIZE}
-							position='navbar'
-						/>
-						{data && (
-							<SearchMenu
-								sidebarData={data}
-								iconSize={ICON_SIZE}
-							/>
-						)}
-						<NotificationMenu iconSize={ICON_SIZE} />
-						<SelfMenu iconSize={ICON_SIZE} />
-						{/* <CreateMenu /> */}
-					</Align>
+					<NavActions sidebarData={data} />
 				</Navbar>
 				<Body>
-					{type == 'default' && <Sidebar />}
+					{type == 'default' && <MemoSidebar />}
 					<Flex
 						{...mainContainer}
 						pl={type !== 'default' ? 0 : sizes.HOME_NAV_LEFT}

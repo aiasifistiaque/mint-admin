@@ -26,7 +26,7 @@ const VTags: FC<InputContainerProps> = ({
 	...props
 }) => {
 	const { colorMode } = useColorMode();
-	const borderColor = colorMode === 'dark' ? 'brand.200' : 'brand.500';
+	const borderColor = 'accent.solid';
 	const [tag, setTag] = useState<string>('');
 
 	const handleChange = useCallback((e: any) => {
@@ -113,10 +113,7 @@ const VTags: FC<InputContainerProps> = ({
 							<IconButton
 								onClick={addTag}
 								size='xs'
-								color={{
-									_light: 'white',
-									_dark: 'black',
-								}}
+								color='accent.contrast'
 								aria-label='add tag'>
 								<Icon
 									name='add'
@@ -137,7 +134,7 @@ const VTags: FC<InputContainerProps> = ({
 							<Flex
 								px={2.5}
 								py={1}
-								bg={{ _light: 'transparent', _dark: 'gray.700' }}
+								bg={{ _light: 'transparent', _dark: 'bg.muted' }}
 								border='1px solid'
 								borderColor={{ _light: 'border.light', _dark: 'border.dark' }}
 								borderRadius='md'

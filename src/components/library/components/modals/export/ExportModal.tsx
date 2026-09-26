@@ -78,7 +78,7 @@ const ExportModal = ({ path, ids }: { path: string; ids?: string[] }) => {
 	));
 
 	const { colorMode } = useColorMode();
-	const iconColor = colorMode === 'light' ? '#fafafa' : '#171717';
+	const iconColor = 'accent.contrast';
 
 	return (
 		<>

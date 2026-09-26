@@ -111,7 +111,8 @@ export const styles = {
 		bg: 'navbar.blurLight',
 	},
 	MODAL_BLUR: {
-		bg: 'rgba(255, 255, 255, .6)',
+		bg: 'menu.blurLight',
+		_dark: { bg: 'menu.blurDark' },
 		backdropFilter: 'blur(10px)',
 	},
 	NAVBAR: {
@@ -250,7 +251,7 @@ export const styles = {
 			borderWidth: 1,
 			borderColor: 'container.borderLight',
 			_dark: {
-				borderColor: '#eee',
+				borderColor: 'container.borderDark',
 			},
 		},
 	},

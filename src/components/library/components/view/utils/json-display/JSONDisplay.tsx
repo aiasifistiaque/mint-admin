@@ -51,7 +51,7 @@ const renderJsonToElements = (data: any, keyPrefix: any = '') => {
 						flexDir='row'
 						p={2}
 						borderWidth={1}
-						borderColor='#eee'
+						borderColor='border.muted'
 						borderRadius={4}
 						gap={2}
 						key={uniqueKey}>

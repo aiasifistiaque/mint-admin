@@ -132,7 +132,7 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id, l
 							gap={2}>
 							<Text
 								{...textCss}
-								color='dodgerblue'>
+								color='accent.fg'>
 								{children}
 							</Text>
 							<ExternalLink size={16} />
@@ -355,7 +355,7 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id, l
 							<Text
 								{...textCss}
 								cursor={'pointer'}
-								color='dodgerblue'>
+								color='accent.fg'>
 								{typeof children === 'string' ? children : 'View Details'}
 							</Text>
 						}

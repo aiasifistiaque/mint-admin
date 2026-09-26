@@ -66,7 +66,7 @@ const InvoicePdfDownloadModal: FC<InvoicePdfDownloadModalProps> = ({ isOpen, onC
 										borderRadius='md'
 										border='1px solid'
 										borderColor={
-											selected ? 'brand.500' : { _light: 'border.light', _dark: 'border.dark' }
+											selected ? 'accent.solid' : 'border'
 										}
 										onClick={() => setDesign(option.id)}>
 										<Text
@@ -123,7 +123,7 @@ const InvoicePdfDownloadModal: FC<InvoicePdfDownloadModalProps> = ({ isOpen, onC
 									<Link href='/settings'>
 										<Text
 											fontSize='sm'
-											color='brand.500'
+											color='accent.fg'
 											textDecoration='underline'>
 											Add one in Settings
 										</Text>

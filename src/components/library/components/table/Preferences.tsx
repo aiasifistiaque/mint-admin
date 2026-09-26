@@ -90,6 +90,7 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 	return (
 		<>
 			<Tooltip.Root
+				lazyMount
 				openDelay={200}
 				closeDelay={100}
 				positioning={{ placement: 'bottom' }}>

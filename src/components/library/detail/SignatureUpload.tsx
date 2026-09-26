@@ -58,7 +58,7 @@ const SignatureUpload: FC<SignatureUploadProps> = ({ value, onChange, helper }) 
 				) : (
 					<Text
 						fontSize='.8rem'
-						color='text.500'>
+						color='fg'>
 						No signature
 					</Text>
 				)}
@@ -83,7 +83,7 @@ const SignatureUpload: FC<SignatureUploadProps> = ({ value, onChange, helper }) 
 				{helper && (
 					<Text
 						fontSize='.75rem'
-						color='text.500'
+						color='fg'
 						maxW='260px'>
 						{helper}
 					</Text>

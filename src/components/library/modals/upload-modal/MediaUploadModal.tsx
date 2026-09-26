@@ -124,7 +124,7 @@ const MediaUploadModal: FC<MediaUploadModalProps> = ({
 									px={2}
 									py={1}
 									borderRadius='md'
-									bg={{ _light: 'gray.50', _dark: 'whiteAlpha.100' }}>
+									bg='bg.subtle'>
 									{r.ok ? (
 										<LuCheck color='var(--chakra-colors-green-500)' />
 									) : (
@@ -163,9 +163,9 @@ const MediaUploadModal: FC<MediaUploadModalProps> = ({
 								onClick={() => inputRef.current?.click()}
 								cursor='pointer'
 								borderRadius='8px'
-								border={isDragOver ? '2px dashed #4A90E2' : '2px dashed #ddd'}
-								_dark={{ borderColor: isDragOver ? 'brand.500' : 'border.dark' }}
-								backgroundColor={isDragOver ? 'blue.50' : 'transparent'}
+								border='2px dashed'
+								borderColor={isDragOver ? 'accent.solid' : 'border'}
+								backgroundColor={isDragOver ? 'accent.subtle' : 'transparent'}
 								transition='all 0.2s ease'
 								py={10}
 								textAlign='center'>
@@ -205,7 +205,7 @@ const MediaUploadModal: FC<MediaUploadModalProps> = ({
 											px={2}
 											py={1}
 											borderRadius='md'
-											bg={{ _light: 'gray.50', _dark: 'whiteAlpha.100' }}>
+											bg='bg.subtle'>
 											<Text
 												fontSize='sm'
 												flex={1}

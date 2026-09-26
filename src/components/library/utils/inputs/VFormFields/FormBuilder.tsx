@@ -73,7 +73,7 @@ const FormBuilder: FC<FormBuilderProps> = ({ availableFields, onChange, value = 
 						mb={4}>
 						<Heading
 							size='sm'
-							color='gray.600'>
+							color='fg.muted'>
 							Section {index + 1}
 						</Heading>
 						<Button
@@ -86,7 +86,7 @@ const FormBuilder: FC<FormBuilderProps> = ({ availableFields, onChange, value = 
 
 					<Box
 						border='2px solid'
-						borderColor='gray.200'
+						borderColor='border'
 						borderRadius='lg'
 						p={6}>
 						<FormFields
@@ -104,7 +104,7 @@ const FormBuilder: FC<FormBuilderProps> = ({ availableFields, onChange, value = 
 				<Box
 					textAlign='center'
 					py={12}
-					color='gray.500'>
+					color='fg.muted'>
 					<Text
 						fontSize='lg'
 						mb={2}>
@@ -119,7 +119,7 @@ const FormBuilder: FC<FormBuilderProps> = ({ availableFields, onChange, value = 
 				<Box
 					mt={8}
 					p={6}
-					bg='gray.50'
+					bg='bg.subtle'
 					borderRadius='lg'>
 					<Heading
 						size='sm'

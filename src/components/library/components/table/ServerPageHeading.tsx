@@ -104,7 +104,7 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 						<Link href={table.guideHref}>
 							<Text
 								{...subHeadingCss}
-								color='brand.500'
+								color='accent.fg'
 								textDecoration='underline'>
 								{table?.guideLabel || 'View the guide'}
 							</Text>

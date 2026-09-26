@@ -135,7 +135,7 @@ const VFormFields: FC<InputContainerProps> = ({
 									{item?.description && (
 										<Text
 											fontSize='sm'
-											color='gray.500'
+											color='fg.muted'
 											mb={2}>
 											{item?.description}
 										</Text>

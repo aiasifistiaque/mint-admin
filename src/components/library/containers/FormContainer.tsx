@@ -25,7 +25,7 @@ const styles = {
 	container: {
 		h: 'fit-content',
 		p: PADDING,
-		bg: 'white',
+		bg: 'bg.panel',
 		_dark: { bg: 'sidebar.dark' },
 		flexDirection: 'column',
 		mx: 'auto',

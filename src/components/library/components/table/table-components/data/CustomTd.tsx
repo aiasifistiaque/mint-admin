@@ -167,10 +167,7 @@ const imageCss: ImageProps = {
 	h: IMG_SIZE,
 	w: IMG_SIZE,
 	alt: 'img',
-	bg: '#ebebeb',
-	_dark: {
-		bg: '#2d2d2d',
-	},
+	bg: 'bg.muted',
 };
 
 export default CustomTd;

@@ -89,6 +89,8 @@ const Dialog: FC<DialogProps> = ({
 	if (!isMobile && layout === 'drawer') {
 		return (
 			<Drawer.Root
+				lazyMount
+				unmountOnExit
 				preventScroll
 				placement='end'
 				size='xl'
@@ -115,6 +117,8 @@ const Dialog: FC<DialogProps> = ({
 	if (isMobile) {
 		return (
 			<Drawer.Root
+				lazyMount
+				unmountOnExit
 				preventScroll={true}
 				placement='bottom'
 				size='full'

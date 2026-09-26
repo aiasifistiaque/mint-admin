@@ -13,6 +13,7 @@ const SquareButton: FC<SquareButtonProps> = ({ children, label, ...props }) => {
 			// whileTap={{ scale: 0.8 }}
 			onClick={props.onClick}>
 			<Tooltip.Root
+				lazyMount
 				openDelay={200}
 				closeDelay={100}
 				positioning={{ placement: 'top' }}>

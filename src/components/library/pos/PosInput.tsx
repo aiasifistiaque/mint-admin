@@ -44,8 +44,8 @@ const PosInput: FC<InputContainerProps> = ({
 	...props
 }) => {
 	const { colorMode } = useColorMode();
-	const borderColor = colorMode === 'light' ? 'brand.500' : 'brand.200';
-	const textColor = colorMode === 'light' ? 'text.500' : 'gray.300';
+	const borderColor = 'accent.solid';
+	const textColor = 'fg';
 
 	return (
 		<Grid
