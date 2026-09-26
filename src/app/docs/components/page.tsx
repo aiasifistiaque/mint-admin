@@ -14,12 +14,14 @@ import {
 	TextFilter,
 } from '@/components/library/dynamic-filters/filters';
 
+import { BarList, ColumnChart, DonutChart, LineChart } from '@/components/library/dashboard/charts';
+
 import { C, Code, H3, P, Preview, Props, PropRow, Section } from './_components/ui';
 
 /**
  * The admin's component library: every reusable component, with a live
- * example, its props and how to use it. Filters only for now — add a group to
- * `NAV` and its sections below to document more.
+ * example, its props and how to use it. Filters and charts so far — add a
+ * group to `NAV` and its sections below to document more.
  */
 
 const NAV: { group: string; items: { id: string; title: string }[] }[] = [
@@ -36,7 +38,42 @@ const NAV: { group: string; items: { id: string; title: string }[] }[] = [
 			{ id: 'filter-building-blocks', title: 'Building blocks' },
 		],
 	},
+	{
+		group: 'Charts',
+		items: [
+			{ id: 'charts', title: 'Overview' },
+			{ id: 'column-line-chart', title: 'Column & line' },
+			{ id: 'bar-list', title: 'Bar list' },
+			{ id: 'donut-chart', title: 'Donut' },
+		],
+	},
 ];
+
+/* ---------- chart sample data ---------- */
+
+const SERIES = ['2026-09-01', '2026-09-02', '2026-09-03', '2026-09-04', '2026-09-05', '2026-09-06', '2026-09-07', '2026-09-08', '2026-09-09', '2026-09-10', '2026-09-11', '2026-09-12', '2026-09-13', '2026-09-14'].map(
+	(key, i) => ({ key, value: [4, 7, 3, 9, 12, 6, 0, 8, 11, 5, 9, 14, 10, 7][i] })
+);
+const SLICES = [
+	{ key: 'progress', label: 'In progress', value: 18 },
+	{ key: 'planning', label: 'Planning', value: 11 },
+	{ key: 'review', label: 'Review', value: 7 },
+	{ key: 'other', label: 'Other (4)', value: 6, other: true },
+];
+const count = (v: number) => v.toLocaleString();
+
+const CHART_FORMAT: PropRow = {
+	name: 'format',
+	type: '(v: number) => string',
+	required: true,
+	description: 'A value as the tooltip and legend show it — add the unit here, e.g. v => `BDT ${v.toLocaleString()}`.',
+};
+const CHART_TITLE: PropRow = {
+	name: 'title',
+	type: 'string',
+	required: true,
+	description: 'Names the chart for screen readers (its aria-label and the caption of the hidden data table).',
+};
 
 /* ---------- shared prop rows ---------- */
 
@@ -512,6 +549,143 @@ const isMobile = useIsMobile();
 		</RadioGroup.Root>
 	</PopModalBody>
 </PopModal>`}</Code>
+					</Section>
+
+					<Section
+						id='charts'
+						title='Charts'
+						lead='Small SVG charts with no chart library — what the dashboard widgets draw with.'>
+						<P>
+							From <C>@/components/library/dashboard/charts</C>. Every mark has a hover tooltip, every chart a
+							screen-reader table, and the colours are a validated categorical palette with its own dark-mode steps
+							(<C>PALETTE_CSS</C>, <C>seriesColor(i)</C>) — data colours, deliberately not the admin theme&apos;s.
+							Bars are at most 24px thick with a 4px rounded end; lines are 2px; one axis only.
+						</P>
+					</Section>
+
+					<Section
+						id='column-line-chart'
+						title='Column & line'
+						lead='A series over time: one column (or point) per day, week or month.'>
+						<Grid
+							templateColumns={{ base: '1fr', lg: '1fr 1fr' }}
+							gap={4}>
+							<Box
+								p={4}
+								borderWidth='1px'
+								borderRadius='md'
+								bg='bg.panel'>
+								<ColumnChart
+									points={SERIES}
+									interval='day'
+									format={count}
+									title='New projects a day'
+								/>
+							</Box>
+							<Box
+								p={4}
+								borderWidth='1px'
+								borderRadius='md'
+								bg='bg.panel'>
+								<LineChart
+									points={SERIES}
+									interval='day'
+									format={count}
+									title='New projects a day'
+								/>
+							</Box>
+						</Grid>
+						<H3>Props</H3>
+						<Props
+							rows={[
+								{
+									name: 'points',
+									type: '{ key: string; value: number }[]',
+									required: true,
+									description: (
+										<>
+											In order. Keys are bucket keys: <C>2026-09-21</C> (day), <C>2026-W39</C> (week), <C>2026-09</C>{' '}
+											(month) — as <C>/get/stats?group=time</C> returns them.
+										</>
+									),
+								},
+								{ name: 'interval', type: "'day' | 'week' | 'month'", required: true, description: 'How the keys are labelled.' },
+								CHART_FORMAT,
+								CHART_TITLE,
+								{ name: 'height', type: 'number', description: 'Pixels, 200 by default. The width follows the container.' },
+							]}
+						/>
+						<H3>Usage</H3>
+						<Code label='tsx'>{`import { ColumnChart } from '@/components/library/dashboard/charts';
+
+<ColumnChart
+	points={[{ key: '2026-09-01', value: 4 }, { key: '2026-09-02', value: 7 }]}
+	interval='day'
+	format={v => v.toLocaleString()}
+	title='New projects a day'
+/>`}</Code>
+					</Section>
+
+					<Section
+						id='bar-list'
+						title='Bar list'
+						lead='A breakdown as labelled horizontal bars, biggest first — for long labels or many values.'>
+						<Box
+							p={4}
+							borderWidth='1px'
+							borderRadius='md'
+							bg='bg.panel'
+							maxW='420px'>
+							<BarList
+								slices={SLICES}
+								format={count}
+								title='Projects by status'
+							/>
+						</Box>
+						<H3>Props</H3>
+						<Props
+							rows={[
+								{
+									name: 'slices',
+									type: '{ key; label: string; value: number; other?: boolean }[]',
+									required: true,
+									description: 'Biggest first. `other: true` draws the remainder in grey.',
+								},
+								CHART_FORMAT,
+								CHART_TITLE,
+							]}
+						/>
+					</Section>
+
+					<Section
+						id='donut-chart'
+						title='Donut'
+						lead='A breakdown as a ring, with a legend of values and shares. Up to 7 slices plus “Other”.'>
+						<Box
+							p={4}
+							borderWidth='1px'
+							borderRadius='md'
+							bg='bg.panel'
+							maxW='480px'>
+							<DonutChart
+								slices={SLICES}
+								format={count}
+								title='Projects by status'
+							/>
+						</Box>
+						<P>
+							The centre shows the total, or the hovered slice. The legend always carries the labels and values, so
+							no slice is told apart by colour alone.
+						</P>
+						<H3>Props</H3>
+						<Props
+							rows={[
+								{ name: 'slices', type: 'as BarList', required: true, description: 'At most 7 plus an `other` slice — the palette’s validated hues.' },
+								CHART_FORMAT,
+								CHART_TITLE,
+								{ name: 'total', type: 'number', description: 'The centre figure, when it isn’t the sum of the slices.' },
+							]}
+						/>
 					</Section>
 				</Box>
 			</Grid>
