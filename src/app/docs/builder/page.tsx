@@ -487,8 +487,12 @@ const BuilderDocs = () => {
 						<P>
 							A field whose input picks records — <strong>Pick a record</strong>, <strong>Pick records</strong> or
 							the nested picker — gets a <em>Linked records</em> panel in its expanded options.{' '}
-							<strong>Linked model</strong> is the route its records come from (<C>clients</C>,{' '}
-							<C>categories</C>, <C>admins</C>).
+							<strong>Linked model</strong> is picked by name (Client, Category, Admin) from every model with
+							an admin route. What&apos;s saved is the route it&apos;s served on (<C>schema.model</C>, e.g.{' '}
+							<C>clients</C>), as settings files have always had it — so existing fields keep working, and one
+							whose route matches no model shows it as is. A model served on more than one route gets a{' '}
+							<em>Served on</em> choice. Picking a model also sets the field that names its records in the
+							list (<C>menuKey</C> / <C>labelKey</C>), and clears conditions written for another model.
 						</P>
 						<P>
 							<strong>Add new from the form</strong> puts a <strong>+</strong> beside the input. It opens a modal

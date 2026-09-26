@@ -7,10 +7,13 @@ import { useGetConfigQuery } from '@/components/library';
 import { Dropdown } from '@/components/library/cl';
 import { OptionFilter, OptionFilterOp } from '@/components/library/functions/optionFilters';
 import { DocLink, FieldLabel, Toggle } from './ui';
+import { mainRoute, modelLabel, useLinkModels } from './useLinkModels';
 
 /**
  * A record picker's own options (Settings → a field's details, when its input
- * picks records): the linked model, a + beside the input that adds a record
+ * picks records): the linked model — picked by name; what's stored is still
+ * the route it's served on (`schema.model`), as settings files have always
+ * had it, so existing fields keep working — a + beside the input that adds a record
  * of it in a modal (`schema.addItem`), and which of its records are offered
  * (`schema.optionFilters`) — compared with a fixed value (only active admins)
  * or with another field of this form (only the projects of the client picked
@@ -41,6 +44,9 @@ const OPS: { value: OptionFilterOp; label: string }[] = [
 
 type Target = { key: string; label: string; input?: string; options?: { value: any; label?: any }[] };
 
+/** A value not matched to a model: an old route, kept as it is. */
+const ROUTE_ONLY = 'route:';
+
 const LinkedRecordsEditor: FC<Props> = ({ schema, formFields, fieldKey, disabled, onChange }) => {
 	const model: string = schema?.model || '';
 	const filters: OptionFilter[] = Array.isArray(schema?.optionFilters) ? schema.optionFilters : [];
@@ -52,6 +58,23 @@ const LinkedRecordsEditor: FC<Props> = ({ schema, formFields, fieldKey, disabled
 		.map(([key, s]) => ({ key, label: s?.label || key, input: s?.type, options: s?.options }));
 	const targetOf = (key: string) => targets.find(t => t.key === key);
 	const others = formFields.filter(f => f.key !== fieldKey);
+
+	const { models } = useLinkModels();
+	const linked = models.find(m => m.routes.includes(model));
+
+	/** A model picked: the route it's served on, and the field that names its records. */
+	const pickModel = (value: string) => {
+		const m = models.find(x => x.name === value);
+		if (!m) return;
+		const route = mainRoute(m);
+		const display = m.display && m.display !== '_id' ? m.display : undefined;
+		onChange({
+			model: route,
+			...(display && { menuKey: display, labelKey: display }),
+			// Conditions name fields of the old model.
+			...(m.name !== linked?.name && filters.length && { optionFilters: undefined }),
+		});
+	};
 
 	const setFilters = (next: OptionFilter[]) => onChange({ optionFilters: next.length ? next : undefined });
 	const setFilter = (i: number, patch: Partial<OptionFilter>) =>
@@ -85,25 +108,59 @@ const LinkedRecordsEditor: FC<Props> = ({ schema, formFields, fieldKey, disabled
 				<DocLink section='settings-linked' />
 			</Flex>
 
-			<Box maxW='320px'>
-				<FieldLabel>Linked model (its route)</FieldLabel>
-				<Input
-					size='sm'
-					fontFamily='mono'
-					value={model}
-					placeholder='e.g. clients'
-					disabled={disabled}
-					onChange={e => onChange({ model: e.target.value.trim() || undefined })}
-				/>
-				{model && isError && (
-					<Text
-						fontSize='xs'
-						color='red.fg'
-						mt={1}>
-						No route “{model}” — check the name (the part of the address after /).
-					</Text>
+			<Flex
+				gap={3}
+				flexWrap='wrap'
+				align='flex-start'>
+				<Box
+					w='320px'
+					maxW='full'>
+					<FieldLabel>Linked model</FieldLabel>
+					<Dropdown
+						size='sm'
+						disabled={disabled || !models.length}
+						placeholder={models.length ? 'Pick a model' : 'Loading models…'}
+						value={linked?.name || (model ? `${ROUTE_ONLY}${model}` : '')}
+						onChange={pickModel}>
+						{models.map(m => (
+							<option
+								key={m.name}
+								value={m.name}>
+								{modelLabel(m)}
+							</option>
+						))}
+						{model && !linked && <option value={`${ROUTE_ONLY}${model}`}>{`Route “${model}” (no model found)`}</option>}
+					</Dropdown>
+				</Box>
+				{linked && linked.routes.length > 1 && (
+					<Box w='200px'>
+						<FieldLabel>Served on</FieldLabel>
+						<Dropdown
+							size='sm'
+							disabled={disabled}
+							value={model}
+							onChange={route => onChange({ model: route })}>
+							{linked.routes.map(r => (
+								<option
+									key={r}
+									value={r}>
+									/{r}
+								</option>
+							))}
+						</Dropdown>
+					</Box>
 				)}
-			</Box>
+			</Flex>
+			{model && (
+				<Text
+					fontSize='xs'
+					color={isError || (models.length > 0 && !linked) ? 'red.fg' : 'fg.muted'}
+					mt={-1}>
+					{isError || (models.length > 0 && !linked)
+						? `No model is served on “${model}” — pick one above.`
+						: `Records come from /${model}${linked?.display ? `, named by their ${linked.display}` : ''}.`}
+				</Text>
+			)}
 
 			<Toggle
 				label='Add new from the form'
