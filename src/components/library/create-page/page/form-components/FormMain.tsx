@@ -9,6 +9,7 @@ import {
 } from '../../..';
 import { Accordion, Text } from '@chakra-ui/react';
 import { hiddenFormFields } from '../../../functions/formRules';
+import { withFormulaValues } from '../../../functions/formula';
 
 type FormMainType = {
 	fields: any;
@@ -107,6 +108,10 @@ const FormMain: FC<FormMainType> = ({
 	// that depend on it — so if A shows B and B shows C, clearing A hides both.
 	const hidden = hiddenFormFields(fields, formData);
 
+	// Formula inputs show their value from the form as it will be saved: every
+	// formula calculated, so one that uses another reads its result, not 0.
+	const calculated = useMemo(() => withFormulaValues(formData, fields), [formData, fields]);
+
 	return (
 		<Accordion.Root
 			gap={4}
@@ -129,7 +134,7 @@ const FormMain: FC<FormMainType> = ({
 							key={i}>
 							<>
 								<FormInput
-									formData={formData}
+									formData={item?.type === 'formula' ? calculated : formData}
 									setFormData={setFormData}
 									setChangedData={setChangedData}
 									isRequired={item?.isRequired || false}

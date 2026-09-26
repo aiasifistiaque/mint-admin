@@ -14,6 +14,7 @@ import {
 	getOnChangeHandler as resolveOnChangeHandler,
 	getFieldValue,
 } from '../..';
+import { withFormulaValues } from '../../functions/formula';
 
 type FormPageType = {
 	formData: any;
@@ -58,6 +59,9 @@ const FormPage: FC<FormPageType> = ({
 
 		return sections;
 	}, [data]);
+
+	// Formula inputs read the form with every formula calculated (one can use another).
+	const calculated = useMemo(() => withFormulaValues(formData, data), [formData, data]);
 
 	useRedirect({ isSuccess, isLoading, path: `/${path}` });
 	useCustomToast({
@@ -117,6 +121,7 @@ const FormPage: FC<FormPageType> = ({
 											options={item?.options}
 											dataModel={item?.dataModel}
 											item={item}
+											formData={item?.type === 'formula' ? calculated : formData}
 										/>
 									)}
 								</FormItem>

@@ -438,3 +438,60 @@ export const evaluate = (tree: Node, doc: any): number | null => {
 	const v = ev(tree, doc);
 	return v === null || !Number.isFinite(v) ? null : roundTo(v, 10);
 };
+
+/* ---------- a form's formula fields, live ---------- */
+
+const tryParse = (src: any): Node | null => {
+	if (typeof src !== 'string' || !src.trim()) return null;
+	try {
+		return parse(src);
+	} catch {
+		return null;
+	}
+};
+
+/**
+ * The form's values with every formula calculated, as the server will store
+ * them — so a formula that uses another formula (`total = subtotal + tax`,
+ * `subtotal = sum(items.total)`) reads the calculated value, not the nothing
+ * that was typed for it. Row formulas of a list go first (each row from its
+ * own values), then the record's, each after the formulas it uses; a loop is
+ * left alone. `fields` are the form's items: `{ name, type, formula }`, and a
+ * list's `section.dataModel` / a section's `dataModel`.
+ */
+export const withFormulaValues = (values: any, fields: any[] = []) => {
+	const out: any = { ...(values || {}) };
+
+	// Rows (and single sections) first, from their own values.
+	for (const f of fields) {
+		const subs: any[] = (f?.section?.dataModel || f?.dataModel || []).filter((x: any) => x?.type === 'formula' && tryParse(x.formula));
+		if (!subs.length || !f?.name) continue;
+		const calc = (row: any) => {
+			const r = { ...(row || {}) };
+			// Twice over, so a row formula that uses another row formula settles.
+			for (let pass = 0; pass < subs.length; pass++) for (const x of subs) r[x.name] = evaluate(parse(x.formula), r);
+			return r;
+		};
+		const v = out[f.name];
+		if (Array.isArray(v)) out[f.name] = v.map(calc);
+		else if (f.type === 'section-object' && v && typeof v === 'object') out[f.name] = calc(v);
+	}
+
+	// Then the record's, in the order they depend on each other.
+	const formulas = fields
+		.filter(f => f?.type === 'formula' && f?.name)
+		.map(f => ({ name: f.name as string, tree: tryParse(f.formula) }))
+		.filter((f): f is { name: string; tree: Node } => !!f.tree);
+	const byName = new Map(formulas.map(f => [f.name, f]));
+	const state = new Map<string, 'visiting' | 'done'>();
+	const visit = (name: string) => {
+		if (state.get(name)) return;
+		state.set(name, 'visiting');
+		const f = byName.get(name)!;
+		for (const r of refsOf(f.tree)) if (byName.has(r) && !state.get(r)) visit(r);
+		out[name] = evaluate(f.tree, out);
+		state.set(name, 'done');
+	};
+	for (const f of formulas) visit(f.name);
+	return out;
+};
