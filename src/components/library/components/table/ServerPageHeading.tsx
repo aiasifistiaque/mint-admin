@@ -40,7 +40,6 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 			<Icon
 				size={18}
 				name='add'
-				color='fg.inverted'
 			/>
 			{!isMobile && button}
 		</Button>

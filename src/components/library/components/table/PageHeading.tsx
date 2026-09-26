@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { FC, ReactNode } from 'react';
 import { CreateModal, Icon } from '../..';
 import ExportModal from '../modals/export/ExportModal';
-import { useColorMode } from '@/components/ui/color-mode';
 import { buttonGroupCss, containerCss, headingCss, subHeadingCss } from './style';
 
 type PageHeadingProps = FlexProps & {
@@ -32,15 +31,12 @@ const PageHeading: FC<PageHeadingProps> = ({
 	customButton,
 	...props
 }) => {
-	const { colorMode } = useColorMode();
-	const iconColor = colorMode === 'light' ? 'text.dark' : 'text.light';
 
 	const btn = (
 		<Button size='sm'>
 			<Icon
 				size={16}
 				name='add'
-				color={iconColor}
 			/>
 			{button}
 		</Button>

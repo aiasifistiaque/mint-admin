@@ -97,28 +97,30 @@ const Preferences = ({ path, schema }: { path: string; schema?: any }) => {
 				<Tooltip.Trigger asChild>
 					<IconButton
 						onClick={onOpen}
-						aria-label='Select Table Fields'
-						colorPalette='gray'
+						aria-label='Table preferences'
+						// Outline, like the refresh button beside the search field. It
+						// was a solid gray button with its fill overridden, so the icon
+						// took the solid's text colour (the theme's accent text), white
+						// on a white button in light mode.
+						variant='outline'
 						size='sm'
-						borderWidth={1}
 						mr={0.5}
 						h={sizes?.SEARCH_BAR_HEIGHT}
 						w={sizes?.SEARCH_BAR_HEIGHT}
+						minW={sizes?.SEARCH_BAR_HEIGHT}
 						borderRadius={radius?.BUTTON}
-						bg='container.newLight'
-						borderColor='container.borderLight'
-						_dark={{
-							bg: 'container.dark',
-							borderColor: 'container.borderDark',
-						}}>
+						color='fg.muted'
+						bg='field.bg'
+						borderColor='field.border'
+						_hover={{ bg: 'bg.subtle', color: 'fg', borderColor: 'border.emphasized' }}>
 						<Icon
-							name='fields'
-							size={12}
+							name='preferences'
+							size={14}
 						/>
 					</IconButton>
 				</Tooltip.Trigger>
 				<Tooltip.Positioner>
-					<Tooltip.Content p={1}>Select Table Columns</Tooltip.Content>
+					<Tooltip.Content p={1}>Table preferences</Tooltip.Content>
 				</Tooltip.Positioner>
 			</Tooltip.Root>
 

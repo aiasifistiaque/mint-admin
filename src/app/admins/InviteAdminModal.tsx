@@ -2,7 +2,6 @@
 
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { useEffect, useState, ChangeEvent } from 'react';
-import { useColorMode } from '@/components/ui/color-mode';
 
 import {
 	VInput,
@@ -25,7 +24,6 @@ const InviteAdminModal = () => {
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const [email, setEmail] = useState('');
 	const [role, setRole] = useState('');
-	const { colorMode } = useColorMode();
 
 	const { data } = useGetAllQuery({ path: 'adminroles', limit: 999, sort: 'name' });
 	const roles = data?.doc || [];
@@ -67,7 +65,6 @@ const InviteAdminModal = () => {
 				<Icon
 					size={16}
 					name='add'
-					color={colorMode === 'light' ? 'text.dark' : 'text.light'}
 				/>
 				Invite Admin
 			</Button>

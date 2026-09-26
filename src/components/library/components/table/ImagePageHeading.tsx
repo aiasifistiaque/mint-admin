@@ -6,7 +6,6 @@ import { buttonGroupCss, containerCss, subHeadingCss, wrapperCss } from './style
 import { useGetByIdQuery } from '../../store';
 import { MediaUploadModal } from '../../modals/upload-modal';
 import { Icon } from '../..';
-import { useColorMode } from '@/components/ui/color-mode';
 
 type PageHeadingProps = FlexProps & {
 	title: string;
@@ -36,8 +35,6 @@ const ImagePageHeading: React.FC<PageHeadingProps> = ({
 }) => {
 	const { data: folderData } = useGetByIdQuery({ path: 'folders', id: folder }, { skip: !folder });
 	const { open: isUploadOpen, onOpen: onUploadOpen, onClose: onUploadClose } = useDisclosure();
-	const { colorMode } = useColorMode();
-	const iconColor = colorMode === 'light' ? 'text.dark' : 'text.light';
 
 	return (
 		<Flex
@@ -102,7 +99,6 @@ const ImagePageHeading: React.FC<PageHeadingProps> = ({
 							<Icon
 								size={18}
 								name='add'
-								color={iconColor}
 							/>
 							Add Media
 						</Button>

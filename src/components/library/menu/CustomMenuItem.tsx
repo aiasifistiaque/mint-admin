@@ -53,7 +53,9 @@ const CustomMenuItem: FC<CustomMenuItemProps> = ({ children, icon, href, ...prop
 						<Icon
 							name={icon}
 							size={17}
-							color={props.color || 'text.selected'}
+							// Unset, the icon takes the item's text colour, which follows
+							// the mode; `text.selected` is the light-mode colour only.
+							color={props.color}
 						/>
 					)}
 					{children}

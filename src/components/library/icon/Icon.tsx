@@ -25,6 +25,7 @@ import {
 	LuAlignVerticalJustifyCenter,
 	LuImagePlus,
 	LuSettings2,
+	LuSlidersHorizontal,
 	LuPalette,
 } from 'react-icons/lu';
 import { DiNpm } from 'react-icons/di';
@@ -238,6 +239,7 @@ const icons: any = {
 	feedback: FcFeedback,
 	feedbacks: MdFeedback,
 	fields: FaTable,
+	preferences: LuSlidersHorizontal,
 	home: GoHomeFill,
 	info: FaCircleInfo,
 	inventory: MdInventory,
