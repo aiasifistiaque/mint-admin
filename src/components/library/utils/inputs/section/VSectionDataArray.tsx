@@ -4,6 +4,7 @@ import { Image, Stack, Flex, Text, Heading } from '@chakra-ui/react';
 import { HelperText, Label, ImageContainer, Column, SpaceBetween } from '../../..';
 import DeleteSection from './DeleteSection';
 import AddSectionDataModal from './AddSectionDataModal';
+import { SectionRows } from '../../../components/view/utils/render-view-item/SectionValues';
 
 type FormDataType = {
 	value: any;
@@ -55,9 +56,37 @@ const VSectionDataArray: FC<FormDataType> = ({
 						</Text>
 					)}
 				</Label>
+				{/* A model builder list: its rows as a table, number columns added up. */}
+				{section?.table && Array.isArray(value) && value.length > 0 && (
+					<SectionRows
+						rows={value}
+						dataModel={section?.dataModel || []}
+						actions={i => (
+							<Flex gap={1}>
+								<AddSectionDataModal
+									value={value}
+									type='edit'
+									handleDataChange={onChange}
+									name={name}
+									index={i}
+									prevVal={value[i]}
+									section={section}
+									dataModel={section?.dataModel}
+								/>
+								<DeleteSection
+									idx={i}
+									handleDataChange={onChange}
+									name={name}
+									value={value}
+								/>
+							</Flex>
+						)}
+					/>
+				)}
 				<Column
 					gap={4}
-					my={4}>
+					my={section?.table ? 0 : 4}
+					display={section?.table ? 'none' : undefined}>
 					{value?.map((item: any, i: number) => (
 						<Flex
 							key={i}

@@ -453,7 +453,9 @@ const BuilderDocs = () => {
 							add the field with the <strong>Formula</strong> kind instead of Number. Either way the formula
 							window opens. Build it from the field list, the operator buttons (+ − × ÷ %,
 							brackets) and the functions (<C>round</C>, <C>floor</C>, <C>ceil</C>, <C>abs</C>, <C>min</C>,{' '}
-							<C>max</C>), or type it — e.g. <C>total - paid</C> or <C>round(price * qty * 1.05, 2)</C>. It&apos;s
+							<C>max</C>) — plus <C>sum</C>, <C>avg</C> and <C>count</C> over a list&apos;s rows (see{' '}
+							<NextLink href='#models-sections'>Sections and section lists</NextLink>) — or type it — e.g.{' '}
+							<C>total - paid</C> or <C>round(price * qty * 1.05, 2)</C>. It&apos;s
 							checked as you go: a name that isn&apos;t a field, a field that isn&apos;t a number, a formula that
 							uses itself (directly or through another formula) or a typo is pointed at, and <em>Try it</em>{' '}
 							works it out on sample numbers.
@@ -886,8 +888,42 @@ const BuilderDocs = () => {
 								['Video', 'String (the video’s URL) · video upload; link in the table'],
 								['Link to a record', 'ObjectId with ref · record picker; shown by its display field; filter by record'],
 								['Link to records', 'List of ObjectIds with ref · multi-picker'],
+								[
+									'Section',
+									'An object of fields you choose · filled in inline in the form, label / value lines on the detail page',
+								],
+								[
+									'Section list',
+									'A list of rows of fields you choose · rows added in a dialog and listed as a table; count in the table; a table with number columns added up on the detail page',
+								],
 							]}
 						/>
+
+						<H3>Sections and section lists</H3>
+						<Box
+							id='models-sections'
+							scrollMarginTop='24px'
+						/>
+						<P>
+							A <strong>Section</strong> groups fields of its own under one key — <C>billing</C> with a city and a
+							fee. A <strong>Section list</strong> is rows of the same fields, as many as needed — an
+							invoice&apos;s <C>items</C>, each with an item, quantity, rate and total. Choosing either kind opens
+							its field builder: the same field editor, one level down, starting from a preset (title, description
+							and image for a section; an invoice line for a list) that you can change, reorder or replace
+							entirely. Save there, then save the model. The row&apos;s &ldquo;5 fields: …&rdquo; button opens it
+							again. A section&apos;s own fields can be text, long text, email, link, colour, number, formula,
+							yes/no, date, options, image or file — not links to records or other sections.
+						</P>
+						<P>
+							Formulas reach into them. A formula field inside a list row is calculated from that row&apos;s own
+							values (<C>total = quantity * rate</C>). The model&apos;s formulas use a list through{' '}
+							<C>sum(items.total)</C>, <C>avg(items.total)</C> and <C>count(items)</C>, and a section&apos;s values
+							as <C>billing.fee</C> — so an invoice&apos;s grand total is{' '}
+							<C>sum(items.total) + shipping + billing.fee</C>. Row formulas run first, so the sum always sees
+							up-to-date row totals; a row value on its own (<C>items.total + 1</C>) is refused, since a list has
+							many. The formula window lists these as &ldquo;Sum of Total in Items&rdquo; and &ldquo;Number of
+							rows in Items&rdquo;, and <em>Try it</em> takes a list&apos;s values as <C>30, 300</C>.
+						</P>
 						<P>
 							Some keys are reserved and refused: <C>_id</C>, <C>code</C>, <C>createdAt</C>, <C>updatedAt</C> and
 							Mongoose&apos;s own names like <C>collection</C>, <C>save</C> or <C>schema</C>. So are

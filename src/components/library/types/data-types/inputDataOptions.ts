@@ -44,6 +44,7 @@ export const inputDataOptions = [
 	'letterspacing',
 	'slider',
 	'section-data-array',
+	'section-object',
 	'alignment',
 	'flex-justify',
 	'flex-align',

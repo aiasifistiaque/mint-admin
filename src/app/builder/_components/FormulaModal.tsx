@@ -6,7 +6,7 @@ import { Calculator, CheckCircle2, CircleAlert } from 'lucide-react';
 import { AlertDialogContent, AlertDialogHeader, Align } from '@/components/library';
 import DiscardButton from '@/components/library/components/buttons/DiscardButton';
 import { Dropdown } from '@/components/library/cl';
-import { FUNCTIONS, FieldInfo, checkFormula, evaluate } from '@/components/library/functions/formula';
+import { AGGREGATES, FUNCTIONS, FieldInfo, checkFormula, evaluate } from '@/components/library/functions/formula';
 
 /**
  * Writing a formula field's formula — `due = total - paid`. Two ways in, one
@@ -59,9 +59,23 @@ const FormulaModal: FC<Props> = ({ isOpen, onClose, onSave, fieldKey, fieldTitle
 	}, [isOpen, formula]);
 
 	const name = fieldTitle || fieldKey;
-	const usable = fields.filter(f => f.key !== fieldKey && f.numeric);
+	// What the picker inserts: a number field as is; a number in a list's rows
+	// added up (`sum(items.total)`); a list, its row count (`count(items)`).
+	const usable = fields
+		.filter(f => f.key !== fieldKey && (f.numeric || f.list))
+		.map(f => {
+			const label = f.label && f.label !== f.key ? f.label : f.key;
+			if (f.list) return { key: f.key, insert: `count(${f.key})`, label: `Number of rows in ${label} — count(${f.key})` };
+			if (f.inList) return { key: f.key, insert: `sum(${f.key})`, label: `Sum of ${label} in ${labelOfList(f.inList)} — sum(${f.key})` };
+			return { key: f.key, insert: f.key, label: label === f.key ? f.key : `${label} (${f.key})` };
+		});
+	const hasLists = fields.some(f => f.list);
 	const checked = useMemo(() => (text.trim() ? checkFormula(text, fields, fieldKey) : null), [text, fields, fieldKey]);
 	const labelOf = (key: string) => fields.find(f => f.key === key)?.label || key;
+	function labelOfList(key: string) {
+		return fields.find(f => f.key === key)?.label || key;
+	}
+	const infoOf = (key: string) => fields.find(f => f.key === key);
 	const result = checked?.ok && checked.tree ? evaluate(checked.tree, Object.fromEntries(checked.refs.map(r => [r, sample[r] ?? '']))) : null;
 
 	/** Puts `token` in at the cursor (or the end), spaced, and keeps the cursor after it. */
@@ -126,6 +140,8 @@ const FormulaModal: FC<Props> = ({ isOpen, onClose, onSave, fieldKey, fieldTitle
 									color='fg.muted'>
 									{name} is calculated from other number fields each time a record is saved, and can&apos;t be
 									typed in. An empty field counts as 0.
+									{hasLists &&
+										' A list’s rows are used through sum(), avg() and count() — e.g. sum(items.total) adds up the total of every row.'}
 								</Text>
 
 								{/* Build it from pieces… */}
@@ -146,8 +162,8 @@ const FormulaModal: FC<Props> = ({ isOpen, onClose, onSave, fieldKey, fieldTitle
 											{usable.map(f => (
 												<option
 													key={f.key}
-													value={f.key}>
-													{f.label && f.label !== f.key ? `${f.label} (${f.key})` : f.key}
+													value={f.insert}>
+													{f.label}
 												</option>
 											))}
 										</Dropdown>
@@ -177,7 +193,7 @@ const FormulaModal: FC<Props> = ({ isOpen, onClose, onSave, fieldKey, fieldTitle
 											mr={1}>
 											Functions
 										</Text>
-										{Object.entries(FUNCTIONS).map(([fn, spec]) => (
+										{[...Object.entries(FUNCTIONS), ...(hasLists ? Object.entries(AGGREGATES) : [])].map(([fn, spec]) => (
 											<Button
 												key={fn}
 												size='xs'
@@ -333,12 +349,12 @@ const FormulaModal: FC<Props> = ({ isOpen, onClose, onSave, fieldKey, fieldTitle
 														color='fg.muted'
 														mb={1}
 														truncate>
-														{labelOf(r)}
+														{infoOf(r)?.inList ? `${labelOf(r)}, each row` : infoOf(r)?.list ? `Rows in ${labelOf(r)}` : labelOf(r)}
 													</Text>
 													<Input
 														size='xs'
-														type='number'
-														placeholder='0'
+														type={infoOf(r)?.inList ? 'text' : 'number'}
+														placeholder={infoOf(r)?.inList ? '5, 3, 2' : '0'}
 														value={sample[r] ?? ''}
 														onChange={e => setSample(s => ({ ...s, [r]: e.target.value }))}
 													/>

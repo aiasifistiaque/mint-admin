@@ -9,6 +9,7 @@ import {
 } from '@/components/library/utils/inputs';
 import VVariant from '@/components/library/utils/inputs/VVariant';
 import VModelFields from '@/components/library/utils/inputs/VModelFields';
+import VSectionObject from '@/components/library/utils/inputs/section/VSectionObject';
 import { registerFieldType } from '../registry';
 import { NotYetImplementedCell, NotYetImplementedView } from './_shared';
 
@@ -35,6 +36,18 @@ const SectionDataArrayInput = ({ item, isRequired, ...props }: any) => (
 		limit={item?.limit}
 		section={item?.section}
 		{...props}
+	/>
+);
+
+const SectionObjectInput = ({ item, isRequired, formData, ...props }: any) => (
+	<VSectionObject
+		name={(props as any).name}
+		label={(props as any).label}
+		value={(props as any).value}
+		onChange={(props as any).onChange}
+		isRequired={isRequired}
+		helper={item?.helper}
+		dataModel={item?.dataModel}
 	/>
 );
 
@@ -135,6 +148,17 @@ registerFieldType({
 	table: { type: 'data-array', cell: NotYetImplementedCell },
 	view: { type: 'section-data-array', render: NotYetImplementedView, layout: 'full' },
 	storage: 'array-object',
+});
+
+registerFieldType({
+	id: 'section-object',
+	family: 'composite',
+	input: SectionObjectInput,
+	changeMode: 'value',
+	emptyValue: () => ({}),
+	table: { type: 'text', cell: NotYetImplementedCell },
+	view: { type: 'section-object', render: NotYetImplementedView, layout: 'full' },
+	storage: 'object',
 });
 
 registerFieldType({

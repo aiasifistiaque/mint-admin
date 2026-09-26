@@ -27,7 +27,9 @@ export type FieldKind =
 	| 'files'
 	| 'video'
 	| 'reference'
-	| 'references';
+	| 'references'
+	| 'section'
+	| 'sectionlist';
 
 export const KINDS: { value: FieldKind; label: string; hint: string; group: string; hidden?: boolean }[] = [
 	{ value: 'text', label: 'Text', hint: 'A short line: a name, a title, a phone number', group: 'Text' },
@@ -63,9 +65,39 @@ export const KINDS: { value: FieldKind; label: string; hint: string; group: stri
 	{ value: 'video', label: 'Video', hint: 'An uploaded video', group: 'Media' },
 	{ value: 'reference', label: 'Link to a record', hint: 'One record of another model — or this one', group: 'Links' },
 	{ value: 'references', label: 'Link to records', hint: 'Several records of another model', group: 'Links' },
+	{
+		value: 'section',
+		label: 'Section',
+		hint: 'A group of fields of its own, filled in once — an address, a billing block. You choose its fields',
+		group: 'Sections',
+	},
+	{
+		value: 'sectionlist',
+		label: 'Section list',
+		hint: 'Rows of the same fields, as many as needed — an invoice’s items. You choose the fields of a row; its number fields can be added up in formulas (sum(items.total))',
+		group: 'Sections',
+	},
 ];
 
-export const KIND_GROUPS = ['Text', 'Values', 'Choices', 'Media', 'Links'];
+export const KIND_GROUPS = ['Text', 'Values', 'Choices', 'Media', 'Links', 'Sections'];
+
+/** Kinds made of fields of their own, chosen in the section's field builder. */
+export const SECTION_KINDS: FieldKind[] = ['section', 'sectionlist'];
+/** What a section's own fields can be — the same list as the backend's SUB_KINDS. */
+export const SUB_KINDS: FieldKind[] = [
+	'text',
+	'textarea',
+	'email',
+	'url',
+	'color',
+	'number',
+	'formula',
+	'boolean',
+	'date',
+	'select',
+	'image',
+	'file',
+];
 
 export const kindLabel = (kind?: string) => KINDS.find(k => k.value === kind)?.label || kind || '—';
 
@@ -77,8 +109,8 @@ export const ENUM_KINDS: FieldKind[] = ['text', 'number', 'select', 'multiselect
 export const NEEDS_OPTIONS: FieldKind[] = ['select', 'multiselect'];
 /** Kinds stored as a list — their default is a list too. */
 export const ARRAY_KINDS: FieldKind[] = ['multiselect', 'tags', 'images', 'files', 'references'];
-export const NO_DEFAULT_KINDS: FieldKind[] = ['reference', 'references', 'formula'];
-const CANT_BE_UNIQUE: FieldKind[] = ['boolean', 'editor', 'textarea', 'formula', ...ARRAY_KINDS];
+export const NO_DEFAULT_KINDS: FieldKind[] = ['reference', 'references', 'formula', 'section', 'sectionlist'];
+const CANT_BE_UNIQUE: FieldKind[] = ['boolean', 'editor', 'textarea', 'formula', ...ARRAY_KINDS, ...SECTION_KINDS];
 export const canBeUnique = (kind: FieldKind) => !CANT_BE_UNIQUE.includes(kind);
 export const hasLength = (kind: FieldKind) => ['text', 'email', 'url', 'textarea', 'editor'].includes(kind);
 export const hasOptions = (f: Pick<EditableField, 'kind' | 'options'>) =>
@@ -114,6 +146,10 @@ export type EditableField = {
 	helper?: string;
 	/** The formula kind's calculation, e.g. `total - paid`. */
 	formula?: string;
+	/** A section's own fields (SUB_KINDS only). */
+	fields?: EditableField[];
+	/** A section list's add button, e.g. "Add item". */
+	addLabel?: string;
 	/** Editor-only: the key follows the label until it's typed by hand. */
 	keyTouched?: boolean;
 };
@@ -150,16 +186,49 @@ export const singular = (title: string) =>
 		.replace(/(ch|sh|x|ss)es$/i, '$1')
 		.replace(/([^s])s$/i, '$1');
 
-export const fromServer = (fields: any[] = []): EditableField[] =>
-	fields.map(f => ({ ...f, uid: newUid(), keyTouched: true }));
+/**
+ * What a new section starts with — the title / description / image a custom
+ * section has always had — for the list, an invoice line: item, quantity,
+ * rate and total = quantity * rate. Every one can be changed or removed.
+ */
+export const sectionPreset = (kind: FieldKind): EditableField[] => {
+	const f = (key: string, label: string, k: FieldKind, extra: Partial<EditableField> = {}): EditableField => ({
+		uid: newUid(),
+		key,
+		label,
+		kind: k,
+		keyTouched: true,
+		...extra,
+	});
+	return kind === 'sectionlist'
+		? [
+				f('item', 'Item', 'text', { required: true }),
+				f('description', 'Description', 'textarea'),
+				f('quantity', 'Quantity', 'number'),
+				f('rate', 'Rate', 'number'),
+				f('total', 'Total', 'formula', { formula: 'quantity * rate' }),
+		  ]
+		: [f('title', 'Title', 'text'), f('description', 'Description', 'textarea'), f('image', 'Image', 'image')];
+};
 
-export const toServer = (fields: EditableField[]) =>
+export const fromServer = (fields: any[] = []): EditableField[] =>
+	fields.map(f => ({
+		...f,
+		uid: newUid(),
+		keyTouched: true,
+		...(Array.isArray(f.fields) && { fields: fromServer(f.fields) }),
+	}));
+
+export const toServer = (fields: EditableField[]): any[] =>
 	fields.map(({ uid, keyTouched, ...f }) => {
 		const out: any = { ...f, label: f.label || '' };
 		if (!ENUM_KINDS.includes(f.kind)) delete out.options;
 		else out.options = (f.options || []).filter(o => o.value?.trim());
 		if (!out.options?.length) delete out.options;
 		if (!REFERENCE_KINDS.includes(f.kind)) delete out.ref;
+		if (SECTION_KINDS.includes(f.kind)) out.fields = toServer(f.fields || []);
+		else delete out.fields;
+		if (f.kind !== 'sectionlist' || !out.addLabel) delete out.addLabel;
 		if (f.kind !== 'formula') delete out.formula;
 		else {
 			// Calculated, never typed.
@@ -182,25 +251,36 @@ const defaultValues = (f: EditableField): string[] =>
 	f.default === undefined || f.default === null || f.default === '' ? [] : (Array.isArray(f.default) ? f.default : [f.default]).map(String);
 
 /** Which input a field problem is about — where it's shown, and which input turns red. */
-export type FieldErrorOn = 'key' | 'ref' | 'options' | 'default' | 'range' | 'formula';
+export type FieldErrorOn = 'key' | 'ref' | 'options' | 'default' | 'range' | 'formula' | 'fields';
 export type FieldError = { message: string; on: FieldErrorOn };
 
 /** What a formula may use: the model's fields, and which hold numbers. */
 export const formulaFieldsOf = (fields: EditableField[]): FieldInfo[] =>
 	fields
 		.filter(f => f.key)
-		.map(f => ({
-			key: f.key,
-			label: f.label,
-			numeric: f.kind === 'number' || f.kind === 'formula',
-			...(f.kind === 'formula' && { formula: f.formula }),
-		}));
+		.flatMap((f): FieldInfo[] => {
+			const numeric = (k: FieldKind) => k === 'number' || k === 'formula';
+			const subs = (f.fields || []).filter(x => x.key);
+			// A list: itself for count(), each row's values for sum() / avg().
+			if (f.kind === 'sectionlist')
+				return [
+					{ key: f.key, label: f.label, numeric: false, list: true },
+					...subs.map(x => ({ key: `${f.key}.${x.key}`, label: x.label, numeric: numeric(x.kind), inList: f.key })),
+				];
+			// A section: its values as `address.zip`.
+			if (f.kind === 'section')
+				return subs.map(x => ({ key: `${f.key}.${x.key}`, label: `${f.label || f.key} › ${x.label || x.key}`, numeric: numeric(x.kind) }));
+			return [{ key: f.key, label: f.label, numeric: numeric(f.kind), ...(f.kind === 'formula' && { formula: f.formula }) }];
+		});
 
 /** Keys access control adds to every record; no field may use them while it's on. */
 export const ACCESS_KEYS = ['privacy', 'access', 'addedBy'];
 
 /** Problems per field (by uid) that would make the server refuse the model. */
-export const validateFields = (fields: EditableField[], { accessEnabled = false }: { accessEnabled?: boolean } = {}) => {
+export const validateFields = (
+	fields: EditableField[],
+	{ accessEnabled = false, sub = false }: { accessEnabled?: boolean; sub?: boolean } = {}
+): Record<string, FieldError> => {
 	const errors: Record<string, FieldError> = {};
 	const seen = new Map<string, string>();
 	const fail = (uid: string, on: FieldErrorOn, message: string) => (errors[uid] = { on, message });
@@ -226,6 +306,13 @@ export const validateFields = (fields: EditableField[], { accessEnabled = false 
 			if (outside.length) return fail(f.uid, 'default', `${outside.join(', ')} isn’t one of the options`);
 		}
 		if (typeof f.min === 'number' && typeof f.max === 'number' && f.min > f.max) return fail(f.uid, 'range', 'Min is above max');
+		if (SECTION_KINDS.includes(f.kind)) {
+			if (sub) return fail(f.uid, 'fields', 'A section can’t hold another section');
+			if (!f.fields?.length) return fail(f.uid, 'fields', 'Add at least one field to the section');
+			const inner = validateFields(f.fields, { sub: true });
+			const first = f.fields.find(x => inner[x.uid]);
+			if (first) return fail(f.uid, 'fields', `${first.label || first.key || 'A field'}: ${inner[first.uid].message}`);
+		}
 		if (f.kind === 'formula') {
 			if (!f.formula?.trim()) return fail(f.uid, 'formula', 'Write its formula');
 			const checked = checkFormula(f.formula, formulaFieldsOf(fields), f.key);

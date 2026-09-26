@@ -13,9 +13,16 @@
  *   total - paid
  *   round((price * qty) * (1 - discount / 100), 2)
  *   max(total - paid, 0)
+ *   sum(items.total) + shipping
  *
  * - field keys (dotted for nested: `payment.amount`), numbers, `+ - * / %`,
  *   brackets, and round(x[, digits]) floor ceil abs min max;
+ * - over a list of rows (a custom section list, like an invoice's items):
+ *   sum(items.total), avg(items.total) and count(items) — a row's value
+ *   can't be used on its own, only through these;
+ * - a list's rows can have formula fields of their own, from the other
+ *   values in the same row (`total = quantity * rate`) — calculated before
+ *   the record's, so `sum(items.total)` sees them;
  * - an empty or non-numeric field counts as 0; dividing by 0 leaves the
  *   result empty (null) rather than infinite;
  * - results are rounded to 10 decimals so 0.1 + 0.2 is 0.3.
@@ -34,7 +41,8 @@ export type Node =
 	| { t: 'ref'; key: string; at: number }
 	| { t: 'neg'; a: Node }
 	| { t: 'bin'; op: '+' | '-' | '*' | '/' | '%'; a: Node; b: Node }
-	| { t: 'fn'; name: FnName; args: Node[]; at: number };
+	| { t: 'fn'; name: FnName; args: Node[]; at: number }
+	| { t: 'agg'; name: AggName; key: string; at: number };
 
 export type FormulaError = { message: string; at?: number };
 
@@ -47,6 +55,14 @@ export const FUNCTIONS = {
 	max: { min: 2, max: 20, hint: 'max(a, b, …) — the largest' },
 } as const;
 type FnName = keyof typeof FUNCTIONS;
+
+/** Over the rows of a list: the one argument is `list.field` (or the list, for count). */
+export const AGGREGATES = {
+	sum: { hint: 'sum(items.total) — a number in every row of a list, added up' },
+	avg: { hint: 'avg(items.total) — the average of a number in every row (empty with no rows)' },
+	count: { hint: 'count(items) — how many rows a list has' },
+} as const;
+type AggName = keyof typeof AGGREGATES;
 
 export const OPERATORS = ['+', '-', '*', '/', '%', '(', ')'] as const;
 
@@ -119,6 +135,15 @@ const parseTokens = (tokens: Token[]): Node => {
 		if (t.k === 'id') {
 			if (peek().k === 'op' && peek().v === '(') {
 				const name = t.v.toLowerCase();
+				if (name in AGGREGATES) {
+					next();
+					const arg = next();
+					const hint = AGGREGATES[name as AggName].hint;
+					if (arg.k !== 'id') throw new ParseError(hint, arg.at);
+					const close = next();
+					if (close.k !== 'op' || close.v !== ')') throw new ParseError(`${name}() takes one field — ${hint}`, close.at);
+					return { t: 'agg', name: name as AggName, key: arg.v, at: arg.at };
+				}
 				if (!(name in FUNCTIONS)) throw new ParseError(`There's no function “${t.v}”`, t.at);
 				next();
 				const args: Node[] = [];
@@ -190,6 +215,7 @@ export const refsOf = (n: Node, out = new Set<string>()): Set<string> => {
 	else if (n.t === 'neg') refsOf(n.a, out);
 	else if (n.t === 'bin') (refsOf(n.a, out), refsOf(n.b, out));
 	else if (n.t === 'fn') n.args.forEach(a => refsOf(a, out));
+	else if (n.t === 'agg') out.add(n.key);
 	return out;
 };
 
@@ -206,6 +232,8 @@ export const format = (n: Node, parent = 0, right = false): string => {
 			return `-${format(n.a, 3)}`;
 		case 'fn':
 			return `${n.name}(${n.args.map(a => format(a)).join(', ')})`;
+		case 'agg':
+			return `${n.name}(${n.key})`;
 		case 'bin': {
 			const p = PREC[n.op];
 			const s = `${format(n.a, p)} ${n.op} ${format(n.b, p, true)}`;
@@ -214,7 +242,16 @@ export const format = (n: Node, parent = 0, right = false): string => {
 	}
 };
 
-export type FieldInfo = { key: string; label?: string; numeric: boolean; formula?: string };
+export type FieldInfo = {
+	key: string;
+	label?: string;
+	numeric: boolean;
+	formula?: string;
+	/** A list of rows (custom section list): only count() takes it. */
+	list?: boolean;
+	/** A value in each row of this list (`items.total` → 'items'): only sum() and avg() take it. */
+	inList?: string;
+};
 
 export type Checked = {
 	ok: boolean;
@@ -245,6 +282,16 @@ export const checkFormula = (src: string, fields: FieldInfo[], self?: string): C
 			const f = byKey.get(n.key);
 			if (n.key === self) errors.push({ message: `“${n.key}” is this field — a formula can't use itself`, at: n.at });
 			else if (!f) errors.push({ message: `There's no field “${n.key}”`, at: n.at });
+			else if (f.list) errors.push({ message: `“${n.key}” is a list — count(${n.key}) counts its rows`, at: n.at });
+			else if (f.inList)
+				errors.push({ message: `“${n.key}” is in every row of ${f.inList} — use sum(${n.key}) or avg(${n.key})`, at: n.at });
+			else if (!f.numeric) errors.push({ message: `“${n.key}” isn't a number field`, at: n.at });
+		} else if (n.t === 'agg') {
+			const f = byKey.get(n.key);
+			if (n.name === 'count') {
+				if (!f?.list) errors.push({ message: `count() takes a list — “${n.key}” isn't one`, at: n.at });
+			} else if (!f) errors.push({ message: `There's no field “${n.key}”`, at: n.at });
+			else if (!f.inList) errors.push({ message: `${n.name}() takes a value in a list's rows, like items.total — “${n.key}” isn't one`, at: n.at });
 			else if (!f.numeric) errors.push({ message: `“${n.key}” isn't a number field`, at: n.at });
 		} else if (n.t === 'neg') walk(n.a);
 		else if (n.t === 'bin') (walk(n.a), walk(n.b));
@@ -312,6 +359,38 @@ const valueAt = (doc: any, key: string) => {
 	return key.split('.').reduce((o, k) => (o == null ? undefined : o[k]), doc);
 };
 
+/** Every value at `segs` under `v`, through any lists on the way; a row without the value adds nothing. */
+const collect = (v: any, segs: string[]): any[] => {
+	if (v === undefined || v === null) return segs.length ? [] : v === null ? [null] : [];
+	if (!segs.length) return [v];
+	if (Array.isArray(v)) return v.flatMap(x => collect(x, segs));
+	if (typeof v !== 'object') return [];
+	const [head, ...rest] = segs;
+	return collect(typeof v.get === 'function' ? v.get(head) : v[head], rest);
+};
+
+const isPlain = (doc: any) => doc && typeof doc === 'object' && typeof doc.get !== 'function';
+
+/**
+ * The numbers `sum(key)` / `avg(key)` run over. A plain object may carry the
+ * key as is — the builder's "Try it" does, with the rows' values typed as
+ * `5, 3, 2`.
+ */
+const listNumbers = (doc: any, key: string): number[] => {
+	if (isPlain(doc) && Object.prototype.hasOwnProperty.call(doc, key)) {
+		const v = doc[key];
+		return (typeof v === 'string' ? v.split(',') : Array.isArray(v) ? v : [v])
+			.filter((x: any) => String(x ?? '').trim() !== '')
+			.map(numberOf);
+	}
+	return collect(doc, key.split('.')).map(numberOf);
+};
+
+const rowCount = (doc: any, key: string): number => {
+	if (isPlain(doc) && Object.prototype.hasOwnProperty.call(doc, key) && !Array.isArray(doc[key])) return numberOf(doc[key]);
+	return collect(doc, key.split('.')).reduce((n, v) => n + (Array.isArray(v) ? v.length : 0), 0);
+};
+
 const ev = (n: Node, doc: any): number | null => {
 	switch (n.t) {
 		case 'num':
@@ -344,6 +423,12 @@ const ev = (n: Node, doc: any): number | null => {
 			if (x === null) return null;
 			if (n.name === 'round') return roundTo(x, (n.args[1] as any)?.v ?? 0);
 			return Math[n.name](x);
+		}
+		case 'agg': {
+			if (n.name === 'count') return rowCount(doc, n.key);
+			const xs = listNumbers(doc, n.key);
+			if (n.name === 'sum') return xs.reduce((a, b) => a + b, 0);
+			return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null;
 		}
 	}
 };

@@ -15,6 +15,25 @@ import {
 	InsertModalHeader,
 	InsertModalOverlay,
 } from '../../..';
+import { evaluate, parse } from '../../../functions/formula';
+
+/**
+ * A row with its formula fields calculated from the row's other values
+ * (`total = quantity * rate`) — so the list, and a record formula over it
+ * like sum(items.total), read right before the server recalculates on save.
+ */
+export const withRowFormulas = (row: any, dataModel: any[] = []) => {
+	const out = { ...row };
+	for (const f of dataModel || []) {
+		if (f?.type !== 'formula' || !f.formula) continue;
+		try {
+			out[f.name] = evaluate(parse(f.formula), out);
+		} catch {
+			/* left as is; the server refuses a broken formula anyway */
+		}
+	}
+	return out;
+};
 
 type UploadModalProps = {
 	trigger?: ReactNode;
@@ -62,7 +81,7 @@ const AddSectionDataModal: FC<UploadModalProps> = ({
 	const handleAddSection = (e: any) => {
 		e.preventDefault();
 		e.stopPropagation();
-		const newArr = [...(Array.isArray(value) ? value : []), formData];
+		const newArr = [...(Array.isArray(value) ? value : []), withRowFormulas(formData, section?.dataModel)];
 		if (handleDataChange) {
 			const event = {
 				target: {
@@ -84,7 +103,7 @@ const AddSectionDataModal: FC<UploadModalProps> = ({
 
 		const newArr = Array.isArray(value) ? [...value] : [];
 		if (index >= 0 && index < newArr.length) {
-			newArr[index] = formData;
+			newArr[index] = withRowFormulas(formData, section?.dataModel);
 		}
 
 		if (handleDataChange) {
@@ -155,7 +174,9 @@ const AddSectionDataModal: FC<UploadModalProps> = ({
 							as='form'
 							onSubmit={handleSubmit}>
 							<FormMain
-								fields={section?.dataModel}
+								fields={(section?.dataModel || []).map((f: any, i: number) =>
+									i === 0 && !f.sectionTitle ? { ...f, sectionTitle: section?.title || 'Details' } : f
+								)}
 								formData={formData}
 								setFormData={setFormData}
 								setChangedData={setChangedData}

@@ -8,6 +8,7 @@ import moment from 'moment';
 import Price from '../../../../utils/texts/Price';
 import RecordLink from '../record-link/RecordLink';
 import { labelOf } from '../record-link/linked';
+import { SectionObject, SectionRows } from './SectionValues';
 
 const textCss: TextProps & LinkProps = {
 	fontSize: '.95rem',
@@ -54,7 +55,7 @@ const LINKABLE = ['string', 'text', 'read-only', 'data-menu', undefined];
  * `link` — the record this value is part of ({route, record}, from
  * `linkOf`): the value then renders as a RecordLink chip naming it.
  */
-const renderContent = ({ type, children, colorPalette, path, originalType, id, link }: any) => {
+const renderContent = ({ type, children, colorPalette, path, originalType, id, link, dataModel }: any) => {
 	if (link?.route && link?.record && LINKABLE.includes(type))
 		return (
 			<RecordLink
@@ -66,6 +67,14 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id, l
 
 	switch (type) {
 		case 'section-data-array':
+			// With its row fields known: a table, with the number columns added up.
+			if (Array.isArray(dataModel) && dataModel.length)
+				return (
+					<SectionRows
+						rows={children}
+						dataModel={dataModel}
+					/>
+				);
 			return (
 				<Flex
 					flexWrap='wrap'
@@ -83,6 +92,13 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id, l
 						</Flex>
 					))}
 				</Flex>
+			);
+		case 'section-object':
+			return (
+				<SectionObject
+					value={children}
+					dataModel={Array.isArray(dataModel) ? dataModel : []}
+				/>
 			);
 		case 'custom-section-array':
 			return (

@@ -2,7 +2,7 @@
 
 import { DragEvent, FC, ReactNode, useState } from 'react';
 import { Badge, Box, Button, Flex, Grid, IconButton, Input, Switch, Text } from '@chakra-ui/react';
-import { AlertTriangle, Calculator, ChevronDown, ChevronRight, GripVertical, Plus, Trash2, X } from 'lucide-react';
+import { AlertTriangle, Calculator, ChevronDown, ListTree, ChevronRight, GripVertical, Plus, Trash2, X } from 'lucide-react';
 import { radius } from '@/components/library';
 import { Dropdown } from '@/components/library/cl';
 import {
@@ -16,14 +16,17 @@ import {
 	NEEDS_OPTIONS,
 	NO_DEFAULT_KINDS,
 	REFERENCE_KINDS,
+	SECTION_KINDS,
 	SELF,
 	canBeUnique,
 	formulaFieldsOf,
 	hasLength,
 	hasOptions,
 	newUid,
+	sectionPreset,
 	toKey,
 } from './modelKinds';
+import SectionFieldsModal from './SectionFieldsModal';
 import FormulaModal from '@/app/builder/_components/FormulaModal';
 import { checkFormula } from '@/components/library/functions/formula';
 
@@ -49,6 +52,10 @@ type Props = {
 	/** Kinds as saved, by key — to flag a kind change on a model with records. */
 	savedKinds?: Record<string, FieldKind>;
 	hasRecords?: boolean;
+	/** The kinds offered — all by default; a section's own fields get SUB_KINDS. */
+	kinds?: FieldKind[];
+	/** A section's own fields: no table, index or search options. */
+	sub?: boolean;
 };
 
 const ICON = { size: 14, strokeWidth: 1.75 };
@@ -351,7 +358,10 @@ const OptionsInput: FC<{
 	);
 };
 
-const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, savedKinds = {}, hasRecords }) => {
+const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, savedKinds = {}, hasRecords, kinds, sub }) => {
+	// The section whose fields are being edited.
+	const [sectionFor, setSectionFor] = useState<string | null>(null);
+	const sectionField = sectionFor ? fields.find(f => f.uid === sectionFor) : undefined;
 	const [open, setOpen] = useState<string | null>(null);
 	// The formula field whose formula is being written.
 	const [formulaFor, setFormulaFor] = useState<string | null>(null);
@@ -395,8 +405,19 @@ const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, 
 			...(!canBeUnique(kind) && { unique: false }),
 			// A formula is calculated: never required, no default.
 			...(kind === 'formula' && { required: false }),
-			default: kind === 'formula' ? undefined : nextDefault,
+			default: kind === 'formula' || SECTION_KINDS.includes(kind) ? undefined : nextDefault,
+			// A section starts from a preset, changed in its field builder; between the two section kinds its fields stay.
+			...(SECTION_KINDS.includes(kind)
+				? {
+						fields: f.fields?.length ? f.fields : sectionPreset(kind),
+						required: false,
+						// A section's values don't fit a table cell; a list shows its row count.
+						...(kind === 'section' && { showInTable: false }),
+				  }
+				: { fields: undefined, addLabel: undefined }),
 		});
+		// Choosing a section opens its field builder.
+		if (SECTION_KINDS.includes(kind)) setSectionFor(f.uid);
 		// Choosing Formula opens the formula window.
 		if (kind === 'formula') setFormulaFor(f.uid);
 		// Choosing Options opens the input to type them in.
@@ -505,11 +526,11 @@ const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, 
 								// Options for one and for several are one entry; the switch beside it picks.
 								value={f.kind === 'multiselect' ? 'select' : f.kind}
 								onChange={v => changeKind(f, v as FieldKind)}>
-								{KIND_GROUPS.map(g => (
+								{KIND_GROUPS.filter(g => KINDS.some(k => k.group === g && (!kinds || kinds.includes(k.value)))).map(g => (
 									<optgroup
 										key={g}
 										label={g}>
-										{KINDS.filter(k => k.group === g && !k.hidden).map(k => (
+										{KINDS.filter(k => k.group === g && !k.hidden && (!kinds || kinds.includes(k.value))).map(k => (
 											<option
 												key={k.value}
 												value={k.value}>
@@ -538,7 +559,29 @@ const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, 
 									{error?.on === 'ref' && <FieldMessage>{error.message}</FieldMessage>}
 								</Box>
 							)}
-							{f.kind === 'formula' ? (
+							{SECTION_KINDS.includes(f.kind) ? (
+								<Box maxW='280px'>
+									<Button
+										size='xs'
+										variant='outline'
+										borderColor={error?.on === 'fields' ? 'red.solid' : undefined}
+										color={error?.on === 'fields' ? 'red.fg' : undefined}
+										title='Choose the section’s fields'
+										onClick={() => setSectionFor(f.uid)}>
+										<ListTree size={12} />
+										<Text
+											as='span'
+											truncate>
+											{f.fields?.length
+												? `${f.fields.length} field${f.fields.length === 1 ? '' : 's'}: ${f.fields
+														.map(x => x.label || x.key)
+														.join(', ')}`
+												: 'Choose fields'}
+										</Text>
+									</Button>
+									{error?.on === 'fields' && <FieldMessage>{error.message}</FieldMessage>}
+								</Box>
+							) : f.kind === 'formula' ? (
 								<Box maxW='280px'>
 									{(() => {
 										const c = f.formula?.trim() ? checkFormula(f.formula, formulaFieldsOf(fields), f.key) : null;
@@ -676,6 +719,7 @@ const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, 
 									mb={3}>
 									{KINDS.find(k => k.value === f.kind)?.hint}
 								</Text>
+								{!sub && (
 								<Flex
 									gap={5}
 									flexWrap='wrap'
@@ -710,6 +754,7 @@ const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, 
 										/>
 									)}
 								</Flex>
+								)}
 
 								<Grid
 									templateColumns={{ base: '1fr', md: 'repeat(3, minmax(0, 1fr))' }}
@@ -844,6 +889,16 @@ const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, 
 					Add field
 				</Button>
 			</Box>
+
+			<SectionFieldsModal
+				isOpen={!!sectionField}
+				onClose={() => setSectionFor(null)}
+				field={sectionField}
+				onSave={patch => {
+					if (sectionField) set(sectionField.uid, patch);
+					setSectionFor(null);
+				}}
+			/>
 
 			<FormulaModal
 				isOpen={!!formulaField}

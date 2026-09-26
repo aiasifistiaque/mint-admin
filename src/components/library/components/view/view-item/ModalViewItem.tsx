@@ -51,7 +51,7 @@ const ViewItem: FC<ViewItemProps> = ({
 					align='center'>
 					{!isLoading &&
 						children &&
-						renderContent({ type, children, colorPalette, path, isLoading, link })}
+						renderContent({ type, children, colorPalette, path, isLoading, link, dataModel: field?.dataModel })}
 					{copy && children && children != 'n/a' && (
 						<Tooltip.Root
 							lazyMount

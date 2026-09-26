@@ -23,6 +23,8 @@ export type ViewDataType =
 	| 'editor'
 	| 'basic-editor'
 	| 'section-data-array'
+	// A model builder Section: one object of its own fields.
+	| 'section-object'
 	// WO-15: renderViewItem.tsx already had working cases for these, just never
 	// declared in the union
 	| 'array-tag'
