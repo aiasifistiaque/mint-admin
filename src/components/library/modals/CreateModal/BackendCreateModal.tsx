@@ -130,8 +130,11 @@ const CreateModal = (props: CreateModalProps) => {
 				{...(isMobile && { w: 'full' })}
 				type='submit'
 				px={2}
-				size={{ base: 'md', md: 'sm' }}>
-				{isLoading ? 'Processing...' : prompt?.btnText || 'Confirm'}
+				size={{ base: 'md', md: 'sm' }}
+				loading={isLoading}
+				loadingText='Processing'
+				spinnerPlacement='start'>
+				{prompt?.btnText || 'Confirm'}
 			</Button>
 		</>
 	);

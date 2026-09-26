@@ -151,6 +151,14 @@ export const system = createSystem(defaultConfig, {
 			color: 'fg',
 			fontSize: '15px',
 		},
+		// …except inside a button, where text takes the button's own colour and
+		// size. The rule above painted a loading button's spinner and "Saving…"
+		// (Chakra wraps both in spans) the page's text colour — dark on a dark
+		// button, invisible — and at 15px in a 13px button.
+		'button span': {
+			color: 'inherit',
+			fontSize: 'inherit',
+		},
 		'h1, h2, h3, h4, h5, h6': {
 			color: '{colors.text.light}',
 			_dark: {

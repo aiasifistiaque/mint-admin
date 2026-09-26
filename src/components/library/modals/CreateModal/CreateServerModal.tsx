@@ -162,8 +162,11 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 				{...(isMobile && { w: 'full' })}
 				px={2}
 				type='submit'
-				size={{ base: 'md', md: 'sm' }}>
-				{isLoading ? 'Processing...' : prompt?.btnText || 'Confirm'}
+				size={{ base: 'md', md: 'sm' }}
+				loading={isLoading}
+				loadingText='Processing'
+				spinnerPlacement='start'>
+				{prompt?.btnText || 'Confirm'}
 			</Button>
 		</>
 	);

@@ -41,7 +41,10 @@ export const buttonRecipe = defineRecipe({
 		// 0.45-opacity fade as a truly disabled one — washing the spinner and
 		// "Uploading…" text out against the page instead of the button's own
 		// background. Loading should read as busy, not as unavailable.
-		'&[data-loading=true]': {
+		// Chakra marks it `data-loading=""` (present, empty), so the selector
+		// matches on presence; repeating it with :disabled out-ranks the
+		// `_disabled` rule above, which has the same specificity otherwise.
+		'&[data-loading], &[data-loading]:disabled': {
 			opacity: 1,
 			cursor: 'progress',
 		},

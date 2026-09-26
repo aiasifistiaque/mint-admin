@@ -8,9 +8,11 @@ type ModalSubmitButtonProps = ButtonProps & {
 };
 
 /** The drawer's one primary action. Matches DiscardButton's metrics exactly. */
-const ModalSubmitButton: FC<ModalSubmitButtonProps> = ({ children, ...props }) => {
+const ModalSubmitButton: FC<ModalSubmitButtonProps> = ({ children, isLoading, loading, ...props }) => {
 	return (
 		<Button
+			// `isLoading` is the v2 name callers still pass; Chakra v3 only knows `loading`.
+			loading={isLoading || loading}
 			loadingText='Processing'
 			spinnerPlacement='start'
 			size='sm'
