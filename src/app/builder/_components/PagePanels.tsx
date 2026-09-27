@@ -5,6 +5,8 @@ import { Box, Button, Flex, Grid, Input, Text } from '@chakra-ui/react';
 import { RotateCcw } from 'lucide-react';
 import { Dropdown, Panel } from '@/components/library/cl';
 import MenuItemsEditor from './MenuItemsEditor';
+import TotalsEditor from './TotalsEditor';
+import StatusEditor from './StatusEditor';
 import { TableField } from './TableColumnsEditor';
 import { BULK_MENU_TYPES, ROW_MENU_TYPES } from './menuTypes';
 import { FieldLabel, Toggle } from './ui';
@@ -225,6 +227,38 @@ export const BulkActionsPanel: FC<Props & { fields: TableField[] }> = ({ value: 
 					fields={fields}
 					addLabel='Add action'
 					onChange={menu => onChange({ ...page, select: { ...page.select, menu } })}
+				/>
+			)}
+			{page.select?.show && (
+				<Toggle
+					label='Archive rows'
+					hint='An “Archive” action hides rows from the list without deleting them; an “Archived” switch above the table shows them, to restore.'
+					code={code ? !!code.archive : undefined}
+					checked={!!page.archive}
+					onChange={v => {
+						const { archive: _a, ...rest } = page;
+						onChange(v ? { ...rest, archive: true } : rest);
+					}}
+				/>
+			)}
+			{page.select?.show && (
+				<StatusEditor
+					value={page.status}
+					fields={fields}
+					onChange={status => {
+						const { status: _s, ...rest } = page;
+						onChange(status ? { ...rest, status } : rest);
+					}}
+				/>
+			)}
+			{page.select?.show && (
+				<TotalsEditor
+					value={page.totals}
+					fields={fields}
+					onChange={totals => {
+						const { totals: _old, ...rest } = page;
+						onChange(totals ? { ...rest, totals } : rest);
+					}}
 				/>
 			)}
 		</Flex>

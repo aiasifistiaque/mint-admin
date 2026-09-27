@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 // import { BackendCreateModal, Icon } from '../..';
 
-import ExportModal from '../modals/export/ExportModal';
+import { ExportButton } from './table-components/bulk/ExportRows';
 import { buttonGroupCss, containerCss, headingCss, subHeadingCss, wrapperCss } from './style';
 import { BackendCreateModal } from '../../modals';
 import { Icon } from '../../icon';
@@ -45,7 +45,7 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 		</Button>
 	);
 
-	const exportButton = <ExportModal path={path} />;
+	const exportButton = <ExportButton path={path} />;
 	const renderButton = () => {
 		if (isModal)
 			return (

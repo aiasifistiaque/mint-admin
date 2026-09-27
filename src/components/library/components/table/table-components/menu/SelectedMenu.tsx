@@ -3,7 +3,6 @@ import { Menu, Button, Portal } from '@chakra-ui/react';
 
 import {
 	EditManyModal,
-	ExportManyModal,
 	SendBulkSmsModal,
 	CalculateModal,
 	EditManySelectModal,
@@ -11,6 +10,10 @@ import {
 } from '../../table-components/modals';
 
 import { Icon } from '../../../../icon';
+import { ArchiveRows, DeleteRows, DuplicateRows, StatusRows } from '../bulk/RowActions';
+import CompareRows from '../bulk/CompareRows';
+import MergeRows from '../bulk/MergeRows';
+import { ExportRows, PrintRows } from '../bulk/ExportRows';
 import { MenuContainer } from '../../../../menu';
 
 type TableMenuProps = {
@@ -18,9 +21,11 @@ type TableMenuProps = {
 	data: any;
 	hide: boolean;
 	items: any[];
+	/** The route's config: status and archive settings for those actions. */
+	route?: any;
 };
 
-const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
+const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items, route }) => {
 	if (hide) return null;
 
 	return (
@@ -38,6 +43,7 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 			<Portal>
 				<MenuContainer>
 					{data?.map((item: any, i: number) => {
+						const bulkProps = { path, items, title: item?.title, route };
 						// `key` goes on each element directly: React warns when it's spread in.
 						const commonProps = {
 							path,
@@ -95,12 +101,61 @@ const SelectedMenu: FC<TableMenuProps> = ({ path, hide, data, items }) => {
 										options={item?.options}
 									/>
 								);
+							// Columns, format (Excel / CSV / PDF), ticked rows or every matching row.
 							case 'export':
 								return (
-									<ExportManyModal
+									<ExportRows
 										key={i}
-										ids={items}
-										path={path}
+										{...bulkProps}
+									/>
+								);
+							case 'delete-many':
+								return (
+									<DeleteRows
+										key={i}
+										{...bulkProps}
+									/>
+								);
+							case 'duplicate-many':
+								return (
+									<DuplicateRows
+										key={i}
+										{...bulkProps}
+									/>
+								);
+							case 'archive':
+								return route?.archive ? (
+									<ArchiveRows
+										key={i}
+										{...bulkProps}
+									/>
+								) : null;
+							case 'change-status':
+								return (
+									<StatusRows
+										key={i}
+										{...bulkProps}
+									/>
+								);
+							case 'compare':
+								return (
+									<CompareRows
+										key={i}
+										{...bulkProps}
+									/>
+								);
+							case 'merge':
+								return (
+									<MergeRows
+										key={i}
+										{...bulkProps}
+									/>
+								);
+							case 'print':
+								return (
+									<PrintRows
+										key={i}
+										{...bulkProps}
 									/>
 								);
 							case 'marketing-sms':

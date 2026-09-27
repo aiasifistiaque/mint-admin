@@ -261,6 +261,10 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 	const tableFields: TableField[] = settingsFields.map((f: any) => ({
 		key: f.key,
 		label: f.schema?.label || f.title || f.key,
+		// The stored data type — 'number' fields are the ones a total can add up.
+		type: f.type,
+		input: f.schema?.type,
+		options: f.schema?.options || f.options,
 		default: !!f.schema?.default,
 	}));
 	const modelFields: ModelField[] = data?.fields || [];

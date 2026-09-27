@@ -22,6 +22,8 @@ export * from './services/vercelApi';
 export * from './services/repoApi';
 export * from './services/builderApi';
 export * from './services/dashboardApi';
+export * from './services/totalsApi';
+export * from './services/bulkApi';
 export * from './services/notificationsApi';
 
 export * from './store';

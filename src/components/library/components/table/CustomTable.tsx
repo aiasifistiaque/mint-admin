@@ -1,5 +1,6 @@
-import { Table, Flex, Text, CloseButton } from '@chakra-ui/react';
-import { FC, useEffect } from 'react';
+import { Table, Flex, Text, CloseButton, Button } from '@chakra-ui/react';
+import { FC, useEffect, useState } from 'react';
+import { Archive, Sigma } from 'lucide-react';
 
 // Direct imports instead of barrel export
 import { useAppDispatch } from '../../hooks/useReduxHooks';
@@ -18,10 +19,12 @@ import TableErrorMessage from './table-components/error/TableErrorMessage';
 import DynamicFilters from '../../dynamic-filters/DynamicFilters';
 import { CustomTableProps } from '../../types/components.types';
 import SelectedMenu from './table-components/menu/SelectedMenu';
-import { selectAll } from '../../store/slices/tableSlice';
+import { applyFilters, selectAll } from '../../store/slices/tableSlice';
+import { useAppSelector } from '../../hooks/useReduxHooks';
 import TableResultContainer from './table-components/pagination/TableResultContainer';
 import TableSort from './MobileSort';
 import { setCurrentPath } from '../../store/slices/tableSlice';
+import TotalsDialog, { TotalsConfig } from './table-components/totals/TotalsDialog';
 
 const CustomTable: FC<CustomTableProps> = ({
 	headers,
@@ -61,6 +64,18 @@ const CustomTable: FC<CustomTableProps> = ({
 	const isCardGrid = isCardView && !isMobile;
 	const onUnselect = () => dispatch(selectAll({ ids: [], isSelected: false }));
 
+	// "View total" / "Calculate" for the ticked rows — presets from the route's
+	// `totals` (route builder → Table → Bulk actions), and any number field.
+	const totals: TotalsConfig | undefined = table?.totals;
+	const [totalsOpen, setTotalsOpen] = useState(false);
+	const totalsLabel = totals?.title || (totals?.items?.length ? 'View total' : 'Calculate');
+	const showTotals = !!path && (!!totals?.items?.length || totals?.calculate !== false);
+
+	// Archived rows (route.archive on) live behind this toggle: the list hides
+	// them, and with it on it shows only them — where they can be restored.
+	const viewingArchived = useAppSelector((s: any) => s.table?.filters?.archived === 'only');
+	const toggleArchived = () => dispatch(applyFilters({ key: 'archived', value: viewingArchived ? '' : 'only' }));
+
 	useEffect(() => {
 		dispatch(setCurrentPath(path));
 	}, [path]);
@@ -92,12 +107,31 @@ const CustomTable: FC<CustomTableProps> = ({
 						</Text>
 					</Flex>
 
-					<SelectedMenu
-						items={selectedItems}
-						hide={!select || !select?.show}
-						path={path}
-						data={select?.menu}
-					/>
+					<Flex
+						align='center'
+						gap={2}>
+						{showTotals && (
+							<Button
+								size='xs'
+								h='32px'
+								px={3}
+								// A light button on the bar's inverted surface.
+								bg='bg.panel'
+								color='fg'
+								_hover={{ bg: 'bg.muted' }}
+								onClick={() => setTotalsOpen(true)}>
+								<Sigma size={14} />
+								{totalsLabel}
+							</Button>
+						)}
+						<SelectedMenu
+							items={selectedItems}
+							hide={!select || !select?.show}
+							path={path}
+							data={select?.menu}
+							route={table}
+						/>
+					</Flex>
 				</SelectedItemsContainer>
 			) : (
 				<TableSettingsMenuContainer>
@@ -108,6 +142,19 @@ const CustomTable: FC<CustomTableProps> = ({
 					)}
 
 					<TableSearchContainer>
+						{table?.archive && (
+							<Button
+								size='sm'
+								h='32px'
+								px={3}
+								variant={viewingArchived ? 'solid' : 'outline'}
+								aria-pressed={viewingArchived}
+								title={viewingArchived ? 'Back to the list' : 'Show archived rows'}
+								onClick={toggleArchived}>
+								<Archive size={14} />
+								{viewingArchived ? 'Archived' : 'Archive'}
+							</Button>
+						)}
 						{!hidePreferences && (
 							<Preferences
 								path={path}
@@ -161,6 +208,16 @@ const CustomTable: FC<CustomTableProps> = ({
 			</TableContainer>
 
 			{pagination && <ResultContainer data={data} />}
+
+			{showTotals && (
+				<TotalsDialog
+					open={totalsOpen}
+					onClose={() => setTotalsOpen(false)}
+					path={path}
+					ids={selectedItems || []}
+					config={totals}
+				/>
+			)}
 		</>
 	);
 };

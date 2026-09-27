@@ -621,14 +621,61 @@ const BuilderDocs = () => {
 						<Terms
 							head={['Action', 'What it does']}
 							rows={[
-								['Export', 'Downloads the selected rows.'],
+								['Export', 'Excel, CSV or PDF: pick the columns and their order, and export the ticked rows or every row matching the table’s filters and search (up to 20,000) — not just the page. Linked records read as names, dates as dates. The page header’s Export button opens the same dialog.'],
+								['Delete', 'Deletes the ticked rows after a confirmation. The message that follows has Undo for 10 seconds, which puts them back exactly (same ids). The server keeps a copy for 30 days.'],
+								['Duplicate', 'A copy of each ticked row. Codes are numbered anew; anything that must be unique gets “-copy”. Optionally set fields on every copy (a status back to Draft, a new date).'],
+								['Archive', 'Hides the ticked rows from the list, its counts, dashboards and exports without deleting them. Needs “Archive rows” on. The “Archive” switch above the table lists archived rows, where the same action restores them.'],
+								['Change status', 'Moves the ticked rows to another status, following the allowed moves; rows that can’t move are skipped and listed. Needs the status set up (below).'],
+								['Compare', '2–4 ticked records side by side, rendered like the view page; fields that differ are marked, and “Differences only” hides the rest.'],
+								['Merge duplicates', 'Keep one of the ticked records (the oldest by default), pick which record’s value wins for each differing field, and everything linking to the others — invoices of a duplicate client, say — moves to the one kept. The others are removed; the server keeps a copy for 30 days.'],
+								['Print / PDF', 'The ticked records one per page: a print view laid out like the view page (“Save as PDF” in the print dialog makes the file), or a plainer PDF file straight from the server.'],
 								['Set a field', 'Sets one field on every selected row to a fixed value.'],
 								['Set a field from a list', 'Sets one field to an option picked from a list you define.'],
 								['Set a field from another route', 'Sets a reference field to a record picked from another route.'],
-								['Sum a field', 'Totals a numeric field across the selection.'],
+								['Sum fields', 'Opens the same calculator as View total below.'],
 								['Send SMS', 'Sends a bulk SMS to the selected customers.'],
 							]}
 						/>
+						<P>
+							Each action needs the matching permission on the route — delete for Delete and Merge, create for
+							Duplicate, edit for Archive and Change status, view for the rest — and only touches rows the admin
+							could see in the list. On routes with per-record access, deleting and merging are the owner’s alone.
+							Every change is written to the records’ History.
+						</P>
+						<H3>Status: which moves Change status allows</H3>
+						<Box
+							id='table-status'
+							scrollMarginTop='24px'
+						/>
+						<P>
+							Under Bulk actions, <strong>Status</strong> picks the route’s status field (any select field). Every move
+							is allowed until you switch a chip off — e.g. from <em>Paid</em>, switch off every other status so a paid
+							invoice can’t go back. <strong>Ask for a reason</strong> makes each move need one; it’s saved in the
+							records’ history. Saved as <C>route.status</C>: <C>{'{ field, transitions, requireReason }'}</C>.
+						</P>
+						<H3>Totals: “View total” for the selected rows</H3>
+						<Box
+							id='table-totals'
+							scrollMarginTop='24px'
+						/>
+						<P>
+							With rows selectable, the selection bar has a button — <strong>View total</strong>, or the title you
+							give it — that shows calculations across the ticked rows, e.g. <em>Total amount</em> and{' '}
+							<em>Average amount</em> of the selected invoices. They&apos;re worked out on the server across every
+							ticked row, on any page, and only rows the admin could see in the list are counted.
+						</P>
+						<Terms
+							head={['Setting', 'What it does']}
+							rows={[
+								['Button title', 'The button’s label. Empty: “View total” with presets, “Calculate” without.'],
+								['Preset calculations', 'Each is a number field and Total, Average, Lowest, Highest or Count (Count with no field counts the rows). Give it a label, or leave it empty for one like “Total amount”. Format: Money adds the currency; Auto uses Money for price fields.'],
+								['Let admins calculate other fields', 'On by default: a Calculate list in the same dialog where the admin picks any number field and a calculation. Their picks are remembered per route in their browser.'],
+							]}
+						/>
+						<P>
+							Only number fields the route lets you filter or sort by can be totalled, so excluded and secret-looking
+							fields never are. Totals are saved as <C>route.totals</C> in the route&apos;s config.
+						</P>
 					</Section>
 
 					<Section

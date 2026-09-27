@@ -77,7 +77,30 @@ export const ROW_MENU_TYPES: MenuType[] = [
 ];
 
 export const BULK_MENU_TYPES: MenuType[] = [
-	{ value: 'export', label: 'Export', hint: 'Downloads the selected rows' },
+	{
+		value: 'export',
+		label: 'Export',
+		hint: 'Excel, CSV or PDF — the columns you pick, of the ticked rows or every row matching the filters',
+	},
+	{ value: 'delete-many', label: 'Delete', hint: 'Deletes the ticked rows, with Undo for a few seconds after' },
+	{ value: 'duplicate-many', label: 'Duplicate', hint: 'A copy of each ticked row; fields can be changed on the copies' },
+	{
+		value: 'archive',
+		label: 'Archive',
+		hint: 'Hides the ticked rows from the list (restorable under “Archived”). Needs “Archive rows” on, below',
+	},
+	{
+		value: 'change-status',
+		label: 'Change status',
+		hint: 'Moves the ticked rows to another status, where allowed. Needs the status set up, below',
+	},
+	{ value: 'compare', label: 'Compare', hint: '2–4 ticked records side by side, differences highlighted' },
+	{
+		value: 'merge',
+		label: 'Merge duplicates',
+		hint: 'Keeps one of the ticked records; everything linking to the others moves to it',
+	},
+	{ value: 'print', label: 'Print / PDF', hint: 'The ticked records one per page — print view, or a PDF file' },
 	{
 		value: 'edit-select',
 		label: 'Set a field from a list',

@@ -5,7 +5,16 @@ import { Flex, Text } from '@chakra-ui/react';
 import { EyeOff, GripVertical, Plus, X } from 'lucide-react';
 import { radius } from '@/components/library';
 
-export type TableField = { key: string; label: string; type?: string; default?: boolean };
+export type TableField = {
+	key: string;
+	label: string;
+	/** Stored data type ('number', 'string'…). */
+	type?: string;
+	/** Form input ('select', 'date'…) and its options, from the field's schema. */
+	input?: string;
+	options?: any[];
+	default?: boolean;
+};
 
 type Props = {
 	columns: string[];
