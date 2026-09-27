@@ -255,7 +255,7 @@ const MediaDocs = () => {
 								<>
 									<strong>New → New folder</strong> makes a folder in the one you’re looking at.
 								</>,
-								<>Double-click a folder to open it (tap on a phone). The path at the top shows where you are; click any part of it to go back up.</>,
+								<>Click a folder to open it. The path at the top shows where you are; click any part of it to go back up.</>,
 								<>
 									Two folders side by side can’t share a name. If you pick one that’s taken, the new folder is called
 									“Name (2)” and a message says so. The same name in <em>different</em> folders is fine.
@@ -302,10 +302,11 @@ const MediaDocs = () => {
 						<Terms
 							head={['How', 'What it does']}
 							rows={[
-								['Click', 'Selects that item (and only that one).'],
-								['⌘ / Ctrl + click', 'Adds or removes an item from the selection.'],
+								['Click', 'Opens it: a folder shows what’s inside, a file opens its preview. While items are selected, a click adds or removes one instead.'],
+								['⌘ / Ctrl + click', 'Selects an item without opening it, or removes it from the selection.'],
 								['Shift + click', 'Selects everything between the last item you clicked and this one.'],
 								['The checkbox', 'Appears on hover (always, on a phone). Ticks an item without un-ticking the others.'],
+								['Drag on an empty spot', 'Draws a box; everything it touches is selected. Hold ⌘ / Ctrl or Shift to add to what’s already selected. Dragging near the top or bottom of the window scrolls it.'],
 								['⌘ / Ctrl + A', 'Selects everything on screen.'],
 								['Esc, or click an empty spot', 'Clears the selection.'],
 							]}
@@ -372,12 +373,18 @@ const MediaDocs = () => {
 						id='preview'
 						title='Preview and links'>
 						<P>
-							Double-click a file (or right-click → Preview) to see it full screen, with its details beside it: type,
+							Click a file (or right-click → Preview) to see it full screen, with its details beside it: type,
 							size, dimensions, the folder it’s in, when it was uploaded, and its link. Use the arrows or the ← → keys
-							to step through the files in the current view. Videos play; other files can be downloaded.
+							to step through the files in the current view. Videos play; other files can be downloaded. In the grid,
+							videos show their first frame with a play badge, and documents show an icon for their kind (PDF, Word,
+							spreadsheet, slides, archive, audio, code) over their extension.
 						</P>
 						<List
 							items={[
+								<>
+									<strong>Open in new tab</strong> (right-click or ⋮) opens a file on its own in a new browser tab, or a
+									folder’s page.
+								</>,
 								<>
 									<strong>Copy link</strong> puts the file’s public address on your clipboard — for pasting into an email,
 									a page, or anywhere outside the admin.

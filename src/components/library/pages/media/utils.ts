@@ -57,6 +57,43 @@ export const typeLabel = (file: MediaFile) => {
 export const isImage = (file: MediaFile) => (file.fileType || '').startsWith('image') || (file.type || '').startsWith('image/');
 export const isVideo = (file: MediaFile) => file.fileType === 'video' || (file.type || '').startsWith('video/');
 
+export type FileKind = 'image' | 'video' | 'pdf' | 'doc' | 'sheet' | 'slides' | 'archive' | 'audio' | 'code' | 'text' | 'file';
+
+const EXT_KIND: Record<string, FileKind> = {
+	pdf: 'pdf',
+	doc: 'doc', docx: 'doc', odt: 'doc', rtf: 'doc', pages: 'doc',
+	xls: 'sheet', xlsx: 'sheet', ods: 'sheet', csv: 'sheet', tsv: 'sheet', numbers: 'sheet',
+	ppt: 'slides', pptx: 'slides', odp: 'slides', key: 'slides',
+	zip: 'archive', rar: 'archive', '7z': 'archive', tar: 'archive', gz: 'archive', tgz: 'archive',
+	mp3: 'audio', wav: 'audio', ogg: 'audio', m4a: 'audio', aac: 'audio', flac: 'audio',
+	json: 'code', js: 'code', ts: 'code', html: 'code', css: 'code', xml: 'code', svg: 'code',
+	txt: 'text', md: 'text', log: 'text',
+};
+
+/** What a file is, for its icon: from its type, else its extension. */
+export const fileKind = (file: MediaFile): FileKind => {
+	if (isImage(file) && !/svg/.test(file.type || '')) return 'image';
+	if (isVideo(file)) return 'video';
+	const mime = file.type || '';
+	if (mime === 'application/pdf') return 'pdf';
+	if (mime.startsWith('audio/')) return 'audio';
+	if (/spreadsheet|excel|csv/.test(mime)) return 'sheet';
+	if (/presentation|powerpoint/.test(mime)) return 'slides';
+	if (/wordprocessing|msword|opendocument\.text/.test(mime)) return 'doc';
+	if (/zip|rar|7z|tar|gzip|compressed/.test(mime)) return 'archive';
+	const ext = splitExt(file.name || '')[1].slice(1).toLowerCase();
+	if (EXT_KIND[ext]) return EXT_KIND[ext];
+	if (/json|javascript|html|xml|css/.test(mime)) return 'code';
+	if (mime.startsWith('text/')) return 'text';
+	return isImage(file) ? 'image' : 'file';
+};
+
+/** "PDF", "DOCX"… — the extension when there is one, for the badge under a file's icon. */
+export const extLabel = (file: MediaFile) => {
+	const ext = splitExt(file.name || '')[1].slice(1);
+	return (ext && ext.length <= 5 ? ext : typeLabel(file)).toUpperCase();
+};
+
 export const folderSummary = (folder: MediaFolder) => {
 	const parts = [];
 	if (folder.folderCount) parts.push(`${folder.folderCount} folder${folder.folderCount === 1 ? '' : 's'}`);

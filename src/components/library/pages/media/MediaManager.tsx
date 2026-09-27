@@ -24,6 +24,10 @@ import {
 	Search,
 	Trash2,
 	X,
+	ExternalLink,
+	EllipsisVertical,
+	Info,
+	SquareCheck,
 } from 'lucide-react';
 import { toaster } from '@/components/ui/toaster';
 import { Layout } from '../../nav';
@@ -48,6 +52,8 @@ import MediaItems, { ItemHandlers } from './MediaItems';
 import MoveDialog from './MoveDialog';
 import PreviewDialog from './PreviewDialog';
 import SortModal, { SORT_VALUES } from './SortModal';
+import useMarquee from './useMarquee';
+import DetailsDialog from './DetailsDialog';
 import UploadPanel from './UploadPanel';
 import { ConfirmDialog, DocLink, NameDialog } from './ui';
 import { fromDirectoryInput, readDroppedEntries, setUploadDispatch, uploadQueue } from './uploadQueue';
@@ -109,11 +115,14 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 	const current = folder || null;
 
 	/* ------------------------------------------------------------ view state */
+	// Newest first is the default; the key moved when it stopped being Name, so a
+	// Name saved under the old key doesn't hold on to it.
+	const SORT_PREF = 'media-sort-v2';
 	const [view, setView] = useState<'grid' | 'list'>('grid');
-	const [sort, setSort] = useState('name');
+	const [sort, setSort] = useState('-createdAt');
 	useEffect(() => {
 		setView(readPref('media-view', 'grid', VIEWS));
-		setSort(readPref('media-sort', 'name', SORT_VALUES as any));
+		setSort(readPref(SORT_PREF, '-createdAt', SORT_VALUES as any));
 	}, []);
 	const changeView = (v: 'grid' | 'list') => {
 		setView(v);
@@ -121,7 +130,7 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 	};
 	const changeSort = (v: string) => {
 		setSort(v);
-		writePref('media-sort', v);
+		writePref(SORT_PREF, v);
 	};
 
 	const [searchInput, setSearchInput] = useState('');
@@ -181,6 +190,15 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 		mq.addEventListener('change', on);
 		return () => mq.removeEventListener('change', on);
 	}, []);
+
+	const marquee = useMarquee({
+		selected,
+		onSelect: keys => {
+			setSelected(keys);
+			anchor.current = null;
+		},
+		disabled: touch || !!renaming,
+	});
 
 	const clear = () => {
 		setSelected(new Set());
@@ -281,6 +299,35 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 		}
 	};
 
+	const [detailsOpen, setDetailsOpen] = useState(false);
+	const [renamingCurrent, setRenamingCurrent] = useState(false);
+
+	/** The admin page of the folder on screen, for pasting to someone else. */
+	const copyFolderLink = async () => {
+		try {
+			await navigator.clipboard.writeText(`${window.location.origin}/images/f/${current}`);
+			toaster.create({ type: 'success', title: 'Folder link copied' });
+		} catch {
+			toaster.create({ type: 'error', title: "Couldn't copy the link" });
+		}
+	};
+
+	/** Trashes the folder on screen and steps up to its parent. */
+	const trashCurrent = async () => {
+		if (!current) return;
+		const sel = { files: [], folders: [current] };
+		const res: any = await trashMedia(sel);
+		if (fail(res)) return;
+		const parent = path.length > 1 ? path[path.length - 2]._id : null;
+		router.push(parent ? `/images/f/${parent}` : '/images');
+		toaster.create({
+			type: 'success',
+			title: `“${path[path.length - 1]?.name || 'Folder'}” moved to trash`,
+			duration: UNDO_MS,
+			action: { label: 'Undo', onClick: () => restoreMedia(sel) },
+		});
+	};
+
 	const rename = async (key: ItemKey, name: string) => {
 		setRenaming(null);
 		const id = key.slice(2);
@@ -290,6 +337,12 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 
 	/* --------------------------------------------------------------- opening */
 	const [previewIndex, setPreviewIndex] = useState(-1);
+	/** A folder opens its page in a new tab, a file its own URL (the browser shows or downloads it). */
+	const openInNewTab = (key: ItemKey) => {
+		const id = key.slice(2);
+		const href = key.startsWith('d:') ? `/images/f/${id}` : fileById.get(id)?.url;
+		if (href) window.open(href, '_blank', 'noopener,noreferrer');
+	};
 	const previewFiles = files;
 	const open = (key: ItemKey) => {
 		const id = key.slice(2);
@@ -581,10 +634,14 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 				gap={4}
 				position='relative'
 				minH='70vh'
+				ref={marquee.containerRef}
+				onPointerDown={marquee.onPointerDown}
 				onClick={e => {
+					if (marquee.justDragged.current) return;
 					if (!(e.target as HTMLElement).closest('[data-media-item]')) clear();
 				}}
 				{...page}>
+				{marquee.overlay}
 				{pageDrop && (
 					<Flex
 						position='absolute'
@@ -666,6 +723,100 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 										)}
 									</Flex>
 								))}
+								<Menu.Root positioning={{ placement: 'bottom-start' }}>
+									<Menu.Trigger asChild>
+										<IconButton
+											aria-label='Folder options'
+											title='Folder options'
+											size='sm'
+											variant='ghost'
+											color='fg.muted'
+											ml={0.5}
+											flexShrink={0}
+											_hover={{ color: 'fg', bg: 'bg.muted' }}>
+											<EllipsisVertical size={18} />
+										</IconButton>
+									</Menu.Trigger>
+									<Portal>
+										<Menu.Positioner>
+											<Menu.Content minW='220px'>
+												<Menu.Item
+													value='details'
+													onClick={() => setDetailsOpen(true)}>
+													<Info size={15} /> View details
+												</Menu.Item>
+												<Menu.Separator />
+												<Menu.Item
+													value='new-folder'
+													onClick={() => setNewFolderOpen(true)}>
+													<FolderPlus size={15} /> New folder
+												</Menu.Item>
+												<Menu.Item
+													value='upload-files'
+													onClick={() => fileInput.current?.click()}>
+													<FileUp size={15} /> Upload files
+												</Menu.Item>
+												<Menu.Item
+													value='upload-dir'
+													onClick={() => dirInput.current?.click()}>
+													<FolderUp size={15} /> Upload folder
+												</Menu.Item>
+												<Menu.Separator />
+												<Menu.Item
+													value='select-all'
+													disabled={!order.length}
+													onClick={() => setSelected(new Set(order))}>
+													<SquareCheck size={15} /> Select all
+												</Menu.Item>
+												<Menu.Item
+													value='view'
+													onClick={() => changeView(view === 'grid' ? 'list' : 'grid')}>
+													{view === 'grid' ? <List size={15} /> : <LayoutGrid size={15} />}
+													{view === 'grid' ? 'Show as list' : 'Show as grid'}
+												</Menu.Item>
+												{current && (
+													<>
+														<Menu.Separator />
+														<Menu.Item
+															value='folder-tab'
+															onClick={() => openInNewTab(folderKey(current))}>
+															<ExternalLink size={15} /> Open in new tab
+														</Menu.Item>
+														<Menu.Item
+															value='folder-link'
+															onClick={copyFolderLink}>
+															<Copy size={15} /> Copy folder link
+														</Menu.Item>
+														<Menu.Item
+															value='folder-rename'
+															onClick={() => setRenamingCurrent(true)}>
+															<Pencil size={15} /> Rename folder
+														</Menu.Item>
+														<Menu.Item
+															value='folder-move'
+															onClick={() => setMoveKeys([folderKey(current)])}>
+															<FolderInput size={15} /> Move folder to…
+														</Menu.Item>
+														<Menu.Item
+															value='folder-trash'
+															color='fg.error'
+															onClick={trashCurrent}>
+															<Trash2 size={15} /> Move folder to trash
+														</Menu.Item>
+													</>
+												)}
+												<Menu.Separator />
+												<Menu.Item
+													value='trash'
+													asChild>
+													<NextLink href='/images/trash'>
+														<Trash2 size={15} /> Open trash
+													</NextLink>
+												</Menu.Item>
+											</Menu.Content>
+										</Menu.Positioner>
+									</Portal>
+								</Menu.Root>
 							</>
 						)}
 					</Flex>
@@ -851,7 +1002,12 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 							</InputGroup>
 						)}
 						{!isTrash && (
-							<Box w='150px'>
+							// On a phone it takes what's left of the row, so the sort and view
+							// buttons stay beside it instead of wrapping to a line of their own.
+							<Box
+								w={{ base: 'auto', md: '150px' }}
+								flex={{ base: '1 1 0', md: 'none' }}
+								minW={0}>
 								<Dropdown
 									size='sm'
 									value={type}
@@ -860,7 +1016,10 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 								/>
 							</Box>
 						)}
-						<Box flex={1} />
+						<Box
+							flex={1}
+							display={{ base: isTrash ? 'block' : 'none', md: 'block' }}
+						/>
 						{!isTrash && (
 							<SortModal
 								value={sort}
@@ -1058,6 +1217,13 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 									)}
 									{menuOne && (
 										<Menu.Item
+											value='open-tab'
+											onClick={() => openInNewTab(menuOne)}>
+											<ExternalLink size={15} /> Open in new tab
+										</Menu.Item>
+									)}
+									{menuOne && (
+										<Menu.Item
 											value='rename'
 											onClick={() => setRenaming(menuOne)}>
 											<Pencil size={15} /> Rename
@@ -1114,6 +1280,32 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 				doc='folders'
 				busy={createState.isLoading}
 				onConfirm={onCreateFolder}
+			/>
+
+			<NameDialog
+				isOpen={renamingCurrent}
+				onClose={() => setRenamingCurrent(false)}
+				title='Rename folder'
+				label='Folder name'
+				initial={path[path.length - 1]?.name || ''}
+				confirmLabel='Rename'
+				doc='folders'
+				onConfirm={async name => {
+					setRenamingCurrent(false);
+					if (current) fail(await renameFolder({ id: current, name }));
+				}}
+			/>
+
+			<DetailsDialog
+				isOpen={detailsOpen}
+				onClose={() => setDetailsOpen(false)}
+				name={path.length ? path[path.length - 1].name : 'All Media'}
+				location={path.length ? ['All Media', ...path.map(p => p.name)].join(' / ') : 'Top level'}
+				folders={folders}
+				files={files}
+				totalFiles={browse.data?.totalFiles ?? files.length}
+				partial={!!browse.data?.hasMore}
+				usage={usage}
 			/>
 
 			<MoveDialog

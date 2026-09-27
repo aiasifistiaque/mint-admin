@@ -116,6 +116,21 @@ a {
   text-decoration: none;
 }
 
+/* A click or double-click on a picture painted it with the blue text-selection
+   highlight, and a small drag pulled out a ghost copy. Pictures are never text
+   to copy here; anything draggable is dragged by its own element. */
+img {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Phones flashed a grey box over whatever was tapped; every control here has
+   its own pressed state. */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

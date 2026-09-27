@@ -1,8 +1,23 @@
 'use client';
 
 import { FC, memo, useEffect, useRef, useState } from 'react';
-import { Box, Checkbox, Flex, Grid, IconButton, Image, Input, Skeleton, Text } from '@chakra-ui/react';
-import { ArrowDown, ArrowUp, EllipsisVertical, FileText, Film, Folder, Image as ImageIcon } from 'lucide-react';
+import { Box, chakra, Checkbox, Flex, Grid, IconButton, Image, Input, Skeleton, Text } from '@chakra-ui/react';
+import {
+	ArrowDown,
+	ArrowUp,
+	EllipsisVertical,
+	File as FileIcon,
+	FileArchive,
+	FileCode,
+	FileMusic,
+	FileSpreadsheet,
+	FileText,
+	Film,
+	Folder,
+	Image as ImageIcon,
+	Play,
+	Presentation,
+} from 'lucide-react';
 import type { MediaFile, MediaFolder } from '../../store/services/mediaApi';
 import {
 	ItemKey,
@@ -11,8 +26,10 @@ import {
 	folderSummary,
 	formatBytes,
 	formatDate,
+	FileKind,
+	extLabel,
+	fileKind,
 	isImage,
-	isVideo,
 	splitExt,
 	typeLabel,
 } from './utils';
@@ -43,8 +60,146 @@ type Common = {
 	handlers: ItemHandlers;
 };
 
-const FileGlyph: FC<{ file: MediaFile; size?: number }> = ({ file, size = 16 }) =>
-	isImage(file) ? <ImageIcon size={size} /> : isVideo(file) ? <Film size={size} /> : <FileText size={size} />;
+/** Each kind's icon and the hue that tells them apart at a glance (text stays neutral). */
+const KIND: Record<FileKind, { icon: any; color: string; dark: string }> = {
+	image: { icon: ImageIcon, color: 'fg.muted', dark: 'fg.muted' },
+	video: { icon: Film, color: 'purple.600', dark: 'purple.300' },
+	pdf: { icon: FileText, color: 'red.600', dark: 'red.300' },
+	doc: { icon: FileText, color: 'blue.600', dark: 'blue.300' },
+	sheet: { icon: FileSpreadsheet, color: 'green.600', dark: 'green.300' },
+	slides: { icon: Presentation, color: 'orange.600', dark: 'orange.300' },
+	archive: { icon: FileArchive, color: 'yellow.700', dark: 'yellow.300' },
+	audio: { icon: FileMusic, color: 'pink.600', dark: 'pink.300' },
+	code: { icon: FileCode, color: 'teal.600', dark: 'teal.300' },
+	text: { icon: FileText, color: 'fg.muted', dark: 'fg.muted' },
+	file: { icon: FileIcon, color: 'fg.muted', dark: 'fg.muted' },
+};
+
+const FileGlyph: FC<{ file: MediaFile; size?: number }> = ({ file, size = 16 }) => {
+	const k = KIND[fileKind(file)];
+	return (
+		<Box
+			as='span'
+			display='inline-flex'
+			color={k.color}
+			_dark={{ color: k.dark }}>
+			<k.icon
+				size={size}
+				strokeWidth={1.75}
+			/>
+		</Box>
+	);
+};
+
+/** A document's face in the grid: its kind's icon, large, over the extension. */
+const DocFace: FC<{ file: MediaFile }> = ({ file }) => (
+	<Flex
+		h='full'
+		direction='column'
+		align='center'
+		justify='center'
+		gap={2}>
+		<FileGlyph
+			file={file}
+			size={44}
+		/>
+		<Text
+			fontSize='10px'
+			fontWeight='700'
+			letterSpacing='0.06em'
+			color='fg.muted'
+			px={1.5}
+			py={0.5}
+			borderRadius='sm'
+			borderWidth='1px'
+			borderColor='border'
+			bg='bg.panel'>
+			{extLabel(file)}
+		</Text>
+	</Flex>
+);
+
+/**
+ * A video's first frame, with a play badge so it doesn't pass for a picture.
+ * Only loaded once the tile scrolls near the screen, and only its metadata and
+ * that one frame (`#t=`), not the whole file.
+ */
+const VideoFace: FC<{ file: MediaFile }> = ({ file }) => {
+	const ref = useRef<HTMLDivElement>(null);
+	const [near, setNear] = useState(false);
+	const [failed, setFailed] = useState(false);
+	useEffect(() => {
+		const el = ref.current;
+		if (!el || near) return;
+		if (typeof IntersectionObserver === 'undefined') return setNear(true);
+		const io = new IntersectionObserver(
+			entries => {
+				if (entries.some(e => e.isIntersecting)) {
+					setNear(true);
+					io.disconnect();
+				}
+			},
+			{ rootMargin: '200px' }
+		);
+		io.observe(el);
+		return () => io.disconnect();
+	}, [near]);
+	return (
+		<Box
+			ref={ref}
+			position='relative'
+			h='full'
+			bg='bg.emphasized'>
+			{near && !failed ? (
+				<chakra.video
+					src={`${file.url}#t=0.5`}
+					preload='metadata'
+					muted
+					playsInline
+					disablePictureInPicture
+					tabIndex={-1}
+					aria-hidden
+					onError={() => setFailed(true)}
+					w='full'
+					h='full'
+					objectFit='cover'
+					pointerEvents='none'
+				/>
+			) : (
+				<Flex
+					h='full'
+					align='center'
+					justify='center'>
+					<FileGlyph
+						file={file}
+						size={40}
+					/>
+				</Flex>
+			)}
+			<Flex
+				position='absolute'
+				inset={0}
+				align='center'
+				justify='center'
+				pointerEvents='none'>
+				<Flex
+					align='center'
+					justify='center'
+					boxSize='40px'
+					borderRadius='full'
+					bg='rgba(0, 0, 0, 0.55)'
+					color='white'
+					boxShadow='0 2px 8px rgba(0, 0, 0, 0.3)'>
+					<Play
+						size={18}
+						fill='currentColor'
+						style={{ marginLeft: 2 }}
+					/>
+				</Flex>
+			</Flex>
+		</Box>
+	);
+};
 
 /** The name field that replaces a label while renaming. Enter saves, Esc cancels, blur saves. */
 const RenameInput: FC<{ initial: string; isFile: boolean; onSave: (v: string) => void; onCancel: () => void }> = ({
@@ -102,15 +257,15 @@ const RenameInput: FC<{ initial: string; isFile: boolean; onSave: (v: string) =>
 	);
 };
 
-const MenuButton: FC<{ onMenu: (point: { x: number; y: number }) => void; visible: boolean }> = ({ onMenu, visible }) => (
+/** Always showing — hidden until hover, it was out of reach on touch screens and easy to miss everywhere else. */
+const MenuButton: FC<{ onMenu: (point: { x: number; y: number }) => void }> = ({ onMenu }) => (
 	<IconButton
 		aria-label='More actions'
 		size='xs'
 		variant='ghost'
 		flexShrink={0}
-		opacity={{ base: 1, md: visible ? 1 : 0 }}
-		_groupHover={{ opacity: 1 }}
-		_focusVisible={{ opacity: 1 }}
+		color='fg.muted'
+		_hover={{ color: 'fg', bg: 'bg.muted' }}
 		onClick={e => {
 			e.stopPropagation();
 			const r = e.currentTarget.getBoundingClientRect();
@@ -186,22 +341,20 @@ const IconOrCheck: FC<{ icon: React.ReactNode; checked: boolean; show: boolean; 
 	);
 };
 
-/** Shared pointer wiring for a tile/row: click, double-click, context menu, drag. */
+/** Shared pointer wiring for a tile/row: click, context menu, drag. */
 const itemEvents = (key: ItemKey, touch: boolean, selecting: boolean, renaming: boolean, h: ItemHandlers) => ({
 	draggable: !renaming && !touch,
 	onClick: (e: React.MouseEvent) => {
 		if (renaming) return;
 		e.stopPropagation();
-		// On touch there's no double-click: a tap opens unless you're picking items.
-		if (touch && !selecting) h.onOpen(key);
-		else if (touch) h.onToggle(key);
-		else h.onClick(key, e);
+		// A plain click opens, as a tap does; selecting is the checkbox, or
+		// ⌘/Ctrl/Shift + click. While picking several, a click adds or removes.
+		if (!touch && (e.metaKey || e.ctrlKey || e.shiftKey)) h.onClick(key, e);
+		else if (selecting) h.onToggle(key);
+		else h.onOpen(key);
 	},
-	onDoubleClick: (e: React.MouseEvent) => {
-		if (renaming) return;
-		e.stopPropagation();
-		h.onOpen(key);
-	},
+	// The first click already opened it.
+	onDoubleClick: (e: React.MouseEvent) => e.stopPropagation(),
 	onContextMenu: (e: React.MouseEvent) => {
 		if (renaming) return;
 		e.preventDefault();
@@ -229,6 +382,7 @@ const FolderTile = memo<Common & { folder: MediaFolder }>(
 			<Flex
 				role='group'
 				data-media-item
+				data-key={key}
 				align='center'
 				gap={2.5}
 				pl={3}
@@ -287,7 +441,6 @@ const FolderTile = memo<Common & { folder: MediaFolder }>(
 					)}
 				</Box>
 				<MenuButton
-					visible={isSel}
 					onMenu={p => handlers.onMenu(key, p)}
 				/>
 			</Flex>
@@ -306,6 +459,7 @@ const FileTile = memo<Common & { file: MediaFile; location?: string }>(
 			<Flex
 				role='group'
 				data-media-item
+				data-key={key}
 				direction='column'
 				borderRadius='lg'
 				borderWidth='1px'
@@ -338,17 +492,10 @@ const FileTile = memo<Common & { file: MediaFile; location?: string }>(
 							h='full'
 							objectFit='contain'
 						/>
+					) : fileKind(file) === 'video' ? (
+						<VideoFace file={file} />
 					) : (
-						<Flex
-							h='full'
-							align='center'
-							justify='center'
-							color='fg.muted'>
-							<FileGlyph
-								file={file}
-								size={40}
-							/>
-						</Flex>
+						<DocFace file={file} />
 					)}
 					<Box
 						position='absolute'
@@ -402,7 +549,6 @@ const FileTile = memo<Common & { file: MediaFile; location?: string }>(
 						)}
 					</Box>
 					<MenuButton
-						visible={isSel}
 						onMenu={p => handlers.onMenu(key, p)}
 					/>
 				</Flex>
@@ -472,6 +618,7 @@ const Row: FC<
 		<Grid
 			role='group'
 			data-media-item
+			data-key={k}
 			templateColumns={COLS}
 			alignItems='center'
 			gap={3}
@@ -549,7 +696,6 @@ const Row: FC<
 				{type}
 			</Text>
 			<MenuButton
-				visible={isSel}
 				onMenu={p => handlers.onMenu(k, p)}
 			/>
 		</Grid>
@@ -557,6 +703,9 @@ const Row: FC<
 };
 
 /* ----------------------------------------------------------------- views */
+
+/** Two across on a phone, three on a tablet, four on a desktop. */
+const GRID_COLS = { base: 'repeat(2, minmax(0, 1fr))', md: 'repeat(3, minmax(0, 1fr))', lg: 'repeat(4, minmax(0, 1fr))' };
 
 type ViewProps = Common & {
 	view: 'grid' | 'list';
@@ -583,7 +732,7 @@ export const MediaItems: FC<ViewProps> = ({ view, folders, files, loading, sort,
 	if (loading) {
 		return (
 			<Grid
-				templateColumns={{ base: '1fr 1fr', md: 'repeat(auto-fill, minmax(200px, 1fr))' }}
+				templateColumns={GRID_COLS}
 				gap={3}>
 				{[...Array(8)].map((_, i) => (
 					<Skeleton
@@ -656,7 +805,7 @@ export const MediaItems: FC<ViewProps> = ({ view, folders, files, loading, sort,
 				<Box>
 					<SectionLabel>Folders</SectionLabel>
 					<Grid
-						templateColumns={{ base: '1fr 1fr', md: 'repeat(auto-fill, minmax(200px, 1fr))' }}
+						templateColumns={GRID_COLS}
 						gap={3}>
 						{folders.map(f => (
 							<FolderTile
@@ -672,7 +821,7 @@ export const MediaItems: FC<ViewProps> = ({ view, folders, files, loading, sort,
 				<Box>
 					<SectionLabel>Files</SectionLabel>
 					<Grid
-						templateColumns={{ base: '1fr 1fr', md: 'repeat(auto-fill, minmax(200px, 1fr))' }}
+						templateColumns={GRID_COLS}
 						gap={3}>
 						{files.map(f => (
 							<FileTile
