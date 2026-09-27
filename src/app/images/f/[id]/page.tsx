@@ -1,19 +1,10 @@
 'use client';
-import React from 'react';
-import { NextPage } from 'next';
-import { ImagePage } from '@/components/library';
 import { use } from 'react';
+import { MediaManager } from '@/components/library/pages/media';
 
-const FilePage: NextPage<any> = ({ params }) => {
-	const resolvedParams: any = use(params);
-
-	return (
-		<ImagePage
-			route='images'
-			title='All Media'
-			folder={resolvedParams.id}
-		/>
-	);
+const MediaFolderPage = ({ params }: { params: Promise<{ id: string }> }) => {
+	const { id } = use(params);
+	return <MediaManager folder={id} />;
 };
 
-export default FilePage;
+export default MediaFolderPage;

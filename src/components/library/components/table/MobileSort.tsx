@@ -106,7 +106,10 @@ const MobileSort = ({ tableData, show = false }: { tableData: any; show?: boolea
 				</Tooltip.Root>
 			)}
 
+			{/* forceModal: a small picker, so a centered modal on desktop even when the
+			    admin prefers drawers for the big forms (mobile keeps the bottom sheet). */}
 			<MenuModal
+				forceModal
 				placement={isMobile ? 'bottom' : 'center'}
 				isOpen={open}
 				onClose={closeModal}>
@@ -164,24 +167,21 @@ const style: Style = {
 		color: 'red',
 		textAlign: 'right',
 	},
+	// Outline + field tokens, matching TableRefresh. It used to be a solid `gray`
+	// button with its bg overridden, which left the icon in `gray.contrast`
+	// (near-black) on a near-black bg — invisible in dark mode.
 	iconButton: {
-		'aria-label': 'Select Table Fields',
-		colorPalette: 'gray',
-		size: 'md',
-		borderWidth: 1,
-		mr: 0.5,
+		'aria-label': 'Sort results',
+		size: 'sm',
+		variant: 'outline',
 		h: sizes?.SEARCH_BAR_HEIGHT,
 		w: sizes?.SEARCH_BAR_HEIGHT,
+		minW: sizes?.SEARCH_BAR_HEIGHT,
 		borderRadius: radius?.BUTTON,
-		_dark: {
-			borderWidth: 1,
-			bg: 'container.dark',
-			borderColor: 'border.dark',
-		},
-		_light: {
-			borderColor: 'container.borderLight',
-			bg: 'container.newLight',
-		},
+		color: 'fg.muted',
+		bg: 'field.bg',
+		borderColor: 'field.border',
+		_hover: { bg: 'bg.subtle', color: 'fg', borderColor: 'border.emphasized' },
 	},
 };
 

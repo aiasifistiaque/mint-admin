@@ -2,6 +2,6 @@
 import { NextPage } from 'next';
 import { MediaManager } from '@/components/library/pages/media';
 
-const MediaPage: NextPage = () => <MediaManager />;
+const MediaTrashPage: NextPage = () => <MediaManager mode='trash' />;
 
-export default MediaPage;
+export default MediaTrashPage;
