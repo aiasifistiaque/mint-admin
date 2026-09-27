@@ -1,21 +1,9 @@
 'use client';
 
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { useDisclosure, Flex } from '@chakra-ui/react';
-import {
-	Column,
-	useIsMobile,
-	useGetByIdQuery,
-	MenuItem,
-	getValue,
-	ViewItem,
-	useGetConfigQuery,
-	Dialog,
-	DialogHeader,
-	DialogBody,
-	DialogCloseButton,
-	DocumentHistory,
-} from '../../../..';
+import { MenuItem } from '../../../..';
+import RecordDrawer from '../../../view/record/RecordDrawer';
 
 type Props = {
 	title?: string;
@@ -30,7 +18,8 @@ type Props = {
 	onClose?: () => void;
 };
 
-const ViewItemModal: FC<Props> = ({
+/** The table menu's "View": the record's quick-view drawer (RecordDrawer). */
+const ViewServerModal: FC<Props> = ({
 	title,
 	path,
 	trigger,
@@ -42,28 +31,6 @@ const ViewItemModal: FC<Props> = ({
 	const { open: internalOpen, onOpen, onClose: internalOnClose } = useDisclosure();
 	const isOpen = isControlled ? controlledOpen : internalOpen;
 	const closeItem = () => (isControlled ? onControlledClose?.() : internalOnClose());
-
-	const [schema, setSchema] = useState<any>([]);
-
-	const { data: schemaData, isFetching: schemaLoading } = useGetConfigQuery(path, {
-		skip: !isOpen || !path,
-	});
-
-	useEffect(() => {
-		if (schemaData) {
-			setSchema(schemaData?.view);
-		}
-	}, [schemaData, schemaLoading]);
-
-	const { data, isFetching, isError } = useGetByIdQuery(
-		{
-			path: path,
-			id: id,
-		},
-		{ skip: !id || !isOpen }
-	);
-
-	const isMobile = useIsMobile();
 
 	const renderTrigger = () => {
 		if (isControlled) return null;
@@ -83,45 +50,15 @@ const ViewItemModal: FC<Props> = ({
 	return (
 		<>
 			{renderTrigger()}
-			<Dialog
-				isOpen={isOpen}
-				onClose={closeItem}>
-				<DialogHeader>{title || 'Item Details'}</DialogHeader>
-				<DialogCloseButton />
-
-				<DialogBody>
-					<Column
-						gap={4}
-						pt={2}>
-						{schema?.map((item: any, i: number) => {
-							const { title, dataKey, type, colorPalette, path, copy, model } = item;
-
-							return (
-								<ViewItem
-									copy={copy}
-									isLoading={isFetching}
-									title={title}
-									type={type}
-									colorPalette={colorPalette}
-									path={model || path}
-									field={item}
-									doc={data}
-									key={i}>
-									{data && getValue({ dataKey, type, data })}
-								</ViewItem>
-							);
-						})}
-
-						{/* Who did what to this record, under its fields. */}
-						<DocumentHistory
-							id={id}
-							path={path}
-						/>
-					</Column>
-				</DialogBody>
-			</Dialog>
+			<RecordDrawer
+				open={isOpen}
+				onClose={closeItem}
+				path={path}
+				id={id}
+				title={title}
+			/>
 		</>
 	);
 };
 
-export default ViewItemModal;
+export default ViewServerModal;

@@ -55,7 +55,8 @@ const ViewRow: FC<ViewRowProps> = ({ field, value, isLoading, block, doc }) => {
 		dataModel: field.dataModel,
 	});
 
-	const copyButton = copy && value !== 'n/a' && (
+	// A password brings its own copy button, one that copies without revealing.
+	const copyButton = copy && value !== 'n/a' && type !== 'password' && (
 		<Tooltip.Root
 			lazyMount
 			openDelay={200}

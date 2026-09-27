@@ -11,6 +11,7 @@ import { useColorMode } from '@/components/ui/color-mode';
 import CustomTd from '@/components/library/components/table/table-components/data/CustomTd';
 import Align from '@/components/library/containers/AlignCenter';
 import Price from '@/components/library/utils/texts/Price';
+import SecretValue from '@/components/library/cl/SecretValue';
 
 const dateCss: any = { fontSize: { base: '1rem', md: '.8rem' } };
 const badgeCss: BadgeProps = { fontSize: '12px', size: 'xs' };
@@ -116,6 +117,16 @@ export const FileCell = ({ children, type, ...props }: any) => (
 		type={type}
 		{...props}>
 		{children}
+	</CustomTd>
+);
+
+/** Dots with an eye to reveal it in place; the eye doesn't open the row. */
+export const PasswordCell = ({ children, ...props }: any) => (
+	<CustomTd {...props}>
+		<SecretValue
+			value={children}
+			size='xs'
+		/>
 	</CustomTd>
 );
 

@@ -1,6 +1,7 @@
 // WO-10: text-family descriptors. Each `input` component is a mechanical port of
 // the matching case from FormInput.tsx (no behaviour change) — see WO-11, which
 // makes FormInput.tsx delegate to these instead of its own 720-line switch.
+import VPassword from '@/components/library/utils/inputs/VPassword';
 import {
 	VInput,
 	VTextarea,
@@ -90,9 +91,8 @@ const ReadOnlyInput = ({ item, isRequired, type, ...props }: any) => (
 	/>
 );
 
-const PasswordInput = ({ item, isRequired, ...props }: any) => (
-	<VInput
-		type='password'
+const PasswordInput = ({ item, isRequired, type: _type, ...props }: any) => (
+	<VPassword
 		isRequired={isRequired}
 		helper={item?.helper}
 		{...props}
@@ -221,8 +221,8 @@ registerFieldType({
 	input: PasswordInput,
 	changeMode: 'event',
 	emptyValue: () => '',
-	table: { type: 'text', cell: NotYetImplementedCell },
-	view: { type: 'string', render: NotYetImplementedView, layout: 'inline' },
+	table: { type: 'password', cell: NotYetImplementedCell },
+	view: { type: 'password', render: NotYetImplementedView, layout: 'inline' },
 	storage: 'string',
 });
 

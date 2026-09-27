@@ -62,3 +62,19 @@ export const buildViewSections = (formFields: any[], allFields?: string[]): View
 
 	return sections;
 };
+
+/**
+ * The same layout, from a route's form config (`/get/config` → `form`): a flat
+ * list of fields where one carrying a `sectionTitle` starts a new section.
+ * For routes whose form lives in the route builder rather than in code.
+ */
+export const formFieldsFromConfig = (form: any[]): { sectionTitle: string; fields: string[] }[] => {
+	const out: { sectionTitle: string; fields: string[] }[] = [];
+	(form || []).forEach((f: any) => {
+		const key = f?.name || f?.key;
+		if (!key) return;
+		if (f.sectionTitle || !out.length) out.push({ sectionTitle: f.sectionTitle || '', fields: [] });
+		out[out.length - 1].fields.push(key);
+	});
+	return out;
+};

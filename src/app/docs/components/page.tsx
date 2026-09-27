@@ -15,12 +15,13 @@ import {
 } from '@/components/library/dynamic-filters/filters';
 
 import { BarList, ColumnChart, DonutChart, LineChart } from '@/components/library/dashboard/charts';
+import SecretValue from '@/components/library/cl/SecretValue';
 
 import { C, Code, H3, P, Preview, Props, PropRow, Section } from './_components/ui';
 
 /**
  * The admin's component library: every reusable component, with a live
- * example, its props and how to use it. Filters and charts so far — add a
+ * example, its props and how to use it. Filters, charts and record views so far — add a
  * group to `NAV` and its sections below to document more.
  */
 
@@ -45,6 +46,13 @@ const NAV: { group: string; items: { id: string; title: string }[] }[] = [
 			{ id: 'column-line-chart', title: 'Column & line' },
 			{ id: 'bar-list', title: 'Bar list' },
 			{ id: 'donut-chart', title: 'Donut' },
+		],
+	},
+	{
+		group: 'Records',
+		items: [
+			{ id: 'secret-value', title: 'Password / secret' },
+			{ id: 'record-drawer', title: 'Record drawer' },
 		],
 	},
 ];
@@ -684,6 +692,60 @@ const isMobile = useIsMobile();
 								CHART_FORMAT,
 								CHART_TITLE,
 								{ name: 'total', type: 'number', description: 'The centre figure, when it isn’t the sum of the slices.' },
+							]}
+						/>
+					</Section>
+
+					<Section
+						id='secret-value'
+						title='Password / secret'
+						lead='A password, key or token: dots until the eye is pressed. Copy works without revealing it.'>
+						<Preview>
+							<SecretValue value='S3cure-Pa55!word' />
+						</Preview>
+						<P>
+							Give a field the <C>password</C> input (Settings → the field’s input → Password, or{' '}
+							<C>schema: {'{'} type: 'password' {'}'}</C> in its settings file) and it shows this way everywhere: dots
+							with an eye in the table and on the view page and drawer, and an eye on the form field to check what
+							was typed. The mask is always the same length, so it doesn’t give away how long the secret is. Its
+							buttons stop the click, so it’s safe inside a clickable table row.
+						</P>
+						<Code label='backend — <model>/settings.ts'>{`pass: {
+	title: 'Password',
+	type: 'string',
+	schema: { type: 'password' },
+},`}</Code>
+						<H3>Props</H3>
+						<Props
+							rows={[
+								{ name: 'value', type: 'string', description: 'The secret. Empty shows a dash.' },
+								{ name: 'copy', type: 'boolean', description: 'Show the copy button. Default true.' },
+								{ name: 'size', type: "'sm' | 'xs'", description: "'xs' in table cells." },
+							]}
+						/>
+					</Section>
+
+					<Section
+						id='record-drawer'
+						title='Record drawer'
+						lead='A record at a glance from its table, laid out like its view page.'>
+						<P>
+							The table menu’s <C>view-server-modal</C> and <C>view-modal</C> items open it. It shows the same
+							Overview as the view page (the route builder’s view sections, else the fields in the form’s sections),
+							the linked-record tabs with their counts, and History — plus Edit and Open full page. On a phone it’s a
+							bottom sheet. A menu item with its own <C>dataModel</C> or <C>fields</C> shows just those as the
+							Overview.
+						</P>
+						<Code label='tsx'>{`import RecordDrawer from '@/components/library/components/view/record/RecordDrawer';
+
+<RecordDrawer open={open} onClose={close} path='credentials' id={doc._id} />`}</Code>
+						<H3>Props</H3>
+						<Props
+							rows={[
+								{ name: 'open / onClose', type: 'boolean / () => void', required: true, description: 'Nothing is fetched until it opens.' },
+								{ name: 'path', type: 'string', required: true, description: 'The route, e.g. credentials.' },
+								{ name: 'id', type: 'string', required: true, description: 'The record.' },
+								{ name: 'fields', type: 'view fields[]', description: 'Show only these as the Overview.' },
 							]}
 						/>
 					</Section>

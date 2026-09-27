@@ -16,6 +16,7 @@ import {
 	DataArrayCell,
 	DataArrayCountCell,
 	InvitationStatusCell,
+	PasswordCell,
 } from './cells';
 import HistoryCell from './HistoryCell';
 
@@ -37,6 +38,7 @@ export const TABLE_CELLS: Partial<Record<TableTypeId, ComponentType<any>>> = {
 	price: PriceCell,
 	'data-array': DataArrayCell,
 	'data-array-count': DataArrayCountCell,
+	password: PasswordCell,
 };
 
 /**

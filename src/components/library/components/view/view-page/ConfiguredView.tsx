@@ -33,9 +33,11 @@ type Props = {
 	schema: any;
 	view: { doc: any; sections: any[] };
 	isLoading?: boolean;
+	/** Narrow (a drawer): every section in one column. */
+	compact?: boolean;
 };
 
-const ConfiguredView: FC<Props> = ({ slug, schema, view, isLoading }) => {
+const ConfiguredView: FC<Props> = ({ slug, schema, view, isLoading, compact }) => {
 	if (!view) return <DetailSkeleton />;
 
 	const byKey: Record<string, any> = {};
@@ -163,7 +165,9 @@ const ConfiguredView: FC<Props> = ({ slug, schema, view, isLoading }) => {
 								title={section.title || undefined}
 								subtitle={section.description || undefined}>
 								<Grid
-									templateColumns={{ base: '1fr', md: `repeat(${section.columns || 1}, minmax(0, 1fr))` }}
+									templateColumns={
+										compact ? '1fr' : { base: '1fr', md: `repeat(${section.columns || 1}, minmax(0, 1fr))` }
+									}
 									columnGap={8}
 									rowGap={3}>
 									{inline}

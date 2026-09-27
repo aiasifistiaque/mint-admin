@@ -9,6 +9,7 @@ import Price from '../../../../utils/texts/Price';
 import RecordLink from '../record-link/RecordLink';
 import { labelOf } from '../record-link/linked';
 import { SectionObject, SectionRows } from './SectionValues';
+import SecretValue from '../../../../cl/SecretValue';
 
 const textCss: TextProps & LinkProps = {
 	fontSize: '.95rem',
@@ -401,6 +402,8 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id, l
 			);
 		case 'data-array-count':
 			return <Text {...textCss}>{Array.isArray(children) ? children.length : children ?? '--'}</Text>;
+		case 'password':
+			return <SecretValue value={children} />;
 		case 'text':
 		case 'string':
 			// A populated Mongoose reference (e.g. `addedBy`) can reach here as a

@@ -31,7 +31,9 @@ export type ViewDataType =
 	| 'external-link'
 	| 'date-only'
 	| 'number'
-	| 'data-tag';
+	| 'data-tag'
+	// Masked until the eye is pressed (SecretValue).
+	| 'password';
 
 export type TableDataFieldType =
 	| 'date'
@@ -48,4 +50,5 @@ export type TableDataFieldType =
 	| 'file'
 	| 'text'
 	| 'data-array-count'
-	| 'external-link';
+	| 'external-link'
+	| 'password';
