@@ -28,6 +28,8 @@ const SECTIONS = [
 	{ id: 'view', title: 'View' },
 	{ id: 'source', title: 'Source & versions' },
 	{ id: 'models', title: 'Model builder' },
+	{ id: 'features', title: 'Feature builder' },
+	{ id: 'mcp', title: 'Connect your AI (MCP)' },
 	{ id: 'safety', title: 'Safety rules and access' },
 	{ id: 'api', title: 'API and scripts' },
 	{ id: 'faq', title: 'Troubleshooting' },
@@ -1152,6 +1154,158 @@ const BuilderDocs = () => {
 						<Note>
 							A new model has its own permission (<C>view-</C>, <C>create-</C>, <C>edit-</C>, <C>delete-&lt;route&gt;</C>).
 							Roles with <C>*</C> have it at once. Give other roles access on the Roles page.
+						</Note>
+					</Section>
+
+					<Section
+						id='features'
+						title='Feature builder'
+						lead='Several models and the links between them, planned from a description and built in one go.'>
+						<P>
+							A <strong>feature</strong> is everything one piece of work needs: new models, fields added to models you
+							already have, and the links between them. <em>Models → Build a feature</em> (
+							<C>/model-builder/features/new</C>) plans it with Claude from a description, then walks you through it one
+							model at a time. The single-model wizard (<em>New model</em>) stays as it is.
+						</P>
+						<List
+							ordered
+							items={[
+								'Describe the feature. Claude looks at the models that exist and plans the new ones, what to add to existing ones, and how they link — reusing what’s there instead of copying it. Or start without AI and add models yourself.',
+								'Go through the steps. Each one shows what the AI suggested and why, then the same panels as the model builder. Confirm to move on, or skip a model.',
+								'Review and build. Every step, the links, and where the new pages go in the sidebar — then Build.',
+							]}
+						/>
+						<P>
+							The plan is checked by the server as you edit it, with the same checks as the model builder. That is where
+							the names models register as, the links, the suggested tabs and any problems come from. Progress is kept in
+							this browser, so a reload picks up where you left off.
+						</P>
+
+						<H3>New models</H3>
+						<Box
+							id='features-steps'
+							scrollMarginTop='24px'
+						/>
+						<P>
+							A new model&apos;s step is the model builder&apos;s own first step: title, name, code, access and fields. Its
+							link pickers offer the feature&apos;s other new models (marked “new”) as well as every existing one. A name
+							that&apos;s taken can&apos;t be used for a new model: link to the existing one instead, or change it with a
+							step of its own.
+						</P>
+
+						<H3>Existing models</H3>
+						<Box
+							id='features-existing'
+							scrollMarginTop='24px'
+						/>
+						<P>
+							A step for a model you already have shows <strong>only what changes</strong>: the fields added, the fields
+							changed (with what they were), and the tabs added to its page. Everything else is listed under “Stays as it
+							is”. Only models built in the model builder can get fields. Models defined in code keep theirs, but can
+							still be linked to and get tabs. A changed field keeps its key and kind.
+						</P>
+
+						<H3>Links and tabs</H3>
+						<Box
+							id='features-links'
+							scrollMarginTop='24px'
+						/>
+						<P>
+							A link is a reference field on one model pointing at another (a leave request&apos;s staff member). For every
+							link, the page it points at gets a <strong>tab</strong> listing the records that link to it (a staff
+							member&apos;s leave requests). Each tab can be switched off or renamed in the step&apos;s Connections panel.
+							A link to an existing model adds a step for that model just for its tab.
+						</P>
+
+						<H3>Page layout</H3>
+						<Box
+							id='features-layout'
+							scrollMarginTop='24px'
+						/>
+						<P>
+							When the AI lays out a page (table columns, filters, form and detail sections, the add button), that layout
+							is published with the model as version 1. Switch it off to use the generated one. Either way, change it later
+							in the route builder.
+						</P>
+
+						<H3>Building</H3>
+						<Box
+							id='features-review'
+							scrollMarginTop='24px'
+						/>
+						<List
+							items={[
+								'New models are created in link order; two models that link to each other are closed with a second pass.',
+								'Then the fields added to existing models, then the tabs. Each change is kept as a version, as in the builder.',
+								'New pages go in a sidebar category named after the feature, an existing category, or none.',
+								'All or nothing: if any step fails, everything the build did is undone and nothing is left half-made.',
+								'Every build is listed on Models → Features, with links to what it made.',
+							]}
+						/>
+						<Note>
+							Planning with AI uses the server&apos;s <C>ANTHROPIC_API_KEY</C>. To use your own Claude or ChatGPT
+							subscription instead, connect it over MCP (next section).
+						</Note>
+					</Section>
+
+					<Section
+						id='mcp'
+						title='Connect your AI (MCP)'
+						lead='Plan and build features from your own Claude or ChatGPT chat.'>
+						<P>
+							<em>Models → Connect your AI</em> (<C>/model-builder/connect</C>) connects an AI client to the builder over
+							the Model Context Protocol. Your own subscription does the thinking. Describe a feature in your chat and the
+							AI looks at your models, plans the feature, walks you through each model (for an existing one, only what
+							changes), and builds it here once you say go. It uses the same checks and build as the feature wizard.
+						</P>
+						<Terms
+							head={['Tool', 'What the AI can do with it']}
+							rows={[
+								['describe_platform', 'Read the field kinds and rules for designing models here.'],
+								['list_models · get_model', 'See the models that exist, their fields, pages and links.'],
+								['list_sidebar_categories', 'See where new pages can go.'],
+								['plan_feature', 'Check a plan exactly as the build will. Writes nothing.'],
+								['build_feature', 'Build a confirmed plan: models, fields, tabs, pages, sidebar. All or nothing.'],
+								['update_page', 'Change a page’s columns, form, detail sections or add button afterwards.'],
+							]}
+						/>
+						<P>
+							The server tells the AI to go one step at a time and never build without your go-ahead. Claude and ChatGPT
+							also ask before calling a tool that writes.
+						</P>
+
+						<H3>API keys</H3>
+						<Box
+							id='mcp-keys'
+							scrollMarginTop='24px'
+						/>
+						<List
+							items={[
+								'A key acts as the admin who made it, and never does more than that admin’s role allows. Reading needs the builder view permission; building needs edit.',
+								'“Can build” off makes a read-only key: it can look at models and check plans, but not build.',
+								'The secret is shown once. Only a hash is stored, so a lost key is revoked and replaced.',
+								'Revoking takes effect on the next request. Keys can expire after 7, 30, 90 or 365 days.',
+							]}
+						/>
+
+						<H3>Connecting a client</H3>
+						<Box
+							id='mcp-connect'
+							scrollMarginTop='24px'
+						/>
+						<Terms
+							head={['Client', 'How']}
+							rows={[
+								['Claude Desktop / claude.ai', 'Settings → Connectors → Add custom connector, with the URL that ends in the key.'],
+								['ChatGPT', 'Developer mode → create a connector with the URL that ends in the key, no authentication.'],
+								['Claude Code', 'claude mcp add --transport http emint <backend>/mcp --header "Authorization: Bearer <key>"'],
+								['Cursor and others', 'The /mcp URL with an Authorization: Bearer header.'],
+							]}
+						/>
+						<Note>
+							claude.ai, Claude Desktop connectors and ChatGPT reach the backend from the internet, so they need the deployed
+							backend&apos;s https address, not localhost. The endpoint speaks Streamable HTTP (JSON replies, no event
+							stream). The URL form keeps the key out of the request log.
 						</Note>
 					</Section>
 

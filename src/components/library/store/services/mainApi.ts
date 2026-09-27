@@ -62,6 +62,7 @@ const tags: string[] = [
 	'media-trash',
 	'media-usage',
 	'builder',
+	'apiKeys',
 	'tableconfigs',
 	'formfields',
 	'groups',

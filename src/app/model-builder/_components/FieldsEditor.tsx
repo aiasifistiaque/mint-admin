@@ -56,6 +56,8 @@ type Props = {
 	kinds?: FieldKind[];
 	/** A section's own fields: no table, index or search options. */
 	sub?: boolean;
+	/** A fixed set of fields (a feature's changed fields): no "Add field". */
+	fixed?: boolean;
 };
 
 const ICON = { size: 14, strokeWidth: 1.75 };
@@ -358,7 +360,7 @@ const OptionsInput: FC<{
 	);
 };
 
-const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, savedKinds = {}, hasRecords, kinds, sub }) => {
+const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, savedKinds = {}, hasRecords, kinds, sub, fixed }) => {
 	// The section whose fields are being edited.
 	const [sectionFor, setSectionFor] = useState<string | null>(null);
 	const sectionField = sectionFor ? fields.find(f => f.uid === sectionFor) : undefined;
@@ -880,7 +882,7 @@ const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, 
 				);
 			})}
 
-			<Box>
+			<Box display={fixed ? 'none' : undefined}>
 				<Button
 					size='xs'
 					variant='outline'

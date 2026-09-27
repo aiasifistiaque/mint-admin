@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge, Button, Flex, Link, Text } from '@chakra-ui/react';
-import { BookOpen, ExternalLink, Plus } from 'lucide-react';
+import { BookOpen, ExternalLink, Plug, Plus, Sparkles } from 'lucide-react';
 import { Layout, useGetBuiltModelsQuery } from '@/components/library';
 import {
 	Column,
@@ -181,12 +181,30 @@ const ModelBuilderPage = () => {
 					title='Models'
 					meta={data ? `${data.doc.length} built model${data.doc.length === 1 ? '' : 's'}` : 'Database models built here instead of in code'}
 					actions={
-						<Button
-							size='sm'
-							onClick={() => router.push('/model-builder/new')}>
-							<Plus size={14} />
-							New model
-						</Button>
+						<Flex
+							gap={2}
+							flexWrap='wrap'>
+							<Button
+								size='sm'
+								variant='ghost'
+								onClick={() => router.push('/model-builder/connect')}>
+								<Plug size={14} />
+								Connect your AI
+							</Button>
+							<Button
+								size='sm'
+								variant='outline'
+								onClick={() => router.push('/model-builder/features/new')}>
+								<Sparkles size={14} />
+								Build a feature
+							</Button>
+							<Button
+								size='sm'
+								onClick={() => router.push('/model-builder/new')}>
+								<Plus size={14} />
+								New model
+							</Button>
+						</Flex>
 					}
 				/>
 

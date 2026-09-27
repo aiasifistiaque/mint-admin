@@ -129,6 +129,40 @@ export const builderApi = mainApi.injectEndpoints({
 			query: ({ id, dropData }) => ({ url: `builder/models/${id}`, method: 'DELETE', params: dropData ? { dropData: 'true' } : {} }),
 			invalidatesTags: LIVE_TAGS,
 		}),
+
+		// Features: several models and their links at once (backend features.service.ts).
+		getFeatureCatalog: builder.query<{ models: any[]; categories: { _id: string; name: string }[] }, void>({
+			query: () => 'builder/features/catalog',
+			providesTags: ['builder'],
+		}),
+		getBuiltFeatures: builder.query<{ doc: any[] }, void>({
+			query: () => 'builder/features',
+			providesTags: ['builder'],
+		}),
+		checkFeaturePlan: builder.mutation<{ plan: any }, { plan: any }>({
+			query: body => ({ url: 'builder/features/plan', method: 'POST', body }),
+		}),
+		planFeatureWithAi: builder.mutation<{ plan: any; model: string }, { prompt: string; current?: any }>({
+			query: body => ({ url: 'builder/features/ai', method: 'POST', body }),
+		}),
+		buildFeature: builder.mutation<any, { plan: any }>({
+			query: body => ({ url: 'builder/features/build', method: 'POST', body }),
+			invalidatesTags: [...LIVE_TAGS, '/sidebar/crm/page', '/sidebar/crm/server', '/sidebar/crm/generic', 'sidebaritems', 'sidebarcategories'],
+		}),
+
+		// Keys AI clients connect to /mcp with.
+		getApiKeys: builder.query<{ doc: any[] }, void>({
+			query: () => 'builder/api-keys',
+			providesTags: ['apiKeys'],
+		}),
+		createApiKey: builder.mutation<{ doc: any; secret: string }, { name: string; scopes: string[]; expiresInDays?: number }>({
+			query: body => ({ url: 'builder/api-keys', method: 'POST', body }),
+			invalidatesTags: ['apiKeys'],
+		}),
+		revokeApiKey: builder.mutation<any, string>({
+			query: id => ({ url: `builder/api-keys/${id}`, method: 'DELETE' }),
+			invalidatesTags: ['apiKeys'],
+		}),
 	}),
 });
 
@@ -159,4 +193,12 @@ export const {
 	useCreateBuiltModelMutation,
 	useUpdateBuiltModelMutation,
 	useDeleteBuiltModelMutation,
+	useGetFeatureCatalogQuery,
+	useGetBuiltFeaturesQuery,
+	useCheckFeaturePlanMutation,
+	usePlanFeatureWithAiMutation,
+	useBuildFeatureMutation,
+	useGetApiKeysQuery,
+	useCreateApiKeyMutation,
+	useRevokeApiKeyMutation,
 } = builderApi;
