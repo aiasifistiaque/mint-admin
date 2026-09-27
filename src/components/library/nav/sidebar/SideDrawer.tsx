@@ -1,93 +1,103 @@
 'use client';
 
-import { useDisclosure, Flex, Heading, IconButton, Portal } from '@chakra-ui/react';
-import { Drawer, CloseButton } from '@chakra-ui/react';
-import Sidebar from './Sidebar';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { CloseButton, Drawer, Flex, IconButton, Portal } from '@chakra-ui/react';
+import { Menu } from 'lucide-react';
 
 import { useGetSelfQuery } from '../../';
-
-import { Icon, styles } from '../..';
 import MobileSidebar from './MobileSidebar';
-import { SidebarLogo } from './sidebar-components';
 
+/**
+ * The navbar's menu button on phones, and the drawer it opens: a panel from
+ * the left, narrower than the screen so the page stays in view and a tap
+ * beside it closes it. It closes itself once a page is picked.
+ */
 const SideDrawer = () => {
-	const { open: isOpen, onOpen, onClose } = useDisclosure();
+	const [open, setOpen] = useState(false);
+	const pathname = usePathname();
 	const { data } = useGetSelfQuery({});
 
 	const title = data?.shop?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Admin';
+
+	// A link to the page already open doesn't change the path; one that does
+	// (or the back button) closes the drawer either way.
+	useEffect(() => setOpen(false), [pathname]);
 
 	return (
 		<Drawer.Root
 			lazyMount
 			unmountOnExit
-			open={isOpen}
+			open={open}
 			placement='start'
-			size='full'
-			preventScroll={true}
-			onOpenChange={(e: any) => (e.open ? onOpen() : onClose())}>
+			onOpenChange={e => setOpen(e.open)}>
 			<Drawer.Trigger asChild>
-				<Flex
-					ml={-3}
-					onClick={onOpen}
-					{...style.container}
-					gap={0}>
-					<IconButton
-						aria-label='menu'
-						size='md'
-						variant='ghost'>
-						<Icon
-							name='menu'
-							size={28}
-						/>
-					</IconButton>
-					<Heading size='md'>{data?.store?.name}</Heading>
-				</Flex>
+				<IconButton
+					aria-label='Open menu'
+					variant='ghost'
+					size='md'
+					ml={-2}
+					mr={1}
+					flexShrink={0}
+					color='inherit'
+					css={{ WebkitTapHighlightColor: 'transparent' }}>
+					<Menu
+						size={22}
+						strokeWidth={2}
+					/>
+				</IconButton>
 			</Drawer.Trigger>
 			<Portal>
 				<Drawer.Backdrop />
 				<Drawer.Positioner>
-					<Drawer.Content>
-						<Drawer.Header>
-							<Flex
-								pl={4}
-								w='full'
-								{...styles?.SIDEBAR_NAV}>
-								<Drawer.Title
-									color='sidebar.headerText.light'
-									_dark={{ color: 'sidebar.headerText.dark' }}
-									fontSize='20px'
-									fontFamily='Bebas Neue'>
-									{title}
-								</Drawer.Title>
-								<Drawer.CloseTrigger asChild>
-									<CloseButton size='sm' />
-								</Drawer.CloseTrigger>
-							</Flex>
-						</Drawer.Header>
-						<Drawer.Body>
-							<MobileSidebar />
-						</Drawer.Body>
+					<Drawer.Content
+						w='min(86vw, 340px)'
+						maxW='340px'
+						h='100dvh'
+						display='flex'
+						flexDir='column'
+						bg='sidebar.light'
+						borderRightWidth='1px'
+						borderColor='sidebar.borderBottom.light'
+						_dark={{ bg: 'sidebar.dark', borderColor: 'sidebar.borderBottom.dark' }}
+						boxShadow='xl'>
+						<Flex
+							align='center'
+							justify='space-between'
+							gap={2}
+							flexShrink={0}
+							h='calc(56px + env(safe-area-inset-top))'
+							pt='env(safe-area-inset-top)'
+							pl={5}
+							pr={2}
+							borderBottomWidth='1px'
+							borderColor='sidebar.borderBottom.light'
+							_dark={{ borderColor: 'sidebar.borderBottom.dark' }}>
+							<Drawer.Title
+								color='sidebar.headerText.light'
+								_dark={{ color: 'sidebar.headerText.dark' }}
+								fontSize='22px'
+								fontWeight='400'
+								fontFamily='Bebas Neue'
+								lineHeight='1'
+								truncate>
+								{title}
+							</Drawer.Title>
+							<Drawer.CloseTrigger
+								asChild
+								position='static'>
+								<CloseButton
+									size='md'
+									aria-label='Close menu'
+								/>
+							</Drawer.CloseTrigger>
+						</Flex>
+						<MobileSidebar onNavigate={() => setOpen(false)} />
 					</Drawer.Content>
 				</Drawer.Positioner>
 			</Portal>
 		</Drawer.Root>
 	);
-};
-
-const style = {
-	container: {
-		gap: 0,
-		zIndex: 999,
-		alignItems: 'center',
-		h: '64px',
-		px: 0,
-		mr: 2,
-	},
-	menuIcon: {
-		size: 'xs',
-		variant: 'ghost',
-		'aria-label': 'menu',
-	},
 };
 
 export default SideDrawer;
