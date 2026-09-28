@@ -5,6 +5,7 @@ import { Button, Dialog, Flex, Input, Link, Portal, Text } from '@chakra-ui/reac
 import { ExternalLink } from 'lucide-react';
 import { AlertDialogContent, AlertDialogHeader, ModalFooter } from '../../modals';
 import DiscardButton from '../../components/buttons/DiscardButton';
+import PromptDialog from '../../modals/modal-components/PromptDialog';
 import { GUIDE } from './utils';
 
 /** A link into the media guide, opened beside the page rather than in place of it. */
@@ -151,36 +152,15 @@ export const ConfirmDialog: FC<{
 	doc?: string;
 	onConfirm: () => void;
 }> = ({ isOpen, onClose, title, children, confirmLabel, busy, doc, onConfirm }) => (
-	<MediaDialog
-		isOpen={isOpen}
+	<PromptDialog
+		open={isOpen}
 		onClose={onClose}
+		onConfirm={onConfirm}
+		tone='danger'
 		title={title}
-		doc={doc}
-		busy={busy}
-		// Irreversible: start on Cancel, not on the red button (or the guide link).
-		initialFocusEl={() => document.querySelector<HTMLElement>('[data-media-confirm-cancel]')}
-		footer={
-			<>
-				<DiscardButton
-					data-media-confirm-cancel=''
-					onClick={onClose}
-					disabled={busy}>
-					Cancel
-				</DiscardButton>
-				<Button
-					size='sm'
-					px={3}
-					colorPalette='red'
-					loading={busy}
-					onClick={onConfirm}>
-					{confirmLabel}
-				</Button>
-			</>
-		}>
-		<Text
-			fontSize='sm'
-			color='fg.muted'>
-			{children}
-		</Text>
-	</MediaDialog>
+		description={children}
+		confirmLabel={confirmLabel}
+		loading={busy}
+		aside={doc && <DocLink section={doc} />}
+	/>
 );

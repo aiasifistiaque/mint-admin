@@ -1,11 +1,10 @@
 'use client';
 
-import { Dialog, Button, Flex, useDisclosure, Portal, Text, ButtonProps } from '@chakra-ui/react';
-import { useEffect, FC, ReactNode, useRef } from 'react';
+import { Flex, useDisclosure, ButtonProps } from '@chakra-ui/react';
+import { useEffect, FC, ReactNode } from 'react';
 
-import { MenuItem, AlertDialogHeader, AlertDialogContent, PromptType } from '../../../..';
-import DiscardButton from '../../../buttons/DiscardButton';
-import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
+import { MenuItem, PromptType } from '../../../..';
+import PromptDialog from '../../../../modals/modal-components/PromptDialog';
 
 type ConfirmModalProps = {
 	title?: string;
@@ -44,7 +43,6 @@ const ConfirmModal: FC<ConfirmModalProps> = ({
 	const isControlled = controlledOpen !== undefined;
 	const { open: internalOpen, onOpen, onClose: close } = useDisclosure();
 	const isOpen = isControlled ? controlledOpen : internalOpen;
-	const cancelRef = useRef<any>(undefined);
 
 	const closeItem = () => {
 		onClose?.();
@@ -58,7 +56,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSuccess]);
 
-	const titleText = prompt?.title || 'Confirm Action';
+	const titleText = prompt?.title || 'Confirm action';
 	const bodyText = prompt?.body || 'Are you sure you want to proceed?';
 
 	return (
@@ -72,49 +70,18 @@ const ConfirmModal: FC<ConfirmModalProps> = ({
 					{title || 'Confirm'}
 				</MenuItem>
 			)}
-			<Dialog.Root
-				lazyMount
-				unmountOnExit
-				placement='center'
+			<PromptDialog
 				open={isOpen}
-				onOpenChange={(e: any) => !e.open && closeItem()}>
-				<Portal>
-					<Dialog.Backdrop />
-					<Dialog.Positioner>
-						<AlertDialogContent
-							border='1px solid border.light'
-							_dark={{ bg: 'background.dark', border: '1px solid', borderColor: 'border' }}>
-							<AlertDialogHeader>{titleText}</AlertDialogHeader>
-
-							<Dialog.Body
-								p={4}
-								pb={8}>
-								<Text>{bodyText}</Text>
-							</Dialog.Body>
-
-							<ModalFooter>
-								<DiscardButton
-									disabled={isLoading}
-									onClick={closeItem}>
-									Discard
-								</DiscardButton>
-
-								<Button
-									loadingText='Processing'
-									spinnerPlacement='start'
-									loading={isLoading}
-									ref={cancelRef}
-									colorPalette={colorPalette}
-									onClick={onConfirm}
-									px={3}
-									size='sm'>
-									{prompt?.btnText || 'Proceed'}
-								</Button>
-							</ModalFooter>
-						</AlertDialogContent>
-					</Dialog.Positioner>
-				</Portal>
-			</Dialog.Root>
+				onClose={closeItem}
+				onConfirm={() => onConfirm({ preventDefault() {} })}
+				// A red button means a destructive action; anything else is a plain confirm.
+				tone={colorPalette === 'red' ? 'danger' : 'default'}
+				title={titleText}
+				description={bodyText}
+				confirmLabel={prompt?.btnText || 'Proceed'}
+				loading={isLoading}
+				loadingText='Processing'
+			/>
 		</>
 	);
 };

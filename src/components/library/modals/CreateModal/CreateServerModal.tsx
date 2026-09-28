@@ -1,10 +1,11 @@
 'use client';
 
-import React, { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
-import { Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
+import React, { FormEvent, useEffect, useState } from 'react';
+import { Button, Flex, useDisclosure } from '@chakra-ui/react';
+import { Plus } from 'lucide-react';
 
 import { useCustomToast, useIsMobile, useFormData } from '../../hooks';
-import { FormSkeleton, nounOf } from './CreateModal';
+import { FooterStatus, FormSkeleton, formKeys, nounOf } from './CreateModal';
 
 import {
 	ModalFormSection,
@@ -106,10 +107,6 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 		...result,
 	});
 
-	const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
-		if (e.key === 'Enter') e.preventDefault();
-	};
-
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -152,6 +149,7 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 
 	const footer = (
 		<>
+			{!isMobile && <FooterStatus />}
 			{!isMobile && (
 				<DiscardButton
 					px={3}
@@ -169,7 +167,7 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 				loading={isLoading}
 				loadingText='Creating'
 				spinnerPlacement='start'>
-				{prompt?.btnText || 'Create'}
+				{prompt?.btnText || `Create ${nounOf(path)}`}
 			</Button>
 		</>
 	);
@@ -191,12 +189,19 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 				onClose={onModalClose}>
 				<form
 					onSubmit={handleSubmit}
-					onKeyDown={handleKeyDown}>
-					<DialogHeader>
+					onKeyDown={formKeys(!isFetching && !isLoading)}>
+					<DialogHeader
+						divider
+						icon={
+							<Plus
+								size={18}
+								strokeWidth={1.75}
+							/>
+						}>
 						{prompt?.title ||
 							(!title || ['create', 'add', 'new'].includes(String(title).toLowerCase()) ? `New ${nounOf(path)}` : title)}
 					</DialogHeader>
-					<DialogCloseButton />
+					<DialogCloseButton top={{ base: 4, md: 5 }} />
 
 					<DialogBody pt={{ base: 4, md: 5 }}>
 						<ModalFormSection>

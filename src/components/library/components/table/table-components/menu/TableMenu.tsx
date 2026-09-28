@@ -293,6 +293,7 @@ const TableMenu: FC<TableMenuProps> = ({
 						{...commonProps}
 						title={item?.title}
 						item={item}
+						doc={doc}
 					/>
 				);
 			case 'update-key':

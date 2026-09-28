@@ -4,6 +4,7 @@ import { FC, useMemo, useState } from 'react';
 import { Box, Button, Flex, Grid, IconButton, Input, Text, Textarea } from '@chakra-ui/react';
 import { Plus, Trash2 } from 'lucide-react';
 import { MenuItem } from '../../../../menu';
+import PromptDialog from '../../../../modals/modal-components/PromptDialog';
 import Dropdown from '../../../../cl/Dropdown';
 import { toaster } from '@/components/ui/toaster';
 import { useGetConfigQuery } from '../../../../store/services/commonApi';
@@ -61,35 +62,17 @@ export const DeleteRows: FC<BulkProps> = ({ path, items, title }) => {
 				onClick={() => setOpen(true)}>
 				{title || 'Delete'}
 			</MenuItem>
-			<BulkDialog
+			<PromptDialog
 				open={open}
 				onClose={() => setOpen(false)}
-				busy={isLoading}
-				size='sm'
+				onConfirm={run}
+				tone='danger'
 				title={`Delete ${rows(items.length, 'record')}?`}
-				footer={
-					<>
-						<CancelButton
-							onClick={() => setOpen(false)}
-							disabled={isLoading}
-						/>
-						<Button
-							{...COMPACT}
-							colorPalette='red'
-							loading={isLoading}
-							loadingText='Deleting'
-							onClick={run}>
-							Delete
-						</Button>
-					</>
-				}>
-				<Text
-					fontSize='sm'
-					color='fg.muted'>
-					They’re removed from this list for everyone. You can undo it for a few seconds after, from the message
-					that appears.
-				</Text>
-			</BulkDialog>
+				description='They’re removed from this list for everyone. You can undo it for a few seconds after, from the message that appears.'
+				confirmLabel={`Delete ${rows(items.length, 'record')}`}
+				loading={isLoading}
+				loadingText='Deleting'
+			/>
 		</>
 	);
 };

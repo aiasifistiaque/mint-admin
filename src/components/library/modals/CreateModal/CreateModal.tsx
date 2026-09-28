@@ -1,7 +1,8 @@
 'use client';
 
 import React, { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
-import { Box, Button, Flex, Skeleton, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Flex, Kbd, Skeleton, Text, useDisclosure } from '@chakra-ui/react';
+import { Pencil, Plus } from 'lucide-react';
 
 import { useCustomToast, useIsMobile, useFormData } from '../../hooks';
 
@@ -44,6 +45,112 @@ export const recordLabel = (doc: any) => {
 	const name = doc.name || doc.title || doc.label || doc.email || '';
 	const code = doc.code || doc.invoiceId || '';
 	return [code, name].filter(Boolean).join(' · ');
+};
+
+/** "5 minutes ago", "3 days ago" — how fresh the record being edited is. */
+export const ago = (value?: string | number | Date) => {
+	const t = value ? new Date(value).getTime() : NaN;
+	if (!Number.isFinite(t)) return '';
+	const s = Math.round((t - Date.now()) / 1000);
+	const units: [Intl.RelativeTimeFormatUnit, number][] = [
+		['year', 31536000],
+		['month', 2592000],
+		['day', 86400],
+		['hour', 3600],
+		['minute', 60],
+	];
+	const rtf = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
+	for (const [unit, size] of units) if (Math.abs(s) >= size) return rtf.format(Math.round(s / size), unit);
+	return 'just now';
+};
+
+/** The record's status beside the title — a quiet pill, not a coloured badge. */
+export const StatusPill = ({ value }: { value?: any }) =>
+	typeof value === 'string' && value && value.length <= 24 ? (
+		<Box
+			as='span'
+			flexShrink={0}
+			px={2}
+			py='1px'
+			borderWidth='1px'
+			borderColor='border'
+			borderRadius='full'
+			bg='bg.subtle'
+			color='fg.muted'
+			fontSize='11px'
+			fontWeight='500'
+			lineHeight='18px'
+			textTransform='capitalize'>
+			{value.replace(/[-_]+/g, ' ')}
+		</Box>
+	) : null;
+
+/** ⌘ on a Mac, Ctrl elsewhere. */
+const MOD = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl';
+
+/**
+ * The left of a form dialog's footer: how many fields changed (or which are
+ * required, on a new record) and the save shortcut.
+ */
+export const FooterStatus = ({ isUpdate, changes = 0 }: { isUpdate?: boolean; changes?: number }) => (
+	<Flex
+		mr='auto'
+		align='center'
+		gap={2}
+		fontSize='xs'
+		color='fg.muted'
+		minW={0}>
+		{isUpdate ? (
+			<>
+				<Box
+					w='6px'
+					h='6px'
+					borderRadius='full'
+					flexShrink={0}
+					bg={changes ? 'orange.400' : 'border.emphasized'}
+				/>
+				<Text
+					color={changes ? 'fg' : 'fg.muted'}
+					truncate>
+					{changes ? `${changes} unsaved change${changes === 1 ? '' : 's'}` : 'No changes yet'}
+				</Text>
+			</>
+		) : (
+			<Text truncate>
+				Fields marked{' '}
+				<Text
+					as='span'
+					color='red.500'>
+					*
+				</Text>{' '}
+				are required
+			</Text>
+		)}
+		<Flex
+			align='center'
+			gap={1}
+			ml={2}
+			display={{ base: 'none', lg: 'flex' }}
+			color='fg.subtle'>
+			<Kbd size='sm'>{MOD}</Kbd>
+			<Kbd size='sm'>Enter</Kbd>
+			<Text as='span'>to save</Text>
+		</Flex>
+	</Flex>
+);
+
+/**
+ * A form dialog's keys: Enter alone doesn't submit (it's easy to hit mid-form)
+ * but still makes a new line in a textarea; ⌘/Ctrl+Enter saves from anywhere.
+ */
+export const formKeys = (canSave: boolean) => (e: KeyboardEvent<HTMLFormElement>) => {
+	if (e.key !== 'Enter') return;
+	if (e.metaKey || e.ctrlKey) {
+		e.preventDefault();
+		if (canSave) e.currentTarget.requestSubmit();
+		return;
+	}
+	if ((e.target as HTMLElement)?.tagName !== 'TEXTAREA') e.preventDefault();
 };
 
 /** Placeholder rows while the record loads, instead of an empty form. */
@@ -191,10 +298,6 @@ const CreateModal = (props: CreateModalProps) => {
 		...updateResult,
 	});
 
-	const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
-		if (e.key === 'Enter') e.preventDefault();
-	};
-
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -242,22 +345,26 @@ const CreateModal = (props: CreateModalProps) => {
 	const isUpdate = type === 'update';
 	const changes = Object.keys(changedData || {}).length;
 	const loadingRecord = isUpdate && !populate && (isFetching || isUninitialized) && !prevData;
+	// Nothing to send: an update only sends the fields that changed.
+	const saveDisabled = loadingRecord || (isUpdate && changes === 0);
 
 	// A generic "Edit" / "Update" from a menu says less than "Edit invoice".
 	const genericTitle = !title || ['edit', 'update', 'create', 'add'].includes(String(title).toLowerCase());
 	const heading =
 		prompt?.title || (genericTitle ? `${isUpdate ? 'Edit' : 'New'} ${nounOf(path)}` : title);
-	const subheading = isUpdate ? recordLabel(prevData || populate || doc) : undefined;
+	const record = prevData || populate || doc;
+	const updated = isUpdate ? ago(record?.updatedAt) : '';
+	const subheading = isUpdate
+		? [recordLabel(record), updated && `Updated ${updated}`].filter(Boolean).join(' · ')
+		: undefined;
 
 	const footer = (
 		<>
 			{!isMobile && (
-				<Text
-					mr='auto'
-					fontSize='xs'
-					color={changes ? 'fg' : 'fg.muted'}>
-					{isUpdate ? (changes ? `${changes} unsaved change${changes === 1 ? '' : 's'}` : 'No changes yet') : ''}
-				</Text>
+				<FooterStatus
+					isUpdate={isUpdate}
+					changes={changes}
+				/>
 			)}
 			{!isMobile && (
 				<DiscardButton
@@ -272,11 +379,11 @@ const CreateModal = (props: CreateModalProps) => {
 				px={3}
 				type='submit'
 				size={{ base: 'md', md: 'sm' }}
-				disabled={loadingRecord}
+				disabled={saveDisabled}
 				loading={isLoading}
 				loadingText={isUpdate ? 'Saving' : 'Creating'}
 				spinnerPlacement='start'>
-				{prompt?.btnText || (isUpdate ? 'Save changes' : 'Create')}
+				{prompt?.btnText || (isUpdate ? 'Save changes' : `Create ${nounOf(path)}`)}
 			</Button>
 		</>
 	);
@@ -299,9 +406,15 @@ const CreateModal = (props: CreateModalProps) => {
 				onClose={onModalClose}>
 				<form
 					onSubmit={handleSubmit}
-					onKeyDown={handleKeyDown}>
-					<DialogHeader description={subheading || undefined}>{heading}</DialogHeader>
-					<DialogCloseButton />
+					onKeyDown={formKeys(!saveDisabled && !isLoading)}>
+					<DialogHeader
+						divider
+						icon={isUpdate ? <Pencil size={17} strokeWidth={1.75} /> : <Plus size={18} strokeWidth={1.75} />}
+						badge={isUpdate && <StatusPill value={record?.status} />}
+						description={subheading || undefined}>
+						{heading}
+					</DialogHeader>
+					<DialogCloseButton top={{ base: 4, md: 5 }} />
 
 					<DialogBody pt={{ base: 4, md: 5 }}>
 						<ModalFormSection>

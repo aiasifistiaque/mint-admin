@@ -1,15 +1,7 @@
 'use client';
 
-import { FC, ReactNode, useEffect, useState } from 'react';
-import { Button, Flex, Input, Text } from '@chakra-ui/react';
-import {
-	GenericModal,
-	GenericModalHeader,
-	GenericModalBody,
-	GenericModalFooter,
-	GenericModalContent,
-	radius,
-} from '../index';
+import { FC, ReactNode } from 'react';
+import PromptDialog from '../modals/modal-components/PromptDialog';
 
 type ConfirmActionProps = {
 	isOpen: boolean;
@@ -36,8 +28,7 @@ type ConfirmActionProps = {
  * sure?" tells nobody anything; "this restarts all dynos and the app will be
  * briefly unavailable" is the thing that actually prevents the mistake.
  *
- * No backdrop blur — the scrim dims and that is enough. Blur is expensive to
- * composite and buys nothing a stronger dim doesn't.
+ * Drawn by PromptDialog, the same dialog as the table's delete prompts.
  */
 const ConfirmAction: FC<ConfirmActionProps> = ({
 	isOpen,
@@ -50,82 +41,20 @@ const ConfirmAction: FC<ConfirmActionProps> = ({
 	isLoading,
 	typeToConfirm,
 	children,
-}) => {
-	const [typed, setTyped] = useState('');
-
-	// Reopening after a cancel must not inherit the previous attempt's text,
-	// or the guard is already satisfied before the dialog is even read.
-	useEffect(() => {
-		if (isOpen) setTyped('');
-	}, [isOpen]);
-
-	const blocked = !!typeToConfirm && typed.trim() !== typeToConfirm;
-
-	return (
-		<GenericModal
-			isOpen={isOpen}
-			onClose={onClose}
-			size='md'>
-			<GenericModalContent borderRadius={radius.MODAL}>
-				<GenericModalHeader>{title}</GenericModalHeader>
-
-				<GenericModalBody>
-					<Flex
-						direction='column'
-						gap={4}>
-						<Text
-							fontSize='sm'
-							color='fg.muted'>
-							{consequence}
-						</Text>
-
-						{children}
-
-						{typeToConfirm && (
-							<Flex
-								direction='column'
-								gap={2}>
-								<Text fontSize='sm'>
-									Type <strong>{typeToConfirm}</strong> to confirm.
-								</Text>
-								<Input
-									size='sm'
-									value={typed}
-									autoComplete='off'
-									placeholder={typeToConfirm}
-									borderRadius={radius.INPUT}
-									onChange={event => setTyped(event.target.value)}
-								/>
-							</Flex>
-						)}
-					</Flex>
-				</GenericModalBody>
-
-				<GenericModalFooter>
-					<Flex
-						gap={2}
-						justify='flex-end'
-						w='full'>
-						<Button
-							size='sm'
-							variant='outline'
-							onClick={onClose}
-							disabled={isLoading}>
-							Cancel
-						</Button>
-						<Button
-							size='sm'
-							colorPalette={destructive ? 'red' : undefined}
-							loading={isLoading}
-							disabled={blocked}
-							onClick={onConfirm}>
-							{confirmLabel}
-						</Button>
-					</Flex>
-				</GenericModalFooter>
-			</GenericModalContent>
-		</GenericModal>
-	);
-};
+}) => (
+	<PromptDialog
+		open={isOpen}
+		onClose={onClose}
+		onConfirm={onConfirm}
+		title={title}
+		description={consequence}
+		tone={destructive ? 'danger' : 'default'}
+		confirmLabel={confirmLabel}
+		loading={isLoading}
+		typeToConfirm={typeToConfirm}
+		size={children ? 'md' : 'sm'}>
+		{children}
+	</PromptDialog>
+);
 
 export default ConfirmAction;

@@ -11,20 +11,27 @@ const buttonCss = {
 	_hover: { bg: 'bg.muted', color: 'fg' },
 };
 
-const MenuModalCloseButton = () => {
+/** Top-right; `top` can be moved to centre it on a taller header. */
+const MenuModalCloseButton = (props: Record<string, any>) => {
 	const layout = useResolvedModalLayout();
 
 	if (layout === 'drawer') {
 		return (
 			<Drawer.CloseTrigger asChild>
-				<CloseButton {...buttonCss} />
+				<CloseButton
+					{...buttonCss}
+					{...props}
+				/>
 			</Drawer.CloseTrigger>
 		);
 	}
 
 	return (
 		<Dialog.CloseTrigger asChild>
-			<CloseButton {...buttonCss} />
+			<CloseButton
+				{...buttonCss}
+				{...props}
+			/>
 		</Dialog.CloseTrigger>
 	);
 };

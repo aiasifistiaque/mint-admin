@@ -15,6 +15,30 @@ import { useIsCardView, Column, PLACEHOLDER_IMAGE, TableDataProps, theme } from 
 
 const { TABLE } = theme;
 
+/**
+ * Links a cell's value out when the column is an external link or a file.
+ *
+ * Declared out here, not inside CustomTd: a component defined in a render is a
+ * new type every render, so React remounted everything in the cell each time
+ * the row re-rendered — including the row menu and the edit dialog it had
+ * open, which vanished as soon as the record it loaded landed in the store.
+ */
+const External = ({ children, text, type }: any) => {
+	if (text && (type == 'external-link' || type == 'file')) {
+		return (
+			<Link
+				target='_blank'
+				href={text}>
+				<>
+					{type == 'file' ? <b>Go to file</b> : children}{' '}
+					<ExternalLinkIcon style={{ marginLeft: '4px' }} />
+				</>
+			</Link>
+		);
+	}
+	return <>{children}</>;
+};
+
 const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, ...props }) => {
 	const isCardView = useIsCardView();
 
@@ -44,22 +68,6 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 
 	if (type == 'selectMenu') return <Container {...tdCss(type, heading)}>{children}</Container>;
 
-	const External = ({ children }: any) => {
-		if (text && (type == 'external-link' || type == 'file')) {
-			return (
-				<Link
-					target='_blank'
-					href={text}>
-					<>
-						{type == 'file' ? <b>Go to file</b> : children}{' '}
-						<ExternalLinkIcon style={{ marginLeft: '4px' }} />
-					</>
-				</Link>
-			);
-		}
-		return <>{children}</>;
-	};
-
 	return (
 		<>
 			<Container
@@ -75,7 +83,9 @@ const CustomTd: FC<TableDataProps> = ({ children, src, type, heading, editable, 
 				)}
 
 				{isCardView && heading && <Heading size='xs'>{heading}</Heading>}
-				<External>
+				<External
+					text={text}
+					type={type}>
 					{TextContainer === Fragment ? (
 						formatTextForBreaking(text) || <i>--</i>
 					) : (

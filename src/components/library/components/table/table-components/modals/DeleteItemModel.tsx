@@ -1,7 +1,7 @@
 'use client';
 
-import { Dialog, Button, Flex, useDisclosure, Portal, Text, Box } from '@chakra-ui/react';
-import { useEffect, FC, useRef } from 'react';
+import { Flex, useDisclosure } from '@chakra-ui/react';
+import { useEffect, FC } from 'react';
 
 import {
 	useCustomToast,
@@ -9,19 +9,17 @@ import {
 	useDeleteByIdMutation,
 	useAppSelector,
 	useLazyGetAllQuery,
-	Align,
-	AlertDialogHeader,
-	AlertDialogContent,
-	styles,
 } from '../../../..';
-import DiscardButton from '../../../buttons/DiscardButton';
-import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
+import PromptDialog from '../../../../modals/modal-components/PromptDialog';
+import { nounOf, recordLabel } from '../../../../modals/CreateModal/CreateModal';
 
 type DeleteItemModalProps = {
 	title?: string;
 	id: string;
 	path: string;
 	item: any;
+	/** The row being deleted — its code and name are shown in the dialog. */
+	doc?: any;
 	children?: React.ReactNode;
 	// Controlled mode: when `open` is passed, the dialog's open state is driven
 	// by the caller instead of an internal useDisclosure, and no trigger is
@@ -36,6 +34,7 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({
 	path,
 	id,
 	item,
+	doc,
 	children,
 	open: controlledOpen,
 	onClose: onControlledClose,
@@ -44,7 +43,6 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({
 	const isControlled = controlledOpen !== undefined;
 	const { open: internalOpen, onOpen, onClose: internalOnClose } = useDisclosure();
 	const isOpen = isControlled ? controlledOpen : internalOpen;
-	const cancelRef = useRef<any>(undefined);
 
 	const [trigger, result] = useDeleteByIdMutation();
 	const [getAllTrigger, getAllResults] = useLazyGetAllQuery();
@@ -81,10 +79,10 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({
 		...result,
 	});
 
-	const titleText = item?.prompt?.title || 'Delete Item';
+	const noun = nounOf(path);
+	const titleText = item?.prompt?.title || `Delete this ${noun}?`;
 	const bodyText =
-		item?.prompt?.body ||
-		"Are you sure you want to delete this item? You can't undo this action afterwards.";
+		item?.prompt?.body || `It's removed for everyone who uses this list. This can't be undone.`;
 
 	return (
 		<>
@@ -99,48 +97,18 @@ const DeleteItemModal: FC<DeleteItemModalProps> = ({
 					{title || 'Delete'}
 				</MenuItem>
 			)}
-			<Dialog.Root
-				lazyMount
-				unmountOnExit
-				placement='center'
+			<PromptDialog
 				open={isOpen}
-				onOpenChange={(e: any) => !e.open && closeItem()}>
-				<Portal>
-					<Dialog.Backdrop />
-					<Dialog.Positioner>
-						<AlertDialogContent
-							border='1px solid border.light'
-							_dark={{ bg: 'background.dark', border: '1px solid', borderColor: 'border' }}>
-							<AlertDialogHeader>{titleText}</AlertDialogHeader>
-
-							<Dialog.Body
-								p={4}
-								pb={8}>
-								<Text>{bodyText}</Text>
-							</Dialog.Body>
-
-							<ModalFooter>
-								<DiscardButton
-									disabled={isLoading}
-									onClick={closeItem}>
-									Discard
-								</DiscardButton>
-
-								<Button
-									loadingText='Deleting...'
-									spinnerPlacement='start'
-									loading={isLoading}
-									colorPalette='red'
-									onClick={handleDelete}
-									px={3}
-									size='sm'>
-									Delete
-								</Button>
-							</ModalFooter>
-						</AlertDialogContent>
-					</Dialog.Positioner>
-				</Portal>
-			</Dialog.Root>
+				onClose={closeItem}
+				onConfirm={() => handleDelete({ preventDefault() {} })}
+				tone='danger'
+				title={titleText}
+				description={bodyText}
+				subject={recordLabel(doc) || undefined}
+				confirmLabel={item?.prompt?.btnText || `Delete ${noun}`}
+				loading={isLoading}
+				loadingText='Deleting'
+			/>
 		</>
 	);
 };
