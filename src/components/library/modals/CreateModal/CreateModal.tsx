@@ -1,7 +1,7 @@
 'use client';
 
 import React, { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
-import { Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Flex, Skeleton, Text, useDisclosure } from '@chakra-ui/react';
 
 import { useCustomToast, useIsMobile, useFormData } from '../../hooks';
 
@@ -26,6 +26,60 @@ import {
 
 import CreateModalProps from './types';
 import { withoutHidden } from '../../functions/formRules';
+
+/** 'invoice-items' -> 'invoice item', for "Edit invoice item". */
+export const nounOf = (path?: string) => {
+	const words = String(path || 'record')
+		.replace(/[-_]+/g, ' ')
+		.trim()
+		.toLowerCase();
+	if (/ies$/.test(words)) return words.replace(/ies$/, 'y');
+	if (/(ss|us)$/.test(words)) return words;
+	return words.replace(/s$/, '');
+};
+
+/** How a record is named in the header: its code and its name, when it has them. */
+export const recordLabel = (doc: any) => {
+	if (!doc || typeof doc !== 'object') return '';
+	const name = doc.name || doc.title || doc.label || doc.email || '';
+	const code = doc.code || doc.invoiceId || '';
+	return [code, name].filter(Boolean).join(' · ');
+};
+
+/** Placeholder rows while the record loads, instead of an empty form. */
+export const FormSkeleton = () => (
+	<Flex
+		direction='column'
+		gap={5}
+		py={2}>
+		<Skeleton
+			h='14px'
+			w='120px'
+		/>
+		{[0, 1, 2].map(i => (
+			<Flex
+				key={i}
+				gap={4}>
+				<Box flex={1}>
+					<Skeleton
+						h='12px'
+						w='80px'
+						mb={2}
+					/>
+					<Skeleton h='36px' />
+				</Box>
+				<Box flex={1}>
+					<Skeleton
+						h='12px'
+						w='80px'
+						mb={2}
+					/>
+					<Skeleton h='36px' />
+				</Box>
+			</Flex>
+		))}
+	</Flex>
+);
 
 const CreateModal = (props: CreateModalProps) => {
 	const {
@@ -185,14 +239,32 @@ const CreateModal = (props: CreateModalProps) => {
 		if (prevData) setFormData(prevData);
 	}, [prevData, isFetching]);
 
+	const isUpdate = type === 'update';
+	const changes = Object.keys(changedData || {}).length;
+	const loadingRecord = isUpdate && !populate && (isFetching || isUninitialized) && !prevData;
+
+	// A generic "Edit" / "Update" from a menu says less than "Edit invoice".
+	const genericTitle = !title || ['edit', 'update', 'create', 'add'].includes(String(title).toLowerCase());
+	const heading =
+		prompt?.title || (genericTitle ? `${isUpdate ? 'Edit' : 'New'} ${nounOf(path)}` : title);
+	const subheading = isUpdate ? recordLabel(prevData || populate || doc) : undefined;
+
 	const footer = (
 		<>
+			{!isMobile && (
+				<Text
+					mr='auto'
+					fontSize='xs'
+					color={changes ? 'fg' : 'fg.muted'}>
+					{isUpdate ? (changes ? `${changes} unsaved change${changes === 1 ? '' : 's'}` : 'No changes yet') : ''}
+				</Text>
+			)}
 			{!isMobile && (
 				<DiscardButton
 					px={3}
 					disabled={isLoading}
 					onClick={onModalClose}>
-					Discard
+					Cancel
 				</DiscardButton>
 			)}
 			<Button
@@ -200,10 +272,11 @@ const CreateModal = (props: CreateModalProps) => {
 				px={3}
 				type='submit'
 				size={{ base: 'md', md: 'sm' }}
+				disabled={loadingRecord}
 				loading={isLoading}
-				loadingText='Processing'
+				loadingText={isUpdate ? 'Saving' : 'Creating'}
 				spinnerPlacement='start'>
-				{prompt?.btnText || 'Confirm'}
+				{prompt?.btnText || (isUpdate ? 'Save changes' : 'Create')}
 			</Button>
 		</>
 	);
@@ -227,14 +300,14 @@ const CreateModal = (props: CreateModalProps) => {
 				<form
 					onSubmit={handleSubmit}
 					onKeyDown={handleKeyDown}>
-					<DialogHeader>
-						{prompt?.title || title || `${type === 'update' ? 'Update' : 'Create'} ${path}`}
-					</DialogHeader>
+					<DialogHeader description={subheading || undefined}>{heading}</DialogHeader>
 					<DialogCloseButton />
 
-					<DialogBody>
+					<DialogBody pt={{ base: 4, md: 5 }}>
 						<ModalFormSection>
-							{layout ? (
+							{loadingRecord ? (
+								<FormSkeleton />
+							) : layout ? (
 								!schemaLoading && (
 									<>
 										<FormMain

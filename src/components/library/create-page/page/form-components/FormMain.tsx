@@ -114,12 +114,15 @@ const FormMain: FC<FormMainType> = ({
 
 	return (
 		<Accordion.Root
-			gap={4}
+			display='flex'
+			flexDirection='column'
+			gap={isModal ? 0 : 4}
 			multiple
 			defaultValue={sections.map((_, i) => String(i))}>
 			{sections.map((section: any, i: number) => (
 				<FormDivisionAccordion
-					title={section?.[0]?.sectionTitle || 'Section Title'}
+					title={section?.[0]?.sectionTitle || (sections.length > 1 ? `Section ${i + 1}` : 'Details')}
+					description={section?.[0]?.sectionTitle ? section?.[0]?.description : undefined}
 					value={String(i)}
 					key={i}
 					isModal={isModal}>

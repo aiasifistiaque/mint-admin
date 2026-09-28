@@ -4,6 +4,7 @@ import React, { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
 
 import { useCustomToast, useIsMobile, useFormData } from '../../hooks';
+import { FormSkeleton, nounOf } from './CreateModal';
 
 import {
 	ModalFormSection,
@@ -153,20 +154,22 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 		<>
 			{!isMobile && (
 				<DiscardButton
+					px={3}
 					disabled={isLoading}
 					onClick={onModalClose}>
-					Discard
+					Cancel
 				</DiscardButton>
 			)}
 			<Button
 				{...(isMobile && { w: 'full' })}
-				px={2}
+				px={3}
 				type='submit'
 				size={{ base: 'md', md: 'sm' }}
+				disabled={isFetching}
 				loading={isLoading}
-				loadingText='Processing'
+				loadingText='Creating'
 				spinnerPlacement='start'>
-				{prompt?.btnText || 'Confirm'}
+				{prompt?.btnText || 'Create'}
 			</Button>
 		</>
 	);
@@ -189,12 +192,17 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 				<form
 					onSubmit={handleSubmit}
 					onKeyDown={handleKeyDown}>
-					<DialogHeader>{prompt?.title || title || `Create ${path}`}</DialogHeader>
+					<DialogHeader>
+						{prompt?.title ||
+							(!title || ['create', 'add', 'new'].includes(String(title).toLowerCase()) ? `New ${nounOf(path)}` : title)}
+					</DialogHeader>
 					<DialogCloseButton />
 
-					<DialogBody px={{ base: 0, md: 6 }}>
+					<DialogBody pt={{ base: 4, md: 5 }}>
 						<ModalFormSection>
-							{!isFetching && (
+							{isFetching ? (
+								<FormSkeleton />
+							) : (
 								<FormMain
 									fields={data?.form}
 									formData={formData}

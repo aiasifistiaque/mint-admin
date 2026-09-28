@@ -102,7 +102,10 @@ export const SectionRows: FC<{ rows: any[]; dataModel: Sub[]; actions?: (index: 
 			borderRadius='md'>
 			<Table.Root
 				size='sm'
-				variant='line'>
+				variant='line'
+				// Chakra's table paints its own background (solid black in dark mode); it sits on the surface around it.
+				bg='transparent'
+				css={{ '& tbody tr, & tfoot tr': { background: 'transparent' } }}>
 				<Table.Header>
 					<Table.Row bg='bg.muted'>
 						<Table.ColumnHeader
