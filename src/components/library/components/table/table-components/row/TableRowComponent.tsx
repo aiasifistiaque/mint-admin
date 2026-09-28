@@ -101,17 +101,18 @@ const TableRowComponent: FC<TableProps> = ({
 								<MenuButton />
 							</TableMenu>
 						) : (
-							<TableMenu
-								path={path}
-								data={menu}
-								id={item?._id}
-								doc={item}
-								key={columnKey}
-								title={item[dataKey]}>
-								<CustomTd>
+							// The button is the menu's anchor, not the whole cell: anchored to
+							// the cell, the menu opened below the bottom of a tall row.
+							<CustomTd key={columnKey}>
+								<TableMenu
+									path={path}
+									data={menu}
+									id={item?._id}
+									doc={item}
+									title={item[dataKey]}>
 									<MenuButton />
-								</CustomTd>
-							</TableMenu>
+								</TableMenu>
+							</CustomTd>
 						);
 
 				// If the item name is not in the fields array and type is not 'menu', return null

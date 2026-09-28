@@ -1,11 +1,26 @@
 import { FC, ReactNode, useState } from 'react';
-import { Menu, Center } from '@chakra-ui/react';
+import { Menu } from '@chakra-ui/react';
+import {
+	ArrowUpRight,
+	Copy,
+	Eye,
+	ListChecks,
+	MousePointerClick,
+	PanelRightOpen,
+	Pencil,
+	PencilLine,
+	Plus,
+	SquareArrowOutUpRight,
+	Trash2,
+	Zap,
+} from 'lucide-react';
 import {
 	MenuButton,
 	CustomTd,
 	CreateModal,
 	MenuContainer,
 	MenuItem,
+	MenuItemStyle,
 	DeleteItemModal,
 	ViewItemModal,
 	DuplicateModal,
@@ -39,6 +54,44 @@ const DIALOG_TYPES = new Set([
 	'view-modal',
 	'view-server-modal',
 ]);
+
+const ICON = { size: 16, strokeWidth: 1.75 };
+
+/** Each row-menu option's icon, by its type. */
+const iconFor = (item: any) => {
+	switch (item?.type) {
+		case 'view':
+		case 'view-item':
+			return <Eye {...ICON} />;
+		case 'view-modal':
+		case 'view-server-modal':
+			return <PanelRightOpen {...ICON} />;
+		case 'edit':
+		case 'edit-modal':
+		case 'edit-server-modal':
+			return <Pencil {...ICON} />;
+		case 'update-key':
+			return item?.keyType === 'data-menu' ? <ListChecks {...ICON} /> : <PencilLine {...ICON} />;
+		case 'update-api':
+			return <Zap {...ICON} />;
+		case 'duplicate':
+			return <Copy {...ICON} />;
+		case 'post':
+			return <Plus {...ICON} />;
+		case 'delete':
+			return <Trash2 {...ICON} />;
+		case 'link':
+		case 'redirect':
+			return <ArrowUpRight {...ICON} />;
+		case 'custom-redirect':
+			return <SquareArrowOutUpRight {...ICON} />;
+		default:
+			return <MousePointerClick {...ICON} />;
+	}
+};
+
+/** Destructive options go last, after a divider, in red. */
+const isDanger = (item: any) => item?.type === 'delete' || item?.danger === true;
 
 const TableMenu: FC<TableMenuProps> = ({
 	data,
@@ -89,8 +142,6 @@ const TableMenu: FC<TableMenuProps> = ({
 			return (
 				<MenuItem
 					key={i}
-					color={item.type === 'delete' ? 'red.500' : undefined}
-					_dark={item.type === 'delete' ? { color: 'red.300' } : undefined}
 					onClick={() => setActiveIndex(i)}>
 					{item?.title}
 				</MenuItem>
@@ -143,7 +194,6 @@ const TableMenu: FC<TableMenuProps> = ({
 			case 'view-item':
 				return (
 					<MenuItem
-						icon='arrow-angle'
 						key={i}
 						href={`/view/${path}/${id}`}>
 						{item?.title}
@@ -323,9 +373,38 @@ const TableMenu: FC<TableMenuProps> = ({
 		}
 	};
 
+	/** Every option with its icon; destructive ones last, after one divider. */
+	const renderOptions = () => {
+		const entries = (data || []).map((item: any, i: number) => ({ item, i }));
+		const render = ({ item, i }: any) => {
+			const el = renderMenuTrigger(item, i);
+			return el ? (
+				<MenuItemStyle
+					key={i}
+					compact
+					icon={iconFor(item)}
+					danger={isDanger(item)}>
+					{el}
+				</MenuItemStyle>
+			) : null;
+		};
+		const safe = entries.filter((e: any) => !isDanger(e.item)).map(render).filter(Boolean);
+		const danger = entries.filter((e: any) => isDanger(e.item)).map(render).filter(Boolean);
+		return (
+			<>
+				{safe}
+				{safe.length > 0 && danger.length > 0 && <Menu.Separator my={1} />}
+				{danger}
+			</>
+		);
+	};
+
 	return (
 		<>
-			<Menu.Root onOpenChange={(e: any) => e.open && setHasOpened(true)}>
+			<Menu.Root
+				// Opens from the button, lined up with its right edge; flips up near the bottom of the screen.
+				positioning={{ placement: 'bottom-end', gutter: 4 }}
+				onOpenChange={(e: any) => e.open && setHasOpened(true)}>
 				<Menu.Trigger asChild>{children}</Menu.Trigger>
 				{/* {children ? (
 					<Menu.Trigger asChild>{children}</Menu.Trigger>
@@ -339,7 +418,15 @@ const TableMenu: FC<TableMenuProps> = ({
 					</CustomTd>
 				)} */}
 
-				{hasOpened && <MenuContainer>{data?.map(renderMenuTrigger)}</MenuContainer>}
+				{hasOpened && (
+					<MenuContainer
+						p={1}
+						gap={0}
+						minW='220px'
+						boxShadow='lg'>
+						{renderOptions()}
+					</MenuContainer>
+				)}
 			</Menu.Root>
 			{renderActiveDialog()}
 		</>
