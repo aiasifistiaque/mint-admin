@@ -678,6 +678,32 @@ const BuilderDocs = () => {
 							Only number fields the route lets you filter or sort by can be totalled, so excluded and secret-looking
 							fields never are. Totals are saved as <C>route.totals</C> in the route&apos;s config.
 						</P>
+						<H3>Bulk upload: many records from a file</H3>
+						<Box
+							id='table-upload'
+							scrollMarginTop='24px'
+						/>
+						<P>
+							Switch on <strong>Bulk upload</strong> and the table header gets a ⋯ menu beside the add button, with{' '}
+							<em>Bulk upload</em> and, when it&apos;s on, <em>Export</em>. Choose Excel (<C>.xlsx</C>, its first
+							sheet), CSV, or JSON — paste a list of records or upload a <C>.json</C> file — then{' '}
+							<strong>Check file</strong>. Saved as <C>route.bulkUpload</C>.
+						</P>
+						<P>
+							The first row names the columns: a field&apos;s name or its label, in any case. The dialog lists the
+							columns the table takes and downloads a template. Values are read the way the field needs them —
+							numbers without their commas, yes/no for switches, dates like 2026-09-29, a list split by{' '}
+							<C>;</C>, an option in any case. A linked record is found by its id, or by its name, code, title or
+							email; if none or several match, that row is flagged.
+						</P>
+						<P>
+							Check runs every row through what the add form&apos;s save does: required fields, allowed options,
+							the field rules, formulas, the model&apos;s own checks, and unique fields — against the table and
+							within the file. Problems come back row by row, with the file&apos;s row numbers, and nothing is saved.
+							When every row passes, <strong>Import</strong> saves them all; if one still fails to save, the ones
+							already saved are removed again. Columns that match no field are listed and skipped. It needs the
+							create permission on the route, and takes up to 2,000 rows or 10 MB at a time.
+						</P>
 					</Section>
 
 					<Section

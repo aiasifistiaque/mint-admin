@@ -3,7 +3,7 @@
 import { FC, useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { Badge, Button, Flex, Tabs } from '@chakra-ui/react';
-import { ExternalLink, Pencil } from 'lucide-react';
+import { ExternalLink, Eye, Pencil } from 'lucide-react';
 import ConsoleTabs from '../../../cl/ConsoleTabs';
 import Panel from '../../../cl/Panel';
 import { useGetByIdQuery } from '../../../store/services/commonApi';
@@ -11,7 +11,7 @@ import Dialog from '../../table/table-components/menu-modals/Dialog';
 import DialogHeader from '../../table/table-components/menu-modals/MenuModalHeader';
 import DialogBody from '../../table/table-components/menu-modals/MenuModalBody';
 import DialogCloseButton from '../../table/table-components/menu-modals/MenuModalCloseButton';
-import CreateModal from '../../../modals/CreateModal/CreateModal';
+import CreateModal, { StatusPill, ago } from '../../../modals/CreateModal/CreateModal';
 import HistoryTimeline from '../../history/HistoryTimeline';
 import getValue from '../../../functions/getValue';
 import ViewRow from '../view-page/ViewRow';
@@ -51,7 +51,8 @@ const countBadge = (n: number) => (
  */
 const RecordDrawer: FC<Props> = ({ open, onClose, path, id, title, fields }) => {
 	const rv = useRecordView({ slug: path, id, skip: !open });
-	const { name, code, routeTitle, tabs, historyTotal, editProps, canEdit } = rv;
+	const { name, code, routeTitle, tabs, historyTotal, editProps, canEdit, status, updatedAt } = rv;
+	const updated = ago(updatedAt);
 
 	const [tab, setTab] = useState('overview');
 	useEffect(() => {
@@ -93,10 +94,19 @@ const RecordDrawer: FC<Props> = ({ open, onClose, path, id, title, fields }) => 
 		<Dialog
 			isOpen={open}
 			onClose={onClose}>
-			<DialogHeader description={[routeTitle, name && code ? code : ''].filter(Boolean).join(' · ') || undefined}>
+			<DialogHeader
+				divider
+				icon={
+					<Eye
+						size={17}
+						strokeWidth={1.75}
+					/>
+				}
+				badge={<StatusPill value={status} />}
+				description={[routeTitle, name && code ? code : '', updated && `Updated ${updated}`].filter(Boolean).join(' · ') || undefined}>
 				{name || code || 'Details'}
 			</DialogHeader>
-			<DialogCloseButton />
+			<DialogCloseButton top={{ base: 4, md: 5 }} />
 
 			<DialogBody pt={4}>
 				<Flex

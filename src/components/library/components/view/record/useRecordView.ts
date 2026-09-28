@@ -103,6 +103,9 @@ const useRecordView = ({ slug, id, skip = false }: { slug: string; id: string; s
 		code,
 		recordTitle: name || code || id,
 		routeTitle,
+		/** For the header's status pill and "Updated …" line. */
+		status: typeof doc?.status === 'string' ? doc.status : undefined,
+		updatedAt: doc?.updatedAt as string | undefined,
 		configured,
 		configuredLoading,
 		configuredFetching,

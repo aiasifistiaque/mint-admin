@@ -10,6 +10,24 @@ export type StatusSkip = { id: string; name: string; from: string; why: string }
 export type MergeLink = { model: string; path: string; count: number };
 export type DownloadResult = { name: string; rows: number | null };
 
+/** Bulk upload (backend importRows.controller.ts). */
+export type ImportFormat = 'xlsx' | 'csv' | 'json';
+export type ImportColumn = { key: string; label: string; type: string; required: boolean; ref?: string; options?: string[]; list?: boolean };
+export type ImportProblem = { row: number; field?: string; message: string };
+export type ImportResult = {
+	message?: string;
+	stage?: 'read' | 'check' | 'save';
+	total: number;
+	valid: number;
+	invalidRows: number;
+	problems: ImportProblem[];
+	moreProblems: number;
+	columns: { key: string; label: string }[];
+	ignored: string[];
+	preview: Record<string, any>[];
+	created?: number;
+};
+
 /** The file name from a Content-Disposition header. */
 const fileNameOf = (header: string | null, fallback: string) => /filename="?([^";]+)"?/i.exec(header || '')?.[1] || fallback;
 
@@ -57,6 +75,14 @@ export const bulkApi = mainApi.injectEndpoints({
 			// Links moved, so any list may have changed.
 			invalidatesTags: (r, e, { path }) => [path, 'history'],
 		}),
+		importTemplate: builder.query<{ columns: ImportColumn[]; maxRows: number }, string>({
+			query: path => `${path}/bulk/import/template`,
+		}),
+		/** Checks every row (dryRun) or saves them all; nothing is saved unless every row passes. */
+		importRows: builder.mutation<ImportResult, { path: string; format: ImportFormat; content: string; dryRun: boolean }>({
+			query: ({ path, ...body }) => ({ url: `${path}/bulk/import`, method: 'POST', body }),
+			invalidatesTags: (r, e, { path, dryRun }) => (dryRun || !r?.created ? [] : [path, 'history']),
+		}),
 		/** A file from the server (export/rows, export/records), saved as it arrives. */
 		download: builder.mutation<DownloadResult, { url: string; body: any; params?: Record<string, any>; fallbackName: string }>({
 			query: ({ url, body, params, fallbackName }) => ({
@@ -87,6 +113,8 @@ export const {
 	useMergePreviewQuery,
 	useMergeMutation,
 	useDownloadMutation,
+	useImportTemplateQuery,
+	useImportRowsMutation,
 } = bulkApi;
 
 /** Hands a downloaded file to the browser. */

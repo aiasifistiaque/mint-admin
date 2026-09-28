@@ -508,6 +508,7 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 								[
 									hasAddButton && 'add button',
 									pageConfig.export && 'export',
+									pageConfig.bulkUpload && 'bulk upload',
 									pageConfig.select?.show && 'bulk actions',
 									pageConfig.clickable && 'clickable rows',
 								]

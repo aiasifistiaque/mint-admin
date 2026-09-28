@@ -7,6 +7,7 @@ import { Badge, Button, FlexProps, Tabs } from '@chakra-ui/react';
 import { Pencil } from 'lucide-react';
 import useRecordView from '@/components/library/components/view/record/useRecordView';
 import RecordOverview from '@/components/library/components/view/record/RecordOverview';
+import { StatusPill, ago } from '@/components/library/modals/CreateModal/CreateModal';
 
 /** A page's own tab, shown ahead of Overview. */
 export type RecordViewTab = {
@@ -46,7 +47,10 @@ export type RecordViewProps = {
  */
 const RecordView = ({ slug, id, tabs: pageTabs = [], title, badge, meta, actions, children }: RecordViewProps) => {
 	const rv = useRecordView({ slug, id });
-	const { name, code, recordTitle, routeTitle, tabs, historyTotal, editProps: modalProps, canEdit } = rv;
+	const { name, code, recordTitle, routeTitle, tabs, historyTotal, editProps: modalProps, canEdit, status, updatedAt } = rv;
+	// Like the edit dialog's header: the code, then how fresh the record is.
+	const updated = ago(updatedAt);
+	const defaultMeta = [name && code ? code : '', updated && `Updated ${updated}`].filter(Boolean).join(' · ') || undefined;
 
 	// Tabs after Overview: records of other routes that link to this one, as
 	// set in the route builder's view, then History, which every record has.
@@ -106,8 +110,8 @@ const RecordView = ({ slug, id, tabs: pageTabs = [], title, badge, meta, actions
 						{ href: '#', title: recordTitle },
 					]}
 					title={title || recordTitle}
-					badge={badge}
-					meta={meta ?? (name && code ? code : undefined)}
+					badge={badge ?? <StatusPill value={status} />}
+					meta={meta ?? defaultMeta}
 					actions={
 						actions || canEdit ? (
 							<>

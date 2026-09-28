@@ -124,6 +124,13 @@ export const PageOptionsPanel: FC<Props> = ({ value: page, onChange, route, code
 					onChange={v => set({ export: v })}
 				/>
 				<Toggle
+					label='Bulk upload'
+					hint='Add many records from an Excel, CSV or JSON file. Every row is checked before anything is saved. Moves Export into a ⋯ menu beside the add button.'
+					code={code ? !!code.bulkUpload : undefined}
+					checked={!!page.bulkUpload}
+					onChange={v => set({ bulkUpload: v || undefined })}
+				/>
+				<Toggle
 					label='Search'
 					hint='The search box above the table.'
 					checked={page.search !== false}
