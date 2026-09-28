@@ -34,8 +34,9 @@ const PageHeader: FC<PageHeaderProps> = ({ breadcrumbs, title, badge, meta, acti
 					gap={3}
 					minW={0}>
 					<Text
+						fontFamily='display'
 						fontSize='20px'
-						fontWeight='600'
+						fontWeight='display'
 						lineHeight='1.2'
 						truncate>
 						{title}

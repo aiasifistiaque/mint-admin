@@ -46,6 +46,12 @@ export type Theme = {
 	dark: Palette;
 	/** The built-in look: nothing is overridden, the palettes only draw its preview. */
 	builtIn?: boolean;
+	/**
+	 * A typeface for headings (page titles and Chakra's Heading) instead of the
+	 * system font. `href` is a Google Fonts stylesheet, loaded only while the
+	 * theme is on.
+	 */
+	headingFont?: { family: string; href: string; /** Weight for those headings, e.g. '400' for a light serif. */ weight?: string };
 };
 
 export const DEFAULT_THEME = 'default';
@@ -209,46 +215,56 @@ export const THEMES: Theme[] = [
 		},
 	},
 	{
-		// Claude's own palette (claude.ai): cream pages, warm near-black text,
-		// terracotta accent; dark mode is warm charcoal with lighter panels and
-		// a darker sidebar. Borders are its 15% / 10% text-colour hairlines,
-		// pre-mixed onto the colour they sit on.
-		id: 'clay',
-		name: 'Clay',
-		description: 'Cream paper, warm charcoal and a terracotta accent.',
+		// Claude's current palette, read from claude.ai's own design tokens
+		// (--cds-*): near-white surfaces and near-black in dark mode, warm grey
+		// text, translucent borders and fills exactly as it uses them, and its
+		// primary fill — black in light mode, white in dark — for primary
+		// buttons. Headings in a serif at a light weight, as claude.ai sets
+		// them; its serif is proprietary, Source Serif 4 is the closest open one.
+		//   page = surface-1, panels = surface-2, sidebar = surface-0,
+		//   subtle / muted = bg-neutral / bg-neutral-hover, border = border,
+		//   text / muted text / headings = text-primary / -secondary / -muted.
+		id: 'kiln',
+		name: 'Kiln',
+		description: 'Warm off-white and deep black, soft grey text and serif headings.',
+		headingFont: {
+			family: "'Source Serif 4', ui-serif, Georgia, Cambria, 'Times New Roman', serif",
+			href: 'https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300..700&display=swap',
+			weight: '400',
+		},
 		light: {
-			accent: '#c6613f',
+			accent: '#0b0b0b',
 			accentFg: '#ffffff',
-			page: '#faf9f5',
+			page: '#fcfcfb',
 			surface: '#ffffff',
-			subtle: '#f5f4ed',
-			muted: '#f0eee6',
-			border: '#d9d8d5',
-			borderMuted: '#e4e3df',
-			text: '#141413',
-			textMuted: '#73726c',
-			sidebar: '#f5f4ed',
-			sidebarText: '#3d3d3a',
-			sidebarTextActive: '#141413',
-			sidebarHeading: '#73726c',
-			sidebarRail: '#d5d4ce',
+			subtle: '#0b0b0b0d',
+			muted: '#0b0b0b1a',
+			border: '#0b0b0b1a',
+			borderMuted: '#0b0b0b1a',
+			text: '#0b0b0b',
+			textMuted: '#52514e',
+			sidebar: '#f9f9f7',
+			sidebarText: '#52514e',
+			sidebarTextActive: '#0b0b0b',
+			sidebarHeading: '#898781',
+			sidebarRail: '#0b0b0b1a',
 		},
 		dark: {
-			accent: '#c96442',
-			accentFg: '#ffffff',
-			page: '#262624',
-			surface: '#30302e',
-			subtle: '#3a3a38',
-			muted: '#424240',
-			border: '#4a4a46',
-			borderMuted: '#3e3e3a',
-			text: '#faf9f5',
-			textMuted: '#9c9a92',
-			sidebar: '#1f1e1d',
-			sidebarText: '#c2c0b6',
-			sidebarTextActive: '#faf9f5',
-			sidebarHeading: '#9c9a92',
-			sidebarRail: '#3c3a38',
+			accent: '#ffffff',
+			accentFg: '#0b0b0b',
+			page: '#151515',
+			surface: '#1a1a19',
+			subtle: '#ffffff0d',
+			muted: '#ffffff1a',
+			border: '#ffffff1a',
+			borderMuted: '#ffffff1a',
+			text: '#f0efec',
+			textMuted: '#c3c2b7',
+			sidebar: '#0b0b0b',
+			sidebarText: '#c3c2b7',
+			sidebarTextActive: '#f0efec',
+			sidebarHeading: '#898781',
+			sidebarRail: '#ffffff1a',
 		},
 	},
 	{

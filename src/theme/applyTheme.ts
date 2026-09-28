@@ -153,7 +153,14 @@ export const themeCss = (theme: Theme) => {
 		`color-scheme:light`,
 	];
 	const darkRules = [...SEMANTIC.map(([t, v]) => `${cssVar(t)}:${valueOf(v, dark)}`), `color-scheme:dark`];
-	return `html{${root.join(';')}}html.dark{${darkRules.join(';')}}`;
+	// A heading typeface: its stylesheet first (an @import must lead), then the
+	// tokens page titles read (`display`). Kept in the same cached stylesheet,
+	// so the boot script replays the font too.
+	const font = theme.headingFont;
+	if (font) root.push(`--chakra-fonts-display:${font.family}`);
+	if (font?.weight) root.push(`--chakra-font-weights-display:${font.weight}`);
+	const head = font ? `@import url('${font.href}');` : '';
+	return `${head}html{${root.join(';')}}html.dark{${darkRules.join(';')}}`;
 };
 
 export const applyTheme = (theme: Theme) => {

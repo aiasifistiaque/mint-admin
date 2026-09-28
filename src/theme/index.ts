@@ -22,6 +22,14 @@ export const system = createSystem(defaultConfig, {
 			fonts: {
 				body: { value: 'system-ui, sans-serif' },
 				heading: { value: 'system-ui, sans-serif' },
+				// Page titles only. They take the page's font (Geist, set on
+				// <body>) unless a colour theme brings its own heading typeface
+				// (palettes.ts `headingFont`).
+				display: { value: 'inherit' },
+			},
+			// Page titles' weight; a theme with a light heading serif lowers it.
+			fontWeights: {
+				display: { value: '600' },
 			},
 		},
 		semanticTokens: {

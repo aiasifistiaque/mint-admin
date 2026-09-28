@@ -19,8 +19,10 @@ export const containerCss: FlexProps = {
 // Page titles are the largest type on a table page, so they carry the tighter
 // tracking that large text needs to avoid looking spaced out.
 export const headingCss: TextProps = {
+	// The page's font, or the theme's heading typeface when it has one.
+	fontFamily: 'display',
 	fontSize: { base: '1.375rem', md: '1.5rem' },
-	fontWeight: '600',
+	fontWeight: 'display',
 	letterSpacing: '-0.02em',
 	lineHeight: '1.25',
 	color: 'text.light',

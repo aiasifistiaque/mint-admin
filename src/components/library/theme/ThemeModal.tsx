@@ -159,7 +159,9 @@ const ThemeCard: FC<{ theme: Theme; selected: boolean; onSelect: () => void }> =
 			<Box minW={0}>
 				<Text
 					fontSize='sm'
-					fontWeight='600'>
+					fontWeight='600'
+					// A theme with its own heading typeface shows its name in it.
+					style={theme.headingFont ? { fontFamily: theme.headingFont.family } : undefined}>
 					{theme.name}
 				</Text>
 				<Text
