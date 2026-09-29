@@ -15,7 +15,7 @@ import {
 } from '@/components/library';
 import { ConsoleTabs, DataTable, EmptyState, ErrorState, FilterInput, PageHeader, Panel, TableSkeleton } from '@/components/library/cl';
 import type { Column } from '@/components/library/cl/DataTable';
-import { DeviceIcon, ago, deviceLabel, methodLabel, when } from '@/components/library/components/sessions/sessionView';
+import { DeviceIcon, ago, deviceLabel, methodLabel, placeLabel, when } from '@/components/library/components/sessions/sessionView';
 import { toaster } from '@/components/ui/toaster';
 
 type Status = 'active' | 'signed-out' | 'all';
@@ -143,8 +143,41 @@ const SessionsPage = () => {
 				</Flex>
 			),
 		},
-		{ key: 'ip', label: 'IP address', render: s => <Text fontSize='13px' fontFamily='mono'>{s.ip || '—'}</Text> },
-		{ key: 'signedIn', label: 'Signed in', render: s => <Text fontSize='13px' title={when(s.signedInAt)}>{ago(s.signedInAt)}</Text> },
+		{
+			key: 'location',
+			label: 'Location',
+			render: s => (
+				<Box
+					minW={0}
+					title={s.signInLocation && s.signInLocation !== s.location ? `Signed in from ${s.signInLocation}${s.signInIp ? ` (${s.signInIp})` : ''}` : undefined}>
+					<Text
+						fontSize='13px'
+						truncate>
+						{placeLabel(s)}
+					</Text>
+					<Text
+						fontSize='12px'
+						color='fg.muted'
+						fontFamily='mono'>
+						{s.ip || '—'}
+					</Text>
+				</Box>
+			),
+		},
+		{
+			key: 'signedIn',
+			label: 'Signed in',
+			render: s => (
+				<Box>
+					<Text fontSize='13px'>{when(s.signedInAt)}</Text>
+					<Text
+						fontSize='12px'
+						color='fg.muted'>
+						{ago(s.signedInAt)}
+					</Text>
+				</Box>
+			),
+		},
 		{
 			key: 'lastActive',
 			label: 'Last active',
@@ -203,7 +236,7 @@ const SessionsPage = () => {
 				pb={16}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/sessions', title: 'Login sessions' },
 					]}
 					title='Login sessions'
@@ -238,7 +271,7 @@ const SessionsPage = () => {
 							<FilterInput
 								value={typed}
 								onChange={setTyped}
-								placeholder='Search admin, device or IP'
+								placeholder='Search admin, device, IP or place'
 								width='260px'
 							/>
 						}>

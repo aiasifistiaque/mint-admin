@@ -3,6 +3,7 @@
 import { FC, ReactNode, useEffect } from 'react';
 import NextLink from 'next/link';
 import { Box, Flex, Grid, Link, Table, Text } from '@chakra-ui/react';
+import GuideNav from '../_components/GuideNav';
 import { Layout } from '@/components/library';
 import { PageHeader } from '@/components/library/cl';
 
@@ -41,7 +42,7 @@ const Section: FC<{ id: string; title: string; lead?: ReactNode; children: React
 	<Box
 		as='section'
 		id={id}
-		scrollMarginTop='24px'
+		scrollMarginTop='80px'
 		pt={8}
 		pb={2}
 		borderTopWidth='1px'
@@ -206,7 +207,7 @@ const BuilderDocs = () => {
 			pb={16}>
 			<PageHeader
 				breadcrumbs={[
-					{ href: '/dashboard', title: 'Home' },
+					{ href: '/', title: 'Home' },
 					{ href: '/builder', title: 'Routes' },
 					{ href: '/docs/builder', title: 'Guide' },
 				]}
@@ -218,35 +219,7 @@ const BuilderDocs = () => {
 				templateColumns={{ base: '1fr', lg: '200px minmax(0, 1fr)' }}
 				gap={10}
 				alignItems='start'>
-				<Box
-					as='nav'
-					display={{ base: 'none', lg: 'block' }}
-					position='sticky'
-					top='16px'>
-					<Text
-						fontSize='11px'
-						fontWeight='500'
-						letterSpacing='0.04em'
-						textTransform='uppercase'
-						color='fg.muted'
-						mb={2}>
-						On this page
-					</Text>
-					<Flex
-						direction='column'
-						gap={1}>
-						{SECTIONS.map(s => (
-							<Link
-								key={s.id}
-								href={`#${s.id}`}
-								fontSize='sm'
-								color='fg.muted'
-								_hover={{ color: 'fg', textDecoration: 'none' }}>
-								{s.title}
-							</Link>
-						))}
-					</Flex>
-				</Box>
+				<GuideNav sections={SECTIONS} />
 
 				<Box
 					maxW='760px'
@@ -484,7 +457,7 @@ const BuilderDocs = () => {
 						<H3>Linked records: which are offered, and adding new ones</H3>
 						<Box
 							id='settings-linked'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							A field whose input picks records — <strong>Pick a record</strong>, <strong>Pick records</strong> or
@@ -647,7 +620,7 @@ const BuilderDocs = () => {
 						<H3>Status: which moves Change status allows</H3>
 						<Box
 							id='table-status'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							Under Bulk actions, <strong>Status</strong> picks the route’s status field (any select field). Every move
@@ -658,7 +631,7 @@ const BuilderDocs = () => {
 						<H3>Totals: “View total” for the selected rows</H3>
 						<Box
 							id='table-totals'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							With rows selectable, the selection bar has a button — <strong>View total</strong>, or the title you
@@ -681,7 +654,7 @@ const BuilderDocs = () => {
 						<H3>Bulk upload: many records from a file</H3>
 						<Box
 							id='table-upload'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							Switch on <strong>Bulk upload</strong> and the table header gets a ⋯ menu beside the add button, with{' '}
@@ -889,7 +862,7 @@ const BuilderDocs = () => {
 						<H3>Creating a model: the wizard</H3>
 						<Box
 							id='models-wizard'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							<strong>New model</strong> opens a step-by-step wizard. <strong>Nothing is created until the last
@@ -954,7 +927,7 @@ const BuilderDocs = () => {
 						<H3>Names, and what happens when one is taken</H3>
 						<Box
 							id='models-names'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							From a title like &ldquo;Invoices&rdquo; the builder derives the model name <C>Invoice</C>, the
@@ -972,7 +945,7 @@ const BuilderDocs = () => {
 						<H3>Record code</H3>
 						<Box
 							id='models-code'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							<strong>Give every record a code</strong> adds a <C>code</C> field filled in when a record is
@@ -992,7 +965,7 @@ const BuilderDocs = () => {
 						<H3>Fields</H3>
 						<Box
 							id='models-fields'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							Each field has a label, a key (its name in the database and API, filled in from the label until you
@@ -1051,7 +1024,7 @@ const BuilderDocs = () => {
 						<H3>Sections and section lists</H3>
 						<Box
 							id='models-sections'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							A <strong>Section</strong> groups fields of its own under one key — <C>billing</C> with a city and a
@@ -1083,7 +1056,7 @@ const BuilderDocs = () => {
 						<H3>Linking models</H3>
 						<Box
 							id='models-links'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							A <em>Link to a record</em> field stores the id of a record in another model, and saves the model it
@@ -1101,7 +1074,7 @@ const BuilderDocs = () => {
 						<H3>Restricting access to records</H3>
 						<Box
 							id='models-access'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							<strong>Restrict access to each record</strong> (the <em>Access</em> panel, when creating a model or
@@ -1148,7 +1121,7 @@ const BuilderDocs = () => {
 						<H3>Notifications</H3>
 						<Box
 							id='notifications'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							When someone is given access to a private record, they get a notification. This happens when a
@@ -1210,7 +1183,7 @@ const BuilderDocs = () => {
 						<H3>New models</H3>
 						<Box
 							id='features-steps'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							A new model&apos;s step is the model builder&apos;s own first step: title, name, code, access and fields. Its
@@ -1222,7 +1195,7 @@ const BuilderDocs = () => {
 						<H3>Existing models</H3>
 						<Box
 							id='features-existing'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							A step for a model you already have shows <strong>only what changes</strong>: the fields added, the fields
@@ -1234,7 +1207,7 @@ const BuilderDocs = () => {
 						<H3>Links and tabs</H3>
 						<Box
 							id='features-links'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							A link is a reference field on one model pointing at another (a leave request&apos;s staff member). For every
@@ -1246,7 +1219,7 @@ const BuilderDocs = () => {
 						<H3>Page layout</H3>
 						<Box
 							id='features-layout'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<P>
 							When the AI lays out a page (table columns, filters, form and detail sections, the add button), that layout
@@ -1257,7 +1230,7 @@ const BuilderDocs = () => {
 						<H3>Building</H3>
 						<Box
 							id='features-review'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<List
 							items={[
@@ -1303,7 +1276,7 @@ const BuilderDocs = () => {
 						<H3>API keys</H3>
 						<Box
 							id='mcp-keys'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<List
 							items={[
@@ -1317,7 +1290,7 @@ const BuilderDocs = () => {
 						<H3>Connecting a client</H3>
 						<Box
 							id='mcp-connect'
-							scrollMarginTop='24px'
+							scrollMarginTop='80px'
 						/>
 						<Terms
 							head={['Client', 'How']}

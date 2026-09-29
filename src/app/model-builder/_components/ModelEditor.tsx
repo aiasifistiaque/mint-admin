@@ -125,7 +125,7 @@ const ModelEditor: FC<{ id: string }> = ({ id }) => {
 				pb={10}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/builder', title: 'Routes' },
 						{ href: '/model-builder', title: 'Models' },
 						{ href: `/model-builder/${id}`, title: doc.title },

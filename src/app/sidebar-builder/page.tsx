@@ -263,7 +263,7 @@ const SidebarBuilderPage = () => {
 				pb={24}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/sidebar-builder', title: 'Sidebar Builder' },
 					]}
 					title='Sidebar Builder'

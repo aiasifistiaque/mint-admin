@@ -279,7 +279,7 @@ const VercelAccountPage = () => {
 				pb={8}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/vercels', title: 'Vercel Accounts' },
 						{ href: `/vercels/${id}`, title: stored.label },
 					]}

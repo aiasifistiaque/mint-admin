@@ -174,7 +174,7 @@ const ModelBuilderPage = () => {
 				pb={10}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/builder', title: 'Routes' },
 						{ href: '/model-builder', title: 'Models' },
 					]}

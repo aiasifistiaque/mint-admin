@@ -2,6 +2,7 @@
 
 import { FC, ReactNode, useEffect } from 'react';
 import { Box, Flex, Grid, Link, Table, Text } from '@chakra-ui/react';
+import GuideNav from '../_components/GuideNav';
 import { Layout } from '@/components/library';
 import { PageHeader } from '@/components/library/cl';
 
@@ -33,7 +34,7 @@ const Section: FC<{ id: string; title: string; lead?: ReactNode; children: React
 	<Box
 		as='section'
 		id={id}
-		scrollMarginTop='24px'
+		scrollMarginTop='80px'
 		pt={8}
 		pb={2}
 		borderTopWidth='1px'
@@ -185,7 +186,7 @@ const MediaDocs = () => {
 			pb={16}>
 			<PageHeader
 				breadcrumbs={[
-					{ href: '/dashboard', title: 'Home' },
+					{ href: '/', title: 'Home' },
 					{ href: '/images', title: 'Media' },
 					{ href: '/docs/media', title: 'Guide' },
 				]}
@@ -197,33 +198,7 @@ const MediaDocs = () => {
 				templateColumns={{ base: '1fr', lg: '200px minmax(0, 1fr)' }}
 				gap={10}
 				alignItems='start'>
-				<Box
-					as='nav'
-					display={{ base: 'none', lg: 'block' }}>
-					<Text
-						fontSize='11px'
-						fontWeight='500'
-						letterSpacing='0.04em'
-						textTransform='uppercase'
-						color='fg.muted'
-						mb={2}>
-						On this page
-					</Text>
-					<Flex
-						direction='column'
-						gap={1}>
-						{SECTIONS.map(s => (
-							<Link
-								key={s.id}
-								href={`#${s.id}`}
-								fontSize='sm'
-								color='fg.muted'
-								_hover={{ color: 'fg', textDecoration: 'none' }}>
-								{s.title}
-							</Link>
-						))}
-					</Flex>
-				</Box>
+				<GuideNav sections={SECTIONS} />
 
 				<Box
 					maxW='760px'

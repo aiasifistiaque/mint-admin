@@ -2,6 +2,8 @@
 
 import { FC, ReactNode, useEffect } from 'react';
 import { Box, Flex, Grid, Link, Table, Text } from '@chakra-ui/react';
+import GuideNav from '../_components/GuideNav';
+import DocsNavbar from '../_components/DocsNavbar';
 import { ShieldCheck } from 'lucide-react';
 
 /**
@@ -20,6 +22,7 @@ const SECTIONS = [
 	{ id: 'turn-on', title: 'Turning it on' },
 	{ id: 'email', title: 'Email codes' },
 	{ id: 'passkeys', title: 'Passkeys' },
+	{ id: 'passkey-qr', title: 'A passkey on your phone' },
 	{ id: 'backup-codes', title: 'Backup codes' },
 	{ id: 'signing-in', title: 'Signing in' },
 	{ id: 'another-browser', title: 'On another browser or device' },
@@ -34,7 +37,7 @@ const Section: FC<{ id: string; title: string; lead?: ReactNode; children: React
 	<Box
 		as='section'
 		id={id}
-		scrollMarginTop='24px'
+		scrollMarginTop='80px'
 		pt={8}
 		pb={2}
 		borderTopWidth='1px'
@@ -180,9 +183,11 @@ const TwoFactorDocs = () => {
 	return (
 		<Box
 			minH='100vh'
-			bg='bg'
-			px={{ base: 4, md: 10 }}
-			py={{ base: 6, md: 10 }}>
+			bg='bg'>
+			<DocsNavbar current='/docs/two-factor' />
+			<Box
+				px={{ base: 4, md: 10 }}
+				py={{ base: 6, md: 10 }}>
 			<Flex
 				align='center'
 				gap={3}
@@ -209,7 +214,7 @@ const TwoFactorDocs = () => {
 						fontSize='sm'
 						color='fg.muted'>
 						A second step after your password — email code, passkey or backup code — and the devices you’re signed in on.{' '}
-						<Link href='/settings#two-factor'>Open your settings</Link>
+						<Link href='/settings/security'>Open Sign-in & security</Link>
 					</Text>
 				</Box>
 			</Flex>
@@ -219,33 +224,7 @@ const TwoFactorDocs = () => {
 				gap={10}
 				maxW='1040px'
 				mx='auto'>
-				<Box
-					as='nav'
-					display={{ base: 'none', lg: 'block' }}>
-					<Text
-						fontSize='11px'
-						fontWeight='500'
-						letterSpacing='0.04em'
-						textTransform='uppercase'
-						color='fg.muted'
-						mb={2}>
-						On this page
-					</Text>
-					<Flex
-						direction='column'
-						gap={1}>
-						{SECTIONS.map(s => (
-							<Link
-								key={s.id}
-								href={`#${s.id}`}
-								fontSize='sm'
-								color='fg.muted'
-								_hover={{ color: 'fg', textDecoration: 'none' }}>
-								{s.title}
-							</Link>
-						))}
-					</Flex>
-				</Box>
+				<GuideNav sections={SECTIONS} />
 
 				<Box
 					maxW='760px'
@@ -268,7 +247,7 @@ const TwoFactorDocs = () => {
 						/>
 						<P>
 							It’s set per person: turning it on for your account doesn’t change anyone else’s. Find it under{' '}
-							<Link href='/settings#two-factor'>Settings → Two-factor authentication</Link>.
+							<Link href='/settings/security#two-factor'>Settings → Sign-in & security</Link>.
 						</P>
 					</Section>
 
@@ -278,7 +257,7 @@ const TwoFactorDocs = () => {
 						<List
 							ordered
 							items={[
-								<>Open <strong>Settings</strong> and find <strong>Two-factor authentication</strong>.</>,
+								<>Open <strong>Settings → Sign-in & security</strong> and find <strong>Two-factor authentication</strong>.</>,
 								<>Press <strong>Turn on</strong> and enter your current password.</>,
 								<>Email codes are switched on for you, and 10 backup codes appear. Copy or download them before you close the window — they’re shown only once.</>,
 								<>Optional, and recommended: <strong>Add passkey</strong>, so signing in is one touch.</>,
@@ -325,6 +304,35 @@ const TwoFactorDocs = () => {
 							devices. You can add several passkeys, rename them, and remove one you no longer use. Removing it here
 							stops it signing you in; the passkey itself stays in your password manager until you delete it there.
 						</P>
+					</Section>
+
+					<Section
+						id='passkey-qr'
+						title='A passkey on your phone'
+						lead='Add a passkey to your phone (or any other device) from your computer, with a QR code.'>
+						<List
+							ordered
+							items={[
+								<>In <strong>Sign-in &amp; security</strong>, press <strong>Add passkey</strong> and choose <strong>On your phone or another device</strong>.</>,
+								<>Enter your password. A QR code appears — it works for 10 minutes, once.</>,
+								<>Point your phone’s camera at it and open the link. On the page that opens, check the name and press <strong>Create passkey</strong>, then confirm with Face ID, Touch ID or your screen lock.</>,
+								<>The passkey is saved in the phone’s own keychain — iCloud Keychain on iPhone, Google Password Manager on Android. Your computer shows it arrive: <em>Opened on Safari on iPhone</em>, then <em>Passkey added</em>.</>,
+							]}
+						/>
+						<P>
+							Next time you sign in on that phone, choose <strong>Continue with passkey</strong>. On a computer, the browser can
+							also use the phone: pick “use a phone or tablet” in its passkey prompt and scan the code it shows.
+						</P>
+						<Note tone='warn'>
+							Anyone holding the QR code could add a passkey to your account while it’s valid — that’s why it needs your
+							password, lasts 10 minutes and works once, and why you get an email when it’s used. Only scan it with your own
+							phone, and press <strong>Cancel</strong> if you change your mind. <strong>Copy link instead</strong> gives the
+							same link, to open on a device without a camera.
+						</Note>
+						<Note>
+							The phone has to reach the admin at its real address (the one in your browser’s address bar), over https —
+							a link to <C>localhost</C> won’t open on a phone.
+						</Note>
 					</Section>
 
 					<Section
@@ -383,9 +391,10 @@ const TwoFactorDocs = () => {
 						title='Signed-in devices'
 						lead='Every browser or phone your account is signed in on, in Settings.'>
 						<P>
-							<Link href='/settings#devices'>Settings → Signed-in devices</Link> lists each one: the browser and
-							system (“Chrome on macOS”), its IP address, when it signed in and how (password, email code, passkey…), and
-							when it was last active. The device you’re using is marked <strong>This device</strong>.
+							<Link href='/settings/security#devices'>Settings → Sign-in & security → Signed-in devices</Link> lists each
+							one: the browser and system (“Chrome on macOS”), where it is (“🇧🇩 Dhaka, Bangladesh”) and its IP address, the
+							date and time it signed in and how (password, email code, passkey…), and when it was last active. The device
+							you’re using is marked <strong>This device</strong>. The Settings page shows a summary that links there.
 						</P>
 						<List
 							items={[
@@ -393,6 +402,7 @@ const TwoFactorDocs = () => {
 								<><strong>Sign out other devices</strong> signs out everything except the device you’re on — useful after using a shared computer or if you don’t recognise one.</>,
 								<><strong>Logout</strong> in your account menu signs this device out the same way, so it disappears from the list.</>,
 								'“Last active” updates about once a minute while the device is being used.',
+								<>The location comes from the device’s IP address, so it’s the city of the internet connection — a VPN or mobile network can show a nearby city, or another country. Hover it to see where the device first signed in, if it has moved since.</>,
 							]}
 						/>
 						<Note tone='warn'>
@@ -407,8 +417,9 @@ const TwoFactorDocs = () => {
 						lead='For super admins: every admin’s signed-in devices on one page.'>
 						<P>
 							<strong>Admin Sidebar → Login Sessions</strong> (<C>/sessions</C>) shows who is signed in where, when each
-							device was last active (a green dot means within the last 5 minutes), and the history of signed-out sessions
-							— who signed them out and when. Search by an admin’s name or email, a browser, or an IP address.
+							device was last active (a green dot means within the last 5 minutes), where it is, and the history of
+							signed-out sessions — who signed them out and when. Search by an admin’s name or email, a browser, an IP
+							address or a city or country.
 						</P>
 						<List
 							items={[
@@ -464,6 +475,7 @@ const TwoFactorDocs = () => {
 					</Section>
 				</Box>
 			</Grid>
+			</Box>
 		</Box>
 	);
 };

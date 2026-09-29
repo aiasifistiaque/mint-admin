@@ -105,7 +105,7 @@ const RecordView = ({ slug, id, tabs: pageTabs = [], title, badge, meta, actions
 			<Column {...containerCss}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: `/${slug}`, title: routeTitle },
 						{ href: '#', title: recordTitle },
 					]}

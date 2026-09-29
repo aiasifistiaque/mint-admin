@@ -144,7 +144,7 @@ const VercelProjectPage = () => {
 				pb={8}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/vercels', title: 'Vercel Accounts' },
 						// The account by label, never the raw ObjectId.
 						{ href: `/vercels/${id}`, title: stored?.label || 'Account' },

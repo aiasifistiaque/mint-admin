@@ -15,7 +15,7 @@ const HerokuDocPage = () => {
 				pt={{ base: 3, md: 5 }}>
 				<Crumbs
 					data={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/herokus', title: 'Heroku Accounts' },
 						{ href: '/heroku-doc', title: 'Guide' },
 					]}

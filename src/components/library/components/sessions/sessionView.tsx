@@ -19,6 +19,16 @@ export const DeviceIcon: FC<{ type: AdminSessionView['deviceType']; size?: numbe
 export const deviceLabel = (s: Pick<AdminSessionView, 'browser' | 'os'>) =>
 	[s.browser, s.os].filter(v => v && !/^Unknown/.test(v)).join(' on ') || 'Unknown device';
 
+/** 🇧🇩 from "BD" — the flag emoji is the two regional-indicator letters. */
+export const flagOf = (countryCode?: string | null) =>
+	countryCode && /^[a-z]{2}$/i.test(countryCode)
+		? String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1f1e6 + c.charCodeAt(0) - 65))
+		: '';
+
+/** "🇧🇩 Dhaka, Bangladesh", or "Location unknown". */
+export const placeLabel = (s: Pick<AdminSessionView, 'location' | 'countryCode'>) =>
+	s.location ? `${flagOf(s.countryCode)} ${s.location}`.trim() : 'Location unknown';
+
 const METHODS: Record<string, string> = {
 	password: 'Password',
 	'email-code': 'Password + email code',

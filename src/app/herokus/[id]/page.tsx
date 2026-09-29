@@ -282,7 +282,7 @@ const HerokuAccountPage = () => {
 				pb={8}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/herokus', title: 'Heroku Accounts' },
 						{ href: `/herokus/${id}`, title: stored.label },
 					]}

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { Box, Flex, Grid, Link, Text } from '@chakra-ui/react';
+import GuideNav from '../_components/GuideNav';
 
 import { Layout, useAppDispatch, clearFilters } from '@/components/library';
 import { PageHeader } from '@/components/library/cl';
@@ -153,7 +154,7 @@ const ComponentDocs = () => {
 			pb={16}>
 			<PageHeader
 				breadcrumbs={[
-					{ href: '/dashboard', title: 'Home' },
+					{ href: '/', title: 'Home' },
 					{ href: '/docs/components', title: 'Components' },
 				]}
 				title='Component library'
@@ -164,41 +165,7 @@ const ComponentDocs = () => {
 				templateColumns={{ base: '1fr', lg: '200px minmax(0, 1fr)' }}
 				gap={10}
 				alignItems='start'>
-				<Box
-					as='nav'
-					display={{ base: 'none', lg: 'block' }}
-					position='sticky'
-					top='16px'>
-					{NAV.map(group => (
-						<Box
-							key={group.group}
-							mb={6}>
-							<Text
-								fontSize='11px'
-								fontWeight='500'
-								letterSpacing='0.04em'
-								textTransform='uppercase'
-								color='fg.muted'
-								mb={2}>
-								{group.group}
-							</Text>
-							<Flex
-								direction='column'
-								gap={1}>
-								{group.items.map(item => (
-									<Link
-										key={item.id}
-										href={`#${item.id}`}
-										fontSize='sm'
-										color='fg.muted'
-										_hover={{ color: 'fg', textDecoration: 'none' }}>
-										{item.title}
-									</Link>
-								))}
-							</Flex>
-						</Box>
-					))}
-				</Box>
+				<GuideNav groups={NAV} />
 
 				<Box
 					maxW='800px'

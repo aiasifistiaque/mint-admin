@@ -2,7 +2,7 @@
 
 import { FC, ReactNode, useState } from 'react';
 import { Badge, Box, Button, Dialog, Flex, Grid, IconButton, Input, Link, Portal, Skeleton, Switch, Text } from '@chakra-ui/react';
-import { Copy, Download, ExternalLink, KeyRound, Pencil, Plus, ShieldCheck, Trash2 } from 'lucide-react';
+import { Copy, Download, ExternalLink, KeyRound, Laptop, Pencil, Plus, QrCode, ShieldCheck, Trash2 } from 'lucide-react';
 import {
 	AlertDialogContent,
 	AlertDialogHeader,
@@ -18,10 +18,12 @@ import {
 	useRemovePasskeyMutation,
 	useRenamePasskeyMutation,
 	useSetTwoFactorEmailMutation,
+	useCreatePasskeyLinkMutation,
 } from '@/components/library';
 import { deviceName, passkeyError, passkeysSupported, startRegistration } from '@/components/library/utils/functions/passkeys';
 import { toaster } from '@/components/ui/toaster';
 import { Row, SettingsCard } from './ui';
+import PasskeyQrDialog, { ShownLink } from './PasskeyQrDialog';
 
 const COMPACT = { size: 'sm', px: 3 } as const;
 const GUIDE = '/docs/two-factor';
@@ -249,6 +251,111 @@ const NameDialog: FC<{
 	);
 };
 
+/** "Add passkey": on this device, or on a phone / another device by QR code. */
+const WhereDialog: FC<{ open: boolean; supported: boolean; onClose: () => void; onThisDevice: () => void; onAnotherDevice: () => void }> = ({
+	open,
+	supported,
+	onClose,
+	onThisDevice,
+	onAnotherDevice,
+}) => {
+	return (
+		<Dialog.Root
+			placement='center'
+			size='sm'
+			lazyMount
+			unmountOnExit
+			open={open}
+			onOpenChange={e => !e.open && onClose()}>
+			<Portal>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>
+					<AlertDialogContent
+						borderWidth='1px'
+						borderColor='border'
+						_dark={{ bg: 'background.dark' }}>
+						<AlertDialogHeader>Add a passkey</AlertDialogHeader>
+						<Dialog.Body
+							p={4}
+							pb={5}>
+							<Flex
+								direction='column'
+								gap={2}>
+								<WhereOption
+									icon={<Laptop size={18} />}
+									title='On this device'
+									hint={supported ? 'Touch ID, Face ID, Windows Hello, or this browser’s password manager' : 'This browser doesn’t support passkeys'}
+									disabled={!supported}
+									onClick={onThisDevice}
+								/>
+								<WhereOption
+									icon={<QrCode size={18} />}
+									title='On your phone or another device'
+									hint='Scan a QR code — the passkey is saved on that phone (iCloud Keychain, Google Password Manager)'
+									onClick={onAnotherDevice}
+								/>
+							</Flex>
+						</Dialog.Body>
+						<ModalFooter>
+							<DocLink anchor='passkeys' />
+							<Button
+								variant='outline'
+								ml='auto'
+								onClick={onClose}>
+								Cancel
+							</Button>
+						</ModalFooter>
+					</AlertDialogContent>
+				</Dialog.Positioner>
+			</Portal>
+		</Dialog.Root>
+	);
+};
+
+const WhereOption: FC<{ icon: ReactNode; title: string; hint: string; disabled?: boolean; onClick: () => void }> = ({
+	icon,
+	title,
+	hint,
+	disabled,
+	onClick,
+}) => (
+	<Button
+		variant='outline'
+		h='auto'
+		p={3}
+		justifyContent='flex-start'
+		gap={3}
+		textAlign='left'
+		whiteSpace='normal'
+		fontWeight='400'
+		borderRadius='xl'
+		disabled={disabled}
+		onClick={onClick}>
+		<Flex
+			flexShrink={0}
+			w='36px'
+			h='36px'
+			align='center'
+			justify='center'
+			borderRadius='lg'
+			bg='bg.muted'>
+			{icon}
+		</Flex>
+		<Box minW={0}>
+			<Text
+				fontSize='14px'
+				fontWeight='600'>
+				{title}
+			</Text>
+			<Text
+				fontSize='12px'
+				color='fg.muted'>
+				{hint}
+			</Text>
+		</Box>
+	</Button>
+);
+
 /* --------------------------------------------------------------- card */
 
 const PasskeyRow: FC<{ passkey: TwoFactorPasskey; onRename: () => void; onRemove: () => void }> = ({ passkey, onRename, onRemove }) => (
@@ -317,7 +424,7 @@ const PasskeyRow: FC<{ passkey: TwoFactorPasskey; onRename: () => void; onRemove
  * /docs/two-factor.
  */
 const TwoFactorCard: FC = () => {
-	const { data, isLoading } = useGetTwoFactorQuery();
+	const { data, isLoading, refetch } = useGetTwoFactorQuery();
 	const [enable, enabling] = useEnableTwoFactorMutation();
 	const [disable, disabling] = useDisableTwoFactorMutation();
 	const [setEmail, settingEmail] = useSetTwoFactorEmailMutation();
@@ -326,8 +433,13 @@ const TwoFactorCard: FC = () => {
 	const [addPasskey] = useAddPasskeyMutation();
 	const [renamePasskey, renaming] = useRenamePasskeyMutation();
 	const [removePasskey, removing] = useRemovePasskeyMutation();
+	const [createLink, linking] = useCreatePasskeyLinkMutation();
 
-	const [ask, setAsk] = useState<'enable' | 'disable' | 'codes' | null>(null);
+	const [ask, setAsk] = useState<'enable' | 'disable' | 'codes' | 'link' | null>(null);
+	const [where, setWhere] = useState(false); // "Add passkey": this device, or a phone?
+	const [link, setLink] = useState<ShownLink | null>(null);
+	// Kept for "Make a new one" when a QR code expires, without asking again.
+	const [linkPassword, setLinkPassword] = useState('');
 	const [codes, setCodes] = useState<string[] | null>(null);
 	const [naming, setNaming] = useState<string | null>(null); // a new passkey's suggested name
 	const [adding, setAdding] = useState(false);
@@ -350,10 +462,24 @@ const TwoFactorCard: FC = () => {
 			} else if (ask === 'codes') {
 				const r = await newCodes({ password }).unwrap();
 				setCodes(r.backupCodes);
+			} else if (ask === 'link') {
+				const r = await createLink({ password }).unwrap();
+				setLinkPassword(password);
+				setLink({ _id: r._id, url: r.url, expiresAt: r.expiresAt });
 			}
 			setAsk(null);
 		} catch (e) {
-			fail('Couldn’t change two-factor authentication', e);
+			fail(ask === 'link' ? 'Couldn’t make the QR code' : 'Couldn’t change two-factor authentication', e);
+		}
+	};
+
+	const renewLink = async () => {
+		try {
+			const r = await createLink({ password: linkPassword }).unwrap();
+			setLink({ _id: r._id, url: r.url, expiresAt: r.expiresAt });
+		} catch (e) {
+			setLink(null);
+			fail('Couldn’t make a new QR code', e);
 		}
 	};
 
@@ -486,18 +612,10 @@ const TwoFactorCard: FC = () => {
 										alignSelf='flex-start'
 										loading={adding}
 										loadingText='Waiting for the browser'
-										disabled={!supported}
-										onClick={() => setNaming(deviceName())}>
+										onClick={() => setWhere(true)}>
 										<Plus size={14} />
 										Add passkey
 									</Button>
-									{!supported && (
-										<Text
-											fontSize='12px'
-											color='fg.muted'>
-											This browser doesn’t support passkeys.
-										</Text>
-									)}
 									<DocLink anchor='passkeys' />
 								</Flex>
 							</Flex>
@@ -534,18 +652,28 @@ const TwoFactorCard: FC = () => {
 
 			<PasswordDialog
 				open={!!ask}
-				anchor={ask === 'codes' ? 'backup-codes' : ask === 'disable' ? 'turn-off' : 'turn-on'}
-				title={ask === 'enable' ? 'Turn on two-factor authentication?' : ask === 'disable' ? 'Turn off two-factor authentication?' : 'Make new backup codes?'}
-				description={
+				anchor={ask === 'codes' ? 'backup-codes' : ask === 'disable' ? 'turn-off' : ask === 'link' ? 'passkey-qr' : 'turn-on'}
+				title={
 					ask === 'enable'
+						? 'Turn on two-factor authentication?'
+						: ask === 'disable'
+						? 'Turn off two-factor authentication?'
+						: ask === 'link'
+						? 'Add a passkey on your phone'
+						: 'Make new backup codes?'
+				}
+				description={
+					ask === 'link'
+						? 'You’ll get a QR code to scan with your phone. Anyone holding it could add a passkey to your account, so confirm it’s you first.'
+						: ask === 'enable'
 						? 'Signing in will ask for a code by email (or a passkey, once you add one) after your password. You’ll get 10 backup codes to keep.'
 						: ask === 'disable'
 						? 'Your password alone will sign you in. Your backup codes stop working; your passkeys stay, for when you turn it on again.'
 						: 'Your current backup codes stop working, and you get 10 new ones.'
 				}
-				confirmLabel={ask === 'enable' ? 'Turn on' : ask === 'disable' ? 'Turn off' : 'Make new codes'}
+				confirmLabel={ask === 'enable' ? 'Turn on' : ask === 'disable' ? 'Turn off' : ask === 'link' ? 'Show QR code' : 'Make new codes'}
 				tone={ask === 'disable' ? 'warning' : 'default'}
-				loading={enabling.isLoading || disabling.isLoading || making.isLoading}
+				loading={enabling.isLoading || disabling.isLoading || making.isLoading || linking.isLoading}
 				onClose={() => setAsk(null)}
 				onConfirm={confirmPassword}
 			/>
@@ -553,6 +681,33 @@ const TwoFactorCard: FC = () => {
 			<BackupCodesDialog
 				codes={codes}
 				onClose={() => setCodes(null)}
+			/>
+
+			<WhereDialog
+				open={where}
+				supported={supported}
+				onClose={() => setWhere(false)}
+				onThisDevice={() => {
+					setWhere(false);
+					setNaming(deviceName());
+				}}
+				onAnotherDevice={() => {
+					setWhere(false);
+					setAsk('link');
+				}}
+			/>
+
+			<PasskeyQrDialog
+				link={link}
+				onClose={() => {
+					setLink(null);
+					setLinkPassword('');
+				}}
+				onRenew={renewLink}
+				onAdded={() => {
+					refetch();
+					toaster.create({ type: 'success', title: 'Passkey added on your other device' });
+				}}
 			/>
 
 			<NameDialog

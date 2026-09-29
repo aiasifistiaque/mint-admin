@@ -135,7 +135,7 @@ const DashboardBuilderPage = () => {
 				pb={dirty ? 20 : 4}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/dashboard-builder', title: 'Dashboard Builder' },
 					]}
 					title='Dashboard Builder'

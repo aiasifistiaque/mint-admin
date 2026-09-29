@@ -1158,7 +1158,7 @@ const FeatureWizard: FC = () => {
 	};
 
 	const crumbs = [
-		{ href: '/dashboard', title: 'Home' },
+		{ href: '/', title: 'Home' },
 		{ href: '/model-builder', title: 'Models' },
 		{ href: '/model-builder/features', title: 'Features' },
 		{ href: '/model-builder/features/new', title: 'New feature' },

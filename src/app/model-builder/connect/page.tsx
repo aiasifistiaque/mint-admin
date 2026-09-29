@@ -382,7 +382,7 @@ const ConnectPage = () => {
 				maxW='960px'>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/model-builder', title: 'Models' },
 						{ href: '/model-builder/connect', title: 'Connect your AI' },
 					]}

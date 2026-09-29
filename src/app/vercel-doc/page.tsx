@@ -21,7 +21,7 @@ const VercelDocPage = () => {
 				pt={{ base: 3, md: 5 }}>
 				<Crumbs
 					data={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/vercels', title: 'Vercel Accounts' },
 						{ href: '/vercel-doc', title: 'Guide' },
 					]}

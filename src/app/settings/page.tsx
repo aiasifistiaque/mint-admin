@@ -7,15 +7,13 @@ import {
 	useCustomToast,
 	SignatureUpload,
 	useModalLayout,
-	UpdatePasswordModal,
 	PromptDialog,
 } from '@/components/library';
 import { Box, Button, Flex, Grid, Input, Image, Skeleton, Text } from '@chakra-ui/react';
-import { Check, KeyRound, Lock, PanelRight, PenLine, SquareDashed, UserRound } from 'lucide-react';
+import { Check, Lock, PanelRight, PenLine, SquareDashed, UserRound } from 'lucide-react';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { Row, SettingsCard, Value } from './_components/ui';
-import TwoFactorCard from './_components/TwoFactorCard';
-import SessionsCard from './_components/SessionsCard';
+import SecuritySummaryCard from './_components/SecuritySummaryCard';
 
 const COMPACT = { size: 'sm', px: 3 } as const;
 
@@ -165,7 +163,7 @@ const SettingsPage = () => {
 					<Text
 						fontSize='13px'
 						color='fg.muted'>
-						Your profile, sign-in, signature and how forms open. Only you see these.
+						Your profile, sign-in & security, signature and how forms open. Only you see these.
 					</Text>
 				</Box>
 
@@ -329,31 +327,9 @@ const SettingsPage = () => {
 					)}
 				</SettingsCard>
 
-				{/* ------------------------------------------------ password */}
-				<SettingsCard
-					id='password'
-					icon={<KeyRound size={16} />}
-					title='Password'
-					description='The password you sign in with. You’ll need your current one to change it.'
-					note='Use at least 8 characters, and one you don’t use elsewhere.'
-					actions={
-						<UpdatePasswordModal
-							trigger={
-								<Button
-									{...COMPACT}
-									variant='outline'>
-									Change password
-								</Button>
-							}
-						/>
-					}
-				/>
-
-				{/* ---------------------------------------------- two-factor */}
-				<TwoFactorCard />
-
-				{/* ------------------------------------------------- devices */}
-				<SessionsCard />
+				{/* ----------------------------------- sign-in & security */}
+				{/* Password, two-factor and signed-in devices live on their own page. */}
+				<SecuritySummaryCard />
 
 				{/* ----------------------------------------------- signature */}
 				<SettingsCard

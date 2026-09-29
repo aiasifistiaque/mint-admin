@@ -15,6 +15,12 @@ export type AdminSessionView = {
 	os: string;
 	deviceType: 'desktop' | 'mobile' | 'tablet' | 'unknown';
 	ip: string;
+	/** Where it is now — "Dhaka, Bangladesh", "Local network", or '' while unknown. */
+	location: string;
+	countryCode: string | null;
+	/** Where it signed in from (differs when the device has moved since). */
+	signInIp: string;
+	signInLocation: string;
 	signedInAt: string;
 	lastActiveAt: string;
 	online: boolean;

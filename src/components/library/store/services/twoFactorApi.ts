@@ -26,6 +26,16 @@ export type TwoFactorPasskey = {
 	lastUsedAt: string | null;
 };
 
+/** A QR link for adding a passkey on another device, as the computer showing it polls it. */
+export type PasskeyLink = {
+	_id: string;
+	status: 'waiting' | 'opened' | 'added' | 'expired';
+	/** "Safari on iPhone", once the phone opened the link. */
+	device: string | null;
+	passkey: { _id: string; name: string } | null;
+	expiresAt: string | null;
+};
+
 export type TwoFactorStatus = {
 	enabled: boolean;
 	email: { enabled: boolean; address: string };
@@ -86,6 +96,28 @@ export const twoFactorApi = mainApi.injectEndpoints({
 			query: id => ({ url: `auth/2fa/passkeys/${id}`, method: 'DELETE' }),
 			invalidatesTags: ['self'],
 		}),
+
+		/* a passkey on another device, by QR code */
+		createPasskeyLink: builder.mutation<PasskeyLink & { url: string }, { password: string }>({
+			query: body => ({ url: 'auth/2fa/passkeys/link', method: 'POST', body }),
+		}),
+		getPasskeyLink: builder.query<PasskeyLink, string>({
+			query: id => `auth/2fa/passkeys/link/${id}`,
+			// Polled while the QR is showing; never served from cache.
+			keepUnusedDataFor: 0,
+		}),
+		cancelPasskeyLink: builder.mutation<{ message: string }, string>({
+			query: id => ({ url: `auth/2fa/passkeys/link/${id}`, method: 'DELETE' }),
+		}),
+		openPasskeyLink: builder.mutation<
+			{ admin: { name?: string; email: string }; suggestedName: string; options: any; expiresAt: string },
+			{ token: string }
+		>({
+			query: body => ({ url: 'auth/2fa/passkey-link/open', method: 'POST', body }),
+		}),
+		finishPasskeyLink: builder.mutation<{ passkey: TwoFactorPasskey }, { token: string; response: any; name: string }>({
+			query: body => ({ url: 'auth/2fa/passkey-link/finish', method: 'POST', body }),
+		}),
 	}),
 	overrideExisting: false,
 });
@@ -104,4 +136,9 @@ export const {
 	useAddPasskeyMutation,
 	useRenamePasskeyMutation,
 	useRemovePasskeyMutation,
+	useCreatePasskeyLinkMutation,
+	useGetPasskeyLinkQuery,
+	useCancelPasskeyLinkMutation,
+	useOpenPasskeyLinkMutation,
+	useFinishPasskeyLinkMutation,
 } = twoFactorApi;

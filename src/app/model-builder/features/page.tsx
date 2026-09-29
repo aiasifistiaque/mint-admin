@@ -28,7 +28,7 @@ const FeaturesPage = () => {
 				maxW='960px'>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/model-builder', title: 'Models' },
 						{ href: '/model-builder/features', title: 'Features' },
 					]}

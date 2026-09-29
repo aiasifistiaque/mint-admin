@@ -1,4 +1,5 @@
-import { Flex, FlexProps, Heading, Button, Text, Skeleton, IconButton, Menu } from '@chakra-ui/react';
+import { Box, Flex, FlexProps, Heading, Button, Text, Skeleton, IconButton, Menu } from '@chakra-ui/react';
+import Crumbs from '../../cl/Crumbs';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { Download, EllipsisVertical, Upload } from 'lucide-react';
@@ -119,6 +120,23 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 		<Flex
 			{...wrapperCss}
 			{...props}>
+			{/* The same trail as the console and builder pages (cl PageHeader). */}
+			{isLoading ? (
+				<Skeleton
+					w='120px'
+					h='14px'
+					borderRadius='full'
+				/>
+			) : (
+				<Box mb={-1}>
+					<Crumbs
+						data={[
+							{ href: '/', title: 'Home' },
+							{ href: `/${path}`, title },
+						]}
+					/>
+				</Box>
+			)}
 			<Flex {...containerCss}>
 				{isLoading ? (
 					// One bar the size of the <Heading> it stands in for. This was a

@@ -55,7 +55,7 @@ const NotificationsPage = () => {
 				maxW='860px'>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/notifications', title: 'Notifications' },
 					]}
 					title='Notifications'

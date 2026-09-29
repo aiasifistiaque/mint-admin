@@ -457,7 +457,7 @@ const ModelWizard = () => {
 					maxW='720px'>
 					<PageHeader
 						breadcrumbs={[
-							{ href: '/dashboard', title: 'Home' },
+							{ href: '/', title: 'Home' },
 							{ href: '/model-builder', title: 'Models' },
 							{ href: '/model-builder/new', title: 'New model' },
 						]}
@@ -525,7 +525,7 @@ const ModelWizard = () => {
 				pb={10}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/dashboard', title: 'Home' },
+						{ href: '/', title: 'Home' },
 						{ href: '/builder', title: 'Routes' },
 						{ href: '/model-builder', title: 'Models' },
 						{ href: '/model-builder/new', title: 'New model' },

@@ -21,7 +21,7 @@ export const Section: FC<{ id: string; title: string; lead?: ReactNode; children
 	<Box
 		as='section'
 		id={id}
-		scrollMarginTop='24px'
+		scrollMarginTop='80px'
 		pt={8}
 		pb={2}
 		borderTopWidth='1px'
