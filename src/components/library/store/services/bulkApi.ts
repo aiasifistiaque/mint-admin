@@ -1,4 +1,4 @@
-import mainApi from './mainApi';
+import mainApi, { routeTags } from './mainApi';
 
 /**
  * Bulk actions on a table's ticked rows — backend bulkActions.controller.ts —
@@ -36,29 +36,29 @@ export const bulkApi = mainApi.injectEndpoints({
 	endpoints: builder => ({
 		bulkDelete: builder.mutation<{ batch: string; deleted: number; skipped: number }, { path: string; ids: string[] }>({
 			query: ({ path, ids }) => ({ url: `${path}/bulk/delete`, method: 'POST', body: { ids } }),
-			invalidatesTags: (r, e, { path }) => [path, 'history'],
+			invalidatesTags: (r, e, { path }) => routeTags(path, 'history'),
 		}),
 		bulkRestore: builder.mutation<{ restored: number }, { path: string; batch: string }>({
 			query: ({ path, batch }) => ({ url: `${path}/bulk/restore`, method: 'POST', body: { batch } }),
-			invalidatesTags: (r, e, { path }) => [path, 'history'],
+			invalidatesTags: (r, e, { path }) => routeTags(path, 'history'),
 		}),
 		bulkDuplicate: builder.mutation<
 			{ created: string[]; failed: { id: string; name: string; message: string }[]; skipped: number },
 			{ path: string; ids: string[]; overrides?: Record<string, any> }
 		>({
 			query: ({ path, ids, overrides }) => ({ url: `${path}/bulk/duplicate`, method: 'POST', body: { ids, overrides } }),
-			invalidatesTags: (r, e, { path }) => [path, 'history'],
+			invalidatesTags: (r, e, { path }) => routeTags(path, 'history'),
 		}),
 		bulkArchive: builder.mutation<{ changed: number; skipped: number }, { path: string; ids: string[]; archived: boolean }>({
 			query: ({ path, ids, archived }) => ({ url: `${path}/bulk/archive`, method: 'POST', body: { ids, archived } }),
-			invalidatesTags: (r, e, { path }) => [path, 'history'],
+			invalidatesTags: (r, e, { path }) => routeTags(path, 'history'),
 		}),
 		bulkStatus: builder.mutation<
 			{ changed: number; skipped: StatusSkip[] },
 			{ path: string; ids: string[]; to: string; reason?: string }
 		>({
 			query: ({ path, ...body }) => ({ url: `${path}/bulk/status`, method: 'POST', body }),
-			invalidatesTags: (r, e, { path }) => [path, 'history'],
+			invalidatesTags: (r, e, { path }) => routeTags(path, 'history'),
 		}),
 		mergePreview: builder.query<
 			{ links: MergeLink[]; total: number; editable: string[] },
@@ -73,7 +73,7 @@ export const bulkApi = mainApi.injectEndpoints({
 		>({
 			query: ({ path, ...body }) => ({ url: `${path}/bulk/merge`, method: 'POST', body }),
 			// Links moved, so any list may have changed.
-			invalidatesTags: (r, e, { path }) => [path, 'history'],
+			invalidatesTags: (r, e, { path }) => routeTags(path, 'history'),
 		}),
 		importTemplate: builder.query<{ columns: ImportColumn[]; maxRows: number }, string>({
 			query: path => `${path}/bulk/import/template`,
@@ -81,7 +81,7 @@ export const bulkApi = mainApi.injectEndpoints({
 		/** Checks every row (dryRun) or saves them all; nothing is saved unless every row passes. */
 		importRows: builder.mutation<ImportResult, { path: string; format: ImportFormat; content: string; dryRun: boolean }>({
 			query: ({ path, ...body }) => ({ url: `${path}/bulk/import`, method: 'POST', body }),
-			invalidatesTags: (r, e, { path, dryRun }) => (dryRun || !r?.created ? [] : [path, 'history']),
+			invalidatesTags: (r, e, { path, dryRun }) => (dryRun || !r?.created ? [] : routeTags(path, 'history')),
 		}),
 		/** A file from the server (export/rows, export/records), saved as it arrives. */
 		download: builder.mutation<DownloadResult, { url: string; body: any; params?: Record<string, any>; fallbackName: string }>({

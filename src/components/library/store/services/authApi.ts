@@ -1,4 +1,4 @@
-import mainApi from './mainApi';
+import mainApi, { routeTags } from './mainApi';
 import { LoginBodyType, LoginPayloadType } from './types';
 
 export const authApi = mainApi.injectEndpoints({
@@ -62,7 +62,7 @@ export const authApi = mainApi.injectEndpoints({
 				method: 'PUT',
 				body: { field, preferences },
 			}),
-			invalidatesTags: (result, error, { field, preferences }) => [field, 'self'],
+			invalidatesTags: (result, error, { field, preferences }) => routeTags(field, 'self'),
 		}),
 	}),
 	overrideExisting: false,

@@ -1,4 +1,4 @@
-import mainApi from './mainApi';
+import mainApi, { routeTags } from './mainApi';
 
 /**
  * The dashboard builder's widgets (backend library/controllers/dashboard), and
@@ -24,7 +24,7 @@ export const dashboardApi = mainApi.injectEndpoints({
 		// refreshes the widgets reading it.
 		getStats: builder.query<any, { route: string; params: Record<string, any> }>({
 			query: ({ route, params }) => ({ url: `${route}/get/stats`, params }),
-			providesTags: (result, error, { route }) => [route],
+			providesTags: (result, error, { route }) => routeTags(route),
 		}),
 	}),
 });

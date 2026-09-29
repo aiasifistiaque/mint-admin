@@ -1,4 +1,4 @@
-import mainApi from './mainApi';
+import mainApi, { routeTags } from './mainApi';
 
 export type TotalOp = 'sum' | 'avg' | 'min' | 'max' | 'count';
 export type TotalItem = { field?: string; op: TotalOp };
@@ -20,7 +20,7 @@ export const totalsApi = mainApi.injectEndpoints({
 	endpoints: builder => ({
 		getTotals: builder.query<TotalsResult, { path: string; ids: string[]; items: TotalItem[] }>({
 			query: ({ path, ids, items }) => ({ url: `${path}/get/totals`, method: 'POST', body: { ids, items } }),
-			providesTags: (result, error, { path }) => [path],
+			providesTags: (result, error, { path }) => routeTags(path),
 		}),
 	}),
 });

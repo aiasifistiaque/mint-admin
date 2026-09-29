@@ -1,4 +1,4 @@
-import mainApi from './mainApi';
+import mainApi, { routeTags } from './mainApi';
 import { ListType } from '../store.types';
 import { BASE_LIMIT } from '../..';
 
@@ -65,7 +65,7 @@ export const uploadApi = mainApi.injectEndpoints({
 				if (folder) body.append('folder', folder);
 				return { url: 'upload/multiple', method: 'POST', body, formData: true };
 			},
-			invalidatesTags: (result, error, { path }) => ['uploads', 'upload', path || 'images'],
+			invalidatesTags: (result, error, { path }) => routeTags('uploads', 'upload', path || 'images'),
 		}),
 	}),
 });
