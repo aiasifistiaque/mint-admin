@@ -21,6 +21,7 @@ import {
 	MenuItem,
 	useGetConfigQuery,
 } from '../..';
+import { styles } from '../../config';
 
 type CreateServerModalProps = {
 	trigger?: any;
@@ -152,17 +153,15 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 			{!isMobile && <FooterStatus />}
 			{!isMobile && (
 				<DiscardButton
-					px={3}
 					disabled={isLoading}
 					onClick={onModalClose}>
 					Cancel
 				</DiscardButton>
 			)}
 			<Button
+				{...(styles.MODAL_BUTTON as any)}
 				{...(isMobile && { w: 'full' })}
-				px={3}
 				type='submit'
-				size={{ base: 'md', md: 'sm' }}
 				disabled={isFetching}
 				loading={isLoading}
 				loadingText='Creating'

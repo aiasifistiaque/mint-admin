@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { Button, ButtonProps } from '@chakra-ui/react';
-import { radius } from '../../../config';
+import { radius, styles } from '../../../config';
 
 type DiscardButtonProps = ButtonProps & {
 	children?: ReactNode;
@@ -15,21 +15,12 @@ const DiscardButton: FC<DiscardButtonProps> = ({ children, ...props }) => {
 	return (
 		<Button
 			variant='outline'
-			size='sm'
-			minW='84px'
-			px={4}
-			h={CONTROL_H}
+			{...(styles.MODAL_BUTTON as ButtonProps)}
 			borderRadius={radius.BUTTON}
-			fontSize='13px'
-			fontWeight='500'
 			{...props}>
 			{children || 'Discard'}
 		</Button>
 	);
 };
-
-// Same height as the toolbar controls and the fields above it, so a footer
-// button lines up with everything else in the drawer.
-const CONTROL_H = '36px';
 
 export default DiscardButton;

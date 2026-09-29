@@ -200,12 +200,14 @@ const NewKeyDialog: FC<{ open: boolean; onClose: () => void }> = ({ open, onClos
 	const [create, { isLoading }] = useCreateApiKeyMutation();
 	const [name, setName] = useState('');
 	const [build, setBuild] = useState(true);
+	const [data, setData] = useState(false);
 	const [days, setDays] = useState('');
 	const [made, setMade] = useState<{ secret: string; name: string } | null>(null);
 
 	const close = () => {
 		setName('');
 		setBuild(true);
+		setData(false);
 		setDays('');
 		setMade(null);
 		onClose();
@@ -213,7 +215,8 @@ const NewKeyDialog: FC<{ open: boolean; onClose: () => void }> = ({ open, onClos
 
 	const run = async () => {
 		try {
-			const res = await create({ name: name.trim(), scopes: build ? ['read', 'build'] : ['read'], ...(days && { expiresInDays: Number(days) }) }).unwrap();
+			const scopes = ['read', ...(build ? ['build'] : []), ...(data ? ['data'] : [])];
+			const res = await create({ name: name.trim(), scopes, ...(days && { expiresInDays: Number(days) }) }).unwrap();
 			setMade({ secret: res.secret, name: res.doc.name });
 		} catch (e: any) {
 			toaster.create({ type: 'error', title: 'Could not create the key', description: e?.data?.message });
@@ -289,6 +292,16 @@ const NewKeyDialog: FC<{ open: boolean; onClose: () => void }> = ({ open, onClos
 											<Switch.Thumb />
 										</Switch.Control>
 										<Switch.Label fontSize='sm'>Can build (off: it can only read the models and check plans)</Switch.Label>
+									</Switch.Root>
+									<Switch.Root
+										size='sm'
+										checked={data}
+										onCheckedChange={e => setData(e.checked)}>
+										<Switch.HiddenInput />
+										<Switch.Control>
+											<Switch.Thumb />
+										</Switch.Control>
+										<Switch.Label fontSize='sm'>Can read records (for questions and analysis — only pages you can view, read-only)</Switch.Label>
 									</Switch.Root>
 									<Box maxW='240px'>
 										<Text
@@ -485,7 +498,8 @@ const ConnectPage = () => {
 												fontFamily='mono'>
 												{k.prefix}…
 											</Text>{' '}
-											· {k.scopes?.includes('build') ? 'read & build' : 'read only'} · by {k.createdBy?.name || k.createdBy?.email || 'someone'} · last used{' '}
+											· {k.scopes?.includes('build') ? 'read & build' : 'read only'}
+										{k.scopes?.includes('data') ? ' + records' : ''} · by {k.createdBy?.name || k.createdBy?.email || 'someone'} · last used{' '}
 											{k.lastUsedAt ? when(k.lastUsedAt) : 'never'}
 											{k.expiresAt ? ` · expires ${when(k.expiresAt)}` : ''}
 										</Text>

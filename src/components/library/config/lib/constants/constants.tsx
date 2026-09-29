@@ -192,6 +192,20 @@ export const styles = {
 		},
 		borderRadius: '6px',
 	},
+	// Every button in a modal or drawer footer — Cancel / Discard and the
+	// Save / Confirm / Create beside it — so the pair is always one size.
+	// DiscardButton, ModalSubmitButton and ConfirmButton use it; a footer's own
+	// Button spreads it (`{...styles.MODAL_BUTTON}`). Taller on phones, where the
+	// primary button spans the sheet.
+	MODAL_BUTTON: {
+		size: 'sm',
+		h: { base: '40px', md: '36px' },
+		minW: '84px',
+		px: 4,
+		fontSize: '13px',
+		fontWeight: '500',
+		borderRadius: '8px',
+	},
 	// Every modal's footer (ModalFooter): a hairline, a tinted ledge, the
 	// actions on the right — padded like the header, and no more.
 	MODAL_FOOTER: {
@@ -205,6 +219,18 @@ export const styles = {
 		justifyContent: 'flex-end',
 		alignItems: 'center',
 		flexWrap: 'wrap',
+		// Buttons put straight in a footer come out one size too, even one a
+		// dialog styled by hand (size xs, px 2…) — the mismatched pairs were all
+		// hand-sized primaries next to a DiscardButton.
+		css: {
+			'& > button': {
+				h: { base: '40px', md: '36px' },
+				minW: '84px',
+				px: 4,
+				fontSize: '13px',
+				fontWeight: '500',
+			},
+		},
 	},
 	MODAL: {
 		bg: 'menu.light',

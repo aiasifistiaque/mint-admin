@@ -24,6 +24,7 @@ import {
 	createFormFields,
 	MenuItem,
 } from '../..';
+import { styles } from '../../config';
 
 import CreateModalProps from './types';
 import { withoutHidden } from '../../functions/formRules';
@@ -368,17 +369,15 @@ const CreateModal = (props: CreateModalProps) => {
 			)}
 			{!isMobile && (
 				<DiscardButton
-					px={3}
 					disabled={isLoading}
 					onClick={onModalClose}>
 					Cancel
 				</DiscardButton>
 			)}
 			<Button
+				{...(styles.MODAL_BUTTON as any)}
 				{...(isMobile && { w: 'full' })}
-				px={3}
 				type='submit'
-				size={{ base: 'md', md: 'sm' }}
 				disabled={saveDisabled}
 				loading={isLoading}
 				loadingText={isUpdate ? 'Saving' : 'Creating'}

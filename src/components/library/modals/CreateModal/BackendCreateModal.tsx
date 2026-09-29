@@ -21,6 +21,7 @@ import {
 } from '../..';
 
 import CreateModalProps from './types';
+import { styles } from '../../config';
 
 const CreateModal = (props: CreateModalProps) => {
 	const {
@@ -127,10 +128,9 @@ const CreateModal = (props: CreateModalProps) => {
 				</DiscardButton>
 			)}
 			<Button
+				{...(styles.MODAL_BUTTON as any)}
 				{...(isMobile && { w: 'full' })}
 				type='submit'
-				px={2}
-				size={{ base: 'md', md: 'sm' }}
 				loading={isLoading}
 				loadingText='Processing'
 				spinnerPlacement='start'>
