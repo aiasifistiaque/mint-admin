@@ -6,7 +6,9 @@ import {
 	useAppDispatch,
 	login,
 	LoginContainer,
+	TwoFactorChallenge,
 } from '@/components/library';
+import TwoFactorStep from './_components/TwoFactorStep';
 import { Link as ChakraLink } from '@chakra-ui/react';
 import NextLink from 'next/link';
 
@@ -36,9 +38,15 @@ const LoginPage: FC<{}> = () => {
 		trigger(formData);
 	};
 
+	// With two-factor on, the password earns a ticket instead of the token:
+	// the second step (TwoFactorStep) trades it for the session.
+	const [challenge, setChallenge] = useState<TwoFactorChallenge | null>(null);
+
 	useEffect(() => {
 		if (result.isSuccess) {
-			dispatch(login(result.data));
+			const data: any = result.data;
+			if (data?.twoFactor) setChallenge(data.twoFactor);
+			else dispatch(login(data));
 		}
 	}, [isLoading]);
 
@@ -47,6 +55,19 @@ const LoginPage: FC<{}> = () => {
 		isLoading: isLoading,
 		error: error,
 	});
+
+	if (challenge)
+		return (
+			<TwoFactorStep
+				challenge={challenge}
+				onToken={token => dispatch(login({ token } as any))}
+				onRestart={() => {
+					setChallenge(null);
+					setFormData(f => ({ ...f, password: '' }));
+					result.reset();
+				}}
+			/>
+		);
 
 	return (
 		<LoginContainer
