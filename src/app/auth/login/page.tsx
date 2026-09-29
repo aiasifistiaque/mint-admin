@@ -9,7 +9,8 @@ import {
 	TwoFactorChallenge,
 } from '@/components/library';
 import TwoFactorStep from './_components/TwoFactorStep';
-import { Link as ChakraLink } from '@chakra-ui/react';
+import { Box, Link as ChakraLink } from '@chakra-ui/react';
+import { SIGNED_OUT_KEY } from '@/components/provider/SessionGuard';
 import NextLink from 'next/link';
 
 import React, { FC, ChangeEvent, useState, useEffect } from 'react';
@@ -37,6 +38,20 @@ const LoginPage: FC<{}> = () => {
 		e.preventDefault();
 		trigger(formData);
 	};
+
+	// Sent here because this session was signed out elsewhere (SessionGuard):
+	// say so once, then forget it.
+	const [signedOut, setSignedOut] = useState(false);
+	useEffect(() => {
+		try {
+			if (sessionStorage.getItem(SIGNED_OUT_KEY)) {
+				setSignedOut(true);
+				sessionStorage.removeItem(SIGNED_OUT_KEY);
+			}
+		} catch {
+			/* storage blocked */
+		}
+	}, []);
 
 	// With two-factor on, the password earns a ticket instead of the token:
 	// the second step (TwoFactorStep) trades it for the session.
@@ -74,6 +89,18 @@ const LoginPage: FC<{}> = () => {
 			title='Login'
 			isLoading={isLoading}
 			handleSubmit={handleSubmit}>
+			{signedOut && (
+				<Box
+					role='status'
+					px={3}
+					py={2.5}
+					borderRadius='lg'
+					bg='orange.subtle'
+					color='orange.fg'
+					fontSize='13px'>
+					You were signed out on this device — from another device, or by an administrator. Sign in again to continue.
+				</Box>
+			)}
 			<VInput
 				label='Email'
 				isRequired

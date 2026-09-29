@@ -24,6 +24,8 @@ const SECTIONS = [
 	{ id: 'signing-in', title: 'Signing in' },
 	{ id: 'another-browser', title: 'On another browser or device' },
 	{ id: 'turn-off', title: 'Turning it off' },
+	{ id: 'devices', title: 'Signed-in devices' },
+	{ id: 'all-sessions', title: 'Everyone’s sessions' },
 	{ id: 'locked-out', title: 'Locked out' },
 	{ id: 'faq', title: 'Troubleshooting' },
 ];
@@ -206,7 +208,7 @@ const TwoFactorDocs = () => {
 					<Text
 						fontSize='sm'
 						color='fg.muted'>
-						A second step after your password — email code, passkey or backup code.{' '}
+						A second step after your password — email code, passkey or backup code — and the devices you’re signed in on.{' '}
 						<Link href='/settings#two-factor'>Open your settings</Link>
 					</Text>
 				</Box>
@@ -374,6 +376,51 @@ const TwoFactorDocs = () => {
 							Press <strong>Turn off</strong> in Settings and enter your password. Your password alone will sign you in
 							again. Your backup codes stop working; your passkeys stay in the list, ready for when you turn it back on.
 						</P>
+					</Section>
+
+					<Section
+						id='devices'
+						title='Signed-in devices'
+						lead='Every browser or phone your account is signed in on, in Settings.'>
+						<P>
+							<Link href='/settings#devices'>Settings → Signed-in devices</Link> lists each one: the browser and
+							system (“Chrome on macOS”), its IP address, when it signed in and how (password, email code, passkey…), and
+							when it was last active. The device you’re using is marked <strong>This device</strong>.
+						</P>
+						<List
+							items={[
+								<><strong>Sign out</strong> on a row signs that device out straight away. The next thing it does takes it to the login page, with a note that it was signed out.</>,
+								<><strong>Sign out other devices</strong> signs out everything except the device you’re on — useful after using a shared computer or if you don’t recognise one.</>,
+								<><strong>Logout</strong> in your account menu signs this device out the same way, so it disappears from the list.</>,
+								'“Last active” updates about once a minute while the device is being used.',
+							]}
+						/>
+						<Note tone='warn'>
+							A device you don’t recognise means someone else has your password: sign it out, change your password, and
+							turn on two-factor authentication.
+						</Note>
+					</Section>
+
+					<Section
+						id='all-sessions'
+						title='Everyone’s sessions'
+						lead='For super admins: every admin’s signed-in devices on one page.'>
+						<P>
+							<strong>Admin Sidebar → Login Sessions</strong> (<C>/sessions</C>) shows who is signed in where, when each
+							device was last active (a green dot means within the last 5 minutes), and the history of signed-out sessions
+							— who signed them out and when. Search by an admin’s name or email, a browser, or an IP address.
+						</P>
+						<List
+							items={[
+								<>The <strong>sign-out</strong> icon on a row signs that one device out.</>,
+								<>The <strong>red person</strong> icon signs out every device of that admin — for someone who left, or a lost laptop.</>,
+								<>Other roles can be given the <strong>Login sessions</strong> permission on the Roles page: <strong>View</strong> to see the page, <strong>Delete</strong> to sign devices out.</>,
+							]}
+						/>
+						<Note>
+							A signed-out device can’t be signed back in from here — its owner signs in again with their password (and
+							two-factor, if it’s on).
+						</Note>
 					</Section>
 
 					<Section

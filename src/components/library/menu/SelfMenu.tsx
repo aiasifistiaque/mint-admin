@@ -5,7 +5,7 @@ import { Menu, Heading, Tag, Center } from '@chakra-ui/react';
 import CustomMenuItem from './CustomMenuItem';
 import { MenuIconContainer, MenuContainer } from '.';
 import { Icon } from '../icon';
-import { useGetSelfQuery, logout } from '../store';
+import { useGetSelfQuery, logout, useSignOutHereMutation } from '../store';
 import { useAppDispatch } from '../hooks';
 import { useColorMode } from '@/components/ui/color-mode';
 import ThemeModal from '../theme/ThemeModal';
@@ -15,7 +15,15 @@ const SelfMenu = ({ iconSize }: { iconSize?: number }) => {
 	const dispatch = useAppDispatch();
 	const { colorMode } = useColorMode();
 	const [themesOpen, setThemesOpen] = useState(false);
-	const handleLogout = () => {
+	const [signOutHere] = useSignOutHereMutation();
+	// Ends this session on the server too (it leaves Signed-in devices, and the
+	// token stops working), then drops it here — even if the server is unreachable.
+	const handleLogout = async () => {
+		try {
+			await signOutHere().unwrap();
+		} catch {
+			/* signed out locally regardless */
+		}
 		dispatch(logout());
 	};
 	const red = colorMode === 'light' ? 'red.500' : 'red.300';

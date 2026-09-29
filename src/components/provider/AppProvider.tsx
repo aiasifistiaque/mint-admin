@@ -6,12 +6,14 @@ import { Provider } from 'react-redux';
 import { Provider as ChakraProvider } from '@/components/ui/provider';
 import { Toaster } from '@/components/ui/toaster';
 import ThemeSync from '@/components/library/theme/ThemeSync';
+import SessionGuard from './SessionGuard';
 
 export function Providers({ children }: { children: React.ReactNode }) {
 	return (
 		<Provider store={store}>
 			<ChakraProvider>
 				<ThemeSync />
+				<SessionGuard />
 				{children}
 				<Toaster />
 			</ChakraProvider>

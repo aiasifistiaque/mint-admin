@@ -15,6 +15,7 @@ import { Check, KeyRound, Lock, PanelRight, PenLine, SquareDashed, UserRound } f
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { Row, SettingsCard, Value } from './_components/ui';
 import TwoFactorCard from './_components/TwoFactorCard';
+import SessionsCard from './_components/SessionsCard';
 
 const COMPACT = { size: 'sm', px: 3 } as const;
 
@@ -350,6 +351,9 @@ const SettingsPage = () => {
 
 				{/* ---------------------------------------------- two-factor */}
 				<TwoFactorCard />
+
+				{/* ------------------------------------------------- devices */}
+				<SessionsCard />
 
 				{/* ----------------------------------------------- signature */}
 				<SettingsCard

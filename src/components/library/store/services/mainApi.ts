@@ -134,6 +134,7 @@ const tags: string[] = [
 	'route',
 	'schema',
 	'self',
+	'sessions',
 	'sellers',
 	'servicecat',
 	'servicecategories',

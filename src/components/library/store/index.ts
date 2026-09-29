@@ -14,6 +14,7 @@ export * from './services/commonApi';
 export * from './services/ordersApi';
 export * from './services/authApi';
 export * from './services/twoFactorApi';
+export * from './services/sessionsApi';
 export * from './services/adminInvitationApi';
 export * from './services/uploadApi';
 export * from './services/mediaApi';
