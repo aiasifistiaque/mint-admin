@@ -61,10 +61,15 @@ const Compact: FC<CustomMenuItemProps> = ({ children, icon, href, danger, ...pro
 				)}
 			</Box>
 		)}
+		{/* `inherit` twice: the theme's global `body, p, span` rule otherwise
+		    paints this span at 15px in `fg`, over the item's size and the red
+		    of a danger item. */}
 		<Box
 			as='span'
 			flex={1}
 			minW={0}
+			fontSize='inherit'
+			color='inherit'
 			truncate>
 			{children}
 		</Box>

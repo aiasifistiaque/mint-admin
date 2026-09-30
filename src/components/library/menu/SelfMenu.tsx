@@ -1,19 +1,28 @@
 'use client';
 import { useState } from 'react';
-import { Menu, Heading, Tag, Center } from '@chakra-ui/react';
+import { Menu, Center, Flex, Box, Text, FlexProps } from '@chakra-ui/react';
 
-import CustomMenuItem from './CustomMenuItem';
+import CustomMenuItem, { MenuItemStyle } from './CustomMenuItem';
 import { MenuIconContainer, MenuContainer } from '.';
 import { Icon } from '../icon';
 import { useGetSelfQuery, logout, useSignOutHereMutation } from '../store';
 import { useAppDispatch } from '../hooks';
-import { useColorMode } from '@/components/ui/color-mode';
 import ThemeModal from '../theme/ThemeModal';
+
+/** Up to two initials: "Asif Istiaque" → "AI", "admin" → "A". */
+const initialsOf = (name?: string) =>
+	(name ?? '')
+		.trim()
+		.split(/\s+/)
+		.filter(Boolean)
+		.slice(0, 2)
+		.map(part => part[0])
+		.join('')
+		.toUpperCase();
 
 const SelfMenu = ({ iconSize }: { iconSize?: number }) => {
 	const { data } = useGetSelfQuery({});
 	const dispatch = useAppDispatch();
-	const { colorMode } = useColorMode();
 	const [themesOpen, setThemesOpen] = useState(false);
 	const [signOutHere] = useSignOutHereMutation();
 	// Ends this session on the server too (it leaves Signed-in devices, and the
@@ -26,57 +35,73 @@ const SelfMenu = ({ iconSize }: { iconSize?: number }) => {
 		}
 		dispatch(logout());
 	};
-	const red = colorMode === 'light' ? 'red.500' : 'red.300';
+
+	const initials = initialsOf(data?.name);
+	const role = data?.role?.name;
+
 	return (
 		<>
-			<Menu.Root>
-				{/* <MenuButton as={MenuIconContainer}> */}
+			<Menu.Root positioning={{ placement: 'bottom-end', gutter: 8 }}>
 				<MenuIconContainer asChild>
-					<Menu.Trigger>
+					<Menu.Trigger aria-label='Account menu'>
 						<Center>
-							<Icon
-								color='inherit'
-								name='user-outline'
-								size={iconSize || 16}
-							/>
+							{initials ? (
+								<Text {...triggerInitialsCss}>{initials}</Text>
+							) : (
+								<Icon
+									color='inherit'
+									name='user-outline'
+									size={iconSize || 16}
+								/>
+							)}
 						</Center>
 					</Menu.Trigger>
 				</MenuIconContainer>
-				{/* </MenuButton> */}
 
-				<MenuContainer>
-					<Menu.ItemGroup>
-						<Menu.Item {...menuItemCss}>
-							<Heading
-								size='xs'
-								mb={2}>
-								{data?.name}
-							</Heading>
-							<Tag.Root size='sm'>
-								<Tag.Label>Role: {data?.role?.name}</Tag.Label>
-							</Tag.Root>
-						</Menu.Item>
-					</Menu.ItemGroup>
-					<Menu.Separator />
-					<CustomMenuItem
-						icon='config'
-						href='/settings'>
-						Settings
-					</CustomMenuItem>
-					<CustomMenuItem
-						icon='palette'
-						onClick={() => setThemesOpen(true)}>
-						Themes
-					</CustomMenuItem>
-					{/* <MenuDivider /> */}
-					{/* <MenuGroup> */}
-					<CustomMenuItem
-						color={red}
-						icon='logout'
-						onClick={handleLogout}>
-						Logout
-					</CustomMenuItem>
-					{/* </MenuGroup> */}
+				{/* `boxShadow` unset so the menu recipe's softer, layered shadow shows
+				    instead of MenuContainer's flat `md`. */}
+				<MenuContainer
+					p='6px'
+					gap={0}
+					w='256px'
+					boxShadow={undefined}>
+					<Flex {...headerCss}>
+						<Center {...avatarCss}>{initials || <Icon name='user-outline' size={16} color='inherit' />}</Center>
+						<Box
+							minW={0}
+							flex={1}>
+							<Text {...nameCss}>{data?.name || 'Signed in'}</Text>
+							{data?.email ? <Text {...subtleCss}>{data.email}</Text> : null}
+							{role ? <Text {...roleCss}>{role}</Text> : null}
+						</Box>
+					</Flex>
+
+					<Menu.Separator {...separatorCss} />
+
+					<MenuItemStyle compact>
+						<CustomMenuItem
+							value='settings'
+							icon='config'
+							href='/settings'>
+							Settings
+						</CustomMenuItem>
+						<CustomMenuItem
+							value='themes'
+							icon='palette'
+							onClick={() => setThemesOpen(true)}>
+							Themes
+						</CustomMenuItem>
+
+						<Menu.Separator {...separatorCss} />
+
+						<CustomMenuItem
+							value='logout'
+							icon='logout'
+							danger
+							onClick={handleLogout}>
+							Log out
+						</CustomMenuItem>
+					</MenuItemStyle>
 				</MenuContainer>
 			</Menu.Root>
 			<ThemeModal
@@ -87,20 +112,68 @@ const SelfMenu = ({ iconSize }: { iconSize?: number }) => {
 	);
 };
 
-const menuBtnCss: any = {
-	variant: 'ghost',
-	size: 'md',
-	borderRadius: 'full',
-	color: { base: 'navbar.text.light', _dark: 'navbar.text.dark' },
+const triggerInitialsCss: any = {
+	fontSize: '11px',
+	fontWeight: '600',
+	letterSpacing: '0.02em',
+	lineHeight: 1,
+	color: 'inherit',
 };
 
-const menuItemCss: any = {
+const headerCss: FlexProps = {
+	align: 'center',
+	gap: 3,
 	px: 2,
-	py: 1,
-	alignItems: 'flex-start',
-	flexDir: 'column',
-	_hover: { bg: 'transparent' },
-	bg: 'transparent',
+	pt: 2,
+	pb: 2.5,
+};
+
+// The accent fill, so it follows the colour theme like the primary buttons.
+const avatarCss: any = {
+	flexShrink: 0,
+	boxSize: '36px',
+	borderRadius: 'full',
+	bg: 'gray.solid',
+	color: 'gray.contrast',
+	fontSize: '13px',
+	fontWeight: '600',
+	letterSpacing: '0.02em',
+	boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.08)',
+};
+
+const nameCss: any = {
+	fontSize: '13.5px',
+	fontWeight: '600',
+	lineHeight: '1.3',
+	color: 'fg',
+	truncate: true,
+};
+
+const subtleCss: any = {
+	fontSize: '12px',
+	lineHeight: '1.35',
+	color: 'fg.muted',
+	truncate: true,
+};
+
+const roleCss: any = {
+	display: 'inline-block',
+	mt: 1.5,
+	px: 1.5,
+	py: '1px',
+	borderRadius: 'full',
+	borderWidth: '1px',
+	borderColor: 'border',
+	fontSize: '11px',
+	fontWeight: '500',
+	lineHeight: '1.5',
+	color: 'fg.muted',
+};
+
+const separatorCss: any = {
+	my: '5px',
+	mx: '-6px',
+	borderColor: 'border.muted',
 };
 
 export default SelfMenu;
