@@ -74,6 +74,26 @@ const dynoPalette = (size: string) => {
 	return 'orange'; // Performance, Private, Shield
 };
 
+// Cheapest first, for sorting the Dyno column by tier rather than alphabetically.
+const DYNO_ORDER = ['free', 'hobby', 'eco', 'basic', 'standard-1x', 'standard-2x', 'performance-m', 'performance-l', 'private', 'shield'];
+
+/**
+ * An app's place in that order: its largest running size (an app on
+ * Standard-1X and Standard-2X sorts as 2X). Scaled to zero sorts before Eco;
+ * unknown (Heroku didn't answer) is null, and sorts last either way.
+ */
+const dynoRank = (sizes: string[] | null | undefined): number | null => {
+	if (!sizes) return null;
+	if (!sizes.length) return -1;
+	return Math.max(
+		...sizes.map(size => {
+			const s = size.toLowerCase();
+			const at = DYNO_ORDER.findIndex(tier => s.startsWith(tier));
+			return at === -1 ? DYNO_ORDER.length : at;
+		})
+	);
+};
+
 const HerokuAccountPage = () => {
 	const { id }: { id: string } = useParams();
 	const router = useRouter();
@@ -81,7 +101,7 @@ const HerokuAccountPage = () => {
 	const [tab, setTab] = useState('overview');
 	const [appSearch, setAppSearch] = useState('');
 	const [team, setTeam] = useState<string>('');
-	const [sortKey, setSortKey] = useState<'name' | 'released' | 'dynoHours'>('name');
+	const [sortKey, setSortKey] = useState<'name' | 'released' | 'dynoHours' | 'dyno'>('name');
 	const [sortDir, setSortDir] = useState<SortDir>('asc');
 	const [rotating, setRotating] = useState(false);
 	const [newKey, setNewKey] = useState('');
@@ -192,6 +212,17 @@ const HerokuAccountPage = () => {
 				return (left - right) * direction;
 			}
 
+			if (sortKey === 'dyno') {
+				const left = dynoRank(a.dynoSizes);
+				const right = dynoRank(b.dynoSizes);
+
+				if (left === null && right === null) return a.name.localeCompare(b.name);
+				if (left === null) return 1;
+				if (right === null) return -1;
+
+				return (left - right) * direction || a.name.localeCompare(b.name);
+			}
+
 			return a.name.localeCompare(b.name) * direction;
 		});
 	}, [apps, appSearch, team, sortKey, sortDir, dynoHoursByApp]);
@@ -264,6 +295,7 @@ const HerokuAccountPage = () => {
 		{
 			key: 'dyno',
 			label: 'Dyno',
+			sortable: true,
 			render: app => {
 				// Null: Heroku didn't answer for this app. Empty: every process type is at zero.
 				if (!app.dynoSizes) return '—';
