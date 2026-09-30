@@ -1,10 +1,10 @@
 'use client';
 
+import DocsShell from '../_components/DocsShell';
 import { FC, ReactNode, useEffect } from 'react';
 import { Box, Flex, Grid, Link, Table, Text } from '@chakra-ui/react';
 import GuideNav from '../_components/GuideNav';
-import { Layout } from '@/components/library';
-import { PageHeader } from '@/components/library/cl';
+import GuideHeader from '../_components/GuideHeader';
 
 /**
  * The sidebar builder, explained for the people who arrange the sidebar —
@@ -183,14 +183,12 @@ const SidebarBuilderDocs = () => {
 			direction='column'
 			gap={6}
 			pb={16}>
-			<PageHeader
-				breadcrumbs={[
-					{ href: '/', title: 'Home' },
-					{ href: '/sidebar-builder', title: 'Sidebar Builder' },
-					{ href: '/docs/sidebar-builder', title: 'Guide' },
-				]}
-				title='Sidebar builder guide'
-				meta='How to add, arrange, hide and restrict the links in the admin sidebar'
+			<GuideHeader
+				href='/docs/sidebar-builder'
+				title='Sidebar builder'
+				description='How to add, arrange, hide and restrict the links in the admin sidebar.'
+				open={{ href: '/sidebar-builder', label: 'Open Sidebar Builder' }}
+				mb={2}
 			/>
 
 			<Grid
@@ -428,11 +426,11 @@ const SidebarBuilderDocs = () => {
 };
 
 const SidebarBuilderDocsPage = () => (
-	<Layout
-		title='Sidebar builder guide'
-		path='sidebar-builder'>
+	<DocsShell
+		current='/docs/sidebar-builder'
+		requireLogin>
 		<SidebarBuilderDocs />
-	</Layout>
+	</DocsShell>
 );
 
 export default SidebarBuilderDocsPage;

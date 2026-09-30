@@ -1,11 +1,11 @@
 'use client';
 
+import DocsShell from '../_components/DocsShell';
 import { FC, ReactNode, useEffect } from 'react';
 import NextLink from 'next/link';
 import { Box, Flex, Grid, Link, Table, Text } from '@chakra-ui/react';
 import GuideNav from '../_components/GuideNav';
-import { Layout } from '@/components/library';
-import { PageHeader } from '@/components/library/cl';
+import GuideHeader from '../_components/GuideHeader';
 
 /**
  * The route builder, explained — what it is, how a route is served, and what
@@ -205,14 +205,12 @@ const BuilderDocs = () => {
 			direction='column'
 			gap={6}
 			pb={16}>
-			<PageHeader
-				breadcrumbs={[
-					{ href: '/', title: 'Home' },
-					{ href: '/builder', title: 'Routes' },
-					{ href: '/docs/builder', title: 'Guide' },
-				]}
-				title='Route builder guide'
-				meta='What the builder is, how routes are served from it, and what every part of the editor does'
+			<GuideHeader
+				href='/docs/builder'
+				title='Route builder'
+				description='What the builder is, how routes are served from it, and what every part of the editor does.'
+				open={{ href: '/builder', label: 'Open the Routes page' }}
+				mb={2}
 			/>
 
 			<Grid
@@ -1443,11 +1441,11 @@ const BuilderDocs = () => {
 };
 
 const BuilderDocsPage = () => (
-	<Layout
-		title='Builder guide'
-		path='builder'>
+	<DocsShell
+		current='/docs/builder'
+		requireLogin>
 		<BuilderDocs />
-	</Layout>
+	</DocsShell>
 );
 
 export default BuilderDocsPage;

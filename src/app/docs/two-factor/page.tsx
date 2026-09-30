@@ -3,8 +3,8 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { Box, Flex, Grid, Link, Table, Text } from '@chakra-ui/react';
 import GuideNav from '../_components/GuideNav';
-import DocsNavbar from '../_components/DocsNavbar';
-import { ShieldCheck } from 'lucide-react';
+import DocsShell from '../_components/DocsShell';
+import GuideHeader from '../_components/GuideHeader';
 
 /**
  * Two-factor authentication, explained for the people who sign in to the
@@ -181,43 +181,13 @@ const TwoFactorDocs = () => {
 	}, []);
 
 	return (
-		<Box
-			minH='100vh'
-			bg='bg'>
-			<DocsNavbar current='/docs/two-factor' />
-			<Box
-				px={{ base: 4, md: 10 }}
-				py={{ base: 6, md: 10 }}>
-			<Flex
-				align='center'
-				gap={3}
-				mb={8}
-				maxW='1040px'
-				mx='auto'>
-				<Flex
-					w='36px'
-					h='36px'
-					align='center'
-					justify='center'
-					borderRadius='lg'
-					bg='bg.muted'>
-					<ShieldCheck size={18} />
-				</Flex>
-				<Box>
-					<Text
-						fontSize='xl'
-						fontWeight='600'
-						letterSpacing='-0.01em'>
-						Two-factor authentication
-					</Text>
-					<Text
-						fontSize='sm'
-						color='fg.muted'>
-						A second step after your password — email code, passkey or backup code — and the devices you’re signed in on.{' '}
-						<Link href='/settings/security'>Open Sign-in & security</Link>
-					</Text>
-				</Box>
-			</Flex>
+		<DocsShell current='/docs/two-factor'>
+			<GuideHeader
+				href='/docs/two-factor'
+				title='Two-factor authentication'
+				description='A second step after your password — email code, passkey or backup code — and the devices you’re signed in on.'
+				open={{ href: '/settings/security', label: 'Open Sign-in & security' }}
+			/>
 
 			<Grid
 				templateColumns={{ base: '1fr', lg: '200px minmax(0, 1fr)' }}
@@ -475,8 +445,7 @@ const TwoFactorDocs = () => {
 					</Section>
 				</Box>
 			</Grid>
-			</Box>
-		</Box>
+		</DocsShell>
 	);
 };
 

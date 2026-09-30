@@ -1,10 +1,10 @@
 'use client';
 
+import DocsShell from '../_components/DocsShell';
 import { FC, ReactNode, useEffect } from 'react';
 import { Box, Flex, Grid, Link, Table, Text } from '@chakra-ui/react';
 import GuideNav from '../_components/GuideNav';
-import { Layout } from '@/components/library';
-import { PageHeader } from '@/components/library/cl';
+import GuideHeader from '../_components/GuideHeader';
 import { Palette, THEMES } from '@/theme/palettes';
 
 /**
@@ -198,13 +198,11 @@ const ThemesDocs = () => {
 			direction='column'
 			gap={6}
 			pb={16}>
-			<PageHeader
-				breadcrumbs={[
-					{ href: '/', title: 'Home' },
-					{ href: '/docs/themes', title: 'Themes guide' },
-				]}
-				title='Themes guide'
-				meta='Colour themes for the admin panel — choosing one, light and dark, and how they work'
+			<GuideHeader
+				href='/docs/themes'
+				title='Themes'
+				description='Colour themes for the admin panel — choosing one, light and dark, and how they work.'
+				mb={2}
 			/>
 
 			<Grid
@@ -454,11 +452,11 @@ const ThemesDocs = () => {
 };
 
 const ThemesDocsPage = () => (
-	<Layout
-		title='Themes guide'
-		path='themes-guide'>
+	<DocsShell
+		current='/docs/themes'
+		requireLogin>
 		<ThemesDocs />
-	</Layout>
+	</DocsShell>
 );
 
 export default ThemesDocsPage;

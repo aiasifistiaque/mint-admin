@@ -4,24 +4,13 @@ import { FC } from 'react';
 import NextLink from 'next/link';
 import { Box, Button, Flex, Link, Text } from '@chakra-ui/react';
 import { ArrowUpRight, BookOpen } from 'lucide-react';
-
-/** Every guide, in the order people reach for them. */
-export const GUIDES = [
-	{ href: '/docs/two-factor', title: 'Sign-in & security' },
-	{ href: '/docs/builder', title: 'Route builder' },
-	{ href: '/docs/sidebar-builder', title: 'Sidebar builder' },
-	{ href: '/docs/dashboard-builder', title: 'Dashboard builder' },
-	{ href: '/docs/media', title: 'Media' },
-	{ href: '/docs/themes', title: 'Themes' },
-	{ href: '/docs/components', title: 'Components' },
-];
+import { GUIDES } from './guides';
 
 /**
- * The top bar of a guide shown outside the admin layout (the sign-in &
- * security guide is public — it's linked from the sign-in step, before
- * login): MINT Docs, a link to each guide, and back to the admin. Pinned
- * while the page scrolls; 56px tall, like the admin's own navbar, so
- * GuideNav sticks under it the same way.
+ * The top bar of every docs page (DocsShell) — the docs have no admin
+ * sidebar: MINT Docs (the docs home), a link to each guide, and back to the
+ * admin. Pinned while the page scrolls; 56px tall, like the admin's own
+ * navbar, so GuideNav sticks under it the same way.
  */
 const DocsNavbar: FC<{ current: string }> = ({ current }) => (
 	<Flex
@@ -44,7 +33,7 @@ const DocsNavbar: FC<{ current: string }> = ({ current }) => (
 			flexShrink={0}
 			color='fg'
 			_hover={{ textDecoration: 'none' }}>
-			<NextLink href='/docs/two-factor'>
+			<NextLink href='/docs'>
 				<BookOpen size={17} />
 				<Text
 					fontWeight='600'
@@ -94,7 +83,7 @@ const DocsNavbar: FC<{ current: string }> = ({ current }) => (
 				asChild
 				size='xs'
 				variant='outline'>
-				<NextLink href='/settings/security'>
+				<NextLink href='/'>
 					Open admin
 					<ArrowUpRight size={13} />
 				</NextLink>

@@ -1,10 +1,10 @@
 'use client';
 
+import DocsShell from '../_components/DocsShell';
 import { FC, ReactNode, useEffect } from 'react';
 import { Box, Flex, Grid, Link, Table, Text } from '@chakra-ui/react';
 import GuideNav from '../_components/GuideNav';
-import { Layout } from '@/components/library';
-import { PageHeader } from '@/components/library/cl';
+import GuideHeader from '../_components/GuideHeader';
 
 /**
  * The dashboard builder, explained for the people who arrange the dashboard.
@@ -183,14 +183,12 @@ const DashboardBuilderDocs = () => {
 			direction='column'
 			gap={6}
 			pb={16}>
-			<PageHeader
-				breadcrumbs={[
-					{ href: '/', title: 'Home' },
-					{ href: '/dashboard-builder', title: 'Dashboard Builder' },
-					{ href: '/docs/dashboard-builder', title: 'Guide' },
-				]}
-				title='Dashboard builder guide'
-				meta='How to choose the numbers, charts and lists on the admin dashboard'
+			<GuideHeader
+				href='/docs/dashboard-builder'
+				title='Dashboard builder'
+				description='How to choose the numbers, charts and lists on the admin dashboard.'
+				open={{ href: '/dashboard-builder', label: 'Open Dashboard Builder' }}
+				mb={2}
 			/>
 
 			<Grid
@@ -405,11 +403,11 @@ const DashboardBuilderDocs = () => {
 };
 
 const DashboardBuilderDocsPage = () => (
-	<Layout
-		title='Dashboard builder guide'
-		path='dashboard-builder'>
+	<DocsShell
+		current='/docs/dashboard-builder'
+		requireLogin>
 		<DashboardBuilderDocs />
-	</Layout>
+	</DocsShell>
 );
 
 export default DashboardBuilderDocsPage;

@@ -1,10 +1,10 @@
 'use client';
 
+import DocsShell from '../_components/DocsShell';
 import { FC, ReactNode, useEffect } from 'react';
 import { Box, Flex, Grid, Link, Table, Text } from '@chakra-ui/react';
 import GuideNav from '../_components/GuideNav';
-import { Layout } from '@/components/library';
-import { PageHeader } from '@/components/library/cl';
+import GuideHeader from '../_components/GuideHeader';
 
 /**
  * The media manager (admin /images), explained for the people who keep the
@@ -184,14 +184,12 @@ const MediaDocs = () => {
 			direction='column'
 			gap={6}
 			pb={16}>
-			<PageHeader
-				breadcrumbs={[
-					{ href: '/', title: 'Home' },
-					{ href: '/images', title: 'Media' },
-					{ href: '/docs/media', title: 'Guide' },
-				]}
-				title='Media guide'
-				meta='How to organise, upload, find and clean up the images and files the site uses'
+			<GuideHeader
+				href='/docs/media'
+				title='Media'
+				description='How to organise, upload, find and clean up the images and files the site uses.'
+				open={{ href: '/images', label: 'Open Media' }}
+				mb={2}
 			/>
 
 			<Grid
@@ -460,11 +458,11 @@ const MediaDocs = () => {
 };
 
 const MediaDocsPage = () => (
-	<Layout
-		title='Media guide'
-		path='images'>
+	<DocsShell
+		current='/docs/media'
+		requireLogin>
 		<MediaDocs />
-	</Layout>
+	</DocsShell>
 );
 
 export default MediaDocsPage;
