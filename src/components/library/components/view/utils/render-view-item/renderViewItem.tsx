@@ -331,32 +331,43 @@ const renderContent = ({ type, children, colorPalette, path, originalType, id, l
 					</Column>
 				</Box>
 			);
+		// On a phone a picture takes the full width under its label (ViewRow
+		// stacks image rows); from md up, the fixed sizes beside the label.
 		case 'image':
 			return (
-				<FullScreenImage src={children || PLACEHOLDER_IMAGE}>
+				<FullScreenImage
+					src={children || PLACEHOLDER_IMAGE}
+					w={{ base: 'full', md: 'auto' }}>
 					<ImageContainer
 						size={300}
 						src={children || PLACEHOLDER_IMAGE}
+						w={{ base: 'full', md: '300px' }}
+						h={{ base: 'auto', md: '300px' }}
+						aspectRatio={{ base: '4 / 3', md: 'auto' }}
 					/>
 				</FullScreenImage>
 			);
 		case 'image-array':
 			return (
-				<Align
-					flexWrap='wrap'
+				<Grid
+					w={{ base: 'full', md: 'auto' }}
+					templateColumns={{ base: 'repeat(2, minmax(0, 1fr))', md: 'repeat(auto-fill, 100px)' }}
 					gap={2}>
 					{children?.map((item: string, i: number) => (
 						<FullScreenImage
 							src={item || PLACEHOLDER_IMAGE}
-							key={i}>
+							key={i}
+							w={{ base: 'full', md: 'auto' }}>
 							<ImageContainer
-								key={i}
 								src={item || PLACEHOLDER_IMAGE}
 								size={100}
+								w={{ base: 'full', md: '100px' }}
+								h={{ base: 'auto', md: '100px' }}
+								aspectRatio={{ base: '1', md: 'auto' }}
 							/>
 						</FullScreenImage>
 					))}
-				</Align>
+				</Grid>
 			);
 		case 'date':
 			return <Text {...textCss}>{children?.toLocaleString()}</Text>;

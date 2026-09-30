@@ -119,6 +119,7 @@ const ServerPage: FC<TableProps> = ({ route, extraMenu }) => {
 		<>
 			<Layout
 				pb='32px'
+				showFooter={false}
 				title={table?.title}
 				path={route}>
 				<Column gap={2}>

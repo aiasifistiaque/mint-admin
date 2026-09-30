@@ -14,7 +14,8 @@ const DrawerContentContainer: FC<DrawerContentType> = ({ children, ...props }) =
 			_dark={{ bg: 'menu.dark' }}
 			boxShadow={styles.DRAWER.boxShadow}
 			w='100%'
-			maxH='90vh'
+			h='auto'
+			maxH='85dvh'
 			minH='20vh'
 			userSelect='none'
 			overflow='hidden'

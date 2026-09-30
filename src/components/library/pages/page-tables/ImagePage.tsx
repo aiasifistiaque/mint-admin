@@ -141,6 +141,7 @@ const ImagePage: FC<TableProps> = ({ route, title, folder }) => {
 		<>
 			<Layout
 				pb='32px'
+				showFooter={false}
 				title={title || table?.title}
 				path={route}>
 				<Column

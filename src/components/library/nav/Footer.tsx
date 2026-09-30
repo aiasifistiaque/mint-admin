@@ -6,25 +6,30 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import { padding } from '../config';
 
 /**
- * The links along the bottom of every page (Layout renders this under the
- * page body). An empty `href` shows the label without a link — for a page
- * that doesn't exist yet. Links starting with `http` open in a new tab.
+ * The links along the bottom of pages (Layout renders this under the page
+ * body, except on table pages; DocsShell and SiteShell too). Next `Link`s,
+ * so moving between them is client-side. An empty `href` shows the label
+ * without a link; links starting with `http` open in a new tab.
  */
 export const FOOTER_LINKS: { label: string; href: string }[] = [
-	{ label: 'Support', href: '' },
-	{ label: 'System Status', href: '' },
-	{ label: 'Docs', href: '' },
-	{ label: 'Terms of Use', href: '' },
-	{ label: 'Report Issue', href: '' },
-	{ label: 'Privacy Policy', href: '' },
+	// No separate help desk yet: support is reporting the problem.
+	{ label: 'Support', href: '/report-issue' },
+	{ label: 'System Status', href: '/system-status' },
+	{ label: 'Docs', href: '/docs' },
+	{ label: 'Terms of Use', href: '/terms' },
+	{ label: 'Report Issue', href: '/report-issue' },
+	{ label: 'Privacy Policy', href: '/privacy-policy' },
 ];
 
-const COMPANY = 'ThinkCrypt';
+const COMPANY = { name: 'THINKCRYPT', href: 'https://thinkcrypt.dev' };
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 
+// Smaller on phones, where the links wrap onto two or three lines.
+const FONT_SIZE = { base: '11.5px', md: '13px' };
+
 const linkCss: any = {
-	fontSize: '13px',
+	fontSize: FONT_SIZE,
 	color: 'fg',
 	whiteSpace: 'nowrap',
 	transition: 'color .12s ease',
@@ -37,7 +42,7 @@ const FooterLink: FC<{ label: string; href: string }> = ({ label, href }) => {
 	return (
 		<Link
 			href={href}
-			{...(external && { target: '_blank', rel: 'noreferrer' })}>
+			{...(external && { target: '_blank', rel: 'noopener noreferrer' })}>
 			<Text {...linkCss}>{label}</Text>
 		</Link>
 	);
@@ -46,22 +51,23 @@ const FooterLink: FC<{ label: string; href: string }> = ({ label, href }) => {
 const Footer = () => (
 	<Box
 		as='footer'
+		flexShrink={0}
 		borderTopWidth='1px'
 		borderColor='border.muted'
 		px={PX}
-		py={5}>
+		py={{ base: 3, md: 5 }}>
 		<Flex
 			align='center'
 			justify='center'
 			wrap='wrap'
-			rowGap={2}
-			columnGap={4}>
+			rowGap={{ base: 1.5, md: 2 }}
+			columnGap={{ base: 2.5, md: 4 }}>
 			{FOOTER_LINKS.map((link, i) => (
 				<Fragment key={link.label}>
 					{i > 0 && (
 						<Box
 							aria-hidden
-							h='14px'
+							h={{ base: '10px', md: '14px' }}
 							w='1px'
 							bg='border'
 						/>
@@ -69,13 +75,21 @@ const Footer = () => (
 					<FooterLink {...link} />
 				</Fragment>
 			))}
-			<Text
-				fontSize='13px'
-				color='fg.muted'
-				whiteSpace='nowrap'
-				ml={{ base: 0, md: 2 }}>
-				© {new Date().getFullYear()} {COMPANY}
-			</Text>
+			<Link
+				href={COMPANY.href}
+				target='_blank'
+				rel='noopener noreferrer'>
+				<Text
+					fontSize={FONT_SIZE}
+					color='fg.muted'
+					whiteSpace='nowrap'
+					letterSpacing='0.02em'
+					ml={{ base: 0, md: 2 }}
+					transition='color .12s ease'
+					_hover={{ color: 'fg' }}>
+					© {new Date().getFullYear()} {COMPANY.name}
+				</Text>
+			</Link>
 		</Flex>
 	</Box>
 );

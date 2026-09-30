@@ -530,12 +530,27 @@ const isMobile = useIsMobile();
 					<Section
 						id='charts'
 						title='Charts'
-						lead='Small SVG charts with no chart library — what the dashboard widgets draw with.'>
+						lead='What the dashboard widgets draw with — built on Chakra UI Charts (Recharts underneath).'>
 						<P>
-							From <C>@/components/library/dashboard/charts</C>. Every mark has a hover tooltip, every chart a
-							screen-reader table, and the colours are a validated categorical palette with its own dark-mode steps
-							(<C>PALETTE_CSS</C>, <C>seriesColor(i)</C>) — data colours, deliberately not the admin theme&apos;s.
-							Bars are at most 24px thick with a 4px rounded end; lines are 2px; one axis only.
+							From <C>@/components/library/dashboard/charts</C>. They use <C>@chakra-ui/charts</C>, so tooltips,
+							text and grid lines follow the admin&apos;s theme and light or dark mode, and they size themselves to
+							their container. Colours are a validated categorical palette with its own dark-mode steps (
+							<C>PALETTE_CSS</C>, <C>seriesColor(i)</C>) — data colours, deliberately not the admin theme&apos;s, and
+							checked for colour-blind separation in both modes.
+						</P>
+						<Props
+							head={['Chart', 'Component', 'Looks like']}
+							plainNames
+							rows={[
+								{ name: 'Column', type: 'ColumnChart', description: 'Rounded tops with a soft gradient, at most 28px wide; the hovered column gets a band behind it.' },
+								{ name: 'Line', type: 'LineChart', description: 'A 2px line over a fading area; a crosshair and a ringed marker follow the pointer.' },
+								{ name: 'Donut', type: 'DonutChart', description: 'Rounded segments with a small gap; the centre shows the total, or the hovered slice.' },
+								{ name: 'Bar list', type: 'BarList', description: 'Rounded bars on a soft track, with each value and its share.' },
+							]}
+						/>
+						<P>
+							Every chart has a tooltip or a hover state on each mark, a recessive dashed grid, one axis only, and
+							a screen-reader table of its numbers. They animate in once, on first draw.
 						</P>
 					</Section>
 

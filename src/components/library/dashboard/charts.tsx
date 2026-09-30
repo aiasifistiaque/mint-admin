@@ -1,20 +1,36 @@
 'use client';
 
-import { FC, ReactNode, useEffect, useRef, useState } from 'react';
+import { FC, useState } from 'react';
 import { Box, Flex, Text } from '@chakra-ui/react';
+import { Chart, useChart } from '@chakra-ui/charts';
+import {
+	Area,
+	AreaChart,
+	Bar,
+	BarChart,
+	CartesianGrid,
+	Cell,
+	Label,
+	Pie,
+	PieChart,
+	Tooltip,
+	XAxis,
+	YAxis,
+} from 'recharts';
 import { Interval, bucketLabel, formatCompact } from './types';
 
 /**
- * The dashboard's charts, drawn as plain SVG / HTML (no chart library):
+ * The dashboard's charts, on Chakra UI Charts (Recharts underneath, with
+ * Chakra's tooltip, tokens and colour mode):
  *
  * - ColumnChart: a series over time as columns;
- * - LineChart: the same as a line, with a crosshair;
+ * - LineChart: the same as a line over a soft area, with a crosshair;
  * - BarList: a breakdown as horizontal bars, labelled and valued;
  * - DonutChart: a breakdown as a ring, with a legend of values and shares.
  *
- * Marks follow the data-viz spec: bars at most 24px thick with a 4px rounded
- * end and a square baseline, 2px lines, recessive grid, a 2px surface gap
- * between slices, a hover tooltip on every mark, and a screen-reader table.
+ * Marks follow the data-viz spec: columns at most 28px wide with a 4px
+ * rounded top on a square baseline, a 2px line, a recessive dashed grid, a 2px
+ * gap between slices, a tooltip on every mark, and a screen-reader table.
  * Colours are the reference categorical palette (validated light and dark,
  * with the legend carrying the three light hues under 3:1 contrast); they're
  * data colours, deliberately not the admin theme's.
@@ -47,52 +63,6 @@ export const seriesColor = (i: number) => `var(--series-${(i % 7) + 1})`;
 type Point = { key: string; value: number };
 type Slice = { key: string | null; label: string; value: number; other?: boolean };
 
-/** Width of an element, following resizes. */
-const useWidth = () => {
-	const ref = useRef<HTMLDivElement>(null);
-	const [width, setWidth] = useState(0);
-	useEffect(() => {
-		if (!ref.current) return;
-		// Measured now too: the observer's first call waits for a frame, which a
-		// background tab never draws.
-		setWidth(Math.floor(ref.current.getBoundingClientRect().width));
-		const ro = new ResizeObserver(([e]) => setWidth(Math.floor(e.contentRect.width)));
-		ro.observe(ref.current);
-		return () => ro.disconnect();
-	}, []);
-	return { ref, width };
-};
-
-/** A round top for the axis: 0–37 -> 40, ticks every 10. */
-const niceScale = (max: number, ticks = 4) => {
-	if (max <= 0) return { top: 1, step: 1 / ticks };
-	const raw = max / ticks;
-	const mag = Math.pow(10, Math.floor(Math.log10(raw)));
-	const step = [1, 2, 2.5, 5, 10].map(f => f * mag).find(s => s >= raw) || 10 * mag;
-	return { top: step * Math.ceil(max / step), step };
-};
-
-const Tooltip: FC<{ x: number; y: number; width: number; children: ReactNode }> = ({ x, y, width, children }) => (
-	<Box
-		position='absolute'
-		left={`${Math.min(Math.max(x, 70), width - 70)}px`}
-		top={`${y}px`}
-		transform='translate(-50%, calc(-100% - 8px))'
-		pointerEvents='none'
-		bg='bg.panel'
-		borderWidth='1px'
-		borderColor='border'
-		borderRadius='md'
-		boxShadow='md'
-		px={2.5}
-		py={1.5}
-		fontSize='xs'
-		whiteSpace='nowrap'
-		zIndex={2}>
-		{children}
-	</Box>
-);
-
 /** The numbers behind a chart, for screen readers. */
 const SrTable: FC<{ caption: string; rows: [string, string][] }> = ({ caption, rows }) => (
 	<Box
@@ -110,8 +80,6 @@ const SrTable: FC<{ caption: string; rows: [string, string][] }> = ({ caption, r
 	</Box>
 );
 
-const PAD = { left: 40, right: 8, top: 10, bottom: 22 };
-
 type SeriesProps = {
 	points: Point[];
 	interval: Interval;
@@ -121,129 +89,106 @@ type SeriesProps = {
 	height?: number;
 };
 
-/** Axes shared by the column and line charts. */
-const Axes: FC<{ width: number; height: number; top: number; step: number; points: Point[]; interval: Interval }> = ({
-	width,
-	height,
-	top,
-	step,
-	points,
-	interval,
-}) => {
-	const innerW = width - PAD.left - PAD.right;
-	const innerH = height - PAD.top - PAD.bottom;
-	const ticks: number[] = [];
-	for (let v = 0; v <= top + step / 2; v += step) ticks.push(v);
-	const band = innerW / Math.max(points.length, 1);
-	const every = Math.max(1, Math.ceil(points.length / Math.max(1, Math.floor(innerW / 56))));
-	return (
-		<g>
-			{ticks.map(v => {
-				const y = PAD.top + innerH - (v / top) * innerH;
-				return (
-					<g key={v}>
-						<line
-							x1={PAD.left}
-							x2={width - PAD.right}
-							y1={y}
-							y2={y}
-							stroke='var(--chakra-colors-border-muted)'
-							strokeWidth={1}
-						/>
-						<text
-							x={PAD.left - 6}
-							y={y}
-							textAnchor='end'
-							dominantBaseline='middle'
-							fontSize={10}
-							fill='var(--chakra-colors-fg-muted)'>
-							{formatCompact(v)}
-						</text>
-					</g>
-				);
-			})}
-			{points.map((p, i) =>
-				i % every === 0 ? (
-					<text
-						key={p.key}
-						x={PAD.left + band * i + band / 2}
-						y={height - 6}
-						textAnchor='middle'
-						fontSize={10}
-						fill='var(--chakra-colors-fg-muted)'>
-						{bucketLabel(p.key, interval)}
-					</text>
-				) : null
-			)}
-		</g>
-	);
-};
+const AXIS_TICK = { fontSize: 11, fill: 'var(--chakra-colors-fg-muted)' };
+const GRID = 'var(--chakra-colors-border-muted)';
+const ANIMATION_MS = 500;
+const FILL = { width: '100%', height: '100%' };
 
-/** A column with a 4px rounded top and a square foot on the baseline. */
-const columnPath = (x: number, y: number, w: number, h: number) => {
-	const r = Math.min(4, w / 2, h);
-	return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`;
-};
+/** The shared chart state for a time series: one `value` series in the first palette colour. */
+const useSeries = (points: Point[], title: string) =>
+	useChart({
+		data: points.map(p => ({ key: p.key, value: p.value })),
+		series: [{ name: 'value', color: 'var(--series-1)', label: title }],
+	});
+
+/** Axes and grid shared by the column and line charts. */
+const cartesianParts = (interval: Interval) => [
+	<CartesianGrid
+		key='grid'
+		stroke={GRID}
+		strokeDasharray='3 3'
+		vertical={false}
+	/>,
+	<XAxis
+		key='x'
+		dataKey='key'
+		axisLine={false}
+		tickLine={false}
+		tickMargin={8}
+		minTickGap={18}
+		tick={AXIS_TICK}
+		tickFormatter={(k: string) => bucketLabel(k, interval)}
+	/>,
+	<YAxis
+		key='y'
+		axisLine={false}
+		tickLine={false}
+		width={40}
+		allowDecimals={false}
+		tick={AXIS_TICK}
+		tickFormatter={(v: number) => formatCompact(v)}
+	/>,
+];
+
+/** The tooltip for both: the bucket's full date over the value. */
+const seriesTooltip = (interval: Interval, format: (v: number) => string, cursor: any) => (
+	<Tooltip
+		cursor={cursor}
+		animationDuration={100}
+		labelFormatter={(k: any) => bucketLabel(String(k), interval, true)}
+		formatter={(v: any) => format(Number(v))}
+		content={<Chart.Tooltip hideSeriesLabel />}
+	/>
+);
 
 export const ColumnChart: FC<SeriesProps> = ({ points, interval, format, title, height = 200 }) => {
-	const { ref, width } = useWidth();
-	const [hover, setHover] = useState<number | null>(null);
-	const max = Math.max(0, ...points.map(p => p.value));
-	const { top, step } = niceScale(max);
-	const innerW = Math.max(0, width - PAD.left - PAD.right);
-	const innerH = height - PAD.top - PAD.bottom;
-	const band = innerW / Math.max(points.length, 1);
-	const barW = Math.max(2, Math.min(24, band - 2));
+	const chart = useSeries(points, title);
+	const gradient = `${chart.id}-column`;
 	return (
-		<Box
-			ref={ref}
-			position='relative'
-			w='full'
-			h={`${height}px`}
-			css={PALETTE_CSS}>
-			{width > 0 && (
-				<svg
-					width={width}
-					height={height}
-					role='img'
-					aria-label={title}>
-					<Axes {...{ width, height, top, step, points, interval }} />
-					{points.map((p, i) => {
-						const h = (p.value / top) * innerH;
-						const x = PAD.left + band * i + (band - barW) / 2;
-						return (
-							<g key={p.key}>
-								{h > 0 && (
-									<path
-										d={columnPath(x, PAD.top + innerH - h, barW, h)}
-										fill='var(--series-1)'
-										opacity={hover === null || hover === i ? 1 : 0.45}
-									/>
-								)}
-								{/* The hit target: the whole band, taller than the mark. */}
-								<rect
-									x={PAD.left + band * i}
-									y={PAD.top}
-									width={band}
-									height={innerH}
-									fill='transparent'
-									onMouseEnter={() => setHover(i)}
-									onMouseLeave={() => setHover(null)}
-								/>
-							</g>
-						);
-					})}
-				</svg>
-			)}
-			{hover !== null && points[hover] && (
-				<Tooltip
-					x={PAD.left + band * hover + band / 2}
-					y={PAD.top + innerH - (points[hover].value / top) * innerH}
-					width={width}>
-					<Text color='fg.muted'>{bucketLabel(points[hover].key, interval, true)}</Text>
-					<Text fontWeight='600'>{format(points[hover].value)}</Text>
-				</Tooltip>
-			)}
+		<Box css={PALETTE_CSS}>
+			<Chart.Root
+				chart={chart}
+				w='full'
+				h={`${height}px`}
+				aspectRatio='auto'
+				aria-label={title}>
+				<BarChart
+					// Sizes itself to Chart.Root with plain CSS (Recharts 3), no ResponsiveContainer.
+					responsive
+					style={FILL}
+					data={chart.data}
+					margin={{ top: 8, right: 4, left: -4, bottom: 0 }}>
+					<defs>
+						<linearGradient
+							id={gradient}
+							x1='0'
+							y1='0'
+							x2='0'
+							y2='1'>
+							<stop
+								offset='0%'
+								stopColor='var(--series-1)'
+								stopOpacity={1}
+							/>
+							<stop
+								offset='100%'
+								stopColor='var(--series-1)'
+								stopOpacity={0.7}
+							/>
+						</linearGradient>
+					</defs>
+					{cartesianParts(interval)}
+					{seriesTooltip(interval, format, { fill: 'var(--chakra-colors-bg-muted)', radius: 4 })}
+					<Bar
+						dataKey='value'
+						name={title}
+						fill={`url(#${gradient})`}
+						radius={[4, 4, 0, 0]}
+						maxBarSize={28}
+						animationDuration={ANIMATION_MS}
+					/>
+				</BarChart>
+			</Chart.Root>
 			<SrTable
 				caption={title}
 				rows={points.map(p => [bucketLabel(p.key, interval, true), format(p.value)])}
@@ -253,82 +198,47 @@ export const ColumnChart: FC<SeriesProps> = ({ points, interval, format, title, 
 };
 
 export const LineChart: FC<SeriesProps> = ({ points, interval, format, title, height = 200 }) => {
-	const { ref, width } = useWidth();
-	const [hover, setHover] = useState<number | null>(null);
-	const max = Math.max(0, ...points.map(p => p.value));
-	const { top, step } = niceScale(max);
-	const innerW = Math.max(0, width - PAD.left - PAD.right);
-	const innerH = height - PAD.top - PAD.bottom;
-	const band = innerW / Math.max(points.length, 1);
-	const xy = (i: number) => [PAD.left + band * i + band / 2, PAD.top + innerH - (points[i].value / top) * innerH];
-	const line = points.map((_, i) => `${i ? 'L' : 'M'}${xy(i).join(',')}`).join('');
-	const area = points.length
-		? `${line}L${xy(points.length - 1)[0]},${PAD.top + innerH}L${xy(0)[0]},${PAD.top + innerH}Z`
-		: '';
+	const chart = useSeries(points, title);
+	const gradient = `${chart.id}-area`;
 	return (
-		<Box
-			ref={ref}
-			position='relative'
-			w='full'
-			h={`${height}px`}
-			css={PALETTE_CSS}>
-			{width > 0 && points.length > 0 && (
-				<svg
-					width={width}
-					height={height}
-					role='img'
-					aria-label={title}
-					onMouseMove={e => {
-						const box = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
-						const i = Math.floor((e.clientX - box.left - PAD.left) / band);
-						setHover(i >= 0 && i < points.length ? i : null);
-					}}
-					onMouseLeave={() => setHover(null)}>
-					<Axes {...{ width, height, top, step, points, interval }} />
-					<path
-						d={area}
-						fill='var(--series-1)'
-						opacity={0.1}
-					/>
-					<path
-						d={line}
-						fill='none'
+		<Box css={PALETTE_CSS}>
+			<Chart.Root
+				chart={chart}
+				w='full'
+				h={`${height}px`}
+				aspectRatio='auto'
+				aria-label={title}>
+				<AreaChart
+					// Sizes itself to Chart.Root with plain CSS (Recharts 3), no ResponsiveContainer.
+					responsive
+					style={FILL}
+					data={chart.data}
+					margin={{ top: 8, right: 8, left: -4, bottom: 0 }}>
+					<defs>
+						<Chart.Gradient
+							id={gradient}
+							stops={[
+								{ offset: '0%', color: 'var(--series-1)', opacity: 0.4 },
+								{ offset: '100%', color: 'var(--series-1)', opacity: 0.03 },
+							]}
+						/>
+					</defs>
+					{cartesianParts(interval)}
+					{seriesTooltip(interval, format, { stroke: 'var(--chakra-colors-border-emphasized)', strokeWidth: 1 })}
+					<Area
+						type='monotone'
+						dataKey='value'
+						name={title}
 						stroke='var(--series-1)'
 						strokeWidth={2}
-						strokeLinejoin='round'
-						strokeLinecap='round'
+						fill={`url(#${gradient})`}
+						dot={false}
+						// A surface ring keeps the marker clear of the line it sits on.
+						activeDot={{ r: 5, strokeWidth: 2, stroke: 'var(--surface)', fill: 'var(--series-1)' }}
+						animationDuration={ANIMATION_MS}
 					/>
-					{hover !== null && (
-						<>
-							<line
-								x1={xy(hover)[0]}
-								x2={xy(hover)[0]}
-								y1={PAD.top}
-								y2={PAD.top + innerH}
-								stroke='var(--chakra-colors-border-emphasized)'
-								strokeWidth={1}
-							/>
-							<circle
-								cx={xy(hover)[0]}
-								cy={xy(hover)[1]}
-								r={4}
-								fill='var(--series-1)'
-								stroke='var(--surface)'
-								strokeWidth={2}
-							/>
-						</>
-					)}
-				</svg>
-			)}
-			{hover !== null && points[hover] && (
-				<Tooltip
-					x={xy(hover)[0]}
-					y={xy(hover)[1]}
-					width={width}>
-					<Text color='fg.muted'>{bucketLabel(points[hover].key, interval, true)}</Text>
-					<Text fontWeight='600'>{format(points[hover].value)}</Text>
-				</Tooltip>
-			)}
+				</AreaChart>
+			</Chart.Root>
 			<SrTable
 				caption={title}
 				rows={points.map(p => [bucketLabel(p.key, interval, true), format(p.value)])}
@@ -339,47 +249,59 @@ export const LineChart: FC<SeriesProps> = ({ points, interval, format, title, he
 
 type BreakdownProps = { slices: Slice[]; format: (v: number) => string; title: string };
 
+const colorOf = (s: Slice, i: number) => (s.other ? 'var(--series-other)' : seriesColor(i));
+const shareOf = (value: number, sum: number) => (sum ? `${Math.round((value / sum) * 100)}%` : '—');
+
 /** A breakdown as labelled horizontal bars, biggest first. */
 export const BarList: FC<BreakdownProps> = ({ slices, format, title }) => {
 	const max = Math.max(0, ...slices.map(s => s.value));
+	const sum = slices.reduce((a, s) => a + s.value, 0);
 	return (
 		<Flex
 			direction='column'
-			gap={2}
+			gap={2.5}
 			css={PALETTE_CSS}>
 			{slices.map((s, i) => (
 				<Box
 					key={`${s.key}-${i}`}
-					title={`${s.label}: ${format(s.value)}`}
-					borderRadius='sm'
-					_hover={{ bg: 'bg.muted' }}
-					px={1}
-					py={0.5}>
+					title={`${s.label}: ${format(s.value)} (${shareOf(s.value, sum)})`}
+					role='group'>
 					<Flex
 						justify='space-between'
+						align='baseline'
 						gap={3}
 						fontSize='xs'
-						mb={1}>
+						mb={1.5}>
 						<Text
 							truncate
 							color={s.other ? 'fg.muted' : 'fg'}>
 							{s.label}
 						</Text>
-						<Text
-							fontWeight='600'
-							flexShrink={0}>
-							{format(s.value)}
-						</Text>
+						<Flex
+							gap={2}
+							flexShrink={0}
+							align='baseline'>
+							<Text fontWeight='600'>{format(s.value)}</Text>
+							<Text
+								color='fg.muted'
+								w='34px'
+								textAlign='right'>
+								{shareOf(s.value, sum)}
+							</Text>
+						</Flex>
 					</Flex>
 					<Box
-						h='10px'
+						h='8px'
 						bg='bg.muted'
-						borderRadius='0 4px 4px 0'>
+						borderRadius='full'
+						overflow='hidden'>
 						<Box
 							h='full'
-							w={`${max ? Math.max(1, (s.value / max) * 100) : 0}%`}
+							w={`${max ? Math.max(1.5, (s.value / max) * 100) : 0}%`}
 							bg={s.other ? 'var(--series-other)' : 'var(--series-1)'}
-							borderRadius='0 4px 4px 0'
+							borderRadius='full'
+							transition='width .5s ease, filter .15s ease'
+							_groupHover={{ filter: 'brightness(1.1)' }}
 						/>
 					</Box>
 				</Box>
@@ -392,32 +314,14 @@ export const BarList: FC<BreakdownProps> = ({ slices, format, title }) => {
 	);
 };
 
-/** An annular sector from angle a0 to a1 (radians, 0 = top). */
-const arc = (cx: number, cy: number, r0: number, r1: number, a0: number, a1: number) => {
-	const p = (r: number, a: number) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
-	const large = a1 - a0 > Math.PI ? 1 : 0;
-	const [x0, y0] = p(r1, a0);
-	const [x1, y1] = p(r1, a1);
-	const [x2, y2] = p(r0, a1);
-	const [x3, y3] = p(r0, a0);
-	return `M${x0},${y0}A${r1},${r1} 0 ${large} 1 ${x1},${y1}L${x2},${y2}A${r0},${r0} 0 ${large} 0 ${x3},${y3}Z`;
-};
-
 export const DonutChart: FC<BreakdownProps & { total?: number }> = ({ slices, format, title, total }) => {
 	const [hover, setHover] = useState<number | null>(null);
 	const sum = slices.reduce((a, s) => a + s.value, 0);
-	const size = 150;
-	const c = size / 2;
-	let at = 0;
-	const arcs = slices.map((s, i) => {
-		const a0 = at;
-		const a1 = sum ? at + (s.value / sum) * Math.PI * 2 : at;
-		at = a1;
-		// A single slice is a full ring: two halves, as one arc can't close on itself.
-		return { s, i, d: a1 - a0 >= Math.PI * 2 - 1e-6 ? [arc(c, c, 46, 70, 0, Math.PI), arc(c, c, 46, 70, Math.PI, Math.PI * 2)] : [arc(c, c, 46, 70, a0, a1)] };
+	const chart = useChart({
+		data: slices.map((s, i) => ({ name: s.label, value: s.value, color: colorOf(s, i) })),
 	});
-	const colorOf = (s: Slice, i: number) => (s.other ? 'var(--series-other)' : seriesColor(i));
 	const shown = hover !== null ? slices[hover] : null;
+	const size = 168;
 	return (
 		<Flex
 			gap={5}
@@ -425,71 +329,57 @@ export const DonutChart: FC<BreakdownProps & { total?: number }> = ({ slices, fo
 			flexWrap='wrap'
 			justify='center'
 			css={PALETTE_CSS}>
-			<Box
-				position='relative'
-				w={`${size}px`}
-				h={`${size}px`}
-				flexShrink={0}>
-				<svg
-					width={size}
-					height={size}
-					role='img'
-					aria-label={title}>
-					{sum === 0 && (
-						<circle
-							cx={c}
-							cy={c}
-							r={58}
-							fill='none'
-							stroke='var(--chakra-colors-bg-muted)'
-							strokeWidth={24}
-						/>
-					)}
-					{arcs.map(({ s, i, d }) =>
-						d.map((path, j) => (
-							<path
-								key={`${i}-${j}`}
-								d={path}
-								fill={colorOf(s, i)}
-								stroke='var(--surface)'
-								strokeWidth={2}
-								opacity={hover === null || hover === i ? 1 : 0.45}
-								onMouseEnter={() => setHover(i)}
-								onMouseLeave={() => setHover(null)}
+			<Chart.Root
+				chart={chart}
+				boxSize={`${size}px`}
+				aspectRatio='square'
+				flexShrink={0}
+				aria-label={title}>
+				<PieChart
+					responsive
+					style={FILL}>
+					{/* No floating tooltip: the hovered slice's value and name show in the
+					    centre, and its legend row lights up. */}
+					<Pie
+						data={sum ? chart.data : [{ name: '', value: 1, color: 'var(--chakra-colors-bg-muted)' }]}
+						dataKey='value'
+						nameKey='name'
+						innerRadius='64%'
+						outerRadius='100%'
+						paddingAngle={sum && slices.length > 1 ? 2 : 0}
+						cornerRadius={4}
+						stroke='none'
+						startAngle={90}
+						endAngle={-270}
+						animationDuration={ANIMATION_MS}
+						onMouseEnter={(_: any, i: number) => sum && setHover(i)}
+						onMouseLeave={() => setHover(null)}>
+						{(sum ? chart.data : [{ color: 'var(--chakra-colors-bg-muted)' }]).map((d: any, i: number) => (
+							<Cell
+								key={i}
+								fill={d.color}
+								opacity={hover === null || hover === i ? 1 : 0.4}
+								style={{ transition: 'opacity .15s ease', outline: 'none' }}
 							/>
-						))
-					)}
-				</svg>
-				<Flex
-					position='absolute'
-					inset={0}
-					direction='column'
-					align='center'
-					justify='center'
-					pointerEvents='none'
-					textAlign='center'
-					px={8}>
-					<Text
-						fontSize={shown ? 'sm' : 'md'}
-						fontWeight='700'
-						lineHeight='1.2'>
-						{format(shown ? shown.value : total ?? sum)}
-					</Text>
-					<Text
-						fontSize='10px'
-						color='fg.muted'
-						truncate
-						maxW='full'>
-						{shown ? shown.label : 'Total'}
-					</Text>
-				</Flex>
-			</Box>
+						))}
+						<Label
+							content={({ viewBox }: any) => (
+								<Chart.RadialText
+									viewBox={viewBox}
+									title={format(shown ? shown.value : total ?? sum)}
+									description={shown ? shown.label : 'Total'}
+								/>
+							)}
+						/>
+					</Pie>
+				</PieChart>
+			</Chart.Root>
 			<Flex
 				as='ul'
 				direction='column'
-				gap={1.5}
+				gap={1}
 				flex='1'
-				minW='150px'
+				minW='160px'
 				listStyleType='none'>
 				{slices.map((s, i) => (
 					<Flex
@@ -498,15 +388,17 @@ export const DonutChart: FC<BreakdownProps & { total?: number }> = ({ slices, fo
 						align='center'
 						gap={2}
 						fontSize='xs'
-						px={1}
-						borderRadius='sm'
+						px={1.5}
+						py={1}
+						borderRadius='md'
 						bg={hover === i ? 'bg.muted' : undefined}
+						transition='background-color .12s ease'
 						onMouseEnter={() => setHover(i)}
 						onMouseLeave={() => setHover(null)}>
 						<Box
 							w='10px'
 							h='10px'
-							borderRadius='2px'
+							borderRadius='full'
 							flexShrink={0}
 							bg={colorOf(s, i)}
 						/>
@@ -519,9 +411,9 @@ export const DonutChart: FC<BreakdownProps & { total?: number }> = ({ slices, fo
 						<Text fontWeight='600'>{format(s.value)}</Text>
 						<Text
 							color='fg.muted'
-							w='38px'
+							w='34px'
 							textAlign='right'>
-							{sum ? `${Math.round((s.value / sum) * 100)}%` : '—'}
+							{shareOf(s.value, sum)}
 						</Text>
 					</Flex>
 				))}

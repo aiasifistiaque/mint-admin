@@ -117,6 +117,7 @@ const BackendPageTable: FC<TableProps> = ({ table, layoutPath, children }) => {
 		<>
 			<Layout
 				pb='32px'
+				showFooter={false}
 				title={table?.title}
 				path={layoutPath || table?.path}>
 				<Column gap={2}>

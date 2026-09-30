@@ -136,7 +136,9 @@ const Dialog: FC<DialogProps> = ({
 							_dark={{ bg: 'menu.dark' }}
 							boxShadow={styles.DRAWER.boxShadow}
 							w='100%'
-							maxH='90vh'
+							// Content height, up to 85% of the visible screen (see styles.DRAWER).
+							h='auto'
+							maxH='85dvh'
 							minH='20vh'
 							userSelect='none'
 							overflow='hidden'

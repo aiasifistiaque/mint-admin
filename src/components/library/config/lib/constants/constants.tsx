@@ -253,7 +253,11 @@ export const styles = {
 		_dark: {
 			bg: 'menu.dark',
 		},
-		maxH: '90vh',
+		// As tall as its content, up to 85% of the visible screen: `size='full'`
+		// otherwise pins the sheet at 100dvh, and `vh` counts the area behind a
+		// phone's address bar — either way the sheet ran to the top edge.
+		h: 'auto',
+		maxH: '85dvh',
 		userSelect: 'none',
 		borderTopRadius: '20px',
 		boxShadow: shadow.MODAL,

@@ -1,7 +1,8 @@
 import { FC, useRef, useState } from 'react';
 import { Box, Button, Flex, Image, Spinner, Text } from '@chakra-ui/react';
-import { ImageUp } from 'lucide-react';
+import { ImageUp, PenLine } from 'lucide-react';
 import { useUploadSignatureMutation } from '../store';
+import SignaturePad from './SignaturePad';
 
 type SignatureUploadProps = {
 	value?: string;
@@ -9,7 +10,9 @@ type SignatureUploadProps = {
 	helper?: string;
 };
 
-// Dedicated uploader for the admin's signature. Unlike the generic image
+// Dedicated uploader for the admin's signature — drawn on the pad (finger,
+// stylus, mouse or trackpad) or uploaded as an image; both end up as the same
+// uploaded PNG/image URL. Unlike the generic image
 // picker, this never browses or saves into the shared media library — it
 // uploads straight to S3 (see POST /upload/signature) and only ever hands
 // back a URL for the admin's own `signature` field.
@@ -22,6 +25,7 @@ const SignatureUpload: FC<SignatureUploadProps> = ({ value, onChange, helper }) 
 	const [uploadSignature, result] = useUploadSignatureMutation();
 	const [over, setOver] = useState(false);
 	const [error, setError] = useState('');
+	const [mode, setMode] = useState<'draw' | 'upload'>('draw');
 
 	const pick = () => !result.isLoading && inputRef.current?.click();
 
@@ -39,10 +43,93 @@ const SignatureUpload: FC<SignatureUploadProps> = ({ value, onChange, helper }) 
 		else setError(res?.error?.data?.message || 'Upload failed. Try again.');
 	};
 
+	const tabs = (
+		<Flex
+			role='tablist'
+			aria-label='How to add your signature'
+			gap={1}
+			p='3px'
+			borderRadius='md'
+			bg='bg.muted'
+			w='fit-content'>
+			{[
+				{ id: 'draw' as const, label: 'Draw', Icon: PenLine },
+				{ id: 'upload' as const, label: 'Upload', Icon: ImageUp },
+			].map(t => (
+				<Button
+					key={t.id}
+					role='tab'
+					aria-selected={mode === t.id}
+					size='xs'
+					h='26px'
+					px={3}
+					variant={mode === t.id ? 'outline' : 'ghost'}
+					bg={mode === t.id ? 'bg' : 'transparent'}
+					onClick={() => {
+						setMode(t.id);
+						setError('');
+					}}>
+					<t.Icon size={13} />
+					{t.label}
+				</Button>
+			))}
+		</Flex>
+	);
+
+	if (mode === 'draw')
+		return (
+			<Flex
+				direction='column'
+				gap={3}>
+				{tabs}
+				{value && (
+					<Flex
+						align='center'
+						gap={3}>
+						<Flex
+							h='56px'
+							px={3}
+							align='center'
+							borderRadius='md'
+							borderWidth='1px'
+							borderColor='border'
+							bg='white'>
+							<Image
+								src={value}
+								alt='Current signature'
+								maxH='44px'
+								maxW='160px'
+								objectFit='contain'
+							/>
+						</Flex>
+						<Text
+							fontSize='12px'
+							color='fg.muted'>
+							Your current signature. Draw below to replace it.
+						</Text>
+					</Flex>
+				)}
+				<SignaturePad
+					// A fresh, empty pad once a drawn signature is saved as the value.
+					key={value || 'empty'}
+					busy={result.isLoading}
+					onDone={upload}
+				/>
+				{error && (
+					<Text
+						fontSize='12px'
+						color='red.fg'>
+						{error}
+					</Text>
+				)}
+			</Flex>
+		);
+
 	return (
 		<Flex
 			direction='column'
 			gap={2}>
+			{tabs}
 			<input
 				ref={inputRef}
 				type='file'

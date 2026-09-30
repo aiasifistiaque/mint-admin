@@ -55,6 +55,8 @@ type LayoutProps = FlexPropsType & {
 	type?: 'default' | 'pos';
 	hideColorMode?: boolean;
 	isLoading?: boolean;
+	/** The site footer under the page. Table pages turn it off: they page and scroll on their own. */
+	showFooter?: boolean;
 };
 
 const Layout: FC<LayoutProps> = ({
@@ -63,6 +65,7 @@ const Layout: FC<LayoutProps> = ({
 	path = '/dashboard',
 	hideColorMode = false,
 	isLoading,
+	showFooter = true,
 	...props
 }) => {
 	const dispatch = useAppDispatch();
@@ -106,9 +109,13 @@ const Layout: FC<LayoutProps> = ({
 					<Flex
 						{...mainContainer}
 						pl={type !== 'default' ? 0 : sizes.HOME_NAV_LEFT}
+						// With a footer: at least a screen tall, the body taking the
+						// spare room, so a short or loading page keeps the footer at
+						// the bottom of the window rather than below the fold.
+						{...(showFooter && { minH: '100vh' })}
 						{...props}>
-						<MainBody>{!isLoading && children}</MainBody>
-						<Footer />
+						<MainBody grow={showFooter}>{!isLoading && children}</MainBody>
+						{showFooter && <Footer />}
 					</Flex>
 				</Body>
 				{!hideColorMode && <ColorMode size={ICON_SIZE} />}

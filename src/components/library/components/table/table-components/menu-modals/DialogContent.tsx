@@ -16,7 +16,7 @@ const DialogContent: FC<Props> = ({ children, ...props }) => {
 		return (
 			<DrawerContent
 				{...(styles.DRAWER as any)}
-				maxH='90vh'
+				maxH='85dvh'
 				minH='20vh'
 				overflow='hidden'
 				{...props}>

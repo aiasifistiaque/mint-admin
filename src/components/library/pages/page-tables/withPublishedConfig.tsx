@@ -28,6 +28,7 @@ const withPublishedConfig = <P extends { table: any; layoutPath?: string }>(Page
 		if (path && isLoading)
 			return (
 				<Layout
+					showFooter={false}
 					title={props.table?.title || ''}
 					path={props.layoutPath || path}>
 					<DetailSkeleton />

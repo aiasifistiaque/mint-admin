@@ -10,6 +10,8 @@ type DetailRowProps = {
 	value?: ReactNode;
 	/** Widen when a grid has long labels and the values look ragged. */
 	labelWidth?: string;
+	/** On a phone, the label above and the value below at full width (pictures). */
+	stackOnMobile?: boolean;
 };
 
 /**
@@ -19,10 +21,11 @@ type DetailRowProps = {
  * page — with three different label widths, which is why the same grid looked
  * subtly different on every page it appeared on.
  */
-const DetailRow: FC<DetailRowProps> = ({ label, value, labelWidth = '150px' }) => (
+const DetailRow: FC<DetailRowProps> = ({ label, value, labelWidth = '150px', stackOnMobile }) => (
 	<Flex
-		gap={4}
-		align='baseline'>
+		gap={stackOnMobile ? { base: 2, md: 4 } : 4}
+		direction={stackOnMobile ? { base: 'column', md: 'row' } : 'row'}
+		align={stackOnMobile ? { base: 'stretch', md: 'baseline' } : 'baseline'}>
 		<Text
 			fontSize='xs'
 			color='fg.muted'

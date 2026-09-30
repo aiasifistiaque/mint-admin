@@ -126,6 +126,7 @@ const tags: string[] = [
 	'purchased-themes',
 	'purchasedthemes',
 	'purchasedthemes/make/default',
+	'reported-issues',
 	'repos',
 	'resources',
 	'restaurant',

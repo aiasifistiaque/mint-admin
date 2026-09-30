@@ -112,6 +112,7 @@ const PageTable: FC<TableProps> = ({ table, layoutPath, children, schemaLoading 
 		<>
 			<Layout
 				pb='32px'
+				showFooter={false}
 				title={table?.title}
 				path={layoutPath || table?.path}>
 				<PageHeading

@@ -109,9 +109,12 @@ const ViewRow: FC<ViewRowProps> = ({ field, value, isLoading, block, doc }) => {
 		);
 	}
 
+	const isImage = type === 'image' || type === 'image-array';
+
 	return (
 		<DetailRow
 			label={title}
+			stackOnMobile={isImage}
 			value={
 				isLoading ? (
 					<SkeletonContent isLoading>
@@ -121,7 +124,8 @@ const ViewRow: FC<ViewRowProps> = ({ field, value, isLoading, block, doc }) => {
 					<Flex
 						align='center'
 						gap={2}
-						minW={0}>
+						minW={0}
+						w={isImage ? { base: 'full', md: 'auto' } : undefined}>
 						{rendered}
 						{copyButton}
 					</Flex>
