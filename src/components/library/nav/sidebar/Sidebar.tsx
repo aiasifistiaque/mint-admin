@@ -50,7 +50,7 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 		return () => window.removeEventListener('keydown', handleKeyDown);
 	}, []);
 
-	const renderItem = (item: NavItem, key: string | number) => (
+	const renderItem = (item: NavItem, key: string | number, withIcon = false) => (
 		<Link
 			key={key}
 			href={item?.href}>
@@ -58,7 +58,8 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 				isLoading={isLoading}
 				href={item?.href}
 				path={item?.path}
-				icon={item?.icon}>
+				icon={item?.icon}
+				withIcon={withIcon}>
 				{item?.title}
 			</SidebarItem>
 		</Link>
@@ -85,7 +86,13 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 						inputRef={searchInputRef}
 					/>
 
-					{filteredLead.length ? <Stack gap={0.5}>{filteredLead.map(renderItem)}</Stack> : null}
+					{filteredLead.length ? (
+						<Stack
+							gap='2px'
+							mb={1}>
+							{filteredLead.map((item, i) => renderItem(item, i, true))}
+						</Stack>
+					) : null}
 
 					{filteredSections.map(section => {
 						const active = isActive(section);
@@ -100,7 +107,7 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 								hasActive={active}
 								isLoading={isLoading}
 								onToggle={() => toggle(section.title)}>
-								<Stack gap={0.5}>
+								<Stack gap='2px'>
 									{section.items.map((item, i) => renderItem(item, `${section.title}-${i}`))}
 								</Stack>
 							</SidebarSection>

@@ -22,7 +22,7 @@ export const currency = {
 	symbol: '৳',
 };
 
-const BASE_SIDEBAR_WIDTH = '230px';
+const BASE_SIDEBAR_WIDTH = '248px';
 const BASE_SIDEBAR_WIDTH_SMALL = '20PX';
 
 export const BODY_PT = '72px';

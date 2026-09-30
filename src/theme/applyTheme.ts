@@ -49,6 +49,8 @@ const PAIRS: [string, string, Value][] = [
 	['sidebar.bodyText.headingLight', 'sidebar.bodyText.headingDark', 'sidebarHeading'],
 	['sidebar.bodyText.selectedLight', 'sidebar.bodyText.selectedDark', 'sidebarTextActive'],
 	['sidebar.hoverLight', 'sidebar.hoverDark', p => mix(p.sidebarText, 8, p.sidebar)],
+	['sidebar.itemHover.light', 'sidebar.itemHover.dark', p => mix(p.sidebarText, 4, p.sidebar)],
+	['sidebar.itemActive.light', 'sidebar.itemActive.dark', p => mix(p.sidebarText, 8, p.sidebar)],
 
 	['navbar.text.light', 'navbar.text.dark', 'text'],
 	['navbar.border.light', 'navbar.border.dark', 'border'],

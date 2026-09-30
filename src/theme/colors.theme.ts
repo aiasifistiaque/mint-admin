@@ -230,6 +230,17 @@ export const colors: any = {
 			bgLight: '#fff',
 			bgDark: 'transparent',
 		},
+		// Row fills: a faint wash on hover, a soft grey for the current page.
+		// Themes derive both from the item text mixed into the sidebar colour
+		// (applyTheme), so they stay quiet on every palette.
+		itemHover: {
+			light: '#f4f4f4',
+			dark: '#0e0e0e',
+		},
+		itemActive: {
+			light: '#eeeeee',
+			dark: '#171717',
+		},
 		// The vertical line down an expanded category. It has to sit a step
 		// lighter than the item text or it competes with the labels it is
 		// grouping — it marks the branch, it isn't content.

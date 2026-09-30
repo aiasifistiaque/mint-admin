@@ -1,26 +1,52 @@
 'use client';
 import { FC } from 'react';
-import { Flex, Skeleton, Text, TextProps } from '@chakra-ui/react';
+import { Box, Flex, Skeleton, Text, TextProps } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 
 import { useAppDispatch, useAppSelector, navigate, IconNameOptions } from '../..';
+import { LucideIcon } from '../../icon';
 
 type SidebarItemProps = {
 	children: string;
 	href?: string;
 	path: string;
 	/**
-	 * Still accepted so callers don't have to change, but no longer rendered —
-	 * the icon now lives on the category heading instead. A glyph on every row
-	 * made the list read as ~30 equally-weighted things; the category carries
-	 * the symbol and its items are plain labels under it.
+	 * Shown only on top-level rows (`withIcon`) — Dashboard and the like, which
+	 * sit level with the category headings and carry a glyph as they do. Rows
+	 * inside a category are plain labels under its icon.
 	 */
 	icon?: IconNameOptions;
+	withIcon?: boolean;
 	sx?: any;
 	isLoading?: boolean;
 };
 
-const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, isLoading = false }) => {
+/**
+ * The row geometry, shared with SidebarSection so everything lines up:
+ * headings and top-level rows put their icon `ROW_INSET_PX` in, and their
+ * label `ICON_GAP_PX` after it; a nested row's fill starts `RAIL_GAP_PX`
+ * past the rail, and its padding puts the label under the heading text.
+ */
+export const ICON_SIZE_PX = 16;
+export const ROW_INSET_PX = 8;
+export const ICON_GAP_PX = 10;
+export const RAIL_GAP_PX = 6;
+/** Where the rail sits: under the middle of the heading's icon. */
+export const RAIL_X_PX = ROW_INSET_PX + ICON_SIZE_PX / 2;
+const LABEL_X_PX = ROW_INSET_PX + ICON_SIZE_PX + ICON_GAP_PX;
+const NESTED_PAD_PX = LABEL_X_PX - (RAIL_X_PX + 1 + RAIL_GAP_PX);
+const ICON_SIZE = ICON_SIZE_PX;
+
+// Older item icons use the admin's own icon names; the sidebar draws Lucide
+// outlines so they match the category glyphs. Anything else is taken to be a
+// Lucide name already (the sidebar builder stores those).
+const LUCIDE_NAME: Record<string, string> = {
+	dashboard: 'layout-dashboard',
+	analytics: 'chart-line',
+	clicks: 'mouse-pointer-click',
+};
+
+const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, withIcon = false, isLoading = false }) => {
 	const { selected } = useAppSelector((state: any) => state.route);
 
 	const dispatch = useAppDispatch();
@@ -39,7 +65,7 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, isLoading = f
 	return (
 		<Flex
 			onClick={changeRoute}
-			{...containerCss(isLoading, isSelected, href)}>
+			{...containerCss(isLoading, isSelected, withIcon)}>
 			{isLoading ? (
 				<Skeleton
 					height={2}
@@ -47,70 +73,70 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, isLoading = f
 					borderRadius={SKELETON_BORDER_RADIUS}
 				/>
 			) : (
-				<Text {...bodyTextCss(isSelected)}>{children}</Text>
+				<>
+					{withIcon && (
+						// Fixed box, so the label lines up with the headings even if a
+						// name has no Lucide icon and nothing draws.
+						<Box {...iconCss}>
+							{icon ? (
+								<LucideIcon
+									name={LUCIDE_NAME[String(icon)] || String(icon)}
+									size={ICON_SIZE}
+								/>
+							) : null}
+						</Box>
+					)}
+					<Text {...bodyTextCss(isSelected)}>{children}</Text>
+				</>
 			)}
 		</Flex>
 	);
 };
 
-const bodyTextCss = (isSelected?: boolean): TextProps => {
-	return {
-		color: isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
-		_dark: {
-			color: isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark',
-		},
+const bodyTextCss = (isSelected?: boolean): TextProps => ({
+	color: 'inherit',
+	fontSize: { base: '15px', md: '14px' },
+	fontWeight: isSelected ? '500' : '400',
+	lineHeight: '1.3',
+	lineClamp: 1,
+});
 
-		fontSize: { base: '14px', md: '12.5px' },
-		fontWeight: isSelected ? '600' : '500',
-		lineHeight: '1.3',
-		lineClamp: 1,
-		// Sits clear of the descenders rather than cutting through them.
-		textDecoration: isSelected ? 'underline' : 'none',
-		textUnderlineOffset: UNDERLINE_OFFSET,
-		textDecorationThickness: '1px',
-	};
+const iconCss: any = {
+	flexShrink: 0,
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	boxSize: `${ICON_SIZE_PX}px`,
+	color: 'sidebar.bodyText.light',
+	_dark: { color: 'sidebar.bodyText.dark' },
+	opacity: 0.85,
 };
 
 /**
- * No chip, no fill, no rule across the row — both states underline the label
- * itself, so they read as one gesture at two strengths: faded on hover, solid
- * when current.
- *
- * The hover underline is declared on the row rather than the label because
- * `text-decoration` propagates to in-flow descendants and a child cannot switch
- * an ancestor's decoration back off — which is exactly what's wanted here, and
- * it keeps the hover target the whole row instead of just the glyphs.
+ * A flat rounded row: a faint wash on hover, a soft grey fill for the current
+ * page. Top-level rows start at the heading's inset with their icon; rows in a
+ * category start just past the rail, their labels level with the heading text
+ * (SidebarSection's RAIL_* constants set that up).
  */
-const containerCss = (isLoading: boolean, isSelected: boolean, href?: string): any => {
-	const hover = {
-		textDecoration: 'underline',
-		textUnderlineOffset: UNDERLINE_OFFSET,
-		textDecorationThickness: '1px',
-	};
-
-	return {
-		alignItems: 'center',
-		gap: 1,
-		px: 1.5,
-		transition: 'color .12s ease-in-out',
-		cursor: 'pointer',
-		userSelect: 'none',
-		// Chakra's spacing scale has no 6.5 — it fell through as a raw 6.5px and
-		// collapsed every row to 7px tall, overlapping the labels. 7 = 28px.
-		h: { base: 9, md: 7 },
-		bg: 'transparent',
-		color: isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
-		_hover: isSelected ? {} : { ...hover, textDecorationColor: 'sidebar.hoverUnderline.light' },
-		_dark: {
-			bg: 'transparent',
-			color: isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark',
-			_hover: isSelected ? {} : { ...hover, textDecorationColor: 'sidebar.hoverUnderline.dark' },
-		},
-	};
-};
-
-// Far enough below the baseline to clear descenders on both states.
-const UNDERLINE_OFFSET = '4px';
+const containerCss = (isLoading: boolean, isSelected: boolean, withIcon: boolean): any => ({
+	alignItems: 'center',
+	gap: `${ICON_GAP_PX}px`,
+	pl: withIcon ? `${ROW_INSET_PX}px` : `${NESTED_PAD_PX}px`,
+	pr: 2,
+	h: { base: 10, md: '32px' },
+	borderRadius: '8px',
+	cursor: 'pointer',
+	userSelect: 'none',
+	transition: 'background-color .12s ease, color .12s ease',
+	bg: isSelected ? 'sidebar.itemActive.light' : 'transparent',
+	color: isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
+	_hover: isLoading || isSelected ? {} : { bg: 'sidebar.itemHover.light', color: 'sidebar.bodyText.selectedLight' },
+	_dark: {
+		bg: isSelected ? 'sidebar.itemActive.dark' : 'transparent',
+		color: isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark',
+		_hover: isLoading || isSelected ? {} : { bg: 'sidebar.itemHover.dark', color: 'sidebar.bodyText.selectedDark' },
+	},
+});
 
 const SKELETON_BORDER_RADIUS = '90px';
 
