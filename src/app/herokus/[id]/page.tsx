@@ -65,6 +65,15 @@ const invoiceState = (invoice: any) =>
 		? { label: 'unknown', title: `Heroku state code ${invoice.stateCode}` }
 		: { label: invoice.state, title: undefined };
 
+/** A colour per dyno tier, so Eco, Basic and Standard apps tell apart at a glance. */
+const dynoPalette = (size: string) => {
+	const tier = size.toLowerCase();
+	if (tier.startsWith('eco') || tier.startsWith('free') || tier.startsWith('hobby')) return 'gray';
+	if (tier.startsWith('basic')) return 'blue';
+	if (tier.startsWith('standard')) return 'purple';
+	return 'orange'; // Performance, Private, Shield
+};
+
 const HerokuAccountPage = () => {
 	const { id }: { id: string } = useParams();
 	const router = useRouter();
@@ -151,7 +160,7 @@ const HerokuAccountPage = () => {
 			if (team && app.team !== team) return false;
 			if (!term) return true;
 
-			return [app.name, app.team, app.region, app.stack]
+			return [app.name, app.team, app.region, app.stack, ...(app.dynoSizes || [])]
 				.filter(Boolean)
 				.some((field: string) => field.toLowerCase().includes(term));
 		});
@@ -252,7 +261,37 @@ const HerokuAccountPage = () => {
 		},
 		{ key: 'region', label: 'Region', render: app => app.region || '—' },
 		{ key: 'stack', label: 'Stack', render: app => app.stack || '—' },
-		{ key: 'team', label: 'Team', render: app => app.team || 'Personal' },
+		{
+			key: 'dyno',
+			label: 'Dyno',
+			render: app => {
+				// Null: Heroku didn't answer for this app. Empty: every process type is at zero.
+				if (!app.dynoSizes) return '—';
+				if (!app.dynoSizes.length)
+					return (
+						<Text
+							as='span'
+							color='fg.muted'>
+							Off
+						</Text>
+					);
+				return (
+					<Flex
+						gap={1}
+						wrap='wrap'>
+						{app.dynoSizes.map((size: string) => (
+							<Badge
+								key={size}
+								size='sm'
+								variant='subtle'
+								colorPalette={dynoPalette(size)}>
+								{size}
+							</Badge>
+						))}
+					</Flex>
+				);
+			},
+		},
 		{
 			key: 'dynoHours',
 			label: 'Dyno Hours',
