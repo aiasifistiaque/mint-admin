@@ -11,6 +11,7 @@ import { Align, SpaceBetween } from '../containers';
 import { useIsMobile, useAppDispatch } from '../hooks';
 import { unselectAll, useGetQuery, navigate } from '../store';
 import { padding, sizes } from '../config';
+import Footer from './Footer';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 const ICON_SIZE = 17;
@@ -107,6 +108,7 @@ const Layout: FC<LayoutProps> = ({
 						pl={type !== 'default' ? 0 : sizes.HOME_NAV_LEFT}
 						{...props}>
 						<MainBody>{!isLoading && children}</MainBody>
+						<Footer />
 					</Flex>
 				</Body>
 				{!hideColorMode && <ColorMode size={ICON_SIZE} />}
