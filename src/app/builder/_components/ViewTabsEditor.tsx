@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, ReactNode } from 'react';
-import { Badge, Box, Button, Flex, IconButton, Input, Text } from '@chakra-ui/react';
+import { Badge, Box, Button, Flex, IconButton, Input, Switch, Text } from '@chakra-ui/react';
 import { ArrowDown, ArrowUp, LayoutGrid, Link2, Plus, Table2, Trash2 } from 'lucide-react';
 import {
 	radius,
@@ -10,6 +10,7 @@ import {
 	useLazyGetBuilderModelFieldsQuery,
 } from '@/components/library';
 import { Dropdown, Panel } from '@/components/library/cl';
+import { defaultAddLabel } from '@/components/library/components/view/view-page/addLabel';
 import { ModelField } from './filterTypes';
 import { DocLink } from './ui';
 
@@ -34,6 +35,9 @@ export type ViewTab = {
 	display?: 'table' | 'cards';
 	columns: string[];
 	pageSize?: number;
+	/** The tab's add button — on unless false. Only tabs whose records point here have one. */
+	allowAdd?: boolean;
+	addLabel?: string;
 };
 
 type RouteOption = { route: string; model: string | null; title?: string | null };
@@ -324,6 +328,44 @@ const TabCard: FC<{
 								color='fg.muted'>
 								The tab has a search box and pages through the rest.
 							</Text>
+						</Row>
+
+						<Row label='Add button'>
+							{tab.localField ? (
+								<Text
+									fontSize='11px'
+									color='fg.muted'>
+									Not available here: these records are listed in this record’s {tab.localField}, so adding one
+									would also have to edit this record.
+								</Text>
+							) : (
+								<>
+									<Switch.Root
+										size='sm'
+										checked={tab.allowAdd !== false}
+										onCheckedChange={d => onChange({ ...tab, allowAdd: d.checked ? undefined : false })}>
+										<Switch.HiddenInput />
+										<Switch.Control />
+									</Switch.Root>
+									{tab.allowAdd !== false && (
+										<Input
+											size='xs'
+											w='180px'
+											maxLength={60}
+											placeholder={defaultAddLabel(tab.title || name)}
+											value={tab.addLabel || ''}
+											onChange={e => onChange({ ...tab, addLabel: e.target.value || undefined })}
+										/>
+									)}
+									<Text
+										fontSize='11px'
+										color='fg.muted'>
+										{tab.allowAdd !== false
+											? `Creates ${name.toLowerCase()} already linked to this record. Disabled for anyone without create permission on ${name.toLowerCase()}.`
+											: 'No add button on this tab.'}
+									</Text>
+								</>
+							)}
 						</Row>
 					</>
 				)}

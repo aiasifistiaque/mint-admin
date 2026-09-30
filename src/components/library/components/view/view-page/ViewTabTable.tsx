@@ -1,11 +1,13 @@
 'use client';
 
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Box, Button, Center, Flex, Grid, Image, Input, InputGroup, Spinner, Text } from '@chakra-ui/react';
-import { ImageOff, Search, X } from 'lucide-react';
-import { useGetViewTabQuery } from '../../../store';
+import { ImageOff, Plus, Search, X } from 'lucide-react';
+import { useGetConfigQuery, useGetViewTabQuery } from '../../../store';
+import { BackendCreateModal } from '../../../modals';
+import { defaultAddLabel } from './addLabel';
 import Panel from '../../../cl/Panel';
 import DataTable from '../../../cl/DataTable';
 import { EmptyState, ErrorState, TableSkeleton } from '../../../cl/States';
@@ -119,6 +121,53 @@ const Cards: FC<{ columns: any[]; rows: any[]; onOpen: (r: any) => void }> = ({ 
 	);
 };
 
+/**
+ * Disabled, with the reason on hover, for someone without create permission on
+ * the tab's route — the button still says what the tab can do.
+ */
+const AddButton: FC<{
+	label: string;
+	allowed: boolean;
+	ready: boolean;
+	name: string;
+	path: string;
+	fields: any[];
+	defaults: Record<string, any>;
+}> = ({ label, allowed, ready, name, path, fields, defaults }) => {
+	const button = (
+		<Button
+			size='xs'
+			disabled={!allowed || !ready}>
+			<Plus size={14} />
+			{label}
+		</Button>
+	);
+	// A disabled button gets no pointer events, so the reason sits on a wrapper.
+	if (!allowed)
+		return (
+			<Box
+				as='span'
+				display='inline-flex'
+				cursor='not-allowed'
+				title={`You don’t have permission to add ${name.toLowerCase()}`}>
+				{button}
+			</Box>
+		);
+	if (!ready) return button;
+	return (
+		<BackendCreateModal
+			type='post'
+			path={path}
+			data={fields}
+			defaults={defaults}
+			title={label}
+			// Refreshes this tab's rows and the record's tab counts.
+			invalidate={['config']}
+			trigger={button}
+		/>
+	);
+};
+
 const ViewTabTable: FC<Props> = ({ path, id, index, title }) => {
 	const router = useRouter();
 	const [page, setPage] = useState(1);
@@ -133,6 +182,19 @@ const ViewTabTable: FC<Props> = ({ path, id, index, title }) => {
 		page,
 		...(search && { search }),
 	});
+
+	// The add button (route builder: the tab's "Add button"). Its form is the
+	// related route's own create form, with the link to this record filled in
+	// and its field hidden — on this page that link is already decided.
+	const add = data?.allowed === false ? null : data?.add;
+	const { data: config } = useGetConfigQuery(data?.route, { skip: !add?.allowed });
+	const addFields = useMemo(
+		() =>
+			(Array.isArray(config?.form) ? config.form : []).map((f: any) =>
+				f?.name === add?.field ? { ...f, isRequired: false, renderCondition: () => false } : f
+			),
+		[config, add?.field]
+	);
 
 	if (isLoading)
 		return (
@@ -183,14 +245,29 @@ const ViewTabTable: FC<Props> = ({ path, id, index, title }) => {
 			title={name}
 			subtitle={data?.description || undefined}
 			actions={
-				<Link href={`/${data?.route}`}>
-					<Text
-						fontSize='xs'
-						color='fg.muted'
-						_hover={{ color: 'fg' }}>
-						Open {name} →
-					</Text>
-				</Link>
+				<Flex
+					align='center'
+					gap={3}>
+					<Link href={`/${data?.route}`}>
+						<Text
+							fontSize='xs'
+							color='fg.muted'
+							_hover={{ color: 'fg' }}>
+							Open {name} →
+						</Text>
+					</Link>
+					{add && (
+						<AddButton
+							label={add.label || defaultAddLabel(name)}
+							allowed={add.allowed}
+							ready={addFields.length > 0}
+							name={name}
+							path={data.route}
+							fields={addFields}
+							defaults={{ [add.field]: add.many ? [id] : id }}
+						/>
+					)}
+				</Flex>
 			}>
 			<Flex
 				align='center'

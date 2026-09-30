@@ -37,6 +37,7 @@ const CreateModal = (props: CreateModalProps) => {
 		prompt,
 		populate,
 		layout,
+		defaults,
 	} = props;
 
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
@@ -57,7 +58,7 @@ const CreateModal = (props: CreateModalProps) => {
 			if (field?.value) newFieldData = { ...newFieldData, [field.name]: field?.value };
 		});
 
-		setFormData({ ...formData, ...newFieldData });
+		setFormData({ ...formData, ...newFieldData, ...defaults });
 		if (type == 'update') {
 			if (populate) {
 				setFormData(populate);

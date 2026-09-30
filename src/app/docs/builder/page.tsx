@@ -814,6 +814,16 @@ const BuilderDocs = () => {
 							page. A tab only lists records the reader may see, and says so when they can&apos;t view that
 							route at all.
 						</P>
+						<P>
+							<em>Add button</em> (on by default) puts a button on the tab that opens that route&apos;s own
+							create form with the link to this record already filled in — a client&apos;s{' '}
+							<em>Add document</em> creates a document for that client. Type your own text for it, or leave it
+							blank for &ldquo;Add&rdquo; and the tab&apos;s name in the singular. The button shows for
+							everyone who can see the tab, but works only for someone with create permission on that route;
+							for anyone else it is disabled and says why on hover. Switch it off to hide it. Tabs linked the
+							other way (this record&apos;s field lists them) have no add button, because adding one would
+							also have to edit this record.
+						</P>
 					</Section>
 
 					<Section

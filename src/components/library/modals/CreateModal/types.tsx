@@ -15,6 +15,8 @@ type CreateModalProps = {
 	item?: any;
 	icon?: string;
 	layout?: any;
+	/** Values the form starts with on open — set whether or not a field shows them (a view tab's link to its record). */
+	defaults?: Record<string, any>;
 	prompt?: {
 		title?: string;
 		body?: string;
