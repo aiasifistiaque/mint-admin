@@ -1,11 +1,13 @@
 'use client';
 
+import DocsShell from '../_components/DocsShell';
 import { useEffect } from 'react';
 import { Box, Flex, Grid, Link, Text } from '@chakra-ui/react';
 import GuideNav from '../_components/GuideNav';
 
-import { Layout, useAppDispatch, clearFilters } from '@/components/library';
-import { PageHeader } from '@/components/library/cl';
+import { useAppDispatch, clearFilters } from '@/components/library';
+import GuideHeader from '../_components/GuideHeader';
+import { LibraryTabs } from './_components/LibraryTabs';
 import {
 	BooleanFilter,
 	DateFilter,
@@ -152,14 +154,13 @@ const ComponentDocs = () => {
 			direction='column'
 			gap={6}
 			pb={16}>
-			<PageHeader
-				breadcrumbs={[
-					{ href: '/', title: 'Home' },
-					{ href: '/docs/components', title: 'Components' },
-				]}
+			<GuideHeader
+				href='/docs/components'
 				title='Component library'
-				meta='Reusable admin components, with live examples, their props and how to use them'
+				description='Reusable admin components, with live examples, their props and how to use them.'
+				mb={0}
 			/>
+			<LibraryTabs current='/docs/components' />
 
 			<Grid
 				templateColumns={{ base: '1fr', lg: '200px minmax(0, 1fr)' }}
@@ -723,11 +724,11 @@ const isMobile = useIsMobile();
 };
 
 const ComponentDocsPage = () => (
-	<Layout
-		title='Components'
-		path='docs'>
+	<DocsShell
+		current='/docs/components'
+		requireLogin>
 		<ComponentDocs />
-	</Layout>
+	</DocsShell>
 );
 
 export default ComponentDocsPage;
