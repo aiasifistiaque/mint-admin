@@ -30,6 +30,7 @@ import {
 	ViewServerModal,
 	useGetConfigQuery,
 } from '../../../..';
+import { pagePath } from '../../../../config/lib/constants/panel';
 
 type TableMenuProps = {
 	data: any;
@@ -179,7 +180,7 @@ const TableMenu: FC<TableMenuProps> = ({
 				return (
 					<MenuItem
 						key={i}
-						href={`/${path}/edit/${id}`}>
+						href={`${pagePath(path)}/edit/${id}`}>
 						{item?.title}
 					</MenuItem>
 				);
@@ -187,7 +188,7 @@ const TableMenu: FC<TableMenuProps> = ({
 				return (
 					<MenuItem
 						key={i}
-						href={`/${path}/${id}`}>
+						href={`${pagePath(path)}/${id}`}>
 						{item?.title}
 					</MenuItem>
 				);

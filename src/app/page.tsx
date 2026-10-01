@@ -1,15 +1,32 @@
 'use client';
 
-import { Grid, Skeleton } from '@chakra-ui/react';
+import NextLink from 'next/link';
+import { Button, Center, Flex, Grid, Skeleton, Text } from '@chakra-ui/react';
+import { LayoutDashboard } from 'lucide-react';
 
 import { Layout, Count, useGetByIdQuery, ShowSum, useGetDashboardQuery } from '@/components/library';
 import { DashboardGrid } from '@/components/library/dashboard/widgets';
+import { IS_TENANT_PANEL, getProjectId } from '@/components/library/config/lib/constants/panel';
+import ProjectsBoard from '@/components/library/tenant/ProjectsBoard';
 
 /**
  * The dashboard: the widgets saved in the dashboard builder (/dashboard-builder),
  * or — until one is saved — the built-in cards below.
  */
-export default function Dashboard() {
+export default function Home() {
+	// The tenant panel with no project open: the organization's projects.
+	if (IS_TENANT_PANEL && !getProjectId())
+		return (
+			<Layout
+				title='Home'
+				path='dashboard'>
+				<ProjectsBoard welcome />
+			</Layout>
+		);
+	return <Dashboard />;
+}
+
+function Dashboard() {
 	const { data, isLoading } = useGetDashboardQuery();
 	const widgets = data?.widgets || [];
 
@@ -31,12 +48,49 @@ export default function Dashboard() {
 				</Grid>
 			) : data?.saved && widgets.length ? (
 				<DashboardGrid widgets={widgets} />
+			) : IS_TENANT_PANEL ? (
+				<EmptyProjectDashboard />
 			) : (
 				<BuiltInDashboard />
 			)}
 		</Layout>
 	);
 }
+
+/** A tenant project with no dashboard yet: where to make one. */
+const EmptyProjectDashboard = () => (
+	<Flex
+		direction='column'
+		align='center'
+		textAlign='center'
+		gap={2}
+		py={16}>
+		<Center
+			boxSize='44px'
+			borderRadius='full'
+			bg='bg.muted'
+			color='fg.muted'>
+			<LayoutDashboard size={20} />
+		</Center>
+		<Text
+			fontSize='14px'
+			fontWeight='600'>
+			No dashboard yet
+		</Text>
+		<Text
+			fontSize='13px'
+			color='fg.muted'
+			maxW='380px'>
+			Add numbers, charts and recent records from this project’s models.
+		</Text>
+		<Button
+			asChild
+			mt={2}
+			size='sm'>
+			<NextLink href='/dashboard-builder'>Build the dashboard</NextLink>
+		</Button>
+	</Flex>
+);
 
 /** The dashboard as it was before the builder — shown until one is saved. */
 const BuiltInDashboard = () => {

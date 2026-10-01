@@ -8,7 +8,9 @@ import { TOKEN_NAME } from '../../config/lib/constants/constants';
 /** The media manager guide. Section ids are the anchors on /docs/media. */
 export const GUIDE = '/docs/media';
 
-export const BACKEND = (process.env.NEXT_PUBLIC_BACKEND || 'http://localhost:3000').replace(/\/+$/, '');
+// Per request, like the API slice: the admin API, or the tenant panel's current project.
+export { BACKEND } from '../../config/lib/constants/panel';
+import { apiUrl } from '../../config/lib/constants/panel';
 
 /** Selection keys: `d:<id>` for folders, `f:<id>` for files. */
 export type ItemKey = `d:${string}` | `f:${string}`;
@@ -118,7 +120,7 @@ const authHeader = (): Record<string, string> => {
 
 /** JSON call outside RTK (the upload queue lives outside React). */
 export const apiPost = async (path: string, body: any) => {
-	const res = await fetch(`${BACKEND}/${path}`, {
+	const res = await fetch(apiUrl(path), {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', ...authHeader() },
 		body: JSON.stringify(body),
@@ -139,7 +141,7 @@ export const uploadWithProgress = (
 		const body = new FormData();
 		body.append('file', file);
 		if (folder) body.append('folder', folder);
-		xhr.open('POST', `${BACKEND}/media/upload`);
+		xhr.open('POST', apiUrl('media/upload'));
 		Object.entries(authHeader()).forEach(([k, v]) => xhr.setRequestHeader(k, v));
 		xhr.upload.onprogress = e => e.lengthComputable && onProgress(e.loaded / e.total);
 		xhr.onload = () => {
@@ -159,7 +161,7 @@ export const uploadWithProgress = (
 
 /** Downloads through the backend (S3 links are cross-origin, so `download` is ignored on them). */
 export const downloadFile = async (file: MediaFile) => {
-	const res = await fetch(`${BACKEND}/media/download/${file._id}`, { headers: authHeader() });
+	const res = await fetch(apiUrl(`media/download/${file._id}`), { headers: authHeader() });
 	if (!res.ok) throw new Error(`Download failed (${res.status})`);
 	const blob = await res.blob();
 	const url = URL.createObjectURL(blob);

@@ -18,6 +18,7 @@ import {
 	statsParams,
 	withUnit,
 } from './types';
+import { pagePath } from '../config/lib/constants/panel';
 
 /**
  * The dashboard's widgets and the grid they sit in — used by the dashboard
@@ -43,7 +44,7 @@ type WidgetProps = { w: Widget; index: number; editing?: Editing; preview?: bool
 const titleOf = (w: Widget) => w.title?.trim() || defaultTitle(w, humanizeKey(w.route));
 
 /** A route's list page, when the widget has one to link to. */
-const pageHref = (w: Widget) => (w.route ? `/${w.route}` : undefined);
+const pageHref = (w: Widget) => (w.route ? pagePath(w.route) : undefined);
 
 const errorStatus = (error: any) => error?.status ?? error?.originalStatus;
 const errorText = (error: any) => error?.data?.message || 'Couldn’t load this widget';

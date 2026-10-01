@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { Button, Center, CloseButton, Separator, Flex, Heading } from '@chakra-ui/react';
 import { DecisionAlert, Navbar, THEME, useIsMobile } from '../index';
+import { pagePath } from '../config/lib/constants/panel';
 
 type CreateNavProps = {
 	title: string;
@@ -14,7 +15,7 @@ type CreateNavProps = {
 
 const EditorNav: React.FC<CreateNavProps> = ({ title, path, isDisabled, isLoading }) => {
 	const router = useRouter();
-	const handleBackClick = () => router.replace(`/${path}`);
+	const handleBackClick = () => router.replace(pagePath(path));
 	const isMobile = useIsMobile();
 	const truncate = (str: string, n: number) => (str.length > n ? str.slice(0, n) + '...' : str);
 

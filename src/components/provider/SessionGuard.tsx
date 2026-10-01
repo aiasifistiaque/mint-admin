@@ -6,13 +6,16 @@ import { logout } from '@/components/library';
 
 /** The code the backend's adminProtect sends for a signed-out session. */
 export const REVOKED_CODE = 'SESSION_REVOKED';
+/** The tenant API's: this account was removed from the organization the token works in. */
+export const ORG_REVOKED_CODE = 'ORG_ACCESS_REVOKED';
 /** Tells the login page why it's showing (read once, then cleared). */
 export const SIGNED_OUT_KEY = 'mint:signed-out';
 
 /**
  * Signs this browser out the moment the server says its session was signed
  * out — from another device's Settings → Signed-in devices, or by a super
- * admin on Login sessions. Any API response of 401 with
+ * admin on Login sessions — or, in the tenant panel, that the account was
+ * removed from the organization it was working in. Any API response of 401 with
  * `{ code: 'SESSION_REVOKED' }` triggers it, whichever part of the app made
  * the request (RTK Query and plain fetch both go through window.fetch).
  *
@@ -45,7 +48,7 @@ const SessionGuard = () => {
 				res
 					.clone()
 					.json()
-					.then(body => body?.code === REVOKED_CODE && signOut())
+					.then(body => (body?.code === REVOKED_CODE || body?.code === ORG_REVOKED_CODE) && signOut())
 					.catch(() => undefined);
 			}
 			return res;

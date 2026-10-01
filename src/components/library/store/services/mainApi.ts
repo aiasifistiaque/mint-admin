@@ -1,7 +1,8 @@
 // import { URL } from '../..';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { apiUrl } from '../../config/lib/constants/panel';
 
-const URL = process.env.NEXT_PUBLIC_BACKEND || 'http://localhost:3000';
 
 // Tag types for endpoints with fixed tags (providesTags: ['builder'] etc.).
 // RTK Query logs "Tag type 'x' was used, but not specified in `tagTypes`!" for
@@ -130,6 +131,12 @@ const tags: string[] = [
 	'support-tickets',
 	'my-tickets',
 	'ticket-thread',
+	// The tenant panel (tenantApi.ts).
+	'tenant-org',
+	'tenant-members',
+	'tenant-roles',
+	'tenant-invitations',
+	'tenant-projects',
 	'repos',
 	'resources',
 	'restaurant',
@@ -163,17 +170,30 @@ const tags: string[] = [
 	'notifications',
 ];
 
+const rawBaseQuery = fetchBaseQuery({
+	baseUrl: '',
+	prepareHeaders: (headers, { getState }) => {
+		const token: string = (getState() as any).auth?.token;
+		if (token) {
+			headers.set('authorization', token);
+		}
+	},
+});
+
+/**
+ * Every request's base is chosen per path (config/lib/constants/panel.ts): the
+ * admin API for the super-admin panel; for the tenant panel the tenant API's
+ * root (account, organization) or the current project's (everything else).
+ */
+const baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = (args, api, extra) => {
+	const url = typeof args === 'string' ? args : args.url;
+	const full = apiUrl(url);
+	return rawBaseQuery(typeof args === 'string' ? full : { ...args, url: full }, api, extra);
+};
+
 export const mainApi = createApi({
 	reducerPath: 'mainApi',
-	baseQuery: fetchBaseQuery({
-		baseUrl: `${URL}`,
-		prepareHeaders: (headers, { getState }) => {
-			const token: string = (getState() as any).auth?.token;
-			if (token) {
-				headers.set('authorization', token);
-			}
-		},
-	}),
+	baseQuery,
 	tagTypes: tags,
 	endpoints: builder => ({}),
 });

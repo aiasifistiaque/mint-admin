@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { Button, Center, CloseButton, Separator, Flex, Heading } from '@chakra-ui/react';
 import { Navbar, THEME } from '../index';
+import { pagePath } from '../config/lib/constants/panel';
 
 type CreateNavProps = {
 	title: string;
@@ -14,7 +15,7 @@ type CreateNavProps = {
 const CreateNav: FC<CreateNavProps> = ({ title, path, isLoading }) => {
 	const router = useRouter();
 	const handleBackClick = () => {
-		router.replace(`/${path}`);
+		router.replace(pagePath(path));
 	};
 
 	const headings = (

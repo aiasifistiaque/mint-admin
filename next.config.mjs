@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: false,
+	// The tenant panel (NEXT_PUBLIC_PANEL=tenant) can run next to the admin in dev
+	// from this same folder — each needs its own build output.
+	distDir: process.env.NEXT_DIST_DIR || '.next',
 	experimental: {
 		// Turbopack's production scope hoisting (Next 16.0.10) miscompiles the
 		// library barrels: a merged module imports a re-exported component via

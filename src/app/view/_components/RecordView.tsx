@@ -8,6 +8,7 @@ import { Pencil } from 'lucide-react';
 import useRecordView from '@/components/library/components/view/record/useRecordView';
 import RecordOverview from '@/components/library/components/view/record/RecordOverview';
 import { StatusPill, ago } from '@/components/library/modals/CreateModal/CreateModal';
+import { pagePath } from '@/components/library/config/lib/constants/panel';
 
 /** A page's own tab, shown ahead of Overview. */
 export type RecordViewTab = {
@@ -106,7 +107,7 @@ const RecordView = ({ slug, id, tabs: pageTabs = [], title, badge, meta, actions
 				<PageHeader
 					breadcrumbs={[
 						{ href: '/', title: 'Home' },
-						{ href: `/${slug}`, title: routeTitle },
+						{ href: pagePath(slug), title: routeTitle },
 						{ href: '#', title: recordTitle },
 					]}
 					title={title || recordTitle}

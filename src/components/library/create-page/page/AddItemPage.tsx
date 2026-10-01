@@ -13,6 +13,7 @@ import {
 	FormSection,
 	ColorMode,
 } from '../..';
+import { pagePath } from '../../config/lib/constants/panel';
 
 type FormPageType = {
 	data: any;
@@ -28,7 +29,7 @@ const AddItemPage: FC<FormPageType> = ({ data }) => {
 	const { isSuccess, isLoading, isError, error } = result;
 	const [changedData, setChangedData] = useState({});
 
-	useRedirect({ isSuccess, isLoading, path: `/${path}` });
+	useRedirect({ isSuccess, isLoading, path: pagePath(path) });
 	useCustomToast({
 		successText: 'Item added successfully',
 		isSuccess,

@@ -38,3 +38,6 @@ next-env.d.ts
 # TypeScript incremental build info
 .next/cache/tsbuildinfo
 *.tsbuildinfo
+
+# the tenant panel's dev build (NEXT_DIST_DIR)
+/.next-tenant/

@@ -11,6 +11,8 @@ import {
 import { Link as ChakraLink } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import React, { FC, ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
+import TenantRegister from './_components/TenantRegister';
 
 type FormDataType = {
 	name: string;
@@ -20,7 +22,7 @@ type FormDataType = {
 	confirm: string;
 };
 
-const RegisterPage: FC<{}> = () => {
+const AdminRegisterPage: FC<{}> = () => {
 	const [formData, setFormData] = useState<FormDataType>({
 		name: '',
 		email: '',
@@ -131,5 +133,8 @@ const RegisterPage: FC<{}> = () => {
 		</LoginContainer>
 	);
 };
+
+/** The tenant panel signs up a new account and organization; the old form stays for the admin build. */
+const RegisterPage: FC<{}> = () => (IS_TENANT_PANEL ? <TenantRegister /> : <AdminRegisterPage />);
 
 export default RegisterPage;

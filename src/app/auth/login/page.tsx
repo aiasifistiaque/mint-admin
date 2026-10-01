@@ -13,6 +13,7 @@ import TwoFactorStep from './_components/TwoFactorStep';
 import { Box, Link as ChakraLink } from '@chakra-ui/react';
 import { SIGNED_OUT_KEY } from '@/components/provider/SessionGuard';
 import NextLink from 'next/link';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 
 import React, { FC, ChangeEvent, useState, useEffect } from 'react';
 
@@ -92,7 +93,22 @@ const LoginPage: FC<{}> = () => {
 			submitLabel='Sign in'
 			isLoading={isLoading}
 			handleSubmit={handleSubmit}
-			footer='New to the team? Ask an administrator to send you an invitation.'>
+			footer={
+				IS_TENANT_PANEL ? (
+					<>
+						New here?{' '}
+						<ChakraLink
+							as={NextLink}
+							href='/auth/register'
+							color='fg'
+							fontWeight='600'>
+							Create an account
+						</ChakraLink>
+					</>
+				) : (
+					'New to the team? Ask an administrator to send you an invitation.'
+				)
+			}>
 			{signedOut && (
 				<Box
 					role='status'

@@ -15,6 +15,7 @@ import {
 	getFieldValue,
 } from '../..';
 import { withFormulaValues } from '../../functions/formula';
+import { pagePath } from '../../config/lib/constants/panel';
 
 type FormPageType = {
 	formData: any;
@@ -63,7 +64,7 @@ const FormPage: FC<FormPageType> = ({
 	// Formula inputs read the form with every formula calculated (one can use another).
 	const calculated = useMemo(() => withFormulaValues(formData, data), [formData, data]);
 
-	useRedirect({ isSuccess, isLoading, path: `/${path}` });
+	useRedirect({ isSuccess, isLoading, path: pagePath(path) });
 	useCustomToast({
 		successText: type == 'update' ? 'Information Updated Successfully' : 'Item added successfully',
 		isSuccess,

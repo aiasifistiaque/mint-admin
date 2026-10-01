@@ -1,4 +1,8 @@
-export const TOKEN_NAME: string = process.env.NEXT_PUBLIC_TOKEN_NAME || 'MINT_CAFE_TOKEN_TWO';
+import { IS_TENANT_PANEL } from './panel';
+
+// The tenant panel keeps its own token: the two panels can be open side by side.
+export const TOKEN_NAME: string =
+	process.env.NEXT_PUBLIC_TOKEN_NAME || (IS_TENANT_PANEL ? 'MINT_TENANT_TOKEN' : 'MINT_CAFE_TOKEN_TWO');
 
 export const REFRESH_TOKEN: string =
 	process.env.REFRESH_TOKEN || 'THINKCRYPT_ERP_REFRESH_TOKEN_TEST_ONE';

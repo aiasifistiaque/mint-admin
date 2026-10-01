@@ -12,6 +12,8 @@ import { useIsMobile, useAppDispatch } from '../hooks';
 import { unselectAll, useGetQuery, navigate } from '../store';
 import { padding, sizes } from '../config';
 import Footer from './Footer';
+import { IS_TENANT_PANEL } from '../config/lib/constants/panel';
+import WorkspaceSwitcher from '../tenant/WorkspaceSwitcher';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 const ICON_SIZE = 17;
@@ -32,13 +34,16 @@ const NavActions = memo(function NavActions({ sidebarData }: { sidebarData: any 
 				size={ICON_SIZE}
 				position='navbar'
 			/> */}
+			{/* The tenant panel: which project/organization, and switching. */}
+			{IS_TENANT_PANEL && <WorkspaceSwitcher />}
 			{sidebarData && (
 				<SearchMenu
 					sidebarData={sidebarData}
 					iconSize={ICON_SIZE}
 				/>
 			)}
-			<NotificationMenu iconSize={ICON_SIZE} />
+			{/* Notifications come from per-record access, which tenant projects don't have yet. */}
+			{!IS_TENANT_PANEL && <NotificationMenu iconSize={ICON_SIZE} />}
 			<SelfMenu iconSize={ICON_SIZE} />
 			{/* <CreateMenu /> */}
 		</Align>

@@ -35,7 +35,9 @@
     ".next/types/**/*.ts",
     "src/components/library/modals/upload-modal/iconNames.js",
     "../../dd/dd-admin/src/components/library/utils/texts/JsonView.tsx",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    ".next-tenant/types/**/*.ts",
+    ".next-tenant/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

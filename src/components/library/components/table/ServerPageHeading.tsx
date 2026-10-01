@@ -13,6 +13,7 @@ import { BackendCreateModal } from '../../modals';
 import { Icon } from '../../icon';
 import { useIsMobile } from '../../hooks';
 import { radius, sizes } from '../../config';
+import { pagePath } from '../../config/lib/constants/panel';
 
 type PageHeadingProps = FlexProps & {
 	title: string;
@@ -132,7 +133,7 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 					<Crumbs
 						data={[
 							{ href: '/', title: 'Home' },
-							{ href: `/${path}`, title },
+							{ href: pagePath(path), title },
 						]}
 					/>
 				</Box>

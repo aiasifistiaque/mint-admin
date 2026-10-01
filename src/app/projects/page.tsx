@@ -9,6 +9,9 @@ import {
 } from '@/components/library';
 import { projectSchema as schema } from '@/models';
 import { fields, formFields, tableFields } from './config';
+import { Layout } from '@/components/library';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
+import ProjectsBoard from '@/components/library/tenant/ProjectsBoard';
 
 const table: BackendTableObjectProps = {
 	title: 'Projects',
@@ -38,8 +41,20 @@ const table: BackendTableObjectProps = {
 	],
 };
 
-const page: NextPage = () => {
+const AdminProjectsPage: NextPage = () => {
 	return <BackendPageTable table={table} />;
 };
 
-export default page;
+/** The tenant panel's /projects is the organization's projects, not this table. */
+const ProjectsPage: NextPage = () =>
+	IS_TENANT_PANEL ? (
+		<Layout
+			title='Projects'
+			path='projects'>
+			<ProjectsBoard />
+		</Layout>
+	) : (
+		<AdminProjectsPage />
+	);
+
+export default ProjectsPage;
