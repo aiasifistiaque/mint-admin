@@ -18,7 +18,7 @@ const SideDrawer = () => {
 	const pathname = usePathname();
 	const { data } = useGetSelfQuery({});
 
-	const title = data?.shop?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Admin';
+	const title = data?.organization?.name || data?.shop?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Admin';
 
 	// A link to the page already open doesn't change the path; one that does
 	// (or the back button) closes the drawer either way.

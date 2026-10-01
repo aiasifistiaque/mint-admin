@@ -10,6 +10,7 @@ import {
 	PromptDialog,
 } from '@/components/library';
 import { Box, Button, Flex, Grid, Input, Image, Skeleton, Text } from '@chakra-ui/react';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 import { Check, Lock, PanelRight, PenLine, SquareDashed, UserRound } from 'lucide-react';
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { Row, SettingsCard, Value } from './_components/ui';
@@ -332,51 +333,53 @@ const SettingsPage = () => {
 				<SecuritySummaryCard />
 
 				{/* ----------------------------------------------- signature */}
-				<SettingsCard
-					as='form'
-					onSubmit={saveSignature}
-					id='signature'
-					icon={<PenLine size={16} />}
-					title='Signature'
-					description='Printed on invoice, bill and receipt PDFs when you download them with “Include signature” ticked.'
-					note={
-						editingSignature
-							? signatureChanged
-								? 'New signature not saved yet'
-								: 'A PNG with a transparent background prints best'
-							: signature
-							? 'Shown at the foot of the PDF, above your name'
-							: 'No signature yet'
-					}
-					actions={
-						editingSignature ? (
-							<>
-								<Button
-									{...COMPACT}
-									variant='outline'
-									disabled={signatureResult.isLoading}
-									onClick={cancelSignature}>
-									Cancel
-								</Button>
-								<Button
-									{...COMPACT}
-									type='submit'
-									loading={signatureResult.isLoading && !removing}
-									loadingText='Saving'
-									disabled={!signatureChanged}>
-									Save
-								</Button>
-							</>
-						) : (
-							<>
-								{signature && (
+				{/* Signatures go on invoice PDFs — the super-admin panel only. */}
+				{!IS_TENANT_PANEL && (
+					<SettingsCard
+						as='form'
+						onSubmit={saveSignature}
+						id='signature'
+						icon={<PenLine size={16} />}
+						title='Signature'
+						description='Printed on invoice, bill and receipt PDFs when you download them with “Include signature” ticked.'
+						note={
+							editingSignature
+								? signatureChanged
+									? 'New signature not saved yet'
+									: 'A PNG with a transparent background prints best'
+								: signature
+								? 'Shown at the foot of the PDF, above your name'
+								: 'No signature yet'
+						}
+						actions={
+							editingSignature ? (
+								<>
 									<Button
 										{...COMPACT}
-										variant='ghost'
-										color='red.fg'
-										onClick={() => setRemoving(true)}>
-										Remove
+										variant='outline'
+										disabled={signatureResult.isLoading}
+										onClick={cancelSignature}>
+										Cancel
 									</Button>
+									<Button
+										{...COMPACT}
+										type='submit'
+										loading={signatureResult.isLoading && !removing}
+										loadingText='Saving'
+										disabled={!signatureChanged}>
+										Save
+									</Button>
+								</>
+							) : (
+								<>
+									{signature && (
+										<Button
+											{...COMPACT}
+											variant='ghost'
+											color='red.fg'
+											onClick={() => setRemoving(true)}>
+											Remove
+										</Button>
 								)}
 								<Button
 									{...COMPACT}
@@ -446,6 +449,7 @@ const SettingsPage = () => {
 						</Flex>
 					)}
 				</SettingsCard>
+				)}
 
 				{/* ------------------------------------------------- layout */}
 				<SettingsCard

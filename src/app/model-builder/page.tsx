@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge, Button, Flex, Link, Text } from '@chakra-ui/react';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 import { BookOpen, ExternalLink, Plug, Plus, Sparkles } from 'lucide-react';
 import { Layout, useGetBuiltModelsQuery } from '@/components/library';
 import {
@@ -191,13 +192,16 @@ const ModelBuilderPage = () => {
 								<Plug size={14} />
 								Connect your AI
 							</Button>
-							<Button
-								size='sm'
-								variant='outline'
-								onClick={() => router.push('/model-builder/features/new')}>
-								<Sparkles size={14} />
-								Build a feature
-							</Button>
+							{/* Planned by the platform's AI; projects connect their own instead (docs/multi-tenancy D10). */}
+							{!IS_TENANT_PANEL && (
+								<Button
+									size='sm'
+									variant='outline'
+									onClick={() => router.push('/model-builder/features/new')}>
+									<Sparkles size={14} />
+									Build a feature
+								</Button>
+							)}
 							<Button
 								size='sm'
 								onClick={() => router.push('/model-builder/new')}>

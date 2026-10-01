@@ -4,6 +4,7 @@ import { FC, Fragment, memo } from 'react';
 import Link from 'next/link';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { padding } from '../config';
+import { IS_TENANT_PANEL } from '../config/lib/constants/panel';
 
 /**
  * The links along the bottom of pages (Layout renders this under the page
@@ -11,7 +12,7 @@ import { padding } from '../config';
  * so moving between them is client-side. An empty `href` shows the label
  * without a link; links starting with `http` open in a new tab.
  */
-export const FOOTER_LINKS: { label: string; href: string }[] = [
+const ADMIN_LINKS: { label: string; href: string }[] = [
 	{ label: 'Support', href: '/support' },
 	{ label: 'System Status', href: '/system-status' },
 	{ label: 'Docs', href: '/docs' },
@@ -19,6 +20,15 @@ export const FOOTER_LINKS: { label: string; href: string }[] = [
 	{ label: 'Report Issue', href: '/report-issue' },
 	{ label: 'Privacy Policy', href: '/privacy-policy' },
 ];
+
+// Support, status and issue reports are the super-admin panel's own pages.
+const TENANT_LINKS: { label: string; href: string }[] = [
+	{ label: 'Docs', href: '/docs' },
+	{ label: 'Terms of Use', href: '/terms' },
+	{ label: 'Privacy Policy', href: '/privacy-policy' },
+];
+
+export const FOOTER_LINKS = IS_TENANT_PANEL ? TENANT_LINKS : ADMIN_LINKS;
 
 const COMPANY = { name: 'THINKCRYPT', href: 'https://thinkcrypt.dev' };
 

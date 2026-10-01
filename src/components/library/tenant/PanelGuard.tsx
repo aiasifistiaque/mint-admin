@@ -3,13 +3,13 @@
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { IS_TENANT_PANEL, setProjectId } from '../config/lib/constants/panel';
-import { ADMIN_ONLY_PAGES } from './pages';
+import { ADMIN_ONLY_PAGES, TENANT_ONLY_PAGES } from './pages';
 import { useWorkspace } from './useWorkspace';
 
 /**
- * The tenant panel's page rules (mounted once in the root providers; renders
- * nothing in the super-admin panel):
- * - the super admin's own pages (pages.ts) go home;
+ * Which panel a page belongs to (mounted once in the root providers):
+ * - in the tenant panel the super admin's own pages (pages.ts) go home, and
+ *   in the super-admin panel the tenant panel's do;
  * - a stored project this account can no longer see is forgotten.
  */
 const PanelGuard = () => {
@@ -17,11 +17,10 @@ const PanelGuard = () => {
 	const router = useRouter();
 	const first = pathname.split('/')[1] || '';
 	// Signed-out pages have no account to read.
-	const { staleProject } = useWorkspace({ skip: first === 'auth' });
+	const { staleProject } = useWorkspace({ skip: first === 'auth' || !IS_TENANT_PANEL });
 
 	useEffect(() => {
-		if (!IS_TENANT_PANEL) return;
-		if (ADMIN_ONLY_PAGES.has(first)) router.replace('/');
+		if (IS_TENANT_PANEL ? ADMIN_ONLY_PAGES.has(first) : TENANT_ONLY_PAGES.has(first)) router.replace('/');
 	}, [first]);
 
 	useEffect(() => {

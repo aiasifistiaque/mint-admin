@@ -3,6 +3,7 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Badge, Box, Button, Flex, Text } from '@chakra-ui/react';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 import { Plug, Plus } from 'lucide-react';
 import { Layout, useGetBuiltFeaturesQuery } from '@/components/library';
 import { EmptyState, ErrorState, PageHeader, Panel, TableSkeleton, when } from '@/components/library/cl';
@@ -45,12 +46,14 @@ const FeaturesPage = () => {
 									Connect your AI
 								</NextLink>
 							</Button>
-							<Button
-								size='sm'
-								onClick={() => router.push('/model-builder/features/new')}>
-								<Plus size={14} />
-								New feature
-							</Button>
+							{!IS_TENANT_PANEL && (
+								<Button
+									size='sm'
+									onClick={() => router.push('/model-builder/features/new')}>
+									<Plus size={14} />
+									New feature
+								</Button>
+							)}
 						</Flex>
 					}
 				/>
@@ -73,14 +76,29 @@ const FeaturesPage = () => {
 						<Box p={4}>
 							<EmptyState
 								title='Nothing built yet'
-								description='Describe a feature and build several linked models at once — here, or from your own AI.'
+								description={
+									IS_TENANT_PANEL
+										? 'Connect your own AI and describe a feature — it builds several linked models in this project at once.'
+										: 'Describe a feature and build several linked models at once — here, or from your own AI.'
+								}
 								action={
-									<Button
-										size='sm'
-										onClick={() => router.push('/model-builder/features/new')}>
-										<Plus size={14} />
-										New feature
-									</Button>
+									IS_TENANT_PANEL ? (
+										<Button
+											size='sm'
+											asChild>
+											<NextLink href='/model-builder/connect'>
+												<Plug size={14} />
+												Connect your AI
+											</NextLink>
+										</Button>
+									) : (
+										<Button
+											size='sm'
+											onClick={() => router.push('/model-builder/features/new')}>
+											<Plus size={14} />
+											New feature
+										</Button>
+									)
 								}
 							/>
 						</Box>

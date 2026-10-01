@@ -41,3 +41,4 @@ next-env.d.ts
 
 # the tenant panel's dev build (NEXT_DIST_DIR)
 /.next-tenant/
+/.next-admintest/

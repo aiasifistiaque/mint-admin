@@ -13,6 +13,8 @@ import { Text } from '@chakra-ui/react';
 import { useParams } from 'next/navigation';
 
 import React, { FC, ChangeEvent, useState, useEffect } from 'react';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
+import TenantAcceptInvitation from './_components/TenantAcceptInvitation';
 
 type FormDataType = {
 	name: string;
@@ -21,7 +23,7 @@ type FormDataType = {
 	confirmPassword: string;
 };
 
-const AcceptInvitationPage: FC<{}> = () => {
+const AdminAcceptInvitationPage: FC<{}> = () => {
 	const params = useParams<{ token: string }>();
 	const dispatch = useAppDispatch();
 
@@ -140,5 +142,8 @@ const AcceptInvitationPage: FC<{}> = () => {
 		</LoginContainer>
 	);
 };
+
+/** The tenant panel's invitations are into an organization (TenantAcceptInvitation). */
+const AcceptInvitationPage: FC<{}> = () => (IS_TENANT_PANEL ? <TenantAcceptInvitation /> : <AdminAcceptInvitationPage />);
 
 export default AcceptInvitationPage;

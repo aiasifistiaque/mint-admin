@@ -19,3 +19,6 @@ export const ADMIN_ONLY_PAGES = new Set([
 	'support', 'system-status', 'tcclients', 'teams', 'techstacks', 'test', 'themes', 'user-feedback-success',
 	'user-feedback', 'users', 'vercel-doc', 'vercels', 'views',
 ]);
+
+/** The tenant panel's own pages; the super-admin panel sends them home. */
+export const TENANT_ONLY_PAGES = new Set(['org', 't']);

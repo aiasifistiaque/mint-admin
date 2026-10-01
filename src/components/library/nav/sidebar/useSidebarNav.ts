@@ -53,7 +53,8 @@ const useSidebarNav = () => {
 	const { data: sidebarData, isFetching } = useGetQuery({ path: `/sidebar/crm/${sidebarType}` });
 	const { selected } = useAppSelector((state: any) => state.route);
 
-	const title = self?.shop?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Admin';
+	// The tenant panel shows the organization it's working in.
+	const title = self?.organization?.name || self?.shop?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Admin';
 
 	const isLoading = isFetching || !Array.isArray(sidebarData);
 	const source: NavItem[] = isLoading ? (fallback as any) : sidebarData;

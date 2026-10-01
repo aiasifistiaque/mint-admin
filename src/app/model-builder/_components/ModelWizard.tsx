@@ -3,6 +3,7 @@
 import { FC, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge, Box, Button, Flex, Grid, Switch, Text } from '@chakra-ui/react';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 import { ArrowLeft, ArrowRight, Check, ExternalLink, RotateCcw, Settings2 } from 'lucide-react';
 import {
 	Layout,
@@ -604,7 +605,8 @@ const ModelWizard = () => {
 							items={problems}
 						/>
 
-						{key === 'model' && (
+						{/* The platform's AI key; tenant projects bring their own AI over MCP (D10). */}
+						{key === 'model' && !IS_TENANT_PANEL && (
 							<AiBuilder
 								current={definition}
 								hasModel={model.fields.some(f => f.key) && !!model.title.trim()}
