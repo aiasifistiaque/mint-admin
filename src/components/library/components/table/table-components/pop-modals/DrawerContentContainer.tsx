@@ -1,15 +1,16 @@
 import { FC, ReactNode } from 'react';
-import { Drawer, DrawerContentProps, Box } from '@chakra-ui/react';
+import { DrawerContentProps } from '@chakra-ui/react';
 import { styles } from '../../../..';
+import SheetContent from '../menu-modals/SheetContent';
 
 type DrawerContentType = DrawerContentProps & {
 	children: ReactNode;
 };
 
-/** Matches the sheet used by the sort and column-picker drawers. */
+/** Matches the sheet used by the sort and column-picker drawers; swipes down to close. */
 const DrawerContentContainer: FC<DrawerContentType> = ({ children, ...props }) => {
 	return (
-		<Drawer.Content
+		<SheetContent
 			bg='menu.light'
 			_dark={{ bg: 'menu.dark' }}
 			boxShadow={styles.DRAWER.boxShadow}
@@ -21,18 +22,8 @@ const DrawerContentContainer: FC<DrawerContentType> = ({ children, ...props }) =
 			overflow='hidden'
 			borderTopRadius='20px'
 			{...props}>
-			<Box
-				mx='auto'
-				mt={3}
-				mb={1}
-				w='36px'
-				h='4px'
-				flexShrink={0}
-				borderRadius='full'
-				bg='border.emphasized'
-			/>
 			{children}
-		</Drawer.Content>
+		</SheetContent>
 	);
 };
 

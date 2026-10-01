@@ -27,10 +27,11 @@ const MemoSidebar = memo(Sidebar);
 const NavActions = memo(function NavActions({ sidebarData }: { sidebarData: any }) {
 	return (
 		<Align gap={1}>
-			<ColorMode
+			{/* Dark mode is a switch in the account menu (SelfMenu), under Themes. */}
+			{/* <ColorMode
 				size={ICON_SIZE}
 				position='navbar'
-			/>
+			/> */}
 			{sidebarData && (
 				<SearchMenu
 					sidebarData={sidebarData}

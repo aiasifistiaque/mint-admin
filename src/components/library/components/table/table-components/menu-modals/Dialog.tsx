@@ -1,8 +1,9 @@
 'use client';
-import { Drawer, Dialog as ChakraDialog, Portal, Box } from '@chakra-ui/react';
+import { Drawer, Dialog as ChakraDialog, Portal } from '@chakra-ui/react';
 import { styles, useIsMobile, useModalLayout } from '../../../..';
 import { FC, ReactNode } from 'react';
 import { ModalLayoutProvider } from './ModalLayoutContext';
+import SheetContent from './SheetContent';
 
 type DialogProps = {
 	children: ReactNode;
@@ -46,20 +47,6 @@ const formLayoutCss = {
 		overflow: 'hidden',
 	},
 };
-
-/** The sheet's drag affordance — it reads as grabbable before you touch it. */
-const Grabber = () => (
-	<Box
-		mx='auto'
-		mt={3}
-		mb={1}
-		w='36px'
-		h='4px'
-		flexShrink={0}
-		borderRadius='full'
-		bg='border.emphasized'
-	/>
-);
 
 const Dialog: FC<DialogProps> = ({
 	children,
@@ -129,7 +116,7 @@ const Dialog: FC<DialogProps> = ({
 				<Portal>
 					<Drawer.Backdrop />
 					<Drawer.Positioner>
-						<Drawer.Content
+						<SheetContent
 							onClick={(e: any) => e.stopPropagation()}
 							css={formLayoutCss}
 							bg='container.newLight'
@@ -143,9 +130,8 @@ const Dialog: FC<DialogProps> = ({
 							userSelect='none'
 							overflow='hidden'
 							borderTopRadius='20px'>
-							<Grabber />
 							<ModalLayoutProvider value='drawer'>{children}</ModalLayoutProvider>
-						</Drawer.Content>
+						</SheetContent>
 					</Drawer.Positioner>
 				</Portal>
 			</Drawer.Root>

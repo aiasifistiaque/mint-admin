@@ -3,6 +3,7 @@ import { FC, ReactNode } from 'react';
 
 import { styles, useIsMobile, useModalLayout } from '../../../..';
 import { ModalLayoutProvider } from './ModalLayoutContext';
+import SheetContent from './SheetContent';
 
 type MenuModalProps = {
 	children: ReactNode;
@@ -59,9 +60,9 @@ const MenuModal: FC<MenuModalProps> = ({
 				<Portal>
 					<Drawer.Backdrop />
 					<Drawer.Positioner>
-						<Drawer.Content {...drawerStyleProps}>
+						<SheetContent {...drawerStyleProps}>
 							<ModalLayoutProvider value='drawer'>{children}</ModalLayoutProvider>
-						</Drawer.Content>
+						</SheetContent>
 					</Drawer.Positioner>
 				</Portal>
 			</Drawer.Root>

@@ -1,16 +1,22 @@
 'use client';
-import { Button, Flex, FlexProps, Tabs, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, FlexProps, Tabs, Text, useDisclosure } from '@chakra-ui/react';
 import { FC, useState, ReactNode } from 'react';
+import { FolderOpen, ImageIcon, Images, Link2, Upload } from 'lucide-react';
 
-import { MyFolders, styles, MyPhotos, UploadImage, InsertUrl, MFooter } from '.';
-import { AddImageButton, DeleteImageButton, EditImageButton, useAppSelector } from '../..';
+import { MyFolders, MyPhotos, UploadImage, InsertUrl } from '.';
 import {
-	GenericModal,
-	GenericModalHeader,
-	GenericModalCloseButton,
-	GenericModalBody,
-	GenericModalContent,
+	AddImageButton,
+	DeleteImageButton,
+	EditImageButton,
+	useAppSelector,
+	Dialog,
+	DialogHeader,
+	DialogBody,
+	DialogFooter,
+	DialogCloseButton,
+	DiscardButton,
 } from '../..';
+import { styles } from '../../config';
 
 type UploadModalProps = {
 	album?: string;
@@ -18,12 +24,12 @@ type UploadModalProps = {
 	handleImage: any;
 	type?: 'add' | 'edit' | 'delete';
 	multiple?: boolean;
-	/** Lets the "All Photos"/"Browse by folder" grids pick several images
-	 *  before inserting, instead of inserting on the first click. On insert,
-	 *  `handleImage` is called once with the whole array and a second
-	 *  argument of `'add-many'` — see `VImageArray`'s "add" tile, the only
-	 *  current caller. Unrelated to `multiple`, which only changes what
-	 *  trigger button is rendered for the `delete` type. */
+	/** Lets the Library/Folders grids pick several images before inserting,
+	 *  instead of inserting on the first click. On insert, `handleImage` is
+	 *  called once with the whole array and a second argument of `'add-many'`
+	 *  — see `VImageArray`'s "add" tile, the only current caller. Unrelated to
+	 *  `multiple`, which only changes what trigger button is rendered for the
+	 *  `delete` type. */
 	multiSelect?: boolean;
 	handleDelete?: any;
 	title?: string;
@@ -32,10 +38,24 @@ type UploadModalProps = {
 	children?: ReactNode;
 };
 
-const tabs = ['All Photos', 'Browse by folder', 'Upload', 'Web Address (URL)'];
+const TABS = [
+	{ value: 'library', label: 'Library', icon: <Images size={15} /> },
+	{ value: 'folders', label: 'Folders', icon: <FolderOpen size={15} /> },
+	{ value: 'upload', label: 'Upload', icon: <Upload size={15} /> },
+	{ value: 'url', label: 'From URL', icon: <Link2 size={15} /> },
+];
 
+const NOUN: Record<string, [string, string]> = {
+	image: ['image', 'images'],
+	video: ['video', 'videos'],
+};
+
+/**
+ * Pick media for a field: from the library, a folder, a fresh upload or a web
+ * address. The shared Dialog, so it's a centred dialog on desktop and a
+ * bottom sheet (swipe down to close) on phones.
+ */
 const UploadModal: FC<UploadModalProps> = ({
-	album,
 	multiple,
 	multiSelect = false,
 	trigger,
@@ -50,6 +70,7 @@ const UploadModal: FC<UploadModalProps> = ({
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const emptySelection = multiSelect ? [] : null;
 	const [img, setImg] = useState<any>(emptySelection);
+	const [tab, setTab] = useState('library');
 	const { currentPath } = useAppSelector(state => state.table);
 
 	// A selection left over from a previous open must never carry into the
@@ -63,10 +84,9 @@ const UploadModal: FC<UploadModalProps> = ({
 
 	const handleOpen = () => {
 		resetSelection();
+		setTab('library');
 		onOpen();
 	};
-
-	const handleImageSelect = (e: any) => setImg(e);
 
 	const selectionCount = multiSelect ? (Array.isArray(img) ? img.length : 0) : img ? 1 : 0;
 
@@ -99,15 +119,11 @@ const UploadModal: FC<UploadModalProps> = ({
 		delete: <DeleteImageButton onClick={handleDelete} />,
 	};
 
-	const flexCss: FlexProps =
-		type == 'add'
-			? {
-					w: 'full',
-					h: 'full',
-			  }
-			: {};
+	const flexCss: FlexProps = type == 'add' ? { w: 'full', h: 'full' } : {};
+	const triggerButton = (buttonTypes[type] as any) || trigger;
 
-	let triggerButton = (buttonTypes[type] as any) || trigger;
+	const [one, many] = NOUN[fileType] || ['file', 'files'];
+	const kind = fileType || 'image';
 
 	return (
 		<>
@@ -120,93 +136,115 @@ const UploadModal: FC<UploadModalProps> = ({
 					{children || triggerButton}
 				</Flex>
 			)}
-			<GenericModal
+			<Dialog
 				isOpen={isOpen}
 				onClose={handleClose}
 				size='xl'
-				isCentered>
-				<GenericModalContent {...styles.modalContentCss}>
-					<GenericModalHeader
-						px={{ base: 4, md: 6 }}
-						pb={2}
-						pt={4}>
-						Insert Photo/File
-					</GenericModalHeader>
-					<GenericModalCloseButton />
-					<GenericModalBody minH='70vh'>
-						<Tabs.Root
-							{...styles.tabsCss}
-							defaultValue='0'>
-							<Tabs.List
-								px={{ base: 4, md: 4 }}
-								gap={2}>
-								{tabs?.map((label: string, i: number) => (
-									<Tabs.Trigger
-										color={{ _light: 'text.light', _dark: 'text.dark' }}
-										px={2}
-										key={i}
-										value={String(i)}>
-										{label}
-									</Tabs.Trigger>
-								))}
-							</Tabs.List>
+				forceModal>
+				<DialogHeader
+					divider
+					icon={<ImageIcon size={17} strokeWidth={1.75} />}
+					description={
+						multiSelect
+							? `Pick one or more ${many}, upload a new one, or paste a link.`
+							: `Pick from your ${many}, upload a new one, or paste a link.`
+					}>
+					Insert {one}
+				</DialogHeader>
+				<DialogCloseButton top={{ base: 4, md: 5 }} />
+				{/* The tabs pad their own content; their underline is the divider. */}
+				<DialogBody
+					px={0}
+					pt={0}
+					pb={0}
+					borderTopWidth={0}>
+					<Tabs.Root
+						value={tab}
+						onValueChange={e => setTab(e.value)}
+						variant='line'
+						size='sm'
+						display='flex'
+						flexDirection='column'
+						// One height for every tab, so the dialog doesn't jump as you switch.
+						h={{ base: '62dvh', md: '540px' }}
+						maxH='full'>
+						<Tabs.List
+							px={{ base: 2, md: 4 }}
+							flexShrink={0}
+							overflowX='auto'
+							css={{ scrollbarWidth: 'none' }}>
+							{TABS.map(t => (
+								<Tabs.Trigger
+									key={t.value}
+									value={t.value}
+									gap={1.5}
+									px={{ base: 2.5, md: 3 }}
+									fontSize='13px'
+									whiteSpace='nowrap'>
+									{t.icon}
+									{t.label}
+								</Tabs.Trigger>
+							))}
+						</Tabs.List>
+						{TABS.map(t => (
 							<Tabs.Content
-								value='0'
-								px={{ base: 4, md: 6 }}>
-								<MyPhotos
-									handleSelect={handleImageSelect}
-									type={fileType || 'image'}
-									multiple={multiSelect}
-								/>
-							</Tabs.Content>
-							<Tabs.Content
-								value='1'
+								key={t.value}
+								value={t.value}
+								flex={1}
+								minH={0}
+								overflowY='auto'
 								px={{ base: 4, md: 6 }}
-								mt={6}>
-								<MyFolders
-									handleSelect={handleImageSelect}
-									type={fileType || 'image'}
-									multiple={multiSelect}
-								/>
+								py={4}>
+								{t.value === 'library' && (
+									<MyPhotos
+										handleSelect={setImg}
+										type={kind}
+										multiple={multiSelect}
+										onUpload={() => setTab('upload')}
+									/>
+								)}
+								{t.value === 'folders' && (
+									<MyFolders
+										handleSelect={setImg}
+										type={kind}
+										multiple={multiSelect}
+									/>
+								)}
+								{t.value === 'upload' && (
+									<UploadImage
+										fileType={kind}
+										handleSelect={handleUploadComplete}
+										folder={folder || currentPath}
+										active={tab === 'upload'}
+									/>
+								)}
+								{t.value === 'url' && (
+									<InsertUrl
+										fileType={kind}
+										handleSelect={setImg}
+									/>
+								)}
 							</Tabs.Content>
-							<Tabs.Content
-								value='2'
-								h='full'
-								mt={1}
-								px={{ base: 4, md: 4 }}>
-								<UploadImage
-									fileType={fileType || 'image'}
-									handleSelect={handleUploadComplete}
-									folder={folder || currentPath}
-								/>
-							</Tabs.Content>
-							<Tabs.Content
-								h='full'
-								value='3'
-								px={{ base: 4, md: 8 }}>
-								<InsertUrl handleSelect={handleImageSelect} />
-							</Tabs.Content>
-						</Tabs.Root>
-					</GenericModalBody>
+						))}
+					</Tabs.Root>
+				</DialogBody>
 
-					<MFooter>
-						<Button
-							px={3}
-							size='sm'
-							variant='outline'
-							onClick={handleClose}>
-							Cancel
-						</Button>
-						<Button
-							px={3}
-							size='sm'
-							disabled={!selectionCount}
-							onClick={handleInsert}>
-							{multiSelect && selectionCount > 1 ? `Insert ${selectionCount} Images` : 'Insert Media'}
-						</Button>
-					</MFooter>
-				</GenericModalContent>
-			</GenericModal>
+				<DialogFooter>
+					<Text
+						mr='auto'
+						fontSize='13px'
+						color='fg.muted'>
+						{selectionCount ? `${selectionCount} selected` : multiSelect ? `Select ${many}` : `Select ${one === 'image' ? 'an' : 'a'} ${one}`}
+					</Text>
+					<DiscardButton onClick={handleClose}>Cancel</DiscardButton>
+					<Button
+						{...(styles.MODAL_BUTTON as any)}
+						disabled={!selectionCount}
+						onClick={handleInsert}>
+						{multiSelect && selectionCount > 1 ? `Insert ${selectionCount} ${many}` : 'Insert'}
+					</Button>
+				</DialogFooter>
+			</Dialog>
 		</>
 	);
 };

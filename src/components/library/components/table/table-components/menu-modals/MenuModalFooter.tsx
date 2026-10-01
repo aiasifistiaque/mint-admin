@@ -21,7 +21,8 @@ const MenuModalFooter: FC<MenuModalFooterProps> = ({ children, ...props }) => {
 		return (
 			<Drawer.Footer
 				{...footerCss}
-				{...(isMobile ? { pb: 5 } : {})}
+				// Clear of the home indicator on phones without a button.
+				{...(isMobile ? { pt: 3, pb: 'max(16px, env(safe-area-inset-bottom))' } : {})}
 				{...props}>
 				{children}
 			</Drawer.Footer>

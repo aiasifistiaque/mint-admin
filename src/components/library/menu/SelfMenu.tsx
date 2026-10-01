@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { Menu, Center, Flex, Box, Text, FlexProps } from '@chakra-ui/react';
+import { Menu, Center, Flex, Box, Text, FlexProps, Switch } from '@chakra-ui/react';
+import { Moon } from 'lucide-react';
 
 import CustomMenuItem, { MenuItemStyle } from './CustomMenuItem';
 import { MenuIconContainer, MenuContainer } from '.';
@@ -8,6 +9,7 @@ import { Icon } from '../icon';
 import { useGetSelfQuery, logout, useSignOutHereMutation } from '../store';
 import { useAppDispatch } from '../hooks';
 import ThemeModal from '../theme/ThemeModal';
+import { useColorMode } from '@/components/ui/color-mode';
 
 /** Up to two initials: "Asif Istiaque" → "AI", "admin" → "A". */
 const initialsOf = (name?: string) =>
@@ -25,6 +27,8 @@ const SelfMenu = ({ iconSize }: { iconSize?: number }) => {
 	const dispatch = useAppDispatch();
 	const [themesOpen, setThemesOpen] = useState(false);
 	const [signOutHere] = useSignOutHereMutation();
+	const { colorMode, toggleColorMode } = useColorMode();
+	const dark = colorMode === 'dark';
 	// Ends this session on the server too (it leaves Signed-in devices, and the
 	// token stops working), then drops it here — even if the server is unreachable.
 	const handleLogout = async () => {
@@ -90,6 +94,30 @@ const SelfMenu = ({ iconSize }: { iconSize?: number }) => {
 							icon='palette'
 							onClick={() => setThemesOpen(true)}>
 							Themes
+						</CustomMenuItem>
+						{/* The whole row toggles, and the menu stays open to show the change.
+						    The switch only shows the state, so a click can't toggle twice. */}
+						<CustomMenuItem
+							value='dark-mode'
+							icon={<Moon size={16} />}
+							closeOnSelect={false}
+							onClick={toggleColorMode}>
+							<Flex
+								flex={1}
+								align='center'
+								justify='space-between'
+								gap={2}>
+								Dark mode
+								<Switch.Root
+									size='sm'
+									checked={dark}
+									aria-hidden
+									tabIndex={-1}
+									pointerEvents='none'>
+									<Switch.HiddenInput tabIndex={-1} />
+									<Switch.Control />
+								</Switch.Root>
+							</Flex>
 						</CustomMenuItem>
 
 						<Menu.Separator {...separatorCss} />

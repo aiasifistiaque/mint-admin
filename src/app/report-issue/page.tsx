@@ -185,6 +185,7 @@ const ReportForm: FC = () => {
 					)}
 					<Flex justify='flex-end'>
 						<Button
+							w={{ base: 'full', sm: 'auto' }}
 							type='submit'
 							disabled={!canSend}
 							loading={isLoading}
@@ -231,44 +232,57 @@ const MyReports: FC = () => {
 							<Box
 								flex={1}
 								minW={0}>
+								{/* Code and status share a line, so the title gets the full width under them. */}
 								<Flex
 									align='center'
+									justify='space-between'
 									gap={2}
-									mb={0.5}>
-									{r.code && (
-										<Text
-											fontSize='12px'
-											color='fg.muted'
-											fontFamily='mono'>
-											{r.code}
-										</Text>
-									)}
+									mb={1}>
 									<Text
-										fontSize='sm'
-										fontWeight='600'
-										truncate>
-										{r.name}
+										fontSize='12px'
+										color='fg.muted'
+										fontFamily='mono'
+										whiteSpace='nowrap'>
+										{r.code || '—'}
 									</Text>
+									<Badge
+										size='sm'
+										colorPalette={STATUS_COLOR[r.status] || 'gray'}
+										flexShrink={0}>
+										{statusLabel(r.status)}
+									</Badge>
 								</Flex>
+								<Text
+									fontSize='sm'
+									fontWeight='600'
+									lineClamp={2}>
+									{r.name}
+								</Text>
 								<Text
 									fontSize='12px'
 									color='fg.muted'
-									lineClamp={2}>
+									lineClamp={2}
+									mt={0.5}>
 									{r.description}
 								</Text>
 								<Flex
 									align='center'
 									gap={3}
 									mt={1.5}
-									fontSize='11px'
 									color='fg.muted'>
-									<Text>{new Date(r.createdAt).toLocaleDateString()}</Text>
+									<Text fontSize='11px'>
+										{new Date(r.createdAt).toLocaleDateString(undefined, {
+											day: 'numeric',
+											month: 'short',
+											year: 'numeric',
+										})}
+									</Text>
 									{!!r.images?.length && (
 										<Flex
 											align='center'
 											gap={1}>
 											<ImageIcon size={12} />
-											<Text>{r.images.length}</Text>
+											<Text fontSize='11px'>{r.images.length}</Text>
 										</Flex>
 									)}
 								</Flex>
@@ -277,20 +291,14 @@ const MyReports: FC = () => {
 								<Image
 									src={r.images[0]}
 									alt=''
-									boxSize='44px'
+									boxSize='48px'
+									mt={7}
 									objectFit='cover'
 									borderRadius='md'
 									bg='bg.muted'
 									flexShrink={0}
 								/>
 							)}
-							<Badge
-								alignSelf='flex-start'
-								size='sm'
-								colorPalette={STATUS_COLOR[r.status] || 'gray'}
-								flexShrink={0}>
-								{statusLabel(r.status)}
-							</Badge>
 						</Flex>
 					))}
 				</Flex>

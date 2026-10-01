@@ -12,7 +12,6 @@ import {
 	usePostMutation,
 	FormMain,
 	DiscardButton,
-	Align,
 	DialogCloseButton,
 	DialogHeader,
 	DialogFooter,
@@ -216,9 +215,10 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 								/>
 							)}
 						</ModalFormSection>
-						{isMobile && <Align p={4}>{footer}</Align>}
 					</DialogBody>
-					{!isMobile && <DialogFooter>{footer}</DialogFooter>}
+					{/* Pinned under the form on every screen; on a phone it holds the one
+					    full-width primary button, inset like the fields above it. */}
+					<DialogFooter>{footer}</DialogFooter>
 				</form>
 			</Dialog>
 		</>

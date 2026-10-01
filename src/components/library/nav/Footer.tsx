@@ -12,8 +12,7 @@ import { padding } from '../config';
  * without a link; links starting with `http` open in a new tab.
  */
 export const FOOTER_LINKS: { label: string; href: string }[] = [
-	// No separate help desk yet: support is reporting the problem.
-	{ label: 'Support', href: '/report-issue' },
+	{ label: 'Support', href: '/support' },
 	{ label: 'System Status', href: '/system-status' },
 	{ label: 'Docs', href: '/docs' },
 	{ label: 'Terms of Use', href: '/terms' },
@@ -26,7 +25,7 @@ const COMPANY = { name: 'THINKCRYPT', href: 'https://thinkcrypt.dev' };
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 
 // Smaller on phones, where the links wrap onto two or three lines.
-const FONT_SIZE = { base: '11.5px', md: '13px' };
+const FONT_SIZE = { base: '11.5px', md: '12.5px' };
 
 const linkCss: any = {
 	fontSize: FONT_SIZE,
@@ -55,19 +54,20 @@ const Footer = () => (
 		borderTopWidth='1px'
 		borderColor='border.muted'
 		px={PX}
-		py={{ base: 3, md: 5 }}>
+		// A slim strip: the links are a way out, not a section of the page.
+		py={{ base: 2.5, md: 3 }}>
 		<Flex
 			align='center'
 			justify='center'
 			wrap='wrap'
-			rowGap={{ base: 1.5, md: 2 }}
+			rowGap={{ base: 1, md: 1.5 }}
 			columnGap={{ base: 2.5, md: 4 }}>
 			{FOOTER_LINKS.map((link, i) => (
 				<Fragment key={link.label}>
 					{i > 0 && (
 						<Box
 							aria-hidden
-							h={{ base: '10px', md: '14px' }}
+							h={{ base: '10px', md: '12px' }}
 							w='1px'
 							bg='border'
 						/>

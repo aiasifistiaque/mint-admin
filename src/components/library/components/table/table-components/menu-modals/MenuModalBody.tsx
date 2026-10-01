@@ -29,7 +29,9 @@ const MenuModalBody: FC<MenuModalBodyProps> = ({ children, ...props }) => {
 				// decide how tall the body gets.
 				overflowY='auto'
 				{...bodyCss}
-				{...(isMobile ? { pt: 4 } : {})}
+				// No scrollbar gutter on a phone: it cost the right edge 10px, so
+				// fields sat off-centre in the sheet. Touch scrolling needs no bar.
+				{...(isMobile ? { pt: 4, css: { scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } } } : {})}
 				{...props}>
 				{children}
 			</Drawer.Body>
