@@ -1,6 +1,7 @@
 'use client';
 import {
 	VInput,
+	VPassword,
 	useCustomToast,
 	useLgoinMutation,
 	useAppDispatch,
@@ -86,9 +87,12 @@ const LoginPage: FC<{}> = () => {
 
 	return (
 		<LoginContainer
-			title='Login'
+			title='Welcome back'
+			subtitle='Sign in to your MINT account.'
+			submitLabel='Sign in'
 			isLoading={isLoading}
-			handleSubmit={handleSubmit}>
+			handleSubmit={handleSubmit}
+			footer='New to the team? Ask an administrator to send you an invitation.'>
 			{signedOut && (
 				<Box
 					role='status'
@@ -105,26 +109,39 @@ const LoginPage: FC<{}> = () => {
 				label='Email'
 				isRequired
 				size='md'
+				type='email'
+				autoComplete='email'
+				autoFocus
+				placeholder='you@company.com'
 				value={formData.email}
 				onChange={handleChange}
 				name='email'
 			/>
-			<VInput
-				label='Password'
-				isRequired
-				size='md'
-				value={formData.password}
-				onChange={handleChange}
-				name='password'
-				type='password'
-			/>
-			<ChakraLink
-				as={NextLink}
-				href='/auth/forgot-password'
-				fontSize='sm'
-				alignSelf='flex-end'>
-				Forgot Password?
-			</ChakraLink>
+			<Box position='relative'>
+				<VPassword
+					label='Password'
+					isRequired
+					size='md'
+					autoComplete='current-password'
+					placeholder='Your password'
+					value={formData.password}
+					onChange={handleChange}
+					name='password'
+				/>
+				{/* Sits on the label's row, across from it. */}
+				<ChakraLink
+					as={NextLink}
+					href='/auth/forgot-password'
+					position='absolute'
+					top={0}
+					right={0}
+					fontSize='13px'
+					lineHeight='1.3'
+					color='fg.muted'
+					_hover={{ color: 'fg' }}>
+					Forgot password?
+				</ChakraLink>
+			</Box>
 		</LoginContainer>
 	);
 };

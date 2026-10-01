@@ -1,5 +1,5 @@
 'use client';
-import { VInput, useCustomToast, useResetPasswordMutation, LoginContainer } from '@/components/library';
+import { VPassword, useCustomToast, useResetPasswordMutation, LoginContainer } from '@/components/library';
 import { useParams, useRouter } from 'next/navigation';
 
 import React, { FC, ChangeEvent, useState, useEffect } from 'react';
@@ -49,26 +49,27 @@ const ResetPasswordPage: FC<{}> = () => {
 
 	return (
 		<LoginContainer
-			title='Reset Password'
+			title='Set a new password'
+			subtitle='Choose a password you don’t use anywhere else.'
+			submitLabel='Save password'
 			isLoading={isLoading}
 			handleSubmit={handleSubmit}>
-			<VInput
-				label='New Password'
+			<VPassword
+				label='New password'
+				autoFocus
 				isRequired
 				size='md'
 				value={formData.password}
 				onChange={handleChange}
 				name='password'
-				type='password'
 			/>
-			<VInput
-				label='Confirm New Password'
+			<VPassword
+				label='Confirm new password'
 				isRequired
 				size='md'
 				value={formData.confirmPassword}
 				onChange={handleChange}
 				name='confirmPassword'
-				type='password'
 				helper={passwordsMismatch ? "Passwords don't match" : undefined}
 			/>
 		</LoginContainer>

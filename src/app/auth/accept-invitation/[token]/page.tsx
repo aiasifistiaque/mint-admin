@@ -1,6 +1,7 @@
 'use client';
 import {
 	VInput,
+	VPassword,
 	useCustomToast,
 	useGetInvitationInfoQuery,
 	useAcceptInvitationMutation,
@@ -75,7 +76,8 @@ const AcceptInvitationPage: FC<{}> = () => {
 	if (!isLoadingInvitation && isInvalidInvitation) {
 		return (
 			<LoginContainer
-				title='Invitation Invalid'
+				title='This invitation has expired'
+				hideSubmit
 				isLoading={false}
 				handleSubmit={(e: any) => e.preventDefault()}>
 				<Text
@@ -91,6 +93,8 @@ const AcceptInvitationPage: FC<{}> = () => {
 	return (
 		<LoginContainer
 			title='Join MINT'
+			subtitle='Finish setting up your account.'
+			submitLabel='Create account'
 			isLoading={isLoading || isLoadingInvitation}
 			handleSubmit={handleSubmit}>
 			<VInput
@@ -116,23 +120,21 @@ const AcceptInvitationPage: FC<{}> = () => {
 				onChange={handleChange}
 				name='phone'
 			/>
-			<VInput
+			<VPassword
 				label='Password'
 				isRequired
 				size='md'
 				value={formData.password}
 				onChange={handleChange}
 				name='password'
-				type='password'
 			/>
-			<VInput
-				label='Confirm Password'
+			<VPassword
+				label='Confirm password'
 				isRequired
 				size='md'
 				value={formData.confirmPassword}
 				onChange={handleChange}
 				name='confirmPassword'
-				type='password'
 				helper={passwordsMismatch ? "Passwords don't match" : undefined}
 			/>
 		</LoginContainer>

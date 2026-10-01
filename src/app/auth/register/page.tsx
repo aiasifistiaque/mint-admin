@@ -1,33 +1,47 @@
 'use client';
 import {
 	VInput,
+	VPassword,
 	useCustomToast,
 	useAppDispatch,
 	useRegisterMutation,
 	login,
 	LoginContainer,
 } from '@/components/library';
-import React, { FC, ChangeEvent, useState, useEffect } from 'react';
+import { Link as ChakraLink } from '@chakra-ui/react';
+import NextLink from 'next/link';
+import React, { FC, ChangeEvent, FormEvent, useState, useEffect } from 'react';
 
-const LoginPage: FC<{}> = () => {
-	const [formData, setFormData] = useState<any>({
-		name: undefined,
-		email: undefined,
-		restaurant: undefined,
-		password: undefined,
-		confirm: undefined,
+type FormDataType = {
+	name: string;
+	email: string;
+	restaurant: string;
+	password: string;
+	confirm: string;
+};
+
+const RegisterPage: FC<{}> = () => {
+	const [formData, setFormData] = useState<FormDataType>({
+		name: '',
+		email: '',
+		restaurant: '',
+		password: '',
+		confirm: '',
 	});
 
 	const [trigger, result] = useRegisterMutation();
 	const dispatch = useAppDispatch();
 
-	const { isSuccess, isError, isLoading, error } = result;
+	const { isError, isLoading, error } = result;
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-	const handleSubmit = (e: any) => {
+	const mismatch = formData.confirm.length > 0 && formData.password !== formData.confirm;
+
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		if (formData.password !== formData.confirm) return;
 		trigger(formData);
 	};
 
@@ -45,12 +59,30 @@ const LoginPage: FC<{}> = () => {
 
 	return (
 		<LoginContainer
-			title='Register'
+			title='Create your account'
+			subtitle='Set up your restaurant in a minute.'
+			submitLabel='Create account'
 			isLoading={isLoading}
-			handleSubmit={handleSubmit}>
+			handleSubmit={handleSubmit}
+			footer={
+				<>
+					Already have an account?{' '}
+					<ChakraLink
+						as={NextLink}
+						href='/auth/login'
+						color='fg'
+						fontWeight='600'>
+						Sign in
+					</ChakraLink>
+				</>
+			}>
 			<VInput
 				label='Name'
 				isRequired
+				size='md'
+				autoComplete='name'
+				autoFocus
+				placeholder='Your full name'
 				value={formData.name}
 				onChange={handleChange}
 				name='name'
@@ -58,6 +90,10 @@ const LoginPage: FC<{}> = () => {
 			<VInput
 				label='Email'
 				isRequired
+				size='md'
+				type='email'
+				autoComplete='email'
+				placeholder='you@company.com'
 				value={formData.email}
 				onChange={handleChange}
 				name='email'
@@ -65,28 +101,35 @@ const LoginPage: FC<{}> = () => {
 			<VInput
 				label='Restaurant name'
 				isRequired
+				size='md'
+				autoComplete='organization'
+				placeholder='The name guests know you by'
 				value={formData.restaurant}
 				onChange={handleChange}
 				name='restaurant'
 			/>
-			<VInput
+			<VPassword
 				label='Password'
 				isRequired
+				size='md'
+				placeholder='Choose a password'
 				value={formData.password}
 				onChange={handleChange}
 				name='password'
-				type='password'
 			/>
-			<VInput
-				label='Confirm Passsword'
+			<VPassword
+				label='Confirm password'
 				isRequired
+				size='md'
+				placeholder='Type it again'
 				value={formData.confirm}
 				onChange={handleChange}
 				name='confirm'
-				type='password'
+				aria-invalid={mismatch || undefined}
+				helper={mismatch ? 'Passwords don’t match.' : undefined}
 			/>
 		</LoginContainer>
 	);
 };
 
-export default LoginPage;
+export default RegisterPage;

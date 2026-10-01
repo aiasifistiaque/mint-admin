@@ -17,6 +17,7 @@ export { default as ViewOnly } from './ViewOnly';
 export { default as VImageArray } from './VImageArray';
 export { default as SelectContainer } from './containers/SelectContainer';
 export { default as VInput } from './VInput';
+export { default as VPassword } from './VPassword';
 export { default as NoDataFound } from '../no-data-found/NoDataFound';
 export { default as VCustomAttributes } from './VCustomAttributes';
 export { default as VCustom } from './section/VCustom';

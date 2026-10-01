@@ -30,9 +30,21 @@ const ForgotPasswordPage: FC<{}> = () => {
 
 	return (
 		<LoginContainer
-			title='Forgot Password'
+			title='Reset your password'
+			subtitle={sent && isSuccess ? undefined : 'Enter your email and we’ll send you a link to set a new one.'}
+			submitLabel='Send reset link'
+			hideSubmit={sent && isSuccess}
 			isLoading={isLoading}
-			handleSubmit={handleSubmit}>
+			handleSubmit={handleSubmit}
+			footer={
+				<ChakraLink
+					as={NextLink}
+					href='/auth/login'
+					color='fg'
+					fontWeight='600'>
+					Back to sign in
+				</ChakraLink>
+			}>
 			{sent && isSuccess ? (
 				<Text
 					fontSize='sm'
@@ -49,16 +61,11 @@ const ForgotPasswordPage: FC<{}> = () => {
 					onChange={handleChange}
 					name='email'
 					type='email'
+					autoComplete='email'
+					autoFocus
+					placeholder='you@company.com'
 				/>
 			)}
-			<ChakraLink
-				as={NextLink}
-				href='/auth/login'
-				fontSize='sm'
-				textAlign='center'
-				mt={2}>
-				Back to login
-			</ChakraLink>
 		</LoginContainer>
 	);
 };
