@@ -13,6 +13,7 @@ import {
 import { Dropdown, Panel, StatTile } from '@/components/library/cl';
 import { BarList, LineChart } from '@/components/library/dashboard/charts';
 import { useWorkspace } from '@/components/library/tenant';
+import GuideLink from '@/components/library/tenant/GuideLink';
 import type { AnalyticsDim, AnalyticsRange, AnalyticsTotals } from '@/components/library/store/services/tenantApi';
 
 /**
@@ -175,7 +176,8 @@ export default function AnalyticsPage() {
 
 				<Panel
 					title='Page views'
-					subtitle='Per day'>
+					subtitle='Per day'
+					actions={<GuideLink section='analytics' />}>
 					{loadingSeries ? (
 						<Skeleton h='220px' />
 					) : (

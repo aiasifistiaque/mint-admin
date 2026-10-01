@@ -1,4 +1,4 @@
-import { Blocks, Component, Images, LayoutDashboard, LucideIcon, Palette, PanelLeft, ShieldCheck } from 'lucide-react';
+import { Blocks, Building2, Component, Images, LayoutDashboard, LucideIcon, Palette, PanelLeft, ShieldCheck } from 'lucide-react';
 
 export type Guide = {
 	href: string;
@@ -21,6 +21,20 @@ export type Guide = {
  * /docs, or it can't be found from either.
  */
 export const GUIDES: Guide[] = [
+	{
+		href: '/docs/tenancy',
+		title: 'Organizations',
+		name: 'Organizations & projects',
+		description: 'Your organization, its members and roles, and the apps and websites you build — with your own AI, a public API and analytics.',
+		icon: Building2,
+		group: 'Build your admin',
+		topics: [
+			{ id: 'members', title: 'Members and invitations' },
+			{ id: 'projects', title: 'Projects' },
+			{ id: 'public-api', title: 'Public API' },
+			{ id: 'analytics', title: 'Analytics' },
+		],
+	},
 	{
 		href: '/docs/two-factor',
 		title: 'Sign-in & security',

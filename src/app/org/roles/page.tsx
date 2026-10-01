@@ -21,6 +21,7 @@ import {
 import { Panel } from '@/components/library/cl';
 import { styles } from '@/components/library/config';
 import { useWorkspace } from '@/components/library/tenant';
+import GuideLink from '@/components/library/tenant/GuideLink';
 import type { OrgRole } from '@/components/library/store/services/tenantApi';
 
 /**
@@ -286,14 +287,19 @@ export default function RolesPage() {
 					title='Roles'
 					subtitle='What each member can do in this organization'
 					actions={
-						canManage && (
-							<Button
-								size='xs'
-								onClick={() => edit(null)}>
-								<Plus size={14} />
-								New role
-							</Button>
-						)
+						<Flex
+							align='center'
+							gap={3}>
+							<GuideLink section='roles' />
+							{canManage && (
+								<Button
+									size='xs'
+									onClick={() => edit(null)}>
+									<Plus size={14} />
+									New role
+								</Button>
+							)}
+						</Flex>
 					}
 					flush>
 					{isLoading ? (

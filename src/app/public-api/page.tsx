@@ -8,6 +8,7 @@ import { Layout, useGetBuiltModelsQuery, useUpdatePublicApiMutation } from '@/co
 import { Dropdown, Panel } from '@/components/library/cl';
 import { BACKEND } from '@/components/library/config/lib/constants/panel';
 import { useWorkspace } from '@/components/library/tenant';
+import GuideLink from '@/components/library/tenant/GuideLink';
 import type { PublicApi } from '@/components/library/store/services/tenantApi';
 
 /**
@@ -202,6 +203,7 @@ export default function PublicApiPage() {
 				<Panel
 					title='Models'
 					subtitle='What your site or app can read and write. Only a model’s own fields go in and out.'
+					actions={<GuideLink section='public-api' />}
 					flush>
 					{isLoading ? (
 						<Box p={4}>

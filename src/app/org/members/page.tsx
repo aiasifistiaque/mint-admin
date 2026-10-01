@@ -24,6 +24,7 @@ import {
 import { Dropdown, Panel, date } from '@/components/library/cl';
 import { styles } from '@/components/library/config';
 import { useWorkspace } from '@/components/library/tenant';
+import GuideLink from '@/components/library/tenant/GuideLink';
 import type { Member } from '@/components/library/store/services/tenantApi';
 
 /**
@@ -337,14 +338,19 @@ export default function MembersPage() {
 					title='Members'
 					subtitle={data ? `${data.total} ${data.total === 1 ? 'person' : 'people'} in this organization` : undefined}
 					actions={
-						canManage && (
-							<Button
-								size='xs'
-								onClick={() => setInviting(true)}>
-								<MailPlus size={14} />
-								Invite
-							</Button>
-						)
+						<Flex
+							align='center'
+							gap={3}>
+							<GuideLink section='members' />
+							{canManage && (
+								<Button
+									size='xs'
+									onClick={() => setInviting(true)}>
+									<MailPlus size={14} />
+									Invite
+								</Button>
+							)}
+						</Flex>
 					}
 					flush>
 					{isLoading ? (

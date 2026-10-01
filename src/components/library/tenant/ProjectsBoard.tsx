@@ -20,6 +20,7 @@ import type { ProjectType, TenantProject } from '../store/services/tenantApi';
 import { styles } from '../config';
 import { Panel } from '../cl';
 import { openProject, useWorkspace } from './useWorkspace';
+import GuideLink from './GuideLink';
 import { Menu } from '@chakra-ui/react';
 import CustomMenuItem, { MenuItemStyle } from '../menu/CustomMenuItem';
 import { MenuContainer } from '../menu';
@@ -394,7 +395,10 @@ const ProjectsBoard: FC<{ welcome?: boolean }> = ({ welcome }) => {
 				title='Projects'
 				subtitle='Apps and websites in this organization'
 				actions={
-					<Flex gap={2}>
+					<Flex
+						align='center'
+						gap={2}>
+						<GuideLink section='projects' />
 						<Button
 							size='xs'
 							variant='ghost'

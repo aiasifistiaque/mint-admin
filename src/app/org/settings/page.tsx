@@ -12,6 +12,7 @@ import {
 } from '@/components/library';
 import { Dropdown, Panel } from '@/components/library/cl';
 import { useWorkspace } from '@/components/library/tenant';
+import GuideLink from '@/components/library/tenant/GuideLink';
 import { GOALS, HEARD_FROM, INDUSTRIES, TEAM_SIZES } from '@/components/library/tenant/onboarding';
 import type { Onboarding } from '@/components/library/store/services/tenantApi';
 
@@ -61,7 +62,8 @@ const Details: FC = () => {
 	return (
 		<Panel
 			title='Organization'
-			subtitle={`${org.counts?.members ?? 0} members · ${org.counts?.projects ?? 0} projects`}>
+			subtitle={`${org.counts?.members ?? 0} members · ${org.counts?.projects ?? 0} projects`}
+			actions={<GuideLink section='organizations' />}>
 			<form onSubmit={submit}>
 				<fieldset disabled={!editable}>
 					<Flex
