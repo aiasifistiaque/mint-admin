@@ -32,10 +32,15 @@ import { DocLink } from '@/app/builder/_components/ui';
 
 const COMPACT = { size: 'xs', h: '28px', px: 3 } as const;
 
-/** The backend's /mcp, from the admin API base (…/admin/api). */
+/**
+ * The backend's MCP endpoint, from the API base: /mcp for the admin API
+ * (…/admin/api), /tenant/mcp for the tenant API (…/tenant/api) — where a
+ * project key builds inside its project (docs/multi-tenancy WO-10).
+ */
 const mcpUrl = () => {
-	const base = (process.env.NEXT_PUBLIC_BACKEND || 'http://localhost:5000/admin/api').replace(/\/admin\/api\/?$/, '').replace(/\/$/, '');
-	return `${base}/mcp`;
+	const api = (process.env.NEXT_PUBLIC_BACKEND || 'http://localhost:5000/admin/api').replace(/\/$/, '');
+	if (/\/tenant\/api$/.test(api)) return `${api.replace(/\/api$/, '')}/mcp`;
+	return `${api.replace(/\/admin\/api$/, '')}/mcp`;
 };
 
 const Snippet: FC<{ value: string }> = ({ value }) => (
