@@ -1,8 +1,8 @@
 'use client';
 
-import { FC, FormEvent, ReactNode, useState } from 'react';
+import { FC, FormEvent, ReactNode, useEffect, useState } from 'react';
 import { Box, Button, Center, Field, Flex, Grid, Input, Skeleton, Text, Textarea } from '@chakra-ui/react';
-import { Archive, ArchiveRestore, Boxes, Globe, LayoutGrid, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
+import { Archive, ArchiveRestore, Boxes, Globe, LayoutGrid, MoreHorizontal, Pencil, Plus, Trash2 } from 'lucide-react';
 import {
 	Dialog,
 	DialogBody,
@@ -31,37 +31,53 @@ const TYPES: { value: ProjectType; title: string; hint: string; icon: ReactNode 
 	{ value: 'website', title: 'Website', hint: 'Pages, SEO, content blocks and site settings, with a site API and analytics.', icon: <Globe size={18} /> },
 ];
 
-/** New project: a name, App or Website, and (for a website) its domains. */
-const CreateProjectDialog: FC<{ open: boolean; onClose: () => void }> = ({ open, onClose }) => {
+const domainList = (text: string) =>
+	text
+		.split(/[\s,]+/)
+		.map(d => d.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, ''))
+		.filter(Boolean);
+
+/**
+ * A project's name, kind and (for a website) domains: a new project, or —
+ * with `project` — editing one (its kind can't change).
+ */
+const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantProject }> = ({ open, onClose, project }) => {
 	const [name, setName] = useState('');
 	const [type, setType] = useState<ProjectType>('app');
 	const [description, setDescription] = useState('');
 	const [domains, setDomains] = useState('');
-	const [create, { isLoading, error, reset }] = useCreateProjectMutation();
+	const [create, created] = useCreateProjectMutation();
+	const [update, updated] = useUpdateProjectMutation();
+	const { isLoading, error } = project ? updated : created;
+
+	useEffect(() => {
+		if (!open) return;
+		setName(project?.name || '');
+		setType(project?.type || 'app');
+		setDescription(project?.description || '');
+		setDomains((project?.domains || []).join(', '));
+	}, [open, project?._id]);
 
 	const close = () => {
-		setName('');
-		setType('app');
-		setDescription('');
-		setDomains('');
-		reset();
+		created.reset();
+		updated.reset();
 		onClose();
 	};
 
 	const submit = async (e?: FormEvent) => {
 		e?.preventDefault();
 		if (!name.trim()) return;
-		const res = await create({
+		const body = {
 			name: name.trim(),
-			type,
 			description: description.trim(),
-			...(type === 'website' && {
-				domains: domains
-					.split(/[\s,]+/)
-					.map(d => d.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, ''))
-					.filter(Boolean),
-			}),
-		});
+			...(type === 'website' && { domains: domainList(domains) }),
+		};
+		if (project) {
+			const res = await update({ id: project._id, ...body });
+			if ('data' in res) close();
+			return;
+		}
+		const res = await create({ ...body, type });
 		if ('data' in res && res.data) {
 			close();
 			openProject(res.data._id);
@@ -77,8 +93,8 @@ const CreateProjectDialog: FC<{ open: boolean; onClose: () => void }> = ({ open,
 			<DialogHeader
 				divider
 				icon={<Boxes size={17} strokeWidth={1.75} />}
-				description='A project holds its own models, pages, sidebar and dashboard.'>
-				New project
+				description={project ? 'Its kind stays as it is.' : 'A project holds its own models, pages, sidebar and dashboard.'}>
+				{project ? `Edit ${project.name}` : 'New project'}
 			</DialogHeader>
 			<DialogCloseButton />
 			<DialogBody>
@@ -99,56 +115,58 @@ const CreateProjectDialog: FC<{ open: boolean; onClose: () => void }> = ({ open,
 								onChange={e => setName(e.target.value)}
 							/>
 						</Field.Root>
-						<Box>
-							<Text {...labelCss}>Kind</Text>
-							<Grid
-								mt={1.5}
-								templateColumns={{ base: '1fr', sm: '1fr 1fr' }}
-								gap={2}>
-								{TYPES.map(t => {
-									const on = type === t.value;
-									return (
-										<Flex
-											key={t.value}
-											as='button'
-											// @ts-ignore — Flex as button
-											type='button'
-											aria-pressed={on}
-											onClick={() => setType(t.value)}
-											direction='column'
-											align='flex-start'
-											gap={1.5}
-											p={3}
-											textAlign='left'
-											borderRadius='lg'
-											borderWidth={on ? '2px' : '1px'}
-											borderColor={on ? 'accent.solid' : 'border'}
-											m={on ? 0 : '1px'}
-											bg={on ? 'bg.subtle' : 'bg.panel'}
-											cursor='pointer'
-											_hover={{ bg: 'bg.muted' }}>
+						{!project && (
+							<Box>
+								<Text {...labelCss}>Kind</Text>
+								<Grid
+									mt={1.5}
+									templateColumns={{ base: '1fr', sm: '1fr 1fr' }}
+									gap={2}>
+									{TYPES.map(t => {
+										const on = type === t.value;
+										return (
 											<Flex
-												align='center'
-												gap={2}
-												color={on ? 'fg' : 'fg.muted'}>
-												{t.icon}
+												key={t.value}
+												as='button'
+												// @ts-ignore — Flex as button
+												type='button'
+												aria-pressed={on}
+												onClick={() => setType(t.value)}
+												direction='column'
+												align='flex-start'
+												gap={1.5}
+												p={3}
+												textAlign='left'
+												borderRadius='lg'
+												borderWidth={on ? '2px' : '1px'}
+												borderColor={on ? 'accent.solid' : 'border'}
+												m={on ? 0 : '1px'}
+												bg={on ? 'bg.subtle' : 'bg.panel'}
+												cursor='pointer'
+												_hover={{ bg: 'bg.muted' }}>
+												<Flex
+													align='center'
+													gap={2}
+													color={on ? 'fg' : 'fg.muted'}>
+													{t.icon}
+													<Text
+														fontSize='14px'
+														fontWeight='600'
+														color='fg'>
+														{t.title}
+													</Text>
+												</Flex>
 												<Text
-													fontSize='14px'
-													fontWeight='600'
-													color='fg'>
-													{t.title}
+													fontSize='12.5px'
+													color='fg.muted'>
+													{t.hint}
 												</Text>
 											</Flex>
-											<Text
-												fontSize='12.5px'
-												color='fg.muted'>
-												{t.hint}
-											</Text>
-										</Flex>
-									);
-								})}
-							</Grid>
-						</Box>
+										);
+									})}
+								</Grid>
+							</Box>
+						)}
 						{type === 'website' && (
 							<Field.Root>
 								<Field.Label {...labelCss}>Domains</Field.Label>
@@ -191,7 +209,7 @@ const CreateProjectDialog: FC<{ open: boolean; onClose: () => void }> = ({ open,
 					form='new-project'
 					disabled={!name.trim()}
 					loading={isLoading}>
-					Create project
+					{project ? 'Save' : 'Create project'}
 				</Button>
 			</DialogFooter>
 		</Dialog>
@@ -203,6 +221,7 @@ const ProjectCard: FC<{ project: TenantProject; current: boolean; canManage: boo
 	const [update] = useUpdateProjectMutation();
 	const [remove, removing] = useDeleteProjectMutation();
 	const [confirm, setConfirm] = useState(false);
+	const [editing, setEditing] = useState(false);
 	const archived = !project.isActive;
 	const hasData = (project.models || 0) > 0;
 
@@ -287,6 +306,12 @@ const ProjectCard: FC<{ project: TenantProject; current: boolean; canManage: boo
 							boxShadow={undefined}>
 							<MenuItemStyle compact>
 								<CustomMenuItem
+									value='edit'
+									icon={<Pencil size={15} />}
+									onClick={() => setEditing(true)}>
+									Edit…
+								</CustomMenuItem>
+								<CustomMenuItem
 									value='archive'
 									icon={archived ? <ArchiveRestore size={15} /> : <Archive size={15} />}
 									onClick={() => update({ id: project._id, isActive: archived })}>
@@ -307,6 +332,11 @@ const ProjectCard: FC<{ project: TenantProject; current: boolean; canManage: boo
 				</Box>
 			)}
 
+			<ProjectDialog
+				open={editing}
+				onClose={() => setEditing(false)}
+				project={project}
+			/>
 			<PromptDialog
 				open={confirm}
 				onClose={() => setConfirm(false)}
@@ -445,7 +475,7 @@ const ProjectsBoard: FC<{ welcome?: boolean }> = ({ welcome }) => {
 					</Flex>
 				)}
 			</Panel>
-			<CreateProjectDialog
+			<ProjectDialog
 				open={creating}
 				onClose={() => setCreating(false)}
 			/>

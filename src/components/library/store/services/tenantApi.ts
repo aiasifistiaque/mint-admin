@@ -103,6 +103,13 @@ export type RegisterBody = {
 	onboarding?: Onboarding;
 };
 
+export type AnalyticsTotals = { pageviews: number; visitors: number; sessions: number; pagesPerSession: number; bounceRate: number };
+export type AnalyticsDim = 'paths' | 'referrers' | 'devices' | 'browsers' | 'os' | 'countries' | 'clicks' | 'events';
+export type AnalyticsRange = { from?: string; to?: string };
+export type PublicApi = { enabled: boolean; actions: ('list' | 'get' | 'create' | 'update' | 'delete')[]; auth: 'none' | 'customer'; ownerOnly: boolean };
+
+const rangeQuery = (r: AnalyticsRange = {}) => new URLSearchParams(Object.entries(r).filter(([, v]) => v) as [string, string][]).toString();
+
 const ORG = ['tenant-org', 'self'];
 
 export const tenantApi = mainApi.injectEndpoints({
@@ -213,6 +220,24 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: ({ id, force }) => ({ url: `projects/${id}${force ? '?force=1' : ''}`, method: 'DELETE' }),
 			invalidatesTags: ['tenant-projects', 'self', 'tenant-org'],
 		}),
+
+		/* ------------------------------------- inside the open project */
+		getAnalyticsSummary: builder.query<{ current: AnalyticsTotals; previous: AnalyticsTotals; from: string; to: string }, AnalyticsRange>({
+			query: r => `analytics/summary?${rangeQuery(r)}`,
+			providesTags: ['tenant-analytics'],
+		}),
+		getAnalyticsSeries: builder.query<{ days: { date: string; pageviews: number; visitors: number }[] }, AnalyticsRange>({
+			query: r => `analytics/timeseries?${rangeQuery(r)}`,
+			providesTags: ['tenant-analytics'],
+		}),
+		getAnalyticsTop: builder.query<{ rows: { value: string; count: number; visitors: number }[] }, AnalyticsRange & { dim: AnalyticsDim; limit?: number }>({
+			query: ({ dim, limit, ...r }) => `analytics/top?dim=${dim}&limit=${limit || 8}&${rangeQuery(r)}`,
+			providesTags: ['tenant-analytics'],
+		}),
+		updatePublicApi: builder.mutation<{ publicApi: PublicApi }, { id: string } & PublicApi>({
+			query: ({ id, ...body }) => ({ url: `builder/models/${id}/public-api`, method: 'PUT', body }),
+			invalidatesTags: ['builder'],
+		}),
 	}),
 });
 
@@ -242,4 +267,8 @@ export const {
 	useCreateProjectMutation,
 	useUpdateProjectMutation,
 	useDeleteProjectMutation,
+	useGetAnalyticsSummaryQuery,
+	useGetAnalyticsSeriesQuery,
+	useGetAnalyticsTopQuery,
+	useUpdatePublicApiMutation,
 } = tenantApi;
