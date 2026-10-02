@@ -61,6 +61,12 @@ const Footer = () => (
 	<Box
 		as='footer'
 		flexShrink={0}
+		// Pinned to the bottom of the window while the page scrolls under it;
+		// the page's own background so nothing shows through.
+		position='sticky'
+		bottom={0}
+		zIndex={2}
+		bg='inherit'
 		borderTopWidth='1px'
 		borderColor='border.muted'
 		px={PX}
