@@ -6,7 +6,7 @@ import { LayoutDashboard } from 'lucide-react';
 
 import { Layout, Count, useGetByIdQuery, ShowSum, useGetDashboardQuery } from '@/components/library';
 import { DashboardGrid } from '@/components/library/dashboard/widgets';
-import { IS_TENANT_PANEL, getProjectSlug } from '@/components/library/config/lib/constants/panel';
+import { IS_TENANT_PANEL, getProjectSlug, projectHref } from '@/components/library/config/lib/constants/panel';
 import ProjectsBoard from '@/components/library/tenant/ProjectsBoard';
 import WebsiteOverview from '@/components/library/tenant/WebsiteOverview';
 import { useWorkspace } from '@/components/library/tenant';
@@ -103,12 +103,21 @@ const EmptyProjectDashboard = () => (
 			maxW='380px'>
 			Add numbers, charts and recent records from this project’s models.
 		</Text>
-		<Button
-			asChild
-			mt={2}
-			size='sm'>
-			<NextLink href='/dashboard-builder'>Build the dashboard</NextLink>
-		</Button>
+		<Flex
+			gap={2}
+			mt={2}>
+			<Button
+				asChild
+				size='sm'
+				variant='outline'>
+				<NextLink href={projectHref('/get-started')}>Get started</NextLink>
+			</Button>
+			<Button
+				asChild
+				size='sm'>
+				<NextLink href={projectHref('/dashboard-builder')}>Build the dashboard</NextLink>
+			</Button>
+		</Flex>
 	</Flex>
 );
 

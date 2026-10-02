@@ -38,7 +38,7 @@ export const API_ORIGIN = BACKEND.replace(/\/(tenant|admin)\/api\/?$/, '');
  */
 export const PROJECT_PAGES = new Set([
 	'dashboard', 't', 'view', 'model-builder', 'builder', 'sidebar-builder', 'dashboard-builder', 'images', 'public-api',
-	'analytics', 'site-setup',
+	'analytics', 'site-setup', 'get-started', 'activity',
 ]);
 
 // Every top-level page folder (next.config.mjs); any other first segment is a project.
@@ -104,7 +104,7 @@ export const rememberProject = (slug: string | null) => {
  * — tables, the builder, the sidebar, media — is inside the current project
  * (`<api>/p/<publicSlug>/…`), mirroring the admin API's paths.
  */
-const ACCOUNT_PATH = /^\/?(auth|org|projects|invitations)(\/|\?|$)/;
+const ACCOUNT_PATH = /^\/?(auth|org|projects|invitations|notifications)(\/|\?|$)/;
 
 /** The base URL a request for `path` goes to. */
 export const apiBase = (path = ''): string => {

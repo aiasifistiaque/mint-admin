@@ -150,6 +150,15 @@ export const builderApi = mainApi.injectEndpoints({
 			invalidatesTags: [...LIVE_TAGS, '/sidebar/crm/page', '/sidebar/crm/server', '/sidebar/crm/generic', 'sidebaritems', 'sidebarcategories'],
 		}),
 
+		// A new project's starter templates (WO-35): listed, and built like a feature.
+		getStarters: builder.query<{ doc: { key: string; title: string; description: string; icon: string; models: string[] }[] }, void>({
+			query: () => 'builder/starters',
+		}),
+		buildStarter: builder.mutation<any, string>({
+			query: key => ({ url: `builder/starters/${key}`, method: 'POST' }),
+			invalidatesTags: [...LIVE_TAGS, '/sidebar/crm/page', '/sidebar/crm/server', '/sidebar/crm/generic', 'sidebaritems', 'sidebarcategories'],
+		}),
+
 		// Keys AI clients connect to /mcp with.
 		getApiKeys: builder.query<{ doc: any[] }, void>({
 			query: () => 'builder/api-keys',
@@ -198,6 +207,8 @@ export const {
 	useCheckFeaturePlanMutation,
 	usePlanFeatureWithAiMutation,
 	useBuildFeatureMutation,
+	useGetStartersQuery,
+	useBuildStarterMutation,
 	useGetApiKeysQuery,
 	useCreateApiKeyMutation,
 	useRevokeApiKeyMutation,

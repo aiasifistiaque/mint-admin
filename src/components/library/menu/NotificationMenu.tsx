@@ -13,6 +13,7 @@ import {
 	useMarkNotificationReadMutation,
 } from '../store';
 import { when } from '../cl/format';
+import { IS_TENANT_PANEL } from '../config/lib/constants/panel';
 
 /**
  * The navbar bell, between search and the user menu. The badge is the unread
@@ -158,7 +159,7 @@ const NotificationMenu = ({ iconSize }: { iconSize?: number }) => {
 									<Text
 										fontSize='xs'
 										color='fg.muted'>
-										When someone gives you access to a record, it shows up here.
+										{IS_TENANT_PANEL ? 'Invitations, records shared with you and what your site sends in show up here.' : 'When someone gives you access to a record, it shows up here.'}
 									</Text>
 								</Box>
 							) : (

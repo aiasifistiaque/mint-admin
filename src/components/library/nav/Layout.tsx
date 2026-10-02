@@ -43,7 +43,7 @@ const NavActions = memo(function NavActions({ sidebarData }: { sidebarData: any 
 				/>
 			)}
 			{/* Notifications come from per-record access, which tenant projects don't have yet. */}
-			{!IS_TENANT_PANEL && <NotificationMenu iconSize={ICON_SIZE} />}
+			<NotificationMenu iconSize={ICON_SIZE} />
 			<SelfMenu iconSize={ICON_SIZE} />
 			{/* <CreateMenu /> */}
 		</Align>

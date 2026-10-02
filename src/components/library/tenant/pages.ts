@@ -12,7 +12,7 @@ export const ADMIN_ONLY_PAGES = new Set([
 	'collections', 'components', 'contents', 'customer-ledger', 'customers', 'damages', 'deliveries', 'doc',
 	'documents', 'emails', 'employees', 'expenses', 'features', 'fgroups', 'groups', 'heroku-doc', 'herokus',
 	'invoices-old', 'invoices', 'issues', 'jobapplications', 'jobposts', 'leads', 'leaves', 'maintenances',
-	'meetings', 'modelattributes', 'notifications', 'npmlibraries', 'offers', 'orders', 'packages', 'payments',
+	'meetings', 'modelattributes', 'npmlibraries', 'offers', 'orders', 'packages', 'payments',
 	'permissions', 'plannedfeatures', 'plannedmodels', 'plannedpages', 'plannedprojects', 'portfolios', 'print',
 	'products', 'props', 'purchased-themes', 'qr', 'report-issue', 'repos', 'resources', 'roles', 'sellers',
 	'servicecat', 'services', 'sessions', 'shops', 'solutions', 'subscriptions', 'suppliers', 'support-tickets',

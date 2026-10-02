@@ -20,6 +20,8 @@ const GUIDE_OF: Record<string, string> = {
 	invited: 'organization',
 	'project-access': 'organization',
 	projects: 'projects',
+	history: 'projects',
+	notifications: 'account',
 	'media-library': 'projects',
 	'public-api': 'public-api',
 	reference: 'public-api',

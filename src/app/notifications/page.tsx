@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, Button, Flex, IconButton, Text } from '@chakra-ui/react';
-import { Bell, Check, KeyRound, Trash2 } from 'lucide-react';
+import { Bell, Check, Inbox, KeyRound, MailPlus, Trash2, UserCheck, UserCog } from 'lucide-react';
+import { HOME, IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 import {
 	Layout,
 	useDeleteNotificationMutation,
@@ -14,14 +15,21 @@ import {
 import { EmptyState, ErrorState, PageHeader, Panel, TableSkeleton, when } from '@/components/library/cl';
 
 /**
- * The signed-in admin's notifications, newest first. Opening one marks it
- * read and goes where it points — for "you were given access", the record's
- * view page. The navbar bell links here.
+ * The signed-in person's notifications, newest first — an admin's, or in the
+ * tenant panel a tenant user's from every organization (WO-37). Opening one
+ * marks it read and goes where it points (a record's page, Members, Home…).
+ * The navbar bell links here.
  */
 
 const PAGE_SIZE = 20;
 
-const ICONS: Record<string, any> = { 'access-granted': KeyRound };
+const ICONS: Record<string, any> = {
+	'access-granted': KeyRound,
+	invitation: MailPlus,
+	'member-joined': UserCheck,
+	'member-changed': UserCog,
+	'site-record': Inbox,
+};
 
 const NotificationsPage = () => {
 	const router = useRouter();
@@ -55,7 +63,7 @@ const NotificationsPage = () => {
 				maxW='860px'>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/', title: 'Home' },
+						{ href: HOME, title: 'Home' },
 						{ href: '/notifications', title: 'Notifications' },
 					]}
 					title='Notifications'
@@ -103,7 +111,7 @@ const NotificationsPage = () => {
 						<Box p={4}>
 							<EmptyState
 								title={unreadOnly ? 'Nothing unread' : 'No notifications yet'}
-								description='When someone gives you access to a record, it shows up here.'
+								description={IS_TENANT_PANEL ? 'Invitations, records shared with you and what your site sends in show up here.' : 'When someone gives you access to a record, it shows up here.'}
 							/>
 						</Box>
 					) : (
@@ -156,7 +164,7 @@ const NotificationsPage = () => {
 										<Text
 											fontSize='xs'
 											color='fg.muted'>
-											{[n.message, when(n.createdAt)].filter(Boolean).join(' · ')}
+											{[n.message, n.organizationName, when(n.createdAt)].filter(Boolean).join(' · ')}
 										</Text>
 									</Box>
 									{!n.read && (

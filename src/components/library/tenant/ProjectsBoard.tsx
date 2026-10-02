@@ -85,7 +85,8 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 		const res = await create({ ...body, type });
 		if ('data' in res && res.data) {
 			close();
-			openProject(res.data.publicSlug);
+			// A new project starts with its Get started page (WO-35).
+			openProject(res.data.publicSlug, '/get-started');
 		}
 	};
 

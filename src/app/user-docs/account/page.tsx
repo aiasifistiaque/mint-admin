@@ -12,6 +12,7 @@ import { A, C, H3, List, Note, P, Section, Terms } from '../../docs/_components/
 const SECTIONS = [
 	{ id: 'profile', title: 'Profile' },
 	{ id: 'password', title: 'Password' },
+	{ id: 'notifications', title: 'Notifications' },
 	{ id: 'overview', title: 'Two-factor sign-in' },
 	{ id: 'turn-on', title: 'Turning it on' },
 	{ id: 'email', title: 'Email codes' },
@@ -48,6 +49,27 @@ const Account = () => (
 				Enter your current password and the new one — at least 8 characters, and one you don’t use anywhere else. Forgot it?
 				On the sign-in page press <A href='/auth/forgot-password'>Forgot password</A>; we email a link to set a new one. The
 				email says the same thing whether or not an account exists, so nobody can use it to check who has one.
+			</P>
+		</Section>
+
+		<Section
+			id='notifications'
+			title='Notifications'
+			lead='The bell at the top of every page: what you should know about, from every organization you’re in.'>
+			<Terms
+				head={['You’re told when', 'It opens']}
+				rows={[
+					['Someone invites you to their organization (if you already have an account)', 'Home, to accept it'],
+					['Someone you invited joins', 'Members'],
+					['Your role or the projects you can open change', 'Projects'],
+					['Someone shares a record with you', 'The record'],
+					['Your site sends in a record — an enquiry, an order — or a customer signs up', 'The record, for everyone who can see it'],
+				]}
+			/>
+			<P>
+				The number on the bell is how many you haven’t read; it checks every 30 seconds. Opening one marks it read.{' '}
+				<strong>View all</strong> lists them with the organization each came from — mark them read or delete them there.
+				You’re never told about what you did yourself. Notifications are kept for a year.
 			</P>
 		</Section>
 

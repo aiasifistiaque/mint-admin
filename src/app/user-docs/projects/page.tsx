@@ -9,6 +9,8 @@ const SECTIONS = [
 	{ id: 'projects', title: 'What a project is' },
 	{ id: 'kinds', title: 'Apps and websites' },
 	{ id: 'create', title: 'Creating a project' },
+	{ id: 'get-started', title: 'Getting started' },
+	{ id: 'history', title: 'History' },
 	{ id: 'switching', title: 'Switching projects' },
 	{ id: 'edit', title: 'Editing a project' },
 	{ id: 'media-library', title: 'Media library' },
@@ -85,6 +87,47 @@ const Projects = () => (
 					</>,
 				]}
 			/>
+		</Section>
+
+		<Section
+			id='get-started'
+			title='Getting started'
+			lead='A new project opens on its Get started page.'>
+			<List
+				items={[
+					<>
+						<strong>An app</strong> — start from a template (<em>Clients & invoices</em>, <em>Projects & tasks</em>,{' '}
+						<em>Leads pipeline</em>, <em>Products & stock</em>), build your first model step by step, or{' '}
+						<A href='/user-docs/connect-ai'>describe it to your AI</A>. A template makes ordinary models you can change like
+						any other.
+					</>,
+					<>
+						<strong>A website</strong> — three steps: its name, logo, favicon and colour; its home page (headline, introduction,
+						a button and the search description); and, if you know them, its domain and Google Analytics ID. Then build the
+						rest yourself, or <A href='/user-docs/websites#ai-site'>with your AI</A>.
+					</>,
+				]}
+			/>
+			<P>
+				Every step can be skipped. Come back any time from the dashboard (<em>Get started</em>) or at{' '}
+				<C>/&lt;project&gt;/get-started</C>. Setting a project up needs the Build permission.
+			</P>
+		</Section>
+
+		<Section
+			id='history'
+			title='History'
+			lead='Activity → History: everything done in the project, newest first.'>
+			<P>
+				Every record created, changed or deleted — who did it, when, and for a change each field’s before and after — and
+				the project’s building: models built, changed or deleted, features and templates, the public API switched on or off,
+				the site setup changed. Filter by kind, by what was done, by person and by date, or search for a name or code.{' '}
+				<em>Open</em> goes to the record, unless it was deleted.
+			</P>
+			<P>
+				A record’s own history is on its page, in the <strong>History</strong> tab. Anyone whose role has{' '}
+				<em>Records: View</em> can read the History; nobody can change it.
+			</P>
 		</Section>
 
 		<Section

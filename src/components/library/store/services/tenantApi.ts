@@ -149,6 +149,23 @@ export type SiteOverview = {
 	kit: { settings: boolean; pages: boolean; seo: boolean; contents: boolean };
 };
 
+/** One entry of a project's History (WO-36, backend routes-tenant/history.router.ts). */
+export type HistoryEntry = {
+	_id: string;
+	action: 'create' | 'update' | 'delete';
+	model: string;
+	modelPath: string;
+	document: string | null;
+	documentName: string;
+	documentCode: string;
+	text: string;
+	changes: { field: string; label: string; from: string; to: string }[];
+	user: { _id: string; name: string } | null;
+	userName: string;
+	createdAt: string;
+};
+export type HistoryQuery = { model?: string; action?: string; user?: string; from?: string; to?: string; search?: string; limit?: number };
+
 const rangeQuery = (r: AnalyticsRange = {}) => new URLSearchParams(Object.entries(r).filter(([, v]) => v) as [string, string][]).toString();
 
 const ORG = ['tenant-org', 'self'];
@@ -311,6 +328,14 @@ export const tenantApi = mainApi.injectEndpoints({
 			// The kit's own tables too, so editing a page or its SEO refreshes it (routeTags registers them).
 			providesTags: () => routeTags('tenant-site', 'pages', 'seo', 'web-contents', 'site-settings'),
 		}),
+		getProjectHistory: builder.query<{ doc: HistoryEntry[]; totalDocs: number; totalPages: number }, HistoryQuery>({
+			query: q => `history?${new URLSearchParams(Object.entries(q).filter(([, v]) => v !== undefined && v !== '').map(([k, v]) => [k, String(v)])).toString()}`,
+			providesTags: ['history'],
+		}),
+		getHistoryFacets: builder.query<{ models: string[]; people: { _id: string; name: string }[] }, void>({
+			query: () => 'history/facets',
+			providesTags: ['history'],
+		}),
 		updatePublicApi: builder.mutation<{ publicApi: PublicApi }, { id: string } & PublicApi>({
 			query: ({ id, ...body }) => ({ url: `builder/models/${id}/public-api`, method: 'PUT', body }),
 			invalidatesTags: ['builder'],
@@ -356,4 +381,6 @@ export const {
 	useGetSiteConfigQuery,
 	useUpdateSiteConfigMutation,
 	useGetSiteOverviewQuery,
+	useGetProjectHistoryQuery,
+	useGetHistoryFacetsQuery,
 } = tenantApi;
