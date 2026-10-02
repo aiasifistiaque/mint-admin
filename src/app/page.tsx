@@ -1,119 +1,134 @@
 'use client';
 
-import { Grid } from '@chakra-ui/react';
+import NextLink from 'next/link';
+import { Button, Center, Flex, Grid, Skeleton, Text } from '@chakra-ui/react';
+import { LayoutDashboard } from 'lucide-react';
 
-import {
-	Layout,
-	Count,
-	useAppSelector,
-	useGetByIdQuery,
-	ShowSum,
-	useGetSumQuery,
-} from '@/components/library';
+import { Layout, Count, useGetByIdQuery, ShowSum, useGetDashboardQuery } from '@/components/library';
+import { DashboardGrid } from '@/components/library/dashboard/widgets';
+import { IS_TENANT_PANEL, getProjectId } from '@/components/library/config/lib/constants/panel';
+import ProjectsBoard from '@/components/library/tenant/ProjectsBoard';
 
-export default function UserFeedback() {
-	const { filters } = useAppSelector((state: any) => state.table);
+/**
+ * The dashboard: the widgets saved in the dashboard builder (/dashboard-builder),
+ * or — until one is saved — the built-in cards below.
+ */
+export default function Home() {
+	// The tenant panel with no project open: the organization's projects.
+	if (IS_TENANT_PANEL && !getProjectId())
+		return (
+			<Layout
+				title='Home'
+				path='dashboard'>
+				<ProjectsBoard welcome />
+			</Layout>
+		);
+	return <Dashboard />;
+}
 
-	const { data, isFetching, isError, error, isSuccess }: any = useGetByIdQuery({
-		path: 'sms/check',
-		id: 'balance',
-	});
-
-	const {
-		data: storageData,
-		isFetching: storageIsFetching,
-		isError: storageError,
-	} = useGetSumQuery({
-		path: 'files',
-		field: 'size',
-	});
-
-	const {
-		data: awsBillData,
-		isFetching: awsBillIsFetching,
-		isError: awsBillError,
-	} = useGetSumQuery({
-		path: 'upload',
-		field: 'awsbill',
-	});
-
-	const {
-		data: s3Data,
-		isFetching: s3IsFetching,
-		isError: s3Error,
-	} = useGetSumQuery({
-		path: 'upload',
-		field: 's3',
-	});
-
-	const convertSizeToKb = (size: number) => {
-		if (size === undefined || size === null) return '--';
-
-		const bytes = size;
-		const k = 1024;
-		const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-
-		if (bytes === 0) return '0 B';
-
-		const i = Math.floor(Math.log(bytes) / Math.log(k));
-		const convertedSize = bytes / Math.pow(k, i);
-
-		return parseFloat(convertedSize.toFixed(2)) + ' ' + sizes[i];
-	};
+function Dashboard() {
+	const { data, isLoading } = useGetDashboardQuery();
+	const widgets = data?.widgets || [];
 
 	return (
 		<Layout
 			title='Dashboard'
 			path='dashboard'>
-			<Grid
-				pt={3}
-				gridTemplateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }}
-				gap={2}>
-				<Count
-					href='/views'
-					title='Website views'
-					path='views'
-				/>
-				<ShowSum
-					title='AWS Bill (Current Month)'
-					isLoading={awsBillIsFetching}
-					isError={awsBillError}>
-					{(awsBillData && `$${parseFloat(awsBillData?.totalCost?.blended || 0).toFixed(4)}`) ||
-						'--'}
-				</ShowSum>
-				<ShowSum
-					title='Storage Used'
-					isLoading={storageIsFetching}
-					isError={storageError}>
-					{(storageData && convertSizeToKb(storageData?.total)) || '--'}
-				</ShowSum>
-				<ShowSum
-					title='S3 Bucket Used'
-					isLoading={s3IsFetching}
-					isError={s3Error}>
-					{(s3Data && convertSizeToKb(s3Data?.total)) || '--'}
-				</ShowSum>
-
-				<ShowSum
-					title='SMS Balance'
-					isLoading={isFetching}
-					isError={isError}>
-					BDT. {data?.balance || '--'}
-				</ShowSum>
-
-				<Count
-					title='Total Stores'
-					path='shops'
-				/>
-				<Count
-					title='Total Products'
-					path='products'
-				/>
-				<Count
-					title='Total Customers'
-					path='customers'
-				/>
-			</Grid>
+			{isLoading ? (
+				<Grid
+					pt={3}
+					gridTemplateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }}
+					gap={2}>
+					{[0, 1, 2].map(i => (
+						<Skeleton
+							key={i}
+							h='96px'
+						/>
+					))}
+				</Grid>
+			) : data?.saved && widgets.length ? (
+				<DashboardGrid widgets={widgets} />
+			) : IS_TENANT_PANEL ? (
+				<EmptyProjectDashboard />
+			) : (
+				<BuiltInDashboard />
+			)}
 		</Layout>
 	);
 }
+
+/** A tenant project with no dashboard yet: where to make one. */
+const EmptyProjectDashboard = () => (
+	<Flex
+		direction='column'
+		align='center'
+		textAlign='center'
+		gap={2}
+		py={16}>
+		<Center
+			boxSize='44px'
+			borderRadius='full'
+			bg='bg.muted'
+			color='fg.muted'>
+			<LayoutDashboard size={20} />
+		</Center>
+		<Text
+			fontSize='14px'
+			fontWeight='600'>
+			No dashboard yet
+		</Text>
+		<Text
+			fontSize='13px'
+			color='fg.muted'
+			maxW='380px'>
+			Add numbers, charts and recent records from this project’s models.
+		</Text>
+		<Button
+			asChild
+			mt={2}
+			size='sm'>
+			<NextLink href='/dashboard-builder'>Build the dashboard</NextLink>
+		</Button>
+	</Flex>
+);
+
+/** The dashboard as it was before the builder — shown until one is saved. */
+const BuiltInDashboard = () => {
+	const { data, isFetching, isError }: any = useGetByIdQuery({
+		path: 'sms/check',
+		id: 'balance',
+	});
+
+	return (
+		<Grid
+			pt={3}
+			gridTemplateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }}
+			gap={2}>
+			<Count
+				href='/views'
+				title='Website views'
+				path='views'
+			/>
+
+			<ShowSum
+				title='SMS Balance'
+				isLoading={isFetching}
+				isError={isError}>
+				BDT. {data?.balance || '--'}
+			</ShowSum>
+
+			<Count
+				title='Total Stores'
+				path='shops'
+			/>
+			<Count
+				title='Total Products'
+				path='products'
+			/>
+			<Count
+				title='Total Customers'
+				path='customers'
+			/>
+		</Grid>
+	);
+};

@@ -1,10 +1,11 @@
 'use client';
 
-import { Dialog, Button, useDisclosure } from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Portal } from '@chakra-ui/react';
 import { useEffect, useRef, FC } from 'react';
 import { MenuItem } from '../../../..';
 import { useUpdateManyMutation } from '../../../../store';
 import { useCustomToast } from '../../../../hooks';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type EditManyModalType = {
 	title?: string;
@@ -74,49 +75,54 @@ const EditManyModal: FC<EditManyModalType> = ({
 			<MenuItem onClick={onOpen}>{title}</MenuItem>
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				open={isOpen}
 				onOpenChange={(e: any) => !e.open && closeItem()}
 				role='alertdialog'>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<Dialog.Content
-						boxShadow='lg'
-						borderRadius='xl'
-						bg='menu.light'
-						_dark={{
-							bg: 'menu.dark',
-						}}>
-						<Dialog.Header>
-							<Dialog.Title>{prompt?.title || `Edit ${title}`}</Dialog.Title>
-						</Dialog.Header>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<Dialog.Content
+							boxShadow='lg'
+							borderRadius='xl'
+							bg='menu.light'
+							_dark={{
+								bg: 'menu.dark',
+							}}>
+							<Dialog.Header>
+								<Dialog.Title>{prompt?.title || `Edit ${title}`}</Dialog.Title>
+							</Dialog.Header>
 
-						<Dialog.Body pt={4}>
-							{prompt?.body || 'Are you sure you want to edit these items?'}
-						</Dialog.Body>
+							<Dialog.Body pt={4}>
+								{prompt?.body || 'Are you sure you want to edit these items?'}
+							</Dialog.Body>
 
-						<Dialog.Footer>
-							{!isLoading && (
-								<Dialog.CloseTrigger asChild>
-									<Button
-										ref={cancelRef}
-										onClick={closeItem}
-										size='sm'
-										colorPalette='gray'>
-										Discard
-									</Button>
-								</Dialog.CloseTrigger>
-							)}
-							<Button
-								loading={isLoading}
-								colorPalette='brand'
-								onClick={handleSubmit}
-								ml={2}
-								size='sm'>
-								Edit
-							</Button>
-						</Dialog.Footer>
-					</Dialog.Content>
-				</Dialog.Positioner>
+							<ModalFooter>
+								{!isLoading && (
+									<Dialog.CloseTrigger asChild>
+										<Button
+											ref={cancelRef}
+											onClick={closeItem}
+											px={3}
+											size='sm'
+											variant='outline'>
+											Discard
+										</Button>
+									</Dialog.CloseTrigger>
+								)}
+								<Button
+									loading={isLoading}
+									colorPalette='brand'
+									onClick={handleSubmit}
+									px={3}
+									size='sm'>
+									Edit
+								</Button>
+							</ModalFooter>
+						</Dialog.Content>
+					</Dialog.Positioner>
+				</Portal>
 			</Dialog.Root>
 		</>
 	);

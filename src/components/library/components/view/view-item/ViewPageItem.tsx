@@ -54,6 +54,7 @@ const ViewPageItem: FC<ViewItemProps> = ({
 						renderContent({ type, children, colorPalette, path, isLoading, originalType, id })}
 					{copy && children && children != 'n/a' && (
 						<Tooltip.Root
+							lazyMount
 							openDelay={200}
 							closeDelay={100}
 							positioning={{ placement: 'top' }}>

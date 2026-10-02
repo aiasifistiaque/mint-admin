@@ -8,3 +8,5 @@ export {
 	default as ViewPageBasicInfo,
 	default as ViewByIdPage,
 } from './view-page/ViewPageBasicInfo';
+export { default as ConfiguredView } from './view-page/ConfiguredView';
+export { default as ViewTabTable } from './view-page/ViewTabTable';

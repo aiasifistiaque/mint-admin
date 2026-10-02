@@ -22,7 +22,7 @@ const PosSearch: FC = () => {
 				align='center'
 				w='full'>
 				<Box
-					bg={colorMode === 'light' ? '#ddd' : 'background.dark'}
+					bg={colorMode === 'light' ? 'bg.emphasized' : 'background.dark'}
 					px={3}
 					py={2}
 					borderLeftRadius='lg'
@@ -31,7 +31,7 @@ const PosSearch: FC = () => {
 					<Icon name='barcode' />
 				</Box>
 				<Input
-					bg={colorMode === 'light' ? 'white' : 'sidebar.dark'}
+					bg={colorMode === 'light' ? 'bg.panel' : 'sidebar.dark'}
 					borderLeftRadius={0}
 					borderRadius='lg'
 					placeholder='Search By Barcode/Product Name'

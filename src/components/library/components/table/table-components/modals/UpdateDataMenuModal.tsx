@@ -11,6 +11,7 @@ import {
 	useUpdateByIdMutation,
 	PromptType,
 } from '../../../..';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type UpdateKeyProps = {
 	id: string;
@@ -23,10 +24,24 @@ type UpdateKeyProps = {
 		prompt?: PromptType;
 	};
 	doc?: any;
+	// Controlled mode: when `open` is passed, the dialog's open state is driven
+	// by the caller instead of an internal useDisclosure, and no trigger is
+	// rendered — used by TableMenu so the dialog lives outside the dropdown
+	// menu's own mount lifecycle.
+	open?: boolean;
+	onClose?: () => void;
 };
 
-const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
-	const { open: isOpen, onOpen, onClose } = useDisclosure();
+const UpdateDataMenuModal: FC<UpdateKeyProps> = ({
+	item,
+	doc,
+	id,
+	open: controlledOpen,
+	onClose: onControlledClose,
+}) => {
+	const isControlled = controlledOpen !== undefined;
+	const { open: internalOpen, onOpen, onClose: internalOnClose } = useDisclosure();
+	const isOpen = isControlled ? controlledOpen : internalOpen;
 	const { title, path, prompt, invalidate, dataPath, key } = item;
 
 	const cancelRef = useRef<any>(undefined);
@@ -38,7 +53,8 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
 	const closeItem = () => {
 		reset();
 		setValue(undefined);
-		onClose();
+		if (isControlled) onControlledClose?.();
+		else internalOnClose();
 	};
 
 	const handleSubmit = (e: any) => {
@@ -66,13 +82,11 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
 
 	return (
 		<>
-			<MenuItem
-				onClick={onOpen}
-				closeOnSelect={false}>
-				{title}
-			</MenuItem>
+			{!isControlled && <MenuItem onClick={onOpen}>{title}</MenuItem>}
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				open={isOpen}
 				onOpenChange={e => !e.open && closeItem()}>
 				<Portal>
@@ -97,13 +111,14 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
 									/>
 								</Dialog.Body>
 
-								<Dialog.Footer>
+								<ModalFooter>
 									{!isLoading && (
 										<Dialog.CloseTrigger asChild>
 											<Button
 												ref={cancelRef}
+												px={3}
 												size='sm'
-												colorPalette='gray'>
+												variant='outline'>
 												Discard
 											</Button>
 										</Dialog.CloseTrigger>
@@ -113,7 +128,7 @@ const UpdateDataMenuModal: FC<UpdateKeyProps> = ({ item, doc, id }) => {
 										isLoading={isLoading}>
 										{prompt?.btnText || 'Update'}
 									</AlertSubmitButton>
-								</Dialog.Footer>
+								</ModalFooter>
 							</Dialog.Content>
 						</form>
 					</Dialog.Positioner>

@@ -1,63 +1,70 @@
 'use client';
-import { FlexProps, Heading, Stack } from '@chakra-ui/react';
-import { ReactNode, FC } from 'react';
+import { FlexProps, Heading, Stack, Text } from '@chakra-ui/react';
+import { ReactNode, FC, useEffect, useRef } from 'react';
 import SidebarItem from './SidebarItem';
+import useSidebarNav, { NavItem } from './useSidebarNav';
 
-import { sidebarData as sidebar, useGetQuery, useGetSelfQuery } from '../..';
-
-import { SidebarBody, SidebarContainer, SidebarHeading, SidebarLogo } from './sidebar-components';
+import {
+	SidebarBody,
+	SidebarContainer,
+	SidebarLogo,
+	SidebarSearch,
+	SidebarSection,
+} from './sidebar-components';
 import Link from 'next/link';
 
 const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props }) => {
-	const sidebarType = process.env.NEXT_PUBLIC_SIDEBAR_TYPE || 'generic';
-
-	const { data } = useGetSelfQuery({});
 	const {
-		data: sidebarData,
-		isFetching,
-		isError,
-	} = useGetQuery({ path: `/sidebar/crm/${sidebarType}` });
+		title,
+		isLoading,
+		search,
+		setSearch,
+		isSearching,
+		lead: filteredLead,
+		sections: filteredSections,
+		hasResults,
+		toggle,
+		isActive,
+		isOpen,
+	} = useSidebarNav();
 
-	const title = data?.shop?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Admin';
+	// Filters the sidebar in place — matches Vercel's project-nav search, which
+	// narrows the list itself rather than opening a command palette. That's a
+	// separate feature (SearchMenu, still in the navbar for a global jump).
+	const searchInputRef = useRef<HTMLInputElement>(null);
 
-	const main =
-		isFetching || !sidebarData
-			? sidebar.map((item, i) => (
-					<Stack key={i}>
-						<SidebarHeading
-							isLoading={isFetching || !sidebarData}
-							show={item?.startOfSection}>
-							{item?.sectionTitle}
-						</SidebarHeading>
-						<Link href={item?.href}>
-							<SidebarItem
-								isLoading={isFetching || !sidebarData}
-								href={item?.href}
-								path={item?.path}
-								icon={item?.icon}>
-								{item?.title}
-							</SidebarItem>
-						</Link>
-					</Stack>
-			  ))
-			: sidebarData.map((item: any, i: number) => (
-					<Stack key={i}>
-						<SidebarHeading
-							isLoading={false}
-							show={item?.startOfSection}>
-							{item?.sectionTitle}
-						</SidebarHeading>
-						<Link href={item?.href}>
-							<SidebarItem
-								isLoading={false}
-								href={item?.href}
-								path={item?.path}
-								icon={item?.icon}>
-								{item?.title}
-							</SidebarItem>
-						</Link>
-					</Stack>
-			  ));
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.metaKey || e.ctrlKey || e.altKey || e.key.toLowerCase() !== 'f') return;
+
+			const target = e.target as HTMLElement | null;
+			const tag = target?.tagName;
+			// Don't steal the letter while the admin is typing anywhere else.
+			if (tag === 'INPUT' || tag === 'TEXTAREA' || target?.isContentEditable) return;
+
+			e.preventDefault();
+			searchInputRef.current?.focus();
+		};
+
+		window.addEventListener('keydown', handleKeyDown);
+		return () => window.removeEventListener('keydown', handleKeyDown);
+	}, []);
+
+	const renderItem = (item: NavItem, key: string | number, withIcon = false) => (
+		<Link
+			key={key}
+			href={item?.href}>
+			<SidebarItem
+				isLoading={isLoading}
+				href={item?.href}
+				path={item?.path}
+				icon={item?.icon}
+				withIcon={withIcon}>
+				{item?.title}
+			</SidebarItem>
+		</Link>
+	);
+
 	return (
 		<>
 			<SidebarLogo>
@@ -70,8 +77,54 @@ const Sidebar: FC<FlexProps & { closeBtn?: ReactNode }> = ({ closeBtn, ...props 
 				</Heading>
 				{closeBtn && closeBtn}
 			</SidebarLogo>
+
 			<SidebarContainer {...props}>
-				<SidebarBody>{main}</SidebarBody>
+				<SidebarBody>
+					<SidebarSearch
+						value={search}
+						onChange={setSearch}
+						inputRef={searchInputRef}
+					/>
+
+					{filteredLead.length ? (
+						<Stack
+							gap='2px'
+							mb={1}>
+							{filteredLead.map((item, i) => renderItem(item, i, true))}
+						</Stack>
+					) : null}
+
+					{filteredSections.map(section => {
+						const active = isActive(section);
+						const open = isOpen(section);
+
+						return (
+							<SidebarSection
+								key={section.title}
+								title={section.title}
+								icon={section.icon}
+								isOpen={open}
+								hasActive={active}
+								isLoading={isLoading}
+								onToggle={() => toggle(section.title)}>
+								<Stack gap='2px'>
+									{section.items.map((item, i) => renderItem(item, `${section.title}-${i}`))}
+								</Stack>
+							</SidebarSection>
+						);
+					})}
+
+					{isSearching && !hasResults ? (
+						<Text
+							mt={4}
+							textAlign='center'
+							fontSize='xs'
+							color='sidebar.bodyText.light'
+							_dark={{ color: 'sidebar.bodyText.dark' }}>
+							No matches for &ldquo;{search}&rdquo;
+						</Text>
+					) : null}
+				</SidebarBody>
 			</SidebarContainer>
 		</>
 	);

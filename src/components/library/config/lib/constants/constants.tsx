@@ -1,4 +1,8 @@
-export const TOKEN_NAME: string = process.env.NEXT_PUBLIC_TOKEN_NAME || 'MINT_CAFE_TOKEN_TWO';
+import { IS_TENANT_PANEL } from './panel';
+
+// The tenant panel keeps its own token: the two panels can be open side by side.
+export const TOKEN_NAME: string =
+	process.env.NEXT_PUBLIC_TOKEN_NAME || (IS_TENANT_PANEL ? 'MINT_TENANT_TOKEN' : 'MINT_CAFE_TOKEN_TWO');
 
 export const REFRESH_TOKEN: string =
 	process.env.REFRESH_TOKEN || 'THINKCRYPT_ERP_REFRESH_TOKEN_TEST_ONE';
@@ -22,7 +26,7 @@ export const currency = {
 	symbol: '৳',
 };
 
-const BASE_SIDEBAR_WIDTH = '230px';
+const BASE_SIDEBAR_WIDTH = '248px';
 const BASE_SIDEBAR_WIDTH_SMALL = '20PX';
 
 export const BODY_PT = '72px';
@@ -43,21 +47,39 @@ export const sizes = {
 	NAV_HEIGHT: 14,
 	CARD_RADIUS: '8px',
 	SIDEBAR_PX: 3,
-	SEARCH_BAR_HEIGHT: '38px',
+	// Drives the whole toolbar row — search field, refresh, preferences, sort and
+	// the filter chips all read this, so they stay one height. 36px is Chakra's
+	// `sm` control height, which is what the buttons beside the search field
+	// resolve to; the row sat at 38px before that and left the field a couple of
+	// pixels proud of its neighbours.
+	SEARCH_BAR_HEIGHT: '36px',
+	CONTROL_HEIGHT: '36px',
+	CONTROL_HEIGHT_SM: '30px',
 };
 
 export const shadow = {
-	MENU: 'lg',
-	CARD: '2px 2px 10px rgba(0,0,0,.1)',
+	MENU: '0 10px 32px -8px rgba(0, 0, 0, 0.18), 0 2px 6px -2px rgba(0, 0, 0, 0.08)',
+	CARD: '0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 12px -4px rgba(0, 0, 0, 0.08)',
 	DASH: '0px 0px 1px rgba(0,0,0,.08), 0px 2px 2px 0px rgba(0, 0, 0, 0.04)',
-	MODAL: '2xl',
+	// Modals sit on a dimmed backdrop, so they need depth without the heavy
+	// black halo that `2xl` casts over a light page.
+	MODAL: '0 16px 48px -12px rgba(0, 0, 0, 0.22), 0 4px 12px -4px rgba(0, 0, 0, 0.1)',
+	MODAL_DARK: '0 16px 48px -12px rgba(0, 0, 0, 0.7)',
+	SUBTLE: '0 1px 2px rgba(0, 0, 0, 0.05)',
 };
 
 export const padding = {
 	BASE: sizes.PADDING_X_BASE,
 	MD: sizes.PADDING_X_MD,
 	LG: sizes.PADDING_X_LG,
-	BODY_TOP: '72px',
+	// Clears the fixed sidebar header (h: NAV_HEIGHT = 56px).
+	BODY_TOP: '56px',
+	// Sits on top of BODY_TOP to drop the sidebar's search field onto the top
+	// edge of the first block in the main column rather than onto the navbar:
+	// 4px MainBody `pt` + 12px of page padding. It belongs to the search field's
+	// own sticky wrapper, not to the body, so the wrapper's opaque background
+	// covers this band too and rows scrolling past never show through it.
+	SIDEBAR_SEARCH_TOP: '16px',
 	CONTAINER: {
 		BASE: 4,
 		MD: 8,
@@ -70,16 +92,19 @@ export const zIndex = {
 	SIDEBAR: 998,
 };
 
+// One radius ramp. The old values ran 4px for containers and buttons against
+// 10px for menus, so nested chrome never shared a corner.
 export const radius = {
-	CONTAINER: '4px',
-	MODAL: '8px',
-	MENU: '10px',
+	CONTAINER: '8px',
+	MODAL: '12px',
+	MENU: '12px',
 	MENU_INNER: '6px',
 
-	BUTTON: '4px',
-	INPUT: '4px',
-	SELECT_CONTAINER: '6px',
-	FILTER: '4px',
+	BUTTON: '8px',
+	INPUT: '8px',
+	SELECT_CONTAINER: '8px',
+	FILTER: '8px',
+	PILL: '9999px',
 };
 
 export const styles = {
@@ -90,7 +115,8 @@ export const styles = {
 		bg: 'navbar.blurLight',
 	},
 	MODAL_BLUR: {
-		bg: 'rgba(255, 255, 255, .6)',
+		bg: 'menu.blurLight',
+		_dark: { bg: 'menu.blurDark' },
 		backdropFilter: 'blur(10px)',
 	},
 	NAVBAR: {
@@ -111,14 +137,17 @@ export const styles = {
 	SIDEBAR_NAV: {
 		h: sizes.NAV_HEIGHT || 12,
 		alignItems: 'center',
-		bg: 'sidebar.header.light',
-		backdropFilter: 'blur(5px)',
-
+		// Glass, like the page navbar: a translucent fill with the content
+		// behind it blurred. The fill has to be translucent for the filter to do
+		// anything — this carried `blur(5px)` over an opaque `sidebar.header`
+		// for a long time and rendered as a plain white bar.
+		bg: 'sidebar.headerBlur.light',
+		backdropFilter: 'blur(16px)',
 		borderBottomWidth: 1,
 		zIndex: zIndex.NAV || 999,
 		borderColor: 'sidebar.borderBottom.light',
 		_dark: {
-			bg: 'sidebar.header.dark',
+			bg: 'sidebar.headerBlur.dark',
 			borderColor: 'sidebar.borderBottom.dark',
 		},
 	},
@@ -130,9 +159,35 @@ export const styles = {
 	},
 	color: {
 		MODAL_OVERLAY: {
-			LIGHT: 'rgba(250, 250, 250, .8)',
-			DARK: 'menu.overlayDark',
+			// A near-white scrim over a near-white page did no separating at all.
+			LIGHT: 'rgba(17, 17, 17, 0.44)',
+			DARK: 'rgba(0, 0, 0, 0.7)',
 		},
+	},
+	// Shared form-control surface. Spread this instead of restating border,
+	// radius and focus colours on each input.
+	//
+	// 13px, matching the table cells and the Heroku panels' body text. At 14px
+	// the drawer's inputs sat a step larger than the data they were editing,
+	// which is what made a form opened over a table read as a different app.
+	FIELD: {
+		bg: 'field.bg',
+		color: 'fg',
+		borderWidth: 1,
+		borderColor: 'field.border',
+		borderRadius: radius.INPUT,
+		fontSize: '13px',
+		transitionProperty: 'border-color, box-shadow, background-color',
+		transitionDuration: '150ms',
+		transitionTimingFunction: 'cubic-bezier(.4, 0, .2, 1)',
+		_placeholder: { fontSize: '13px', color: 'field.placeholder' },
+		_hover: { borderColor: 'field.borderHover' },
+		_focusVisible: {
+			borderColor: 'field.focusRing',
+			boxShadow: '0 0 0 1px var(--chakra-colors-field-focus-ring)',
+			outline: 'none',
+		},
+		_disabled: { bg: 'bg.subtle', opacity: 0.6, cursor: 'not-allowed' },
 	},
 	BORDER: {
 		_light: {
@@ -141,25 +196,91 @@ export const styles = {
 		},
 		borderRadius: '6px',
 	},
+	// Every button in a modal or drawer footer — Cancel / Discard and the
+	// Save / Confirm / Create beside it — so the pair is always one size.
+	// DiscardButton, ModalSubmitButton and ConfirmButton use it; a footer's own
+	// Button spreads it (`{...styles.MODAL_BUTTON}`). Taller on phones, where the
+	// primary button spans the sheet.
+	MODAL_BUTTON: {
+		size: 'sm',
+		h: { base: '40px', md: '36px' },
+		minW: '84px',
+		px: 4,
+		fontSize: '13px',
+		fontWeight: '500',
+		borderRadius: '8px',
+	},
+	// Every modal's footer (ModalFooter): a hairline, a tinted ledge, the
+	// actions on the right — padded like the header, and no more.
+	MODAL_FOOTER: {
+		w: 'full',
+		gap: 2,
+		px: 4,
+		py: 3,
+		borderTopWidth: 1,
+		borderColor: 'border.muted',
+		bg: 'bg.subtle',
+		justifyContent: 'flex-end',
+		alignItems: 'center',
+		flexWrap: 'wrap',
+		// Buttons put straight in a footer come out one size too, even one a
+		// dialog styled by hand (size xs, px 2…) — the mismatched pairs were all
+		// hand-sized primaries next to a DiscardButton.
+		css: {
+			'& > button': {
+				h: { base: '40px', md: '36px' },
+				minW: '84px',
+				px: 4,
+				fontSize: '13px',
+				fontWeight: '500',
+			},
+		},
+	},
 	MODAL: {
 		bg: 'menu.light',
 		borderWidth: 1,
-		borderColor: 'container.borderLight',
+		borderColor: 'border.muted',
 		_dark: {
 			bg: 'menu.dark',
-			borderColor: 'container.borderDark',
+			borderColor: 'border',
+			boxShadow: shadow.MODAL_DARK,
 		},
-		borderRadius: '8px',
-		shadow: '2xl',
+		borderRadius: radius.MODAL,
+		boxShadow: shadow.MODAL,
+		overflow: 'hidden',
+		// Chakra's inside-scroll default is `calc(100% - 120px)`; go to the full
+		// 90% of the viewport so long forms get the room before they scroll.
+		maxH: '90vh',
 	},
 	DRAWER: {
 		bg: 'menu.light',
 		_dark: {
 			bg: 'menu.dark',
 		},
-		maxH: '75vh',
+		// As tall as its content, up to 85% of the visible screen: `size='full'`
+		// otherwise pins the sheet at 100dvh, and `vh` counts the area behind a
+		// phone's address bar — either way the sheet ran to the top edge.
+		h: 'auto',
+		maxH: '85dvh',
 		userSelect: 'none',
-		borderTopRadius: '16px',
+		borderTopRadius: '20px',
+		boxShadow: shadow.MODAL,
+	},
+	// The desktop "modal layout: drawer" preference — a right-hand panel
+	// instead of the bottom sheet above, so full height and no top radius.
+	DRAWER_END: {
+		bg: 'menu.light',
+		// A hairline against the page, the same one the panels and tables use.
+		// The shadow alone left the drawer's edge indistinct over a light page.
+		borderLeftWidth: 1,
+		borderColor: 'border',
+		_dark: {
+			bg: 'menu.dark',
+			borderColor: 'border',
+		},
+		h: '100vh',
+		maxH: '100vh',
+		boxShadow: shadow.MODAL,
 	},
 	CONTAINER: {
 		RADIUS: {
@@ -178,7 +299,7 @@ export const styles = {
 			borderWidth: 1,
 			borderColor: 'container.borderLight',
 			_dark: {
-				borderColor: '#eee',
+				borderColor: 'container.borderDark',
 			},
 		},
 	},

@@ -1,25 +1,16 @@
-import { NativeSelect } from '@chakra-ui/react';
+import Dropdown from '../../../cl/Dropdown';
 import { SelectChild } from '../../../types';
 
-const SelectInput = ({ children, placeholder, ...props }: SelectChild) => (
-	<NativeSelect.Root
-		cursor='pointer'
+const SelectInput = ({ children, placeholder, name, value, onChange, ...props }: SelectChild) => (
+	<Dropdown
 		size='sm'
-		_light={{
-			bg: 'container.newLight',
-		}}
-		px={3}
-		color='text.light'
-		_dark={{
-			color: 'text.dark',
-		}}
-		fontWeight='600'
-		fontSize={12}
-		borderRadius={4}
+		name={name}
+		value={value}
+		placeholder={placeholder || 'Select option'}
+		onChange={v => onChange?.({ target: { name, value: v } })}
 		{...props}>
-		<NativeSelect.Field placeholder={placeholder || 'Select option'}>{children}</NativeSelect.Field>
-		<NativeSelect.Indicator />
-	</NativeSelect.Root>
+		{children}
+	</Dropdown>
 );
 
 export default SelectInput;

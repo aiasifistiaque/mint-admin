@@ -22,6 +22,10 @@ const VDataSelect: FC<InputContainerProps> = ({
 	model,
 	valueKey = '_id',
 	labelKey = 'name',
+	// FormInput's form-state props — not DOM attributes, so keep them out of `...props`.
+	formData: _formData,
+	setFormData: _setFormData,
+	setChangedData: _setChangedData,
 	...props
 }) => {
 	const { data } = useGetSelectDataQuery(model);

@@ -9,6 +9,8 @@ type FormItemProps = {
 		sectionTitle?: string;
 		span?: number;
 		description?: string;
+		type?: string;
+		section?: { table?: boolean };
 	};
 	children: ReactNode;
 	isHidden?: boolean;
@@ -16,42 +18,43 @@ type FormItemProps = {
 };
 
 const FormItemAccordion: FC<FormItemProps> = ({
-	item: { startOfSection, sectionTitle, span, description },
+	item: { startOfSection, sectionTitle, span, description, type, section },
 	children,
 	collapsible = false,
 	isHidden = false,
 }) => {
 	// const clr = useColorModeValue('gray.200', 'gray.700');
 	if (isHidden) return null;
+	// A list shown as a table needs the whole width; beside another field it's cut off.
+	const wide = type === 'section-data-array' && !!section?.table;
 	return (
 		<>
 			{startOfSection && (
 				<GridItem
-					colSpan={2}
+					colSpan={{ base: 1, md: 2 }}
 					borderTop='1px solid'
-					borderColor='gray.200'
-					_dark={{
-						color: 'gray.700',
-					}}
-					my={2}
+					borderColor='border.muted'
+					my={1}
 				/>
 			)}
 			{sectionTitle && (
 				<>
 					{!collapsible && (
 						<GridItem
-							colSpan={2}
-							fontSize='18px'
-							fontWeight='700'
+							colSpan={{ base: 1, md: 2 }}
+							fontSize='14px'
+							fontWeight='600'
 							mb={description ? -4 : -2}>
 							{sectionTitle}
 						</GridItem>
 					)}
 
-					{description && (
+					{/* Collapsible sections show it in their header. */}
+					{description && !collapsible && (
 						<GridItem
-							colSpan={2}
-							fontSize='14px'
+							colSpan={{ base: 1, md: 2 }}
+							fontSize='13px'
+							color='fg.muted'
 							my={-2}>
 							{description}
 						</GridItem>
@@ -59,7 +62,11 @@ const FormItemAccordion: FC<FormItemProps> = ({
 				</>
 			)}
 
-			<GridItem colSpan={span || 2}>{children}</GridItem>
+			<GridItem
+				colSpan={{ base: 1, md: wide ? 2 : span || 2 }}
+				minW={0}>
+				{children}
+			</GridItem>
 		</>
 	);
 };

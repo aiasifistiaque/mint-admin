@@ -145,12 +145,12 @@ const VImageArray: FC<FormDataType> = ({
 										position='absolute'
 										top='2'
 										left='2'
-										bg='white'
+										bg='bg.panel'
 										borderRadius='md'
 										p='1'
 										boxShadow='sm'
 										fontSize='xs'
-										color='gray.600'
+										color='fg.muted'
 										opacity='0.8'
 										pointerEvents='none'>
 										⋮⋮
@@ -165,6 +165,10 @@ const VImageArray: FC<FormDataType> = ({
 								type='add'
 								handleImage={onChange}
 								multiple={true}
+								// Adding new images is the one place a picker makes
+								// sense to multi-select from — per-image tiles above
+								// only ever browse to replace/delete that one image.
+								multiSelect={true}
 							/>
 						</Center>
 					)}

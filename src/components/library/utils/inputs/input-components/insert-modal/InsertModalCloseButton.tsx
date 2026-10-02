@@ -1,9 +1,13 @@
-import { Dialog } from '@chakra-ui/react';
+import { CloseButton, Dialog } from '@chakra-ui/react';
 
-// Note: In v3, Dialog.CloseTrigger is the new component
-// This component is kept for backward compatibility
-const InsertModalCloseButton = () => {
-	return <Dialog.CloseTrigger />;
-};
+/** The × in the dialog's top-right corner. */
+const InsertModalCloseButton = () => (
+	<Dialog.CloseTrigger
+		asChild
+		top={3}
+		right={3}>
+		<CloseButton size='sm' />
+	</Dialog.CloseTrigger>
+);
 
 export default InsertModalCloseButton;

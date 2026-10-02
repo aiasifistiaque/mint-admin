@@ -12,7 +12,6 @@ import {
 	FormMain,
 	useLazyGetByIdToEditQuery,
 	DiscardButton,
-	Align,
 	DialogCloseButton,
 	DialogHeader,
 	DialogFooter,
@@ -21,6 +20,7 @@ import {
 } from '../..';
 
 import CreateModalProps from './types';
+import { styles } from '../../config';
 
 const CreateModal = (props: CreateModalProps) => {
 	const {
@@ -36,6 +36,7 @@ const CreateModal = (props: CreateModalProps) => {
 		prompt,
 		populate,
 		layout,
+		defaults,
 	} = props;
 
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
@@ -56,7 +57,7 @@ const CreateModal = (props: CreateModalProps) => {
 			if (field?.value) newFieldData = { ...newFieldData, [field.name]: field?.value };
 		});
 
-		setFormData({ ...formData, ...newFieldData });
+		setFormData({ ...formData, ...newFieldData, ...defaults });
 		if (type == 'update') {
 			if (populate) {
 				setFormData(populate);
@@ -127,11 +128,13 @@ const CreateModal = (props: CreateModalProps) => {
 				</DiscardButton>
 			)}
 			<Button
+				{...(styles.MODAL_BUTTON as any)}
 				{...(isMobile && { w: 'full' })}
 				type='submit'
-				px={2}
-				size={{ base: 'md', md: 'sm' }}>
-				{isLoading ? 'Processing...' : prompt?.btnText || 'Confirm'}
+				loading={isLoading}
+				loadingText='Processing'
+				spinnerPlacement='start'>
+				{prompt?.btnText || 'Confirm'}
 			</Button>
 		</>
 	);
@@ -161,9 +164,10 @@ const CreateModal = (props: CreateModalProps) => {
 								isModal={true}
 							/>
 						</ModalFormSection>
-						{isMobile && <Align p={4}>{footer}</Align>}
 					</DialogBody>
-					{!isMobile && <DialogFooter>{footer}</DialogFooter>}
+					{/* Pinned under the form on every screen; on a phone it holds the one
+					    full-width primary button, inset like the fields above it. */}
+					<DialogFooter>{footer}</DialogFooter>
 				</form>
 			</Dialog>
 		</>

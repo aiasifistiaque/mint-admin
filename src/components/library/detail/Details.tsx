@@ -42,6 +42,7 @@ const Details: FC<DetailProps> = ({
 	editing,
 	type,
 	isPassword,
+	isDisabled,
 	body,
 	path,
 	dataModel,
@@ -101,7 +102,7 @@ const Details: FC<DetailProps> = ({
 
 	const styleProps = {
 		borderRadius: 'md',
-		color: 'text.500',
+		color: 'fg',
 		size: 'sm',
 		px: 3,
 		fontSize: '13px',
@@ -120,6 +121,17 @@ const Details: FC<DetailProps> = ({
 		) : type == 'image' ? (
 			<VImage
 				value={children}
+				{...props}
+			/>
+		) : isDisabled ? (
+			<Input
+				{...styleProps}
+				value={children}
+				disabled
+				readOnly
+				cursor='not-allowed'
+				bg='bg.muted'
+				color='fg.muted'
 				{...props}
 			/>
 		) : (

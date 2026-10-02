@@ -3,31 +3,26 @@ import { Flex } from '@chakra-ui/react';
 import { radius, shadow } from '../../../../../config';
 import { SpaceBetween } from '../../../../../containers';
 
+/**
+ * Replaces the toolbar while rows are selected. It uses an inverted surface so
+ * it's unmistakably a mode the table is in, not another row of filters.
+ */
 const SelectedItemsContainer = ({ children }: { children: ReactNode }) => {
 	return (
 		<Flex
-			p={2}
-			pb={0}
-			px={0}
 			w='full'
 			py={1}>
 			<SpaceBetween
-				p={2}
-				py={1}
-				pr={1}
+				px={3}
+				py={2}
 				w='full'
-				borderRadius={radius?.SELECT_CONTAINER}
-				bg='table.bg.light'
-				border='1px solid'
-				borderColor='table.innerBorder.light'
-				color='gray.600'
-				fontWeight='600'
-				boxShadow={shadow.DASH}
-				_dark={{
-					bg: 'table.bg.dark',
-					borderColor: 'table.innerBorder.dark',
-					color: 'gray.200',
-				}}>
+				alignItems='center'
+				borderRadius={radius.SELECT_CONTAINER}
+				bg='bg.inverted'
+				color='fg.inverted'
+				fontSize='14px'
+				fontWeight='500'
+				boxShadow={shadow.SUBTLE}>
 				{children}
 			</SpaceBetween>
 		</Flex>

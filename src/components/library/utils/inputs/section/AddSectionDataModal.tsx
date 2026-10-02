@@ -1,27 +1,44 @@
 'use client';
-import { Button, Flex, FlexProps, IconButton, useDisclosure } from '@chakra-ui/react';
-import { FC, ReactNode, useState } from 'react';
+import { Button, IconButton, useDisclosure } from '@chakra-ui/react';
+import { FC, useId, useState } from 'react';
+import { Plus } from 'lucide-react';
 
 import {
 	Column,
-	createFormFields,
-	DeleteImageButton,
 	FormMain,
 	Icon,
 	InsertModal,
 	InsertModalBody,
 	InsertModalCloseButton,
 	InsertModalContent,
+	InsertModalFooter,
 	InsertModalHeader,
-	InsertModalOverlay,
 } from '../../..';
+import { SECTION_BUTTON } from './sectionButtons';
+import { evaluate, parse } from '../../../functions/formula';
+
+/**
+ * A row with its formula fields calculated from the row's other values
+ * (`total = quantity * rate`) — so the list, and a record formula over it
+ * like sum(items.total), read right before the server recalculates on save.
+ */
+export const withRowFormulas = (row: any, dataModel: any[] = []) => {
+	const out = { ...row };
+	for (const f of dataModel || []) {
+		if (f?.type !== 'formula' || !f.formula) continue;
+		try {
+			out[f.name] = evaluate(parse(f.formula), out);
+		} catch {
+			/* left as is; the server refuses a broken formula anyway */
+		}
+	}
+	return out;
+};
 
 type UploadModalProps = {
-	trigger?: ReactNode;
 	handleDataChange: any;
-	type?: 'add' | 'edit' | 'delete';
+	type?: 'add' | 'edit';
 	multiple?: boolean;
-	handleDelete?: any;
 	value: { image?: string; title: string; description: string }[];
 	name: string;
 	prevVal?: { image?: string; title: string; description: string };
@@ -32,9 +49,7 @@ type UploadModalProps = {
 };
 
 const AddSectionDataModal: FC<UploadModalProps> = ({
-	trigger,
 	handleDataChange,
-	handleDelete,
 	type = 'add',
 	value,
 	name,
@@ -48,21 +63,20 @@ const AddSectionDataModal: FC<UploadModalProps> = ({
 	const [formData, setFormData] = useState<any>({});
 	const [changedData, setChangedData] = useState<any>({});
 
-	const closeModal = () => {
-		setFormData({});
-		setChangedData({});
-		onClose();
-	};
+	// Reset on open, not on close: clearing while the dialog fades out
+	// empties its inputs under React (controlled -> uncontrolled).
+	const closeModal = () => onClose();
 
 	const openModal = () => {
 		setFormData(prevVal || {});
+		setChangedData({});
 		onOpen();
 	};
 
 	const handleAddSection = (e: any) => {
 		e.preventDefault();
 		e.stopPropagation();
-		const newArr = [...(Array.isArray(value) ? value : []), formData];
+		const newArr = [...(Array.isArray(value) ? value : []), withRowFormulas(formData, section?.dataModel)];
 		if (handleDataChange) {
 			const event = {
 				target: {
@@ -72,8 +86,6 @@ const AddSectionDataModal: FC<UploadModalProps> = ({
 			} as any;
 			handleDataChange(event);
 		}
-		setFormData({});
-
 		closeModal();
 	};
 
@@ -84,7 +96,7 @@ const AddSectionDataModal: FC<UploadModalProps> = ({
 
 		const newArr = Array.isArray(value) ? [...value] : [];
 		if (index >= 0 && index < newArr.length) {
-			newArr[index] = formData;
+			newArr[index] = withRowFormulas(formData, section?.dataModel);
 		}
 
 		if (handleDataChange) {
@@ -100,94 +112,72 @@ const AddSectionDataModal: FC<UploadModalProps> = ({
 	};
 
 	const handleSubmit = type == 'add' ? handleAddSection : handleEditSection;
-
-	const buttonTypes = {
-		add: (
-			<Button
-				size='sm'
-				colorPalette='white'>
-				{section?.addBtnText || 'Add Item'}
-			</Button>
-		),
-		edit: (
-			<IconButton
-				variant='outline'
-				aria-label='edit-section'
-				size='xs'
-				colorPalette='brand'>
-				<Icon name='edit' />
-			</IconButton>
-		),
-		delete: <DeleteImageButton onClick={handleDelete} />,
-	};
-
-	let triggerButton = (buttonTypes[type] as any) || trigger;
-
-	const getDataModel = () => {
-		if (!section?.dataModel) return null;
-		const model = createFormFields({
-			schema: section?.dataModel,
-			layout: section?.layout,
-		});
-		return model;
-	};
+	// The footer's submit button sits outside the form, so it names it.
+	const formId = `section-row-${useId()}`;
 
 	return (
 		<>
-			{type == 'delete' ? (
-				<DeleteImageButton onClick={handleDelete} />
+			{type == 'edit' ? (
+				<IconButton
+					variant='outline'
+					aria-label='Edit'
+					size='xs'
+					onClick={openModal}>
+					<Icon name='edit' />
+				</IconButton>
 			) : (
-				<Flex onClick={openModal}>{triggerButton}</Flex>
+				<Button
+					size='sm'
+					variant='outline'
+					onClick={openModal}>
+					<Plus size={14} />
+					{section?.addBtnText || 'Add item'}
+				</Button>
 			)}
 			<InsertModal
 				size='xl'
 				isOpen={isOpen}
 				onClose={closeModal}>
-				<InsertModalOverlay />
 				<InsertModalContent>
 					<InsertModalHeader>
-						{section?.title ? section?.title : type == 'edit' ? 'Update Section' : 'Add Section'}
+						{section?.title ? section?.title : type == 'edit' ? 'Edit row' : 'Add row'}
 					</InsertModalHeader>
 					<InsertModalCloseButton />
-					<InsertModalBody flex={1}>
+					<InsertModalBody>
 						<Column
 							gap={4}
 							as='form'
+							id={formId}
 							onSubmit={handleSubmit}>
 							<FormMain
-								fields={section?.dataModel}
+								fields={(section?.dataModel || []).map((f: any, i: number) =>
+									i === 0 && !f.sectionTitle ? { ...f, sectionTitle: section?.title || 'Details' } : f
+								)}
 								formData={formData}
 								setFormData={setFormData}
 								setChangedData={setChangedData}
 								isModal={true}
 							/>
-							<Flex {...footerCss}>
-								<Button
-									colorPalette='white'
-									size='sm'
-									onClick={onClose}>
-									Discard
-								</Button>
-								<Button
-									size='sm'
-									type='submit'>
-									{type == 'add' ? 'Add' : 'Update'}
-								</Button>
-							</Flex>
 						</Column>
 					</InsertModalBody>
+					<InsertModalFooter>
+						<Button
+							{...SECTION_BUTTON}
+							variant='outline'
+							onClick={closeModal}>
+							Cancel
+						</Button>
+						<Button
+							{...SECTION_BUTTON}
+							type='submit'
+							form={formId}>
+							{type == 'add' ? 'Add' : 'Save'}
+						</Button>
+					</InsertModalFooter>
 				</InsertModalContent>
 			</InsertModal>
 		</>
 	);
-};
-
-const footerCss: FlexProps = {
-	justify: 'flex-end',
-	pb: 4,
-	align: 'center',
-	gap: 2,
-	flex: 1,
 };
 
 export default AddSectionDataModal;

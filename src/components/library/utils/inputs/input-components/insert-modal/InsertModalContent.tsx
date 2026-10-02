@@ -7,21 +7,16 @@ type InsertModalContentProps = {
 	[key: string]: any;
 };
 
-// Note: In v3, Dialog.Content is already part of Dialog.Root structure
-// This component is deprecated but kept for backward compatibility
-const InsertModalContent: FC<InsertModalContentProps> = ({ children, ...props }) => {
-	console.warn(
-		'InsertModalContent is deprecated in Chakra v3. Use Dialog.Content directly within Dialog.Root.'
-	);
-	return (
-		<Dialog.Content
-			borderRadius={radius.MODAL}
-			bg='menu.light'
-			_dark={{ bg: 'menu.dark' }}
-			{...props}>
-			{children}
-		</Dialog.Content>
-	);
-};
+/** The dialog's box, inside an InsertModal. */
+const InsertModalContent: FC<InsertModalContentProps> = ({ children, ...props }) => (
+	<Dialog.Content
+		borderRadius={radius.MODAL}
+		bg='bg.panel'
+		borderWidth='1px'
+		borderColor='border'
+		{...props}>
+		{children}
+	</Dialog.Content>
+);
 
 export default InsertModalContent;

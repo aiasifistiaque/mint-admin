@@ -53,7 +53,7 @@ const commonCSS: CenterProps = {
 const componentCSS: CenterProps = {
 	...commonCSS,
 	borderWidth: 2,
-	borderColor: 'dodgerblue',
+	borderColor: 'accent.solid',
 };
 
 const sectionCss: CenterProps = {
@@ -65,7 +65,7 @@ const sectionCss: CenterProps = {
 };
 
 const componentText: FlexProps = {
-	bg: 'dodgerblue',
+	bg: 'accent.solid',
 	position: 'absolute',
 	top: 0,
 	p: '2px',
@@ -74,8 +74,7 @@ const componentText: FlexProps = {
 	letterSpacing: '.25px',
 	fontWeight: '600',
 	textTransform: 'uppercase',
-	color: 'white',
-	_dark: { color: 'white' },
+	color: 'accent.contrast',
 };
 
 const overlayCSS: CenterProps = {

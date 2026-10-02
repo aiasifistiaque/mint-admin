@@ -14,7 +14,7 @@ const TextSection: FC<TextSectionProps> = ({ title, children, ...props }) => {
 			{...props}>
 			<Text
 				fontSize='14px'
-				color='text.shade'>
+				color='fg.muted'>
 				{title}
 			</Text>
 			<Text

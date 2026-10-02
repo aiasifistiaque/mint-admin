@@ -1,9 +1,11 @@
 'use client';
 
-import { Dialog, Button, useDisclosure, Text, NativeSelect } from '@chakra-ui/react';
+import { Dialog, Button, useDisclosure, Text, Portal } from '@chakra-ui/react';
 import { useEffect, useRef, FC, useState } from 'react';
 import { useCustomToast, MenuItem } from '../../../..';
 import { useUpdateManyMutation } from '../../../../store';
+import Dropdown from '../../../../cl/Dropdown';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type EditManyModalType = {
 	title?: string;
@@ -34,7 +36,10 @@ const EditSelectedModal: FC<EditManyModalType> = ({
 }) => {
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
 	const cancelRef = useRef<any>(undefined);
-	const [value, setValue] = useState<any>(val);
+	// `val` is `undefined` until a caller passes one, which would start the
+	// select uncontrolled and then flip it controlled the moment a value
+	// exists — React warns about exactly that transition.
+	const [value, setValue] = useState<any>(val ?? '');
 
 	const [trigger, result] = useUpdateManyMutation();
 	const { isLoading, isSuccess, isError, error, reset } = result;
@@ -78,25 +83,27 @@ const EditSelectedModal: FC<EditManyModalType> = ({
 			<MenuItem onClick={onOpen}>{title}</MenuItem>
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				open={isOpen}
 				onOpenChange={e => !e.open && closeItem()}
 				role='alertdialog'>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<form onSubmit={handleSubmit}>
-						<Dialog.Content>
-							<Dialog.Header>
-								<Dialog.Title>{prompt?.title || `Edit Item`}</Dialog.Title>
-							</Dialog.Header>
+				<Portal>
+					<Dialog.Backdrop />
+					<Dialog.Positioner>
+						<form onSubmit={handleSubmit}>
+							<Dialog.Content>
+								<Dialog.Header>
+									<Dialog.Title>{prompt?.title || `Edit Item`}</Dialog.Title>
+								</Dialog.Header>
 
-							<Dialog.Body pt={4}>
-								<Text>{prompt?.body || 'Please select an option'}</Text>
-								<NativeSelect.Root
-									size='sm'
-									mt={4}>
-									<NativeSelect.Field
+								<Dialog.Body pt={4}>
+									<Text>{prompt?.body || 'Please select an option'}</Text>
+									<Dropdown
+										size='sm'
+										mt={4}
 										value={value}
-										onChange={e => setValue(e.target.value)}>
+										onChange={v => setValue(v)}>
 										<option
 											disabled
 											value=''>
@@ -109,34 +116,35 @@ const EditSelectedModal: FC<EditManyModalType> = ({
 												{label}
 											</option>
 										))}
-									</NativeSelect.Field>
-								</NativeSelect.Root>
-							</Dialog.Body>
+									</Dropdown>
+								</Dialog.Body>
 
-							<Dialog.Footer>
-								{!isLoading && (
-									<Dialog.CloseTrigger asChild>
-										<Button
-											ref={cancelRef}
-											size='sm'
-											colorPalette='gray'>
-											Discard
-										</Button>
-									</Dialog.CloseTrigger>
-								)}
-								<Button
-									type='submit'
-									disabled={!value}
-									loading={isLoading}
-									colorPalette='brand'
-									ml={2}
-									size='sm'>
-									Edit
-								</Button>
-							</Dialog.Footer>
-						</Dialog.Content>
-					</form>
-				</Dialog.Positioner>
+								<ModalFooter>
+									{!isLoading && (
+										<Dialog.CloseTrigger asChild>
+											<Button
+												ref={cancelRef}
+												px={3}
+												size='sm'
+												variant='outline'>
+												Discard
+											</Button>
+										</Dialog.CloseTrigger>
+									)}
+									<Button
+										type='submit'
+										disabled={!value}
+										loading={isLoading}
+										colorPalette='brand'
+										px={3}
+										size='sm'>
+										Edit
+									</Button>
+								</ModalFooter>
+							</Dialog.Content>
+						</form>
+					</Dialog.Positioner>
+				</Portal>
 			</Dialog.Root>
 		</>
 	);

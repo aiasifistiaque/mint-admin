@@ -13,6 +13,8 @@ type InputContainerProps = InputProps & {
 	model: string;
 	placeholder?: any;
 	item?: any;
+	valueKey?: string;
+	/** @deprecated use valueKey */
 	valKey?: string;
 	labelKey?: string;
 };
@@ -32,7 +34,8 @@ const VDataTags: React.FC<InputContainerProps> = ({
 	const [tag, setTag] = useState<string>('');
 	const { data } = useGetSelectDataQuery(model);
 
-	const valKey = item?.valKey || '_id';
+	// WO-05: valueKey is what createFormFields emits; valKey kept as a deprecated fallback.
+	const valKey = item?.valueKey || item?.valKey || '_id';
 	const labelKey = item?.labelKey || 'name';
 
 	const addTag = useCallback(() => {
@@ -142,7 +145,7 @@ const VDataTags: React.FC<InputContainerProps> = ({
 								colorPalette='gray'
 								px={2.5}
 								py={1}
-								bg='gray.100'
+								bg='bg.muted'
 								borderRadius='md'
 								alignItems='center'
 								gap={2}>
@@ -152,8 +155,7 @@ const VDataTags: React.FC<InputContainerProps> = ({
 									{getNameById(item)}
 								</Flex>
 								<Flex
-									color='black'
-									_dark={{ color: 'white' }}
+									color='fg'
 									as='button'
 									onClick={() => deleteTag(item)}
 									cursor='pointer'

@@ -1,13 +1,19 @@
-import { Flex, FlexProps, Heading, Button, Text, Skeleton, SkeletonText } from '@chakra-ui/react';
+import { Box, Flex, FlexProps, Heading, Button, Text, Skeleton, IconButton, Menu } from '@chakra-ui/react';
+import Crumbs from '../../cl/Crumbs';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
+import { Download, EllipsisVertical, Upload } from 'lucide-react';
 // import { BackendCreateModal, Icon } from '../..';
 
-import ExportModal from '../modals/export/ExportModal';
+import { ExportButton, ExportDialog } from './table-components/bulk/ExportRows';
+import ImportDialog from './table-components/bulk/ImportRows';
+import { MenuContainer, MenuItem, MenuItemStyle } from '../../menu';
 import { buttonGroupCss, containerCss, headingCss, subHeadingCss, wrapperCss } from './style';
 import { BackendCreateModal } from '../../modals';
 import { Icon } from '../../icon';
 import { useIsMobile } from '../../hooks';
+import { radius, sizes } from '../../config';
+import { pagePath } from '../../config/lib/constants/panel';
 
 type PageHeadingProps = FlexProps & {
 	title: string;
@@ -35,20 +41,66 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 }) => {
 	const isMobile = useIsMobile();
 	const btn = (
-		<Button
-			size='sm'
-			px={3}
-			gap={2}>
+		<Button size='sm'>
 			<Icon
 				size={18}
 				name='add'
-				color='fg.inverted'
 			/>
 			{!isMobile && button}
 		</Button>
 	);
 
-	const exportButton = <ExportModal path={path} />;
+	const exportButton = <ExportButton path={path} />;
+
+	// With bulk upload on, the header's other actions move into one ⋯ menu
+	// beside the add button: Bulk upload, and Export when that's on too. The
+	// dialogs are siblings of the menu, which unmounts its content on close.
+	const bulkUpload = !!table?.bulkUpload;
+	const [dialog, setDialog] = useState<'import' | 'export' | null>(null);
+	const moreMenu = (
+		<>
+			<Menu.Root positioning={{ placement: 'bottom-end', gutter: 4 }}>
+				<Menu.Trigger asChild>
+					<IconButton
+						aria-label='More actions'
+						size='sm'
+						variant='outline'>
+						<EllipsisVertical size={16} />
+					</IconButton>
+				</Menu.Trigger>
+				<MenuContainer
+					p={1}
+					gap={0}
+					minW='200px'
+					boxShadow='lg'>
+					<MenuItemStyle
+						compact
+						icon={<Upload size={16} strokeWidth={1.75} />}>
+						<MenuItem onClick={() => setDialog('import')}>{table?.bulkUpload?.title || 'Bulk upload'}</MenuItem>
+					</MenuItemStyle>
+					{Boolean(exportData) && (
+						<MenuItemStyle
+							compact
+							icon={<Download size={16} strokeWidth={1.75} />}>
+							<MenuItem onClick={() => setDialog('export')}>Export</MenuItem>
+						</MenuItemStyle>
+					)}
+				</MenuContainer>
+			</Menu.Root>
+			<ImportDialog
+				open={dialog === 'import'}
+				onClose={() => setDialog(null)}
+				path={path}
+				title={table?.bulkUpload?.title}
+			/>
+			<ExportDialog
+				open={dialog === 'export'}
+				onClose={() => setDialog(null)}
+				path={path}
+			/>
+		</>
+	);
+
 	const renderButton = () => {
 		if (isModal)
 			return (
@@ -69,12 +121,32 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 		<Flex
 			{...wrapperCss}
 			{...props}>
+			{/* The same trail as the console and builder pages (cl PageHeader). */}
+			{isLoading ? (
+				<Skeleton
+					w='120px'
+					h='14px'
+					borderRadius='full'
+				/>
+			) : (
+				<Box mb={-1}>
+					<Crumbs
+						data={[
+							{ href: '/', title: 'Home' },
+							{ href: pagePath(path), title },
+						]}
+					/>
+				</Box>
+			)}
 			<Flex {...containerCss}>
 				{isLoading ? (
-					<SkeletonText
-						noOfLines={3}
-						w='300px'
-						h='40px'
+					// One bar the size of the <Heading> it stands in for. This was a
+					// `SkeletonText noOfLines={3}`, where `h` applies per line — so a
+					// single 30px title loaded in behind a 300x144 slab.
+					<Skeleton
+						w='140px'
+						h={HEADING_HEIGHT}
+						borderRadius='full'
 					/>
 				) : (
 					<Heading {...headingCss}>{title}</Heading>
@@ -82,20 +154,42 @@ const ServerPageHeading: React.FC<PageHeadingProps> = ({
 
 				{isLoading ? (
 					<Skeleton
-						w='140px'
-						h='40px'
-						borderRadius='8px'
+						w='124px'
+						h={sizes.CONTROL_HEIGHT}
+						borderRadius={radius.BUTTON}
 					/>
 				) : (
 					<Flex {...buttonGroupCss}>
-						<>{Boolean(exportData) && exportButton}</>
+						<>{!bulkUpload && Boolean(exportData) && exportButton}</>
 						<>{(Boolean(button) || isModal) && renderButton()}</>
+						{bulkUpload && moreMenu}
 					</Flex>
 				)}
 			</Flex>
-			{table?.subTitle && <Text {...subHeadingCss}>{table?.subTitle}</Text>}
+			{(table?.subTitle || table?.guideHref) && (
+				<Flex
+					align='center'
+					gap={2}
+					wrap='wrap'>
+					{table?.subTitle && <Text {...subHeadingCss}>{table?.subTitle}</Text>}
+					{table?.guideHref && (
+						<Link href={table.guideHref}>
+							<Text
+								{...subHeadingCss}
+								color='accent.fg'
+								textDecoration='underline'>
+								{table?.guideLabel || 'View the guide'}
+							</Text>
+						</Link>
+					)}
+				</Flex>
+			)}
 		</Flex>
 	);
 };
+
+// `headingCss` is 1.375rem/1.5rem at lineHeight 1.25, so the rendered <h2> box
+// is 27.5px on mobile and 30px from md up.
+const HEADING_HEIGHT = { base: '28px', md: '30px' };
 
 export default ServerPageHeading;

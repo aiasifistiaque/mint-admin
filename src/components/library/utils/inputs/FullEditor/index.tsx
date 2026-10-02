@@ -110,7 +110,7 @@ const FullEditor = ({ value, onChange, name, isRequired, label, helper }: any) =
 				{helper && (
 					<Text
 						fontSize='xs'
-						color='gray.500'
+						color='fg.muted'
 						mb={2}>
 						{helper}
 					</Text>
@@ -161,9 +161,7 @@ const formats = [
 	'background',
 	'blockquote',
 	'code-block',
-	'clean',
 	'list',
-	'bullet',
 	'indent',
 	'image',
 	'link',

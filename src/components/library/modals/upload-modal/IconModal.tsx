@@ -134,14 +134,15 @@ const IconModal: FC<UploadModalProps> = ({
 								{list.map((icon: string) => {
 									return (
 										<Tooltip.Root
+											lazyMount
 											key={icon}
 											positioning={{ placement: 'bottom' }}
 											openDelay={200}>
 											<Tooltip.Trigger asChild>
 												<Flex
 													{...iconCss}
-													bg={img === icon ? 'blue.50' : 'background.cardLight'}
-													borderColor={img === icon ? 'blue.300' : 'transparent'}
+													bg={img === icon ? 'accent.subtle' : 'bg.panel'}
+													borderColor={img === icon ? 'accent.solid' : 'transparent'}
 													onClick={() => handleImageSelect(icon)}>
 													<span>
 														<DynamicIcon
@@ -195,11 +196,11 @@ const iconCss: FlexProps = {
 	justify: 'center',
 	p: 2,
 	border: '1px solid',
-	borderColor: 'gray.200',
+	borderColor: 'border',
 	borderRadius: '6px',
 	cursor: 'pointer',
-	bg: { base: 'teal', _dark: 'background.dark' },
-	_hover: { bg: 'gray.50' },
+	bg: 'bg.panel',
+	_hover: { bg: 'bg.subtle' },
 
 	w: '56x',
 	h: '56px',

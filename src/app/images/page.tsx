@@ -1,16 +1,7 @@
 'use client';
-import React from 'react';
 import { NextPage } from 'next';
-import { ImagePage } from '@/components/library';
+import { MediaManager } from '@/components/library/pages/media';
 
-const FilePage: NextPage<any> = () => {
-	return (
-		<ImagePage
-			route='images'
-			title='All Media'
-			// folder='687135fde09e2a40a979761b'
-		/>
-	);
-};
+const MediaPage: NextPage = () => <MediaManager />;
 
-export default FilePage;
+export default MediaPage;

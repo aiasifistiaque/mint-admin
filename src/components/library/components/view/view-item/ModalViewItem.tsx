@@ -4,6 +4,7 @@ import { Icon } from '../../..';
 import { renderViewItem as renderContent } from '..';
 import { SkeletonContent, ViewItemProps } from './utils';
 import { useColorMode } from '@/components/ui/color-mode';
+import { linkFor } from '../utils/record-link/linked';
 
 const ViewItem: FC<ViewItemProps> = ({
 	title,
@@ -13,8 +14,14 @@ const ViewItem: FC<ViewItemProps> = ({
 	path,
 	copy,
 	isLoading = false,
+	field,
+	doc,
 	...props
 }) => {
+	// `field` (the view field) and `doc` (the record) let a linked value — a
+	// reference, the owner, people with access — render as RecordLink chips.
+	const link = field && doc ? linkFor(field, doc) : null;
+
 	const { copy: onCopy, value, setValue, copied: hasCopied } = useClipboard();
 
 	useEffect(() => {
@@ -26,11 +33,16 @@ const ViewItem: FC<ViewItemProps> = ({
 			{...gridCss(type)}
 			{...props}>
 			<SkeletonContent isLoading={isLoading}>
+				{/* A label, not a heading: it names the value beside it, so it sits
+				    back at the same muted 13px the table's column labels use. The
+				    trailing colon went with it — the grid already separates the
+				    pair, and the punctuation only added noise to every row. */}
 				<Heading
-					size='sm'
-					color='heading.lightMuted'
-					_dark={{ color: 'heading.darkMuted' }}>
-					{title}:
+					fontSize='13px'
+					fontWeight='500'
+					lineHeight='1.5'
+					color='fg.muted'>
+					{title}
 				</Heading>
 			</SkeletonContent>
 			<SkeletonContent isLoading={isLoading}>
@@ -39,9 +51,10 @@ const ViewItem: FC<ViewItemProps> = ({
 					align='center'>
 					{!isLoading &&
 						children &&
-						renderContent({ type, children, colorPalette, path, isLoading })}
+						renderContent({ type, children, colorPalette, path, isLoading, link, dataModel: field?.dataModel })}
 					{copy && children && children != 'n/a' && (
 						<Tooltip.Root
+							lazyMount
 							openDelay={200}
 							closeDelay={100}
 							positioning={{ placement: 'top' }}>
@@ -69,7 +82,7 @@ const gridCss = (type: string = 'string'): GridProps => {
 	return {
 		justifyContent: 'center',
 		px: { base: 4, md: 4 },
-		pb: 2,
+		py: 2.5,
 		gridTemplateColumns: {
 			base: '1fr',
 			md: type == 'textarea' || type == 'section-data-array' ? '1fr' : GRID_COLUMNS,
@@ -78,8 +91,11 @@ const gridCss = (type: string = 'string'): GridProps => {
 			base: 2,
 			md: type == 'textarea' || type == 'section-data-array' ? 3 : 8,
 		},
+		fontSize: '13px',
 		borderBottomWidth: 1,
-		borderColor: { base: 'border.light', _dark: 'border.dark' },
+		// The same hairline as the drawer's header/footer and the table rows,
+		// rather than a second, heavier border colour just for view rows.
+		borderColor: 'border.muted',
 		_last: { borderBottomWidth: 0 },
 	};
 };

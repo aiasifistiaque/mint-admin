@@ -1,17 +1,19 @@
 'use client';
 
 import { useState, ChangeEvent, FC } from 'react';
-import { Flex, PopoverTrigger, useDisclosure, Input } from '@chakra-ui/react';
+import { Flex, PopoverTrigger, useDisclosure } from '@chakra-ui/react';
 
 import {
 	PopModal,
 	PopModalHeader,
 	PopModalBody,
 	PopModalCloseButton,
+	PopModalFooterLink,
 	useIsMobile,
 	useAppDispatch,
 	useAppSelector,
 	Filter,
+	FilterInput,
 	applyFilters,
 } from '../..';
 
@@ -72,7 +74,8 @@ const TextFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 			<Filter
 				isActive={ifFieldExists()}
 				onCancel={onFilterReset}>
-				{label} {ifFieldExists() && <span> | {filters[field]}</span>}
+				{/* Plain string rather than a `<span>` — see BooleanFilter.tsx. */}
+				{label} {ifFieldExists() && `| ${filters[field]}`}
 			</Filter>
 		</span>
 	);
@@ -84,9 +87,17 @@ const TextFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 			onOpen={open}
 			onClose={popClose}
 			isOpen={isOpen}
+			width='330px'
+			footerStart={
+				<PopModalFooterLink
+					onClick={() => setVal('')}
+					disabled={!val}>
+					Clear
+				</PopModalFooterLink>
+			}
 			trigger={
 				isMobile ? (
-					<Flex onClick={onOpen}>{button}</Flex>
+					<Flex onClick={open}>{button}</Flex>
 				) : (
 					<PopoverTrigger>{button}</PopoverTrigger>
 				)
@@ -95,10 +106,11 @@ const TextFilter: FC<IsActiveFilterProps> = ({ title, field, label }) => {
 
 			<PopModalCloseButton isMobile={isMobile} />
 			<PopModalBody isMobile={isMobile}>
-				<Input
+				<FilterInput
 					value={val}
-					size='sm'
 					onChange={handleChange}
+					// Enter applies, as it would in any search box.
+					onKeyDown={e => e.key === 'Enter' && handleClick()}
 					placeholder='Search value'
 				/>
 			</PopModalBody>

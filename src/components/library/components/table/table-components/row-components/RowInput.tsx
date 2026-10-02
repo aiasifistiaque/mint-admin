@@ -6,11 +6,10 @@ const RowInput: FC<InputProps> = ({ ...props }) => {
 		<Input
 			size={{ base: 'sm', md: 'xs' }}
 			borderRadius='lg'
-			color='text.500'
+			color='fg'
 			fontWeight='600'
 			borderColor='selectBorder.light'
 			_dark={{
-				color: 'gray.300',
 				borderColor: 'selectBorder.dark',
 			}}
 			boxShadow='sm'

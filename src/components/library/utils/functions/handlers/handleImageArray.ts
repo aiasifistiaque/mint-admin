@@ -78,6 +78,13 @@ const handleImageArray = ({
 			updatedData = Array.isArray(currentArray)
 				? currentArray.filter((item: any) => item !== e)
 				: [];
+		} else if (type === 'add-many') {
+			// Several images picked at once from the media library (see
+			// UploadModal's `multiSelect`) — e is the whole batch, not one item.
+			const base = Array.isArray(currentArray) ? currentArray : [];
+			const incoming: any[] = Array.isArray(e) ? e : [e];
+			const newOnes = incoming.filter(item => !base.includes(item));
+			updatedData = [...base, ...newOnes];
 		} else {
 			// For add operation, ensure we're not duplicating
 			if (Array.isArray(currentArray)) {

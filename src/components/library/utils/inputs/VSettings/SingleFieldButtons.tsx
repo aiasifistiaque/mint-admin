@@ -20,7 +20,7 @@ const SingleFieldButtons: FC<SingleFieldButtonsProps> = ({
 		<SpaceBetween mb={2}>
 			<Text
 				fontSize='sm'
-				color='gray.600'>
+				color='fg.muted'>
 				Field {i + 1}
 			</Text>
 			<Flex gap={1}>

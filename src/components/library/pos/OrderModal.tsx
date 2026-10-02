@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Button, useDisclosure, Grid, Flex, Heading, Drawer } from '@chakra-ui/react';
+import { Button, useDisclosure, Grid, Flex, Heading, Drawer, Portal } from '@chakra-ui/react';
 import { useColorMode } from '@/components/ui/color-mode';
 
 import PosInput from './PosInput';
@@ -102,7 +102,7 @@ const OrderModal = () => {
 	}, [isLoading]);
 
 	const { colorMode } = useColorMode();
-	const borderColor = colorMode === 'light' ? '#bbb' : 'stroke.deepD';
+	const borderColor = colorMode === 'light' ? 'border.emphasized' : 'stroke.deepD';
 
 	const renderLeftSection = (
 		<>
@@ -304,13 +304,17 @@ const OrderModal = () => {
 
 			{isSmallScreen ? (
 				<Drawer.Root
+					lazyMount
+					unmountOnExit
 					open={isOpen}
 					placement='bottom'
 					onOpenChange={e => (e.open ? onOpen() : onModalClose())}>
-					<Drawer.Backdrop />
-					<Drawer.Positioner>
-						<Drawer.Content>{drawerContent}</Drawer.Content>
-					</Drawer.Positioner>
+					<Portal>
+						<Drawer.Backdrop />
+						<Drawer.Positioner>
+							<Drawer.Content>{drawerContent}</Drawer.Content>
+						</Drawer.Positioner>
+					</Portal>
 				</Drawer.Root>
 			) : (
 				<GenericModal

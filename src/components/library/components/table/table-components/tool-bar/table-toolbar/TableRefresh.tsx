@@ -12,25 +12,21 @@ const TableRefresh = () => {
 	};
 
 	return (
-		<Tooltip.Root positioning={{ placement: 'top' }}>
+		<Tooltip.Root lazyMount positioning={{ placement: 'top' }}>
 			<Tooltip.Trigger asChild>
 				<IconButton
 					aria-label='Refresh'
 					h={sizes.SEARCH_BAR_HEIGHT}
 					w={sizes.SEARCH_BAR_HEIGHT}
+					minW={sizes.SEARCH_BAR_HEIGHT}
 					size='sm'
+					variant='outline'
 					borderRadius={radius?.BUTTON}
 					onClick={onReset}
-					colorPalette='gray'
-					borderWidth={1}
-					_dark={{
-						bg: 'container.dark',
-						borderColor: 'container.borderDark',
-					}}
-					_light={{
-						borderColor: 'container.borderLight',
-						bg: 'container.newLight',
-					}}>
+					color='fg.muted'
+					bg='field.bg'
+					borderColor='field.border'
+					_hover={{ bg: 'bg.subtle', color: 'fg', borderColor: 'border.emphasized' }}>
 					<Icon
 						name='refresh'
 						size={14}

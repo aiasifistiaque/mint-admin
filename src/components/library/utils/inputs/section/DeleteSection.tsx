@@ -1,9 +1,10 @@
 'use client';
 
-import { Button, IconButton, useDisclosure, Dialog } from '@chakra-ui/react';
-import { FC, useRef } from 'react';
+import { IconButton, useDisclosure } from '@chakra-ui/react';
+import { FC } from 'react';
 
 import { Icon } from '../../..';
+import PromptDialog from '../../../modals/modal-components/PromptDialog';
 
 type DeleteItemModalProps = {
 	idx: number;
@@ -14,7 +15,6 @@ type DeleteItemModalProps = {
 
 const DeleteSection: FC<DeleteItemModalProps> = ({ value, handleDataChange, name, idx }) => {
 	const { open: isOpen, onOpen, onClose } = useDisclosure();
-	const cancelRef = useRef<any>(undefined);
 
 	const closeItem = () => {
 		onClose();
@@ -42,48 +42,21 @@ const DeleteSection: FC<DeleteItemModalProps> = ({ value, handleDataChange, name
 		<>
 			<IconButton
 				variant='outline'
-				aria-label='delete-section'
+				aria-label='Delete'
 				size='xs'
 				colorPalette='red'
 				onClick={onOpen}>
-				<Icon
-					name='delete'
-					color='red'
-				/>
+				<Icon name='delete' />
 			</IconButton>
 
-			<Dialog.Root
+			<PromptDialog
 				open={isOpen}
-				onOpenChange={e => (e.open ? onOpen() : closeItem())}
-				role='alertdialog'>
-				<Dialog.Backdrop />
-				<Dialog.Positioner>
-					<Dialog.Content>
-						<Dialog.Header>Delete Section</Dialog.Header>
-						<Dialog.CloseTrigger />
-
-						<Dialog.Body>Are you sure? You {`can't`} undo this action afterwards.</Dialog.Body>
-
-						<Dialog.Footer>
-							<Button
-								ref={cancelRef}
-								onClick={closeItem}
-								size='sm'
-								colorPalette='gray'>
-								Discard
-							</Button>
-
-							<Button
-								colorPalette='red'
-								onClick={handleDelete}
-								ml={2}
-								size='sm'>
-								Delete
-							</Button>
-						</Dialog.Footer>
-					</Dialog.Content>
-				</Dialog.Positioner>
-			</Dialog.Root>
+				onClose={closeItem}
+				onConfirm={handleDelete}
+				tone='danger'
+				title='Delete this entry?'
+				description='It’s removed from the list; the change is kept when you save the record.'
+			/>
 		</>
 	);
 };

@@ -7,14 +7,11 @@ const AlignBox: FC<any> = ({ children, isSelected, ...props }) => {
 			p={2}
 			h='32px'
 			w='44px'
-			fontSize='14px'
+			fontSize='13px'
 			fontWeight='600'
 			borderWidth={2}
 			cursor='pointer'
-			borderColor={isSelected ? 'black' : 'container.borderLight'}
-			_dark={{
-				borderColor: isSelected ? '#fafafa' : 'border.dark',
-			}}
+			borderColor={isSelected ? 'fg' : 'border'}
 			borderRadius='md'
 			{...props}>
 			{children}

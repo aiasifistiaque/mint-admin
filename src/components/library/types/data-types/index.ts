@@ -18,7 +18,22 @@ export type ViewDataType =
 	| 'data-array-tag'
 	| 'data-array-count'
 	| 'custom-attribute'
-	| 'custom-section-array';
+	| 'custom-section-array'
+	// WO-10: real view kinds the registry needs that weren't declared yet
+	| 'editor'
+	| 'basic-editor'
+	| 'section-data-array'
+	// A model builder Section: one object of its own fields.
+	| 'section-object'
+	// WO-15: renderViewItem.tsx already had working cases for these, just never
+	// declared in the union
+	| 'array-tag'
+	| 'external-link'
+	| 'date-only'
+	| 'number'
+	| 'data-tag'
+	// Masked until the eye is pressed (SecretValue).
+	| 'password';
 
 export type TableDataFieldType =
 	| 'date'
@@ -35,4 +50,5 @@ export type TableDataFieldType =
 	| 'file'
 	| 'text'
 	| 'data-array-count'
-	| 'external-link';
+	| 'external-link'
+	| 'password';

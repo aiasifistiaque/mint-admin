@@ -1,16 +1,20 @@
 'use client';
 import { FC } from 'react';
 import { Textarea, TextareaProps } from '@chakra-ui/react';
-import { FormControl } from '../..';
+import { FormControl, styles } from '../..';
 
 type InputContainerProps = TextareaProps & {
 	label: string;
 	isRequired?: boolean;
 	helper?: string;
 	placeholder?: any;
+	// FormInput hands these to every field input; stripped before the DOM spread.
+	formData?: any;
+	setFormData?: any;
+	setChangedData?: any;
 };
 
-const MIN_H = '200px';
+const MIN_H = '180px';
 
 const VTextarea: FC<InputContainerProps> = ({
 	label,
@@ -18,6 +22,10 @@ const VTextarea: FC<InputContainerProps> = ({
 	placeholder,
 	value,
 	helper,
+	// FormInput's form-state props — not DOM attributes, so keep them out of `...props`.
+	formData: _formData,
+	setFormData: _setFormData,
+	setChangedData: _setChangedData,
 	...props
 }) => {
 	return (
@@ -33,18 +41,11 @@ const VTextarea: FC<InputContainerProps> = ({
 				}}
 				minH={MIN_H}
 				size='sm'
-				px={3}
-				pt={2}
-				fontSize='14px'
-				borderRadius='lg'
-				color='text.500'
-				_dark={{
-					color: 'text.dark',
-					borderColor: 'selectBorder.dark',
-					_placeholder: { color: 'text.inputPlaceholder.dark' },
-				}}
+				{...(styles.FIELD as TextareaProps)}
+				py={2.5}
+				lineHeight='1.6'
+				resize='vertical'
 				placeholder={placeholder ? placeholder : label}
-				_placeholder={{ fontSize: 14 }}
 				value={value}
 				{...props}
 			/>

@@ -5,7 +5,10 @@ const FilterSectionContainer = ({ children }: { children: ReactNode }) => {
 	return (
 		<Flex
 			pb={2}
-			gap={1}
+			// The chips no longer set their own mr/mb, so this is the only thing
+			// spacing them — and it spaces both axes equally, which the old
+			// gap-plus-margin combination did not.
+			gap={2}
 			flexWrap='wrap'>
 			{children}
 		</Flex>

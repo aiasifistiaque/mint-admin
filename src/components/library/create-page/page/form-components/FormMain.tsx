@@ -3,16 +3,13 @@ import {
 	FormDivision,
 	FormInput,
 	getFieldValue,
-	handleChange,
-	handleImage,
-	handleSwitch,
-	handleImageArray,
-	handleNestedImage,
-	handleNestedString,
+	getOnChangeHandler as resolveOnChangeHandler,
 	FormDivisionAccordion,
 	FormItemAccordion,
 } from '../../..';
 import { Accordion, Text } from '@chakra-ui/react';
+import { hiddenFormFields } from '../../../functions/formRules';
+import { withFormulaValues } from '../../../functions/formula';
 
 type FormMainType = {
 	fields: any;
@@ -46,35 +43,11 @@ const FormMain: FC<FormMainType> = ({
 		return sections;
 	}, [fields]);
 
-	const getOnChangeHandler = (type: string, key?: string) => {
-		const params = { formData, setFormData, setChangedData };
-
-		switch (type) {
-			case 'image':
-				return (e: any) => handleImage({ e, dataKey: key || 'image', ...params });
-			case 'icon':
-				return (e: any) => handleImage({ e, dataKey: key || 'icon', ...params });
-			case 'switch':
-			case 'image-array':
-				return (e: any, type?: string) =>
-					handleImageArray({ e, dataKey: key || 'image', type, ...params });
-			case 'checkbox':
-				return (e: any) => handleSwitch({ e, ...params });
-			case 'nested-image':
-				return (e: any) => handleNestedImage({ e, dataKey: key || 'image', ...params });
-			case 'nested-string':
-				return (e: any) => handleNestedString({ e, ...params });
-			case 'nested-select':
-				return (e: any) => handleNestedString({ e, ...params });
-			case 'nested-data-menu':
-				return (e: any) => handleNestedString({ e, ...params });
-			case 'video':
-				return (e: any) => handleImage({ e, dataKey: key || 'image', ...params });
-
-			default:
-				return (e: any) => handleChange({ e, ...params });
-		}
-	};
+	// WO-12: was a local duplicate of functions/getOnChangeHandler.ts that had
+	// drifted (extra icon/video cases FormPage.tsx's copy never got). Both shells
+	// now call the one shared resolver.
+	const getOnChangeHandler = (type: string, key?: string) =>
+		resolveOnChangeHandler({ type, key, formData, setFormData, setChangedData });
 
 	// return <Text>{JSON.stringify(fields)}</Text>;
 
@@ -130,26 +103,26 @@ const FormMain: FC<FormMainType> = ({
 		);
 	};
 
-	const evaluateCondition = (item: any, formData: any) => {
-		const condition = item?.renderIf;
-		if (!condition) return false;
-		const { field, operator, value } = condition;
-		switch (operator) {
-			case 'eq':
-				return formData[field] !== value;
-			default:
-				return true;
-		}
-	};
+	// Conditional fields (functions/formRules.ts): hidden while their rule
+	// doesn't hold. Rules chain — a hidden field reads as empty to the rules
+	// that depend on it — so if A shows B and B shows C, clearing A hides both.
+	const hidden = hiddenFormFields(fields, formData);
+
+	// Formula inputs show their value from the form as it will be saved: every
+	// formula calculated, so one that uses another reads its result, not 0.
+	const calculated = useMemo(() => withFormulaValues(formData, fields), [formData, fields]);
 
 	return (
 		<Accordion.Root
-			gap={4}
+			display='flex'
+			flexDirection='column'
+			gap={isModal ? 0 : 4}
 			multiple
 			defaultValue={sections.map((_, i) => String(i))}>
 			{sections.map((section: any, i: number) => (
 				<FormDivisionAccordion
-					title={section?.[0]?.sectionTitle || 'Section Title'}
+					title={section?.[0]?.sectionTitle || (sections.length > 1 ? `Section ${i + 1}` : 'Details')}
+					description={section?.[0]?.sectionTitle ? section?.[0]?.description : undefined}
 					value={String(i)}
 					key={i}
 					isModal={isModal}>
@@ -157,14 +130,14 @@ const FormMain: FC<FormMainType> = ({
 						<FormItemAccordion
 							collapsible={true}
 							isHidden={
-								evaluateCondition(item, formData) ||
+								hidden.has(item?.name) ||
 								(item?.renderCondition && !item?.renderCondition(formData))
 							}
 							item={item}
 							key={i}>
 							<>
 								<FormInput
-									formData={formData}
+									formData={item?.type === 'formula' ? calculated : formData}
 									setFormData={setFormData}
 									setChangedData={setChangedData}
 									isRequired={item?.isRequired || false}

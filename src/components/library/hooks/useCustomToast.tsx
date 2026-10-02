@@ -12,6 +12,11 @@ type ToastProps = {
 	isLoading: boolean;
 };
 
+// Chakra's toaster renders with flushSync, which React refuses inside an
+// effect ("flushSync was called from inside a lifecycle method") — the toast
+// could be dropped. Queued after the commit, it always shows.
+const show = (options: Parameters<typeof toaster.create>[0]) => queueMicrotask(() => toaster.create(options));
+
 const useCustomToast = ({
 	isError,
 	isSuccess,
@@ -24,7 +29,7 @@ const useCustomToast = ({
 		if (isLoading) return;
 
 		if (isError) {
-			toaster.create({
+			show({
 				title: 'Error',
 				description: error?.data?.message || 'An error occurred',
 				type: 'error',
@@ -37,7 +42,7 @@ const useCustomToast = ({
 		if (isLoading) return;
 
 		if (isSuccess) {
-			toaster.create({
+			show({
 				title: successTitle || 'Success',
 				description: successText || 'Operation completed successfully',
 				type: 'success',

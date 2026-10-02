@@ -1,23 +1,25 @@
 import { FC, ReactNode } from 'react';
 import { Dialog } from '@chakra-ui/react';
+import { styles } from '../../config';
 
 type CustomModalFooterProps = {
 	children?: ReactNode;
 	[key: string]: any;
 };
 
-const CustomModalFooter: FC<CustomModalFooterProps> = ({ children, ...props }) => {
-	return (
-		<Dialog.Footer
-			borderTopWidth={1}
-			borderColor='container.borderLight'
-			_dark={{ borderColor: 'border.dark' }}
-			borderBottomRadius='2xl'
-			py={3}
-			{...props}>
-			{children}
-		</Dialog.Footer>
-	);
-};
+/**
+ * The footer every modal uses — the actions, right-aligned on a tinted ledge
+ * under a hairline. Put the buttons straight in (DiscardButton, then the
+ * primary Button, both size sm); the spacing is here, so no wrapper is
+ * needed. Its look is `styles.MODAL_FOOTER`: change it there and every
+ * modal follows.
+ */
+const CustomModalFooter: FC<CustomModalFooterProps> = ({ children, ...props }) => (
+	<Dialog.Footer
+		{...(styles.MODAL_FOOTER as any)}
+		{...props}>
+		{children}
+	</Dialog.Footer>
+);
 
 export default CustomModalFooter;

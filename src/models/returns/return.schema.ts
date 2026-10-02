@@ -32,7 +32,9 @@ export const adjustmentSchema: Schema = {
 	},
 	reason: {
 		label: 'Reason',
-		type: 'multi-select',
+		// 'multi-select' is quarantined (PLANNED_FIELD_TYPES) until WO-34 — it fell
+		// through to a plain text box before too, so 'text' is behavior-identical.
+		type: 'text',
 		sort: true,
 		default: true,
 		displayInTable: true,

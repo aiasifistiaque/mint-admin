@@ -1,6 +1,5 @@
 import { FC, ReactNode } from 'react';
 import { Dialog } from '@chakra-ui/react';
-import { radius } from '../../config';
 
 type CustomModalHeaderProps = {
 	children?: ReactNode;
@@ -10,11 +9,14 @@ type CustomModalHeaderProps = {
 const CustomModalHeader: FC<CustomModalHeaderProps> = ({ children, ...props }) => {
 	return (
 		<Dialog.Header
-			_dark={{ bg: 'menu.dark', borderColor: 'border.containerDark', borderBottomWidth: 1 }}
-			borderTopRadius={radius.MODAL}
+			px={{ base: 4, md: 6 }}
+			pt={{ base: 4, md: 5 }}
+			pb={{ base: 3, md: 4 }}
 			fontWeight='600'
-			fontSize='1rem'
-			h='80px'
+			fontSize='16px'
+			letterSpacing='-0.01em'
+			color='text.light'
+			_dark={{ color: 'text.dark' }}
 			{...props}>
 			{children}
 		</Dialog.Header>

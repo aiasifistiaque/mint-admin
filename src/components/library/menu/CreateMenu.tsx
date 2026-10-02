@@ -7,10 +7,11 @@ import { useColorMode } from '@/components/ui/color-mode';
 
 const CreateMenu = () => {
 	const { colorMode } = useColorMode();
-	const color = colorMode === 'light' ? 'white' : '#111';
+	const color = 'accent.contrast';
 	return (
 		<Menu.Root>
 			<Tooltip.Root
+				lazyMount
 				openDelay={200}
 				closeDelay={100}
 				positioning={{ placement: 'bottom' }}>

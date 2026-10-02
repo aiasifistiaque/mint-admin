@@ -1,5 +1,8 @@
 import { FC, ReactNode } from 'react';
 import { Table, TextProps } from '@chakra-ui/react';
+import { theme } from '../../../..';
+
+const { TABLE } = theme;
 
 type RowContainerMdProps = TextProps & {
 	children: ReactNode;
@@ -8,8 +11,13 @@ type RowContainerMdProps = TextProps & {
 const RowContainerMd: FC<RowContainerMdProps> = ({ children, ...props }) => {
 	return (
 		<Table.Row
-			h='60px'
+			h={TABLE.row.height}
 			bg='table.row.light'
+			transition='background-color .12s ease'
+			_hover={{
+				bg: TABLE.row.hover.light,
+				_dark: { bg: TABLE.row.hover.dark },
+			}}
 			_dark={{
 				bg: 'table.row.dark',
 				borderBottomColor: 'table.innerBorder.dark',

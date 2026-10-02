@@ -1,0 +1,272 @@
+'use client';
+
+import UserGuide from '../_components/UserGuide';
+import { A, C, H3, List, Note, P, Section, Terms } from '../../docs/_components/prose';
+
+/**
+ * The model builder for projects. Section ids mirror the platform's builder
+ * guide (models, models-*, features) — the model builder's "How it works"
+ * links land here through panel.ts docsPath. Keep them.
+ */
+
+const SECTIONS = [
+	{ id: 'models', title: 'What a model is' },
+	{ id: 'models-wizard', title: 'Creating a model' },
+	{ id: 'models-names', title: 'Names and addresses' },
+	{ id: 'models-code', title: 'Record codes' },
+	{ id: 'models-fields', title: 'Fields' },
+	{ id: 'models-sections', title: 'Sections and lists' },
+	{ id: 'formulas', title: 'Calculated fields' },
+	{ id: 'models-links', title: 'Linking models' },
+	{ id: 'models-access', title: 'Who sees the records' },
+	{ id: 'changing', title: 'Changing a model' },
+	{ id: 'features', title: 'Features built by AI' },
+	{ id: 'faq', title: 'Troubleshooting' },
+];
+
+const Models = () => (
+	<UserGuide
+		href='/user-docs/models'
+		sections={SECTIONS}
+		open={{ href: '/model-builder', label: 'Open Models' }}>
+		<Section
+			id='models'
+			title='What a model is'
+			lead='A kind of thing your project keeps — customers, products, bookings, invoices.'>
+			<P>
+				A model is a list of fields. Creating one gives your project everything around it at once: a page in the sidebar with
+				a table, search and filters, an add and edit form, a page for each record, a place on the dashboard builder, a
+				permission for roles, and — if you want it — a <A href='/user-docs/public-api'>public API</A>. Nothing to deploy;
+				it’s live as soon as it’s created.
+			</P>
+			<P>
+				Models live under <strong>Build → Models</strong> and need the <em>Build</em> permission. They belong to the open
+				project only.
+			</P>
+		</Section>
+
+		<Section
+			id='models-wizard'
+			title='Creating a model'
+			lead='New model opens a step-by-step wizard. Nothing is created until the last step.'>
+			<List
+				ordered
+				items={[
+					<>
+						<strong>Model</strong> — its title, record code and fields.
+					</>,
+					<>
+						<strong>Settings</strong> — which fields are required, editable, searchable and sortable.
+					</>,
+					<>
+						<strong>Config</strong> — the page: its heading, add and export buttons, the ⋯ menu on each row, bulk actions.
+					</>,
+					<>
+						<strong>Form</strong> — the add/edit form’s sections and rows.
+					</>,
+					<>
+						<strong>Table</strong> — the columns and their order.
+					</>,
+					<>
+						<strong>View</strong> — the record’s own page: its sections and the records linked to it.
+					</>,
+					<>
+						<strong>Filters</strong> — the filter chips above the table.
+					</>,
+					<>
+						<strong>Sidebar & create</strong> — the sidebar section for its page, a summary, and <strong>Create model</strong>
+						.
+					</>,
+				]}
+			/>
+			<P>
+				Every step after the first starts from sensible suggestions made from your fields, so you can press{' '}
+				<strong>Next</strong> through them and change things later in <A href='/user-docs/pages'>Pages</A>. Going back and
+				adding a field adds it everywhere; your other changes stay. Progress is kept in your browser, so a reload carries on
+				where you were — <em>Start over</em> clears it.
+			</P>
+			<Note>
+				Rather describe it? <A href='/user-docs/connect-ai'>Connect your own AI</A> — Claude, ChatGPT and others can plan and
+				build models in your project from a conversation.
+			</Note>
+		</Section>
+
+		<Section
+			id='models-names'
+			title='Names and addresses'>
+			<P>
+				From a title like “Invoices” the builder makes the name <C>Invoice</C> and the address <C>invoices</C> — the page’s
+				address in the panel and the model’s in the public API. If the project already has a model by that name, a number is
+				added (<C>Invoice2</C>) and shown before you save. Other projects don’t matter: each has its own names.
+			</P>
+			<P>The name and address are fixed once the model exists. The title can change any time.</P>
+		</Section>
+
+		<Section
+			id='models-code'
+			title='Record codes'>
+			<P>
+				<strong>Give every record a code</strong> numbers records as they’re created: a prefix, a dash and a padded number,
+				like <C>INV-0001</C>. Two records created at the same moment never share one. Turning codes on for a model that has
+				records gives them codes, oldest first; a new prefix applies from then on.
+			</P>
+		</Section>
+
+		<Section
+			id='models-fields'
+			title='Fields'
+			lead='Each field has a label, a key, a kind, and whether it’s required.'>
+			<P>
+				The key is the field’s name in the API — filled in from the label until you change it. The chevron opens more:
+				unique, searchable, shown in the table, min/max, allowed values, a default and help text for the form.
+			</P>
+			<Terms
+				head={['Kind', 'Holds · shows as']}
+				rows={[
+					['Text', 'A line of text · searchable, sortable'],
+					['Long text / Rich text', 'Paragraphs / formatted text with headings, lists and links'],
+					['Email', 'An email address, checked and lower-cased'],
+					['Link', 'A web address, checked · opens in a new tab'],
+					['Number', 'A number, with optional min/max'],
+					['Formula', 'A number worked out from other fields (see below)'],
+					['Yes / No', 'A switch · a Yes/No filter'],
+					['Date', 'A date; the default can be “when created”'],
+					['Color', 'A colour, with a picker'],
+					['Options', 'One of the values you list (a dropdown) — or several, with “Allow several”'],
+					['Tags', 'A list of words, free or from allowed values'],
+					['Image / Images', 'One uploaded picture / a gallery · from your Media'],
+					['File / Files', 'Uploaded documents · download links'],
+					['Video', 'An uploaded video'],
+					['Link to a record / records', 'One or more records of another model — a booking’s guest, a post’s tags'],
+					['Section / Section list', 'A group of fields, or rows of them (see below)'],
+				]}
+			/>
+			<List
+				items={[
+					<>
+						<strong>Allowed values</strong>: the only values the field takes; the form offers them as a list. Anything else is
+						refused.
+					</>,
+					<>
+						<strong>Default</strong>: what a new record starts with — prefilled in the form, and used when your API call
+						leaves it out.
+					</>,
+					<>
+						Some keys are reserved: <C>_id</C>, <C>code</C>, <C>createdAt</C>, <C>updatedAt</C>, <C>customer</C>, and
+						secret-looking names like <C>password</C> or <C>token</C>. Every model gets <C>createdAt</C> and <C>updatedAt</C>{' '}
+						on its own.
+					</>,
+				]}
+			/>
+		</Section>
+
+		<Section
+			id='models-sections'
+			title='Sections and lists'>
+			<P>
+				A <strong>Section</strong> groups fields under one key — an address with street, city and postcode. A{' '}
+				<strong>Section list</strong> is rows of the same fields, as many as needed — an invoice’s lines, each with an item,
+				quantity, rate and total. Choosing either opens its own field editor, starting from an example you can change; the
+				row’s “5 fields: …” button opens it again. Inside, fields can be text, long text, email, link, colour, number,
+				formula, yes/no, date, options, image or file.
+			</P>
+		</Section>
+
+		<Section
+			id='formulas'
+			title='Calculated fields'
+			lead='A Formula field works itself out from other number fields.'>
+			<P>
+				Build it from the field list, the operators (+ − × ÷ %, brackets) and functions (<C>round</C>, <C>floor</C>,{' '}
+				<C>ceil</C>, <C>abs</C>, <C>min</C>, <C>max</C>), or type it: <C>total - paid</C>,{' '}
+				<C>round(price * qty * 1.05, 2)</C>. Over a section list, <C>sum(items.total)</C>, <C>avg(items.total)</C> and{' '}
+				<C>count(items)</C>; a formula inside a row uses that row’s values (<C>quantity * rate</C>). <em>Try it</em> works it
+				out on sample numbers.
+			</P>
+			<P>
+				A formula field can’t be typed into: forms show the result as you type, and the server calculates it on every save —
+				from the panel and from your API alike. Changing a formula recalculates existing records. Empty counts as 0; dividing
+				by 0 leaves it empty.
+			</P>
+		</Section>
+
+		<Section
+			id='models-links'
+			title='Linking models'
+			lead='A “Link to a record” field connects two models.'>
+			<P>
+				A booking links to its guest; an order to its customer; a page to its parent page. The form shows a picker, the table
+				shows the linked record by its <strong>display field</strong> (the first text field unless you choose), and the linked
+				record’s page can list everything pointing at it as a tab — a guest’s bookings. A model others link to can’t be
+				deleted until those fields are removed.
+			</P>
+		</Section>
+
+		<Section
+			id='models-access'
+			title='Who sees the records'
+			lead='Your role and your projects decide — not per model or per record.'>
+			<P>
+				In your organization, a model’s records are open to everyone who can open the project and whose role has{' '}
+				<em>Records: View</em> (Add, Edit and Delete likewise). To keep people to some work, give them only the projects it’s
+				in — see <A href='/user-docs/organization#project-access'>Which projects people open</A>. Records private to the
+				person who made them aren’t available in projects yet.
+			</P>
+			<P>
+				For the people using your site or app it’s different: a public model can be set to{' '}
+				<A href='/user-docs/public-api#who'>customers’ own records only</A>, so each customer sees just what they created.
+			</P>
+		</Section>
+
+		<Section
+			id='changing'
+			title='Changing a model'
+			lead='Open it from Build → Models. Changes apply as soon as you save.'>
+			<List
+				items={[
+					'Adding a field is always safe; it appears in the table, form, detail page and filters straight away.',
+					'Removing a field hides it: the values stay in the records but aren’t shown or returned. Add it back to see them.',
+					'Changing a field’s kind is flagged: old values stay as they were and may not read correctly as the new kind.',
+					'Making a field unique fails if records already share a value — you’re told which.',
+					'Every change is kept as a version before it’s applied.',
+				]}
+			/>
+			<H3>Disabling and deleting</H3>
+			<P>
+				<strong>Disable</strong> takes the page away but keeps the model and its records. <strong>Delete</strong> removes the
+				model, its page and its sidebar entry; its records stay unless you tick “Also delete its records” and type the model’s
+				name.
+			</P>
+		</Section>
+
+		<Section
+			id='features'
+			title='Features built by AI'
+			lead='Several linked models at once — a whole feature from one description.'>
+			<P>
+				When your <A href='/user-docs/connect-ai'>connected AI</A> builds a feature — say “bookings with guests, rooms and
+				payments” — it makes the models, the links between them and the tabs on their pages in one go, all or nothing.{' '}
+				<strong>Models → Features</strong> lists every feature built, with links to what it made. Everything it made can be
+				changed afterwards like any other model.
+			</P>
+		</Section>
+
+		<Section
+			id='faq'
+			title='Troubleshooting'>
+			<Terms
+				head={['Symptom', 'Why, and what to do']}
+				rows={[
+					['There’s no Build section', 'Your role lacks the Build permission.'],
+					['The name got a 2 on the end', 'The project already has a model by that name. Change the title, or keep it.'],
+					['“Isn’t a number field” in a formula', 'Formulas only use number (and formula) fields.'],
+					['Making a field unique failed', 'Some records share a value. Fix them, then try again.'],
+					['I can’t delete a model', 'Another model links to it. Remove that link field first.'],
+					['A teammate doesn’t see the new page', 'Their role needs Records: View, and the project must be one of theirs.'],
+				]}
+			/>
+		</Section>
+	</UserGuide>
+);
+
+export default Models;

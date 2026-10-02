@@ -1,44 +1,42 @@
-import { useState, ChangeEvent, useEffect } from 'react';
-import { Grid } from '@chakra-ui/react';
+import { ChangeEvent } from 'react';
+import { Flex } from '@chakra-ui/react';
 
-import { Icon, FilterSelect, FilterInput } from '../../..';
+import { FilterSelect, FilterInput } from '../../..';
 
-const InTheLast = ({ setVal }: { setVal: (val: string) => void }) => {
-	const [value, setValue] = useState<number>(1);
-	const [condition, setCondition] = useState<string>('days');
+type InTheLastProps = {
+	/** `<unit>_<count>`, e.g. `days_7` — the shape the API expects. */
+	value: string;
+	setVal: (val: string) => void;
+};
 
-	const handleValue = (e: ChangeEvent<HTMLInputElement>) => {
-		const newValue = parseInt(e.target.value);
-		setValue(newValue);
+const InTheLast = ({ value, setVal }: InTheLastProps) => {
+	const [unit = 'days', count = ''] = value.split('_');
+
+	const handleCount = (e: ChangeEvent<HTMLInputElement>) => {
+		setVal(`${unit}_${e.target.value}`);
 	};
 
-	const handleCondition = (e: ChangeEvent<HTMLSelectElement>) => {
-		const newCondition = e.target.value;
-		setCondition(newCondition);
+	const handleUnit = (e: { target: { value: string } }) => {
+		setVal(`${e.target.value}_${count}`);
 	};
-
-	useEffect(() => {
-		setVal(`${condition}_${value}`);
-	}, [value, condition]);
 
 	return (
-		<Grid
-			gap={2}
-			px={1}
-			gridTemplateColumns='.6fr 2fr 4fr 2fr'>
-			<Icon name='arrow' />
+		<Flex gap={2}>
 			<FilterInput
 				type='number'
-				value={value}
-				onChange={handleValue}
+				min={1}
+				w='72px'
+				flexShrink={0}
+				value={count}
+				onChange={handleCount}
 			/>
 			<FilterSelect
-				value={condition}
-				onChange={handleCondition}>
+				value={unit}
+				onChange={handleUnit}>
 				<option value='days'>days</option>
 				<option value='months'>months</option>
 			</FilterSelect>
-		</Grid>
+		</Flex>
 	);
 };
 

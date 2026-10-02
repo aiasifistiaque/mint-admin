@@ -1,41 +1,47 @@
-import { useState, ChangeEvent } from 'react';
+import { ChangeEvent } from 'react';
 import { Flex, Text } from '@chakra-ui/react';
 
 import { FilterInput } from '../../..';
 
-const BetweenDates = ({ setVal }: { setVal: (val: string) => void }) => {
-	const [start, setStart] = useState<any>();
-	const [end, setEnd] = useState<any>();
+type BetweenDatesProps = {
+	/** `<start>_<end>`; either side may be empty while it's being filled in. */
+	value: string;
+	setVal: (val: string) => void;
+};
+
+// Stacked rather than side by side: two native date inputs don't fit on one
+// line in the popover without clipping their text.
+const BetweenDates = ({ value, setVal }: BetweenDatesProps) => {
+	const [start = '', end = ''] = value.split('_');
 
 	const handleStart = (e: ChangeEvent<HTMLInputElement>) => {
-		const newDate = e.target.value;
-		setStart(newDate);
-		setVal(`${newDate}_${end}`);
+		setVal(`${e.target.value}_${end}`);
 	};
 
 	const handleEnd = (e: ChangeEvent<HTMLInputElement>) => {
-		const newDate = e.target.value;
-		setEnd(newDate);
-		setVal(`${start}_${newDate}`);
+		setVal(`${start}_${e.target.value}`);
 	};
 
 	return (
 		<Flex
-			alignItems='center'
-			gap={1}
-			justifyContent='space-between'>
+			flexDir='column'
+			gap={1.5}>
 			<FilterInput
-				flex={1}
 				date
 				value={start}
+				max={end || undefined}
 				onChange={handleStart}
-				w='100%'
 			/>
-			<Text>{`&`}</Text>
+			<Text
+				fontSize='12px'
+				color='fg.muted'
+				lineHeight={1}>
+				and
+			</Text>
 			<FilterInput
 				date
-				flex={1}
 				value={end}
+				min={start || undefined}
 				onChange={handleEnd}
 			/>
 		</Flex>

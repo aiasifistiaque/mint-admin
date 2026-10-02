@@ -1,16 +1,13 @@
 'use client';
 
-import { FC, useRef } from 'react';
+import { FC } from 'react';
 import {
-	NativeSelectRoot,
-	NativeSelectField,
 	Input,
 	InputProps,
 	Flex,
-	Box,
 } from '@chakra-ui/react';
 import { FormControl } from '..';
-import { Icon } from '../../..';
+import Dropdown from '../../../cl/Dropdown';
 
 type InputContainerProps = InputProps & {
 	label: string;
@@ -19,6 +16,10 @@ type InputContainerProps = InputProps & {
 	value: string | number | undefined;
 	placeholder?: any;
 	options: number[];
+	// FormInput hands these to every field input; stripped before the DOM spread.
+	formData?: any;
+	setFormData?: any;
+	setChangedData?: any;
 };
 
 const VFontSize: FC<InputContainerProps> = ({
@@ -28,12 +29,12 @@ const VFontSize: FC<InputContainerProps> = ({
 	value,
 	helper,
 	options,
+	// FormInput's form-state props — not DOM attributes, so keep them out of `...props`.
+	formData: _formData,
+	setFormData: _setFormData,
+	setChangedData: _setChangedData,
 	...props
 }) => {
-	const ref = useRef<HTMLSelectElement>(null);
-	const onRefClick = () => {
-		ref.current?.click();
-	};
 	return (
 		<FormControl
 			isRequired={isRequired}
@@ -41,39 +42,25 @@ const VFontSize: FC<InputContainerProps> = ({
 			helper={helper}>
 			<Flex {...inputGroupCss}>
 				<Input
-					onClick={onRefClick}
 					{...inputCss}
 					placeholder={placeholder ? placeholder : label}
 					value={value}
 					{...props}
 				/>
 
-				<NativeSelectRoot {...selectCss}>
-					<NativeSelectField
-						ref={ref}
-						value={value}
-						onChange={props.onChange as any}
-						name={props.name}>
+				<Dropdown
+					{...selectCss}
+					hideValue
+					value=''
+					onChange={v => props.onChange?.({ target: { name: props.name, value: v } } as any)}>
+					{options.map((option: any, i: number) => (
 						<option
-							value=''
-							disabled>
-							{value}
+							key={i}
+							value={option}>
+							{option}
 						</option>
-						{options.map((option: any, i: number) => (
-							<option
-								key={i}
-								value={option}>
-								{option}
-							</option>
-						))}
-					</NativeSelectField>
-					<Box
-						position='absolute'
-						right={2}
-						pointerEvents='none'>
-						<Icon name='select' />
-					</Box>
-				</NativeSelectRoot>
+					))}
+				</Dropdown>
 			</Flex>
 		</FormControl>
 	);
@@ -92,10 +79,8 @@ const inputCss: any = {
 };
 
 const selectCss: any = {
-	w: '40px',
-	borderRadius: 'lg',
-	borderLeftRadius: 0,
-	position: 'relative',
+	w: '44px',
+	flexShrink: 0,
 };
 
 //const options = [10, 11, 12, 13, 14, 15, 16, 18, 20, 24, 32, 36, 40, 48, 64, 96, 128];

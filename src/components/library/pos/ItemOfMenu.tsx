@@ -18,8 +18,8 @@ const ItemOfMenu: FC<ItemOfMenuProps> = ({ children, filter, id, ...props }) => 
 	const { filters } = useAppSelector((state: any) => state.table);
 	const { colorMode } = useColorMode();
 	const hoverBg = colorMode === 'dark' ? 'hover.dark' : 'hover.light';
-	const itemBg = colorMode === 'dark' ? 'brand.200' : 'brand.500';
-	const itemColor = colorMode === 'dark' ? '#4a4a4a' : 'white';
+	const itemBg = 'accent.solid';
+	const itemColor = 'accent.contrast';
 
 	const isActive = (id: string): boolean => {
 		return filters[filter] === id;

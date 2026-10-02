@@ -18,7 +18,7 @@ const BuilderEditButton: FC<BuilderEditButtonProps> = ({
 	btnType = 'edit',
 	...props
 }) => {
-	const color = btnType === 'edit' ? '#333' : 'crimson';
+	const color = btnType === 'edit' ? 'fg' : 'fg.error';
 	return (
 		<Button
 			{...buttonCSS}

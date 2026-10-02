@@ -76,31 +76,66 @@
   }
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+/* The `* { margin: 0; padding: 0; box-sizing: border-box }` reset that used to
+   live here is already part of Chakra's preflight, which puts it in the `reset`
+   cascade layer. This copy was unlayered, and unlayered author styles beat every
+   layered one — so it silently zeroed the padding of every Chakra recipe,
+   app-wide. Buttons only looked right where a `px` prop happened to be passed by
+   hand. Deleting it lets the recipes apply; the reset itself is unchanged. */
 
-html,
 body {
-  max-width: 100vw;
+  /* Only on body, never on html. `overflow-x: hidden` forces the other axis
+     from `visible` to `auto`, so putting it on html turned html into the
+     scroll container — and a dialog's scroll lock, which works by setting
+     `overflow: hidden` on body, then had nothing to stop, letting the page
+     scroll behind an open drawer. Left here, body's overflow propagates to the
+     viewport: it still clips horizontally, and the lock actually holds.
+
+     The scrollbar's width is left to the dialog's own compensation, which adds
+     a matching padding-right to body while locked. Reserving it here with
+     `scrollbar-gutter` instead does not survive that propagation. */
   overflow-x: hidden;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+html {
+  /* Matches body so the scrollbar track never shows a contrasting strip. */
+  background: var(--chakra-colors-bg);
 }
 
-a {
+body {
+  /* Follow the app's own light/dark toggle. This used to read
+     `prefers-color-scheme`, so a user on an OS dark theme got a black body
+     behind a light UI — visible as a black strip down the right whenever a
+     modal locked scrolling and narrowed the content. */
+  color: var(--chakra-colors-fg);
+  background: var(--chakra-colors-bg);
+}
+
+/* Not on buttons: a Button rendered as a link (`asChild` + NextLink) is an <a>
+   with the button's classes, and this unlayered rule beats Chakra's layered
+   button recipe — its text took the parent's colour, e.g. near-white on the
+   dark theme's white solid button, so the label vanished. */
+a:not(.chakra-button) {
   color: inherit;
   text-decoration: none;
+}
+a.chakra-button {
+  text-decoration: none;
+}
+
+/* A click or double-click on a picture painted it with the blue text-selection
+   highlight, and a small drag pulled out a ghost copy. Pictures are never text
+   to copy here; anything draggable is dragged by its own element. */
+img {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Phones flashed a grey box over whatever was tapped; every control here has
+   its own pressed state. */
+html {
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -109,10 +144,22 @@ a {
   }
 }
 
-input,
-textarea,
-select {
-  font-size: 16px;
+/*
+ * iOS Safari zooms the whole page when you focus a control whose text is under
+ * 16px, so this floor exists for a real reason — but it was unscoped, and an
+ * unlayered element selector beats every layered Chakra recipe no matter how
+ * specific. That made it win over the design system on desktop too, pinning
+ * comboboxes, native selects and any input that takes its size from a recipe
+ * at 16px beside 13px fields.
+ *
+ * Limited to coarse pointers, which is exactly where the zoom happens.
+ */
+@media (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
 }
 
 /* Quill Image Resize Styles */

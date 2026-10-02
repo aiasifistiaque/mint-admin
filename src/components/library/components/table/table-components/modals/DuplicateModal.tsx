@@ -5,22 +5,38 @@ import { useEffect, FC, useRef } from 'react';
 
 import { useCopyItemMutation } from '../../../../store';
 import { useCustomToast, MenuItem } from '../../../..';
+import ModalFooter from '../../../../modals/modal-components/CustomModalFooter';
 
 type DeleteItemModalProps = {
 	title?: string;
 	id: string;
 	path: string;
+	// Controlled mode: when `open` is passed, the dialog's open state is driven
+	// by the caller instead of an internal useDisclosure, and no trigger is
+	// rendered — used by TableMenu so the dialog lives outside the dropdown
+	// menu's own mount lifecycle.
+	open?: boolean;
+	onClose?: () => void;
 };
 
-const DuplicateModal: FC<DeleteItemModalProps> = ({ title, path, id }) => {
-	const { open: isOpen, onOpen, onClose } = useDisclosure();
+const DuplicateModal: FC<DeleteItemModalProps> = ({
+	title,
+	path,
+	id,
+	open: controlledOpen,
+	onClose: onControlledClose,
+}) => {
+	const isControlled = controlledOpen !== undefined;
+	const { open: internalOpen, onOpen, onClose: internalOnClose } = useDisclosure();
+	const isOpen = isControlled ? controlledOpen : internalOpen;
 	const cancelRef = useRef<any>(undefined);
 
 	const [trigger, result] = useCopyItemMutation();
 
 	const closeItem = () => {
 		result?.reset();
-		onClose();
+		if (isControlled) onControlledClose?.();
+		else internalOnClose();
 	};
 
 	const handleSubmit = (e: any) => {
@@ -44,14 +60,17 @@ const DuplicateModal: FC<DeleteItemModalProps> = ({ title, path, id }) => {
 
 	return (
 		<>
-			<MenuItem
-				closeOnSelect={false}
-				onClick={onOpen}
-				icon='duplicate'>
-				Make Copy
-			</MenuItem>
+			{!isControlled && (
+				<MenuItem
+					onClick={onOpen}
+					icon='duplicate'>
+					Make Copy
+				</MenuItem>
+			)}
 
 			<Dialog.Root
+				lazyMount
+				unmountOnExit
 				open={isOpen}
 				onOpenChange={(e: any) => !e.open && closeItem()}
 				placement='center'>
@@ -65,14 +84,15 @@ const DuplicateModal: FC<DeleteItemModalProps> = ({ title, path, id }) => {
 
 							<Dialog.Body>Are you sure you want to make a copy of this item?</Dialog.Body>
 
-							<Dialog.Footer>
+							<ModalFooter>
 								{!result?.isLoading && (
 									<Dialog.CloseTrigger asChild>
 										<Button
 											ref={cancelRef}
 											onClick={closeItem}
+											px={3}
 											size='sm'
-											colorPalette='white'>
+											variant='outline'>
 											Discard
 										</Button>
 									</Dialog.CloseTrigger>
@@ -80,11 +100,11 @@ const DuplicateModal: FC<DeleteItemModalProps> = ({ title, path, id }) => {
 								<Button
 									loading={result?.isLoading}
 									onClick={handleSubmit}
-									ml={2}
+									px={3}
 									size='sm'>
 									Proceed
 								</Button>
-							</Dialog.Footer>
+							</ModalFooter>
 						</Dialog.Content>
 					</Dialog.Positioner>
 				</Portal>

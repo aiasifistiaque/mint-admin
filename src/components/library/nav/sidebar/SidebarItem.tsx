@@ -1,33 +1,53 @@
 'use client';
 import { FC } from 'react';
-import { Center, Flex, FlexProps, Grid, Skeleton, Text, TextProps } from '@chakra-ui/react';
-import { useColorMode } from '@/components/ui/color-mode';
+import { Box, Flex, Skeleton, Text, TextProps } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 
-import {
-	useIsMobile,
-	Icon,
-	useAppDispatch,
-	useAppSelector,
-	navigate,
-	IconNameOptions,
-	radius,
-	LucideIcon,
-} from '../..';
+import { useAppDispatch, useAppSelector, navigate, IconNameOptions } from '../..';
+import { LucideIcon } from '../../icon';
 
 type SidebarItemProps = {
 	children: string;
 	href?: string;
 	path: string;
-	icon: IconNameOptions;
+	/**
+	 * Shown only on top-level rows (`withIcon`) — Dashboard and the like, which
+	 * sit level with the category headings and carry a glyph as they do. Rows
+	 * inside a category are plain labels under its icon.
+	 */
+	icon?: IconNameOptions;
+	withIcon?: boolean;
 	sx?: any;
 	isLoading?: boolean;
 };
 
-const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoading = false }) => {
+/**
+ * The row geometry, shared with SidebarSection so everything lines up:
+ * headings and top-level rows put their icon `ROW_INSET_PX` in, and their
+ * label `ICON_GAP_PX` after it; a nested row's fill starts `RAIL_GAP_PX`
+ * past the rail, and its padding puts the label under the heading text.
+ */
+export const ICON_SIZE_PX = 16;
+export const ROW_INSET_PX = 8;
+export const ICON_GAP_PX = 10;
+export const RAIL_GAP_PX = 6;
+/** Where the rail sits: under the middle of the heading's icon. */
+export const RAIL_X_PX = ROW_INSET_PX + ICON_SIZE_PX / 2;
+const LABEL_X_PX = ROW_INSET_PX + ICON_SIZE_PX + ICON_GAP_PX;
+const NESTED_PAD_PX = LABEL_X_PX - (RAIL_X_PX + 1 + RAIL_GAP_PX);
+const ICON_SIZE = ICON_SIZE_PX;
+
+// Older item icons use the admin's own icon names; the sidebar draws Lucide
+// outlines so they match the category glyphs. Anything else is taken to be a
+// Lucide name already (the sidebar builder stores those).
+const LUCIDE_NAME: Record<string, string> = {
+	dashboard: 'layout-dashboard',
+	analytics: 'chart-line',
+	clicks: 'mouse-pointer-click',
+};
+
+const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, withIcon = false, isLoading = false }) => {
 	const { selected } = useAppSelector((state: any) => state.route);
-	const sidebarType = process.env.NEXT_PUBLIC_SIDEBAR_TYPE || 'generic';
-	const { colorMode } = useColorMode();
 
 	const dispatch = useAppDispatch();
 
@@ -40,108 +60,84 @@ const SidebarItem: FC<SidebarItemProps> = ({ href, children, path, icon, isLoadi
 		dispatch(navigate({ selected: path }));
 	};
 
-	const isMobile = useIsMobile();
 	const isSelected = selected === path;
 
-	const iconColor =
-		colorMode === 'light'
-			? isSelected
-				? 'sidebar.bodyText.selectedLight'
-				: 'sidebar.bodyText.light'
-			: isSelected
-			? 'sidebar.bodyText.selectedDark'
-			: 'sidebar.bodyText.dark';
-
 	return (
-		<Grid
+		<Flex
 			onClick={changeRoute}
-			{...containerCss(isLoading, isSelected, href)}>
-			{isLoading ? (
-				<Skeleton {...skeletonCss} />
-			) : sidebarType == 'server' ? (
-				<Flex
-					align='center'
-					boxSize={isMobile ? 6 : 5}
-					w='full'
-					h='full'>
-					<LucideIcon
-						name={icon}
-						size={isMobile ? 20 : 16}
-					/>
-				</Flex>
-			) : (
-				<Icon
-					color='inherit'
-					name={icon}
-					size={isMobile ? 20 : 16}
-				/>
-			)}
-
+			{...containerCss(isLoading, isSelected, withIcon)}>
 			{isLoading ? (
 				<Skeleton
 					height={2}
+					w='full'
 					borderRadius={SKELETON_BORDER_RADIUS}
 				/>
 			) : (
-				<Text {...bodyTextCss(isSelected)}>{children}</Text>
+				<>
+					{withIcon && (
+						// Fixed box, so the label lines up with the headings even if a
+						// name has no Lucide icon and nothing draws.
+						<Box {...iconCss}>
+							{icon ? (
+								<LucideIcon
+									name={LUCIDE_NAME[String(icon)] || String(icon)}
+									size={ICON_SIZE}
+								/>
+							) : null}
+						</Box>
+					)}
+					<Text {...bodyTextCss(isSelected)}>{children}</Text>
+				</>
 			)}
-		</Grid>
+		</Flex>
 	);
 };
 
-const bodyTextCss = (isSelected?: boolean): TextProps => {
-	return {
-		color: isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
-		_dark: {
-			color: isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark',
-		},
+const bodyTextCss = (isSelected?: boolean): TextProps => ({
+	color: 'inherit',
+	fontSize: { base: '15px', md: '14px' },
+	fontWeight: isSelected ? '500' : '400',
+	lineHeight: '1.3',
+	lineClamp: 1,
+});
 
-		fontSize: { base: '16px', md: '14px' },
-		fontWeight: isSelected ? '700' : '500',
-	};
+const iconCss: any = {
+	flexShrink: 0,
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	boxSize: `${ICON_SIZE_PX}px`,
+	color: 'sidebar.bodyText.light',
+	_dark: { color: 'sidebar.bodyText.dark' },
+	opacity: 0.85,
 };
 
-const containerCss = (isLoading: boolean, isSelected: boolean, href?: string): any => {
-	return {
-		gridTemplateColumns: '1fr 6fr',
-		borderRadius: radius.CONTAINER,
-		alignItems: 'center',
-		gap: 1,
-		px: 2.5,
-		transition: 'all .1s ease-in-out',
-		fontWeight: '600',
-		cursor: 'pointer',
-		fontSize: '.9rem',
-		userSelect: 'none',
-		borderWidth: '1px',
-		h: { base: 10, md: 8 },
-		borderColor: isSelected ? 'sidebar.selectedItemBorder.light' : 'transparent',
-		bg: isLoading ? 'transparent' : isSelected ? 'sidebar.selectedItemBg.light' : 'transparent',
-		color: isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
-		_hover: !isSelected
-			? { bg: 'sidebar.hover.bgLight' }
-			: !href
-			? { bg: 'sidebar.hover.bgLight' }
-			: {},
-		_dark: {
-			bg: isLoading ? 'transparent' : isSelected ? 'sidebar.selectedItemBg.dark' : 'transparent',
-			borderColor: isSelected ? 'sidebar.selectedItemBorder.dark' : 'transparent',
-			color: isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark',
-			_hover: !isSelected
-				? { bg: 'sidebar.hover.bgDark' }
-				: !href
-				? { bg: 'sidebar.hover.bgDark' }
-				: {},
-		},
-	};
-};
+/**
+ * A flat rounded row: a faint wash on hover, a soft grey fill for the current
+ * page. Top-level rows start at the heading's inset with their icon; rows in a
+ * category start just past the rail, their labels level with the heading text
+ * (SidebarSection's RAIL_* constants set that up).
+ */
+const containerCss = (isLoading: boolean, isSelected: boolean, withIcon: boolean): any => ({
+	alignItems: 'center',
+	gap: `${ICON_GAP_PX}px`,
+	pl: withIcon ? `${ROW_INSET_PX}px` : `${NESTED_PAD_PX}px`,
+	pr: 2,
+	h: { base: 10, md: '32px' },
+	borderRadius: '8px',
+	cursor: 'pointer',
+	userSelect: 'none',
+	transition: 'background-color .12s ease, color .12s ease',
+	bg: isSelected ? 'sidebar.itemActive.light' : 'transparent',
+	color: isSelected ? 'sidebar.bodyText.selectedLight' : 'sidebar.bodyText.light',
+	_hover: isLoading || isSelected ? {} : { bg: 'sidebar.itemHover.light', color: 'sidebar.bodyText.selectedLight' },
+	_dark: {
+		bg: isSelected ? 'sidebar.itemActive.dark' : 'transparent',
+		color: isSelected ? 'sidebar.bodyText.selectedDark' : 'sidebar.bodyText.dark',
+		_hover: isLoading || isSelected ? {} : { bg: 'sidebar.itemHover.dark', color: 'sidebar.bodyText.selectedDark' },
+	},
+});
 
 const SKELETON_BORDER_RADIUS = '90px';
-
-const skeletonCss: any = {
-	borderRadius: SKELETON_BORDER_RADIUS,
-	height: '20px',
-	width: '20px',
-};
 
 export default SidebarItem;

@@ -1,5 +1,5 @@
 import { BASE_LIMIT } from '../..';
-import mainApi from './mainApi';
+import mainApi, { routeTags } from './mainApi';
 
 export const userApi = mainApi.injectEndpoints({
 	overrideExisting: true,
@@ -29,14 +29,14 @@ export const userApi = mainApi.injectEndpoints({
 				url: `${path}/get/count`,
 				params: { ...filters },
 			}),
-			providesTags: (result, error, { path }) => [path],
+			providesTags: (result, error, { path }) => routeTags(path),
 		}),
 		getSum: builder.query<any, any>({
 			query: ({ path, field, filters = {} }: { path: string; field: string; filters?: any }) => ({
 				url: `${path}/get/sum/${field}`,
 				params: { ...filters },
 			}),
-			providesTags: (result, error, { path }) => [path],
+			providesTags: (result, error, { path }) => routeTags(path),
 		}),
 		getAll: builder.query<any, any>({
 			query: ({
@@ -51,31 +51,46 @@ export const userApi = mainApi.injectEndpoints({
 				url: path,
 				params: { sort, page, limit, search, isActive, ...filters },
 			}),
-			providesTags: (result, error, { path }) => [path],
+			providesTags: (result, error, { path }) => routeTags(path),
 		}),
 
 		getSelectData: builder.query<any, string>({
 			query: (id: any) => `${id}?limit=1000&sort=name`,
 			providesTags: ['filters', 'products', 'brands', 'categories', 'coupons', 'collections'],
 		}),
+		/**
+		 * One record's audit trail.
+		 *
+		 * Its own endpoint rather than `get` with an interpolated path: `get`
+		 * derives its cache tag from `path`, so a per-document URL would register
+		 * a brand new tag per record ("Tag type 'history/g/document/<id>' was
+		 * used, but not specified in `tagTypes`"). This tags them all as
+		 * 'history', so any write to the log refreshes every open timeline.
+		 */
+		getDocumentHistory: builder.query<any, { id: string; limit?: number; page?: number }>({
+			query: ({ id, limit = 50, page = 1 }): any =>
+				`history/g/document/${id}?limit=${limit}&page=${page}`,
+			providesTags: ['history'],
+		}),
+
 		getById: builder.query<any, { path: string; id: any; invalidate?: string[] }>({
 			query: ({ path, id, invalidate = [] }): any => `${path}/${id}`,
-			providesTags: (result, error, { path, invalidate = [] }: any) => [path, ...invalidate],
+			providesTags: (result, error, { path, invalidate = [] }: any) => routeTags(path, ...invalidate),
 		}),
 
 		get: builder.query<any, { path: string; invalidate?: string[] }>({
 			query: ({ path, invalidate = [] }): any => `${path}`,
-			providesTags: (result, error, { path, invalidate = [] }: any) => [path, ...invalidate],
+			providesTags: (result, error, { path, invalidate = [] }: any) => routeTags(path, ...invalidate),
 		}),
 
 		getOne: builder.query<any, { path: string; invalidate?: string[] }>({
 			query: ({ path, invalidate = [] }): any => `${path}/get/one`,
-			providesTags: (result, error, { path, invalidate = [] }: any) => [path, ...invalidate],
+			providesTags: (result, error, { path, invalidate = [] }: any) => routeTags(path, ...invalidate),
 		}),
 
 		getByIdToEdit: builder.query<any, { path: string; id: any; invalidate?: string[] }>({
 			query: ({ path, id, invalidate }): any => `${path}/edit/${id}`,
-			providesTags: (result, error, { path, invalidate = [] }: any) => [path, ...invalidate],
+			providesTags: (result, error, { path, invalidate = [] }: any) => routeTags(path, ...invalidate),
 		}),
 		post: builder.mutation<any, { path: string; body: any; invalidate?: string[]; type?: string }>({
 			query: ({ path, body, invalidate }): any => ({
@@ -83,11 +98,8 @@ export const userApi = mainApi.injectEndpoints({
 				method: 'POST',
 				body: body,
 			}),
-			invalidatesTags: (result, error, { path, invalidate = [] }: any) => [
-				'filters',
-				path,
-				...invalidate,
-			],
+			invalidatesTags: (result, error, { path, invalidate = [] }: any) =>
+				routeTags('filters', path, ...invalidate),
 		}),
 		export: builder.mutation<any, { path: string; body: any; invalidate?: string; type?: string }>({
 			query: ({ path, body, invalidate, type = 'csv' }): any => ({
@@ -157,14 +169,14 @@ export const userApi = mainApi.injectEndpoints({
 				method: 'PUT',
 				body: body,
 			}),
-			invalidatesTags: (result, error, { path, id, invalidate = [] }: any) => [path, ...invalidate],
+			invalidatesTags: (result, error, { path, id, invalidate = [] }: any) => routeTags(path, ...invalidate),
 		}),
 		deleteById: builder.mutation<any, { path: string; id: string; invalidate?: string[] }>({
 			query: ({ path, id, invalidate }): any => ({
 				url: `${path}/${id}`,
 				method: 'DELETE',
 			}),
-			invalidatesTags: (result, error, { path, id, invalidate = [] }: any) => [path, ...invalidate],
+			invalidatesTags: (result, error, { path, id, invalidate = [] }: any) => routeTags(path, ...invalidate),
 		}),
 		updateMany: builder.mutation<any, { path: string; body: any; invalidate?: any }>({
 			query: ({ path, body }): any => ({
@@ -172,7 +184,8 @@ export const userApi = mainApi.injectEndpoints({
 				method: 'PUT',
 				body: body,
 			}),
-			invalidatesTags: (result, error, { path, invalidate = '' }) => [path, invalidate],
+			// `invalidate` is optional here; routeTags drops it when missing.
+			invalidatesTags: (result, error, { path, invalidate }) => routeTags(path, invalidate),
 		}),
 		copyItem: builder.mutation<any, { path: string; body: any; invalidate?: string[] }>({
 			query: ({ path, body, invalidate }): any => ({
@@ -180,7 +193,7 @@ export const userApi = mainApi.injectEndpoints({
 				method: 'PUT',
 				body: body,
 			}),
-			invalidatesTags: (result, error, { path, invalidate = [] }) => [path, ...invalidate],
+			invalidatesTags: (result, error, { path, invalidate = [] }) => routeTags(path, ...invalidate),
 		}),
 		deleteProductlistByKeyId: builder.mutation<
 			any,
@@ -190,7 +203,7 @@ export const userApi = mainApi.injectEndpoints({
 				url: `${path}/${id}?key=${key}`,
 				method: 'DELETE',
 			}),
-			invalidatesTags: (result, error, { path, id, invalidate }: any) => [path, ...invalidate],
+			invalidatesTags: (result, error, { path, id, invalidate = [] }: any) => routeTags(path, ...invalidate),
 		}),
 	}),
 });
@@ -199,6 +212,7 @@ export const {
 	useGetFiltersQuery,
 	useGetSelectDataQuery,
 	useGetByIdQuery,
+	useGetDocumentHistoryQuery,
 	useUpdateByIdMutation,
 	useGetAllQuery,
 	useDeleteByIdMutation,

@@ -9,7 +9,9 @@ type InsertModalBodyProps = {
 const InsertModalBody: FC<InsertModalBodyProps> = ({ children, ...props }) => {
 	return (
 		<Dialog.Body
-			minH='70vh'
+			px={{ base: 4, md: 6 }}
+			pt={0}
+			pb={{ base: 4, md: 5 }}
 			{...props}>
 			{children}
 		</Dialog.Body>

@@ -17,5 +17,6 @@ export {
 } from './lib/constants/constants';
 
 export * from './lib/constants/theme';
+export * from './lib/constants/panel';
 
 export { default as sidebarData } from './lib/sidebar/sidebar.data';

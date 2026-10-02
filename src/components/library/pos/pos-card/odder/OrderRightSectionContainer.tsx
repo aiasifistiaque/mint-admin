@@ -12,7 +12,7 @@ const OrderRightSectionContainer = ({ children }: { children: ReactNode }) => {
 			py={2}
 			borderBottom='1px dashed'
 			borderTop='1px dashed'
-			borderColor='#BBB'
+			borderColor='border.emphasized'
 			_dark={{
 				borderColor: 'stroke.deepD',
 			}}

@@ -14,6 +14,7 @@ import {
 	useGetByIdToEditQuery,
 } from '../..';
 import { useParams } from 'next/navigation';
+import { pagePath } from '../../config/lib/constants/panel';
 
 type FormPageType = {
 	data: any;
@@ -31,7 +32,7 @@ const EditItemPage: FC<FormPageType> = ({ data: dataFields }) => {
 	const [trigger, result] = useUpdateByIdMutation();
 	const { isSuccess, isLoading, isError, error } = result;
 
-	useRedirect({ isSuccess, isLoading, path: `/${path}` });
+	useRedirect({ isSuccess, isLoading, path: pagePath(path) });
 	useCustomToast({
 		successText: 'Item Updated successfully',
 		isSuccess,

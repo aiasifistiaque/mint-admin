@@ -10,13 +10,14 @@ const PopModalBody: FC<PopModalBodyProps> = ({ children, isMobile }) => {
 	if (isMobile) {
 		return (
 			<Drawer.Body
-				gap={3}
-				px={4}>
+				px={4}
+				pt={0}
+				pb={4}
+				overflowY='auto'>
 				<Flex
 					flex={1}
 					flexDir='column'
-					gap={3}
-					pb={1}>
+					gap={3}>
 					{children}
 				</Flex>
 			</Drawer.Body>
@@ -24,7 +25,9 @@ const PopModalBody: FC<PopModalBodyProps> = ({ children, isMobile }) => {
 	}
 
 	return (
-		<Popover.Body>
+		<Popover.Body
+			px={4}
+			py={0}>
 			<Flex
 				flexDir='column'
 				gap={3}>

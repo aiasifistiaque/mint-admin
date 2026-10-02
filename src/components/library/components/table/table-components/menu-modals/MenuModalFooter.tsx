@@ -1,21 +1,28 @@
 import { FC, ReactNode } from 'react';
-import { styles, useIsMobile } from '../../../..';
+import { useIsMobile } from '../../../..';
+import { styles } from '../../../../config';
 import { Drawer, Dialog } from '@chakra-ui/react';
+import { useResolvedModalLayout } from './ModalLayoutContext';
 
 type MenuModalFooterProps = {
 	children: ReactNode;
 	[key: string]: any;
 };
 
+// The shared modal footer look (styles.MODAL_FOOTER), in a drawer too —
+// inset like this modal's header and body.
+const footerCss = { ...(styles.MODAL_FOOTER as any), px: { base: 4, md: 6 } };
+
 const MenuModalFooter: FC<MenuModalFooterProps> = ({ children, ...props }) => {
 	const isMobile = useIsMobile();
-	if (isMobile) {
+	const layout = useResolvedModalLayout();
+
+	if (layout === 'drawer') {
 		return (
 			<Drawer.Footer
-				p={{ base: 4, md: 6 }}
-				py={2}
-				_light={{ bg: 'background.light' }}
-				gap={2}
+				{...footerCss}
+				// Clear of the home indicator on phones without a button.
+				{...(isMobile ? { pt: 3, pb: 'max(16px, env(safe-area-inset-bottom))' } : {})}
 				{...props}>
 				{children}
 			</Drawer.Footer>
@@ -24,17 +31,7 @@ const MenuModalFooter: FC<MenuModalFooterProps> = ({ children, ...props }) => {
 
 	return (
 		<Dialog.Footer
-			w='full'
-			gap={2}
-			px={{ base: 4, md: 6 }}
-			borderTopWidth={1}
-			borderColor='container.borderLight'
-			_dark={{ borderColor: 'border.dark' }}
-			py={2}
-			borderBottomRadius={styles?.MODAL?.borderRadius || '8px'}
-			_light={{ bg: 'background.light' }}
-			justifyContent='flex-end'
-			alignItems='center'
+			{...footerCss}
 			{...props}>
 			{children}
 		</Dialog.Footer>

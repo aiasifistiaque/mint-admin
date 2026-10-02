@@ -26,6 +26,7 @@ export const fields = [
 	'note',
 	'participants',
 	'file',
+	'attachments',
 	'fileUrl',
 	'recordingUrl',
 	'addedBy',
@@ -84,7 +85,7 @@ export const formFields = [
 
 	{
 		sectionTitle: 'Attachments & Recording',
-		fields: ['file', 'fileUrl', 'recordingUrl'],
+		fields: ['file', 'attachments', 'fileUrl', 'recordingUrl'],
 	},
 ];
 

@@ -1,16 +1,17 @@
 'use client';
 
-import React, { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
-import { Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
+import React, { FormEvent, useEffect, useState } from 'react';
+import { Button, Flex, useDisclosure } from '@chakra-ui/react';
+import { Plus } from 'lucide-react';
 
 import { useCustomToast, useIsMobile, useFormData } from '../../hooks';
+import { FooterStatus, FormSkeleton, formKeys, nounOf } from './CreateModal';
 
 import {
 	ModalFormSection,
 	usePostMutation,
 	FormMain,
 	DiscardButton,
-	Align,
 	DialogCloseButton,
 	DialogHeader,
 	DialogFooter,
@@ -19,6 +20,7 @@ import {
 	MenuItem,
 	useGetConfigQuery,
 } from '../..';
+import { styles } from '../../config';
 
 type CreateServerModalProps = {
 	trigger?: any;
@@ -105,10 +107,6 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 		...result,
 	});
 
-	const handleKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
-		if (e.key === 'Enter') e.preventDefault();
-	};
-
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -151,19 +149,23 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 
 	const footer = (
 		<>
+			{!isMobile && <FooterStatus />}
 			{!isMobile && (
 				<DiscardButton
 					disabled={isLoading}
 					onClick={onModalClose}>
-					Discard
+					Cancel
 				</DiscardButton>
 			)}
 			<Button
+				{...(styles.MODAL_BUTTON as any)}
 				{...(isMobile && { w: 'full' })}
-				px={2}
 				type='submit'
-				size={{ base: 'md', md: 'sm' }}>
-				{isLoading ? 'Processing...' : prompt?.btnText || 'Confirm'}
+				disabled={isFetching}
+				loading={isLoading}
+				loadingText='Creating'
+				spinnerPlacement='start'>
+				{prompt?.btnText || `Create ${nounOf(path)}`}
 			</Button>
 		</>
 	);
@@ -185,13 +187,25 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 				onClose={onModalClose}>
 				<form
 					onSubmit={handleSubmit}
-					onKeyDown={handleKeyDown}>
-					<DialogHeader>{prompt?.title || title || `Create ${path}`}</DialogHeader>
-					<DialogCloseButton />
+					onKeyDown={formKeys(!isFetching && !isLoading)}>
+					<DialogHeader
+						divider
+						icon={
+							<Plus
+								size={18}
+								strokeWidth={1.75}
+							/>
+						}>
+						{prompt?.title ||
+							(!title || ['create', 'add', 'new'].includes(String(title).toLowerCase()) ? `New ${nounOf(path)}` : title)}
+					</DialogHeader>
+					<DialogCloseButton top={{ base: 4, md: 5 }} />
 
-					<DialogBody px={{ base: 0, md: 6 }}>
+					<DialogBody pt={{ base: 4, md: 5 }}>
 						<ModalFormSection>
-							{!isFetching && (
+							{isFetching ? (
+								<FormSkeleton />
+							) : (
 								<FormMain
 									fields={data?.form}
 									formData={formData}
@@ -201,9 +215,10 @@ const CreateServerModal = (props: CreateServerModalProps) => {
 								/>
 							)}
 						</ModalFormSection>
-						{isMobile && <Align p={4}>{footer}</Align>}
 					</DialogBody>
-					{!isMobile && <DialogFooter>{footer}</DialogFooter>}
+					{/* Pinned under the form on every screen; on a phone it holds the one
+					    full-width primary button, inset like the fields above it. */}
+					<DialogFooter>{footer}</DialogFooter>
 				</form>
 			</Dialog>
 		</>

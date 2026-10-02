@@ -7,4 +7,5 @@ export type SidebarItemType = {
 	path: string;
 	startOfSection?: boolean;
 	sectionTitle?: string;
+	sectionIcon?: string;
 };

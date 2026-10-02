@@ -1,31 +1,35 @@
-import { sizes, radius } from '../../../..';
-import { PopoverContent, PopoverContentProps } from '@chakra-ui/react';
+import { sizes, radius, shadow } from '../../../..';
+import { Popover, PopoverContentProps } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 
 type PopoverContentContainerProps = PopoverContentProps & {
 	children: ReactNode;
 };
 
+/**
+ * Padding lives on the header / body / footer inside, not here — the old `p={4}`
+ * stacked on top of Popover's own slot padding, so nothing in a filter popup
+ * shared a left edge.
+ */
 const PopoverContentContainer: FC<PopoverContentContainerProps> = ({ children, ...props }) => {
 	return (
-		<PopoverContent
-			boxShadow='lg'
-			borderRadius={radius.MODAL}
+		<Popover.Content
+			p={0}
+			borderRadius={radius.MENU}
 			bg='menu.light'
-			p={4}
-			borderColor='container.borderLight'
-			_focusVisible={{
-				outline: 'none',
-			}}
+			borderWidth={1}
+			borderColor='border.muted'
+			boxShadow={shadow.MENU}
 			_dark={{
 				bg: 'menu.dark',
-				borderColor: 'container.borderDark',
-				borderWidth: 1,
+				borderColor: 'border',
 			}}
+			_focusVisible={{ outline: 'none' }}
+			w={sizes.POPOVER_WIDTH}
 			maxW={sizes.POPOVER_WIDTH}
 			{...props}>
 			{children}
-		</PopoverContent>
+		</Popover.Content>
 	);
 };
 

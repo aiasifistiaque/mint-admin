@@ -1,15 +1,24 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button, Input, Group, InputProps } from '@chakra-ui/react';
 
-import { useAppDispatch } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { radius, sizes } from '../../../../../config';
 import { updateTable, Icon } from '../../../../..';
 
 const TableSearch = () => {
-	const [value, setValue] = useState<string>('');
+	const { search } = useAppSelector((state: any) => state.table);
+	const [value, setValue] = useState<string>(search || '');
 	const dispatch = useAppDispatch();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const btnRef = useRef<any>(null);
+
+	// Redux `search` only changes on submit (below) or when the URL-sync hook
+	// hydrates it from the query string on load — the latter can land after
+	// this input's own initial render, which would otherwise leave the box
+	// looking empty while the table is actually filtered.
+	useEffect(() => {
+		setValue(search || '');
+	}, [search]);
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -65,44 +74,35 @@ const inputGroupCss: any = {
 };
 
 const inputCss: InputProps = {
-	outline: 'none',
-	color: 'text.light',
 	px: 3,
 	h: sizes.SEARCH_BAR_HEIGHT,
-	borderRadius: radius.BUTTON,
+	fontSize: '14px',
+	bg: 'field.bg',
+	color: 'fg',
+	borderColor: 'field.border',
+	borderLeftRadius: radius.INPUT,
 	placeholder: 'Search... (⌘ + F)',
-	_placeholder: { fontSize: '14px' },
-	_dark: {
-		bg: 'transparent',
-		borderColor: 'container.borderDark',
-		color: 'text.dark',
-		_placeholder: { color: 'text.inputPlaceholder.dark' },
-	},
-	_light: {
-		bg: 'container.newLight',
-		borderColor: 'container.borderLight',
-		_placeholder: { color: 'text.inputPlaceholder.light' },
-	},
-	_focus: {
-		boxShadow: 'none',
+	_placeholder: { fontSize: '14px', color: 'field.placeholder' },
+	_hover: { borderColor: 'field.borderHover' },
+	// The button is attached to the right, so the focus ring is drawn on the
+	// group instead — a ring on the input alone would cut through the seam.
+	_focusVisible: {
 		outline: 'none',
-		outlineOffset: 0,
+		borderColor: 'field.focusRing',
+		zIndex: 1,
 	},
 };
 
 const addOnCss = {
 	h: sizes.SEARCH_BAR_HEIGHT,
-	borderRightRadius: radius.BUTTON,
-	border: '1px solid',
-	colorPalette: 'gray',
-	_dark: {
-		bg: 'container.dark',
-		borderColor: 'container.borderDark',
-	},
-	_light: {
-		borderColor: 'container.borderLight',
-		bg: 'container.newLight',
-	},
+	w: sizes.SEARCH_BAR_HEIGHT,
+	minW: sizes.SEARCH_BAR_HEIGHT,
+	borderRightRadius: radius.INPUT,
+	borderWidth: '1px',
+	borderColor: 'field.border',
+	bg: 'field.bg',
+	color: 'fg.muted',
+	_hover: { bg: 'bg.subtle', color: 'fg' },
 };
 
 export default TableSearch;

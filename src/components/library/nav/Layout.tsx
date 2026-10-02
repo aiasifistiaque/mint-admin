@@ -1,18 +1,54 @@
 'use client';
 
-import { FC, useEffect, ReactNode } from 'react';
+import { FC, memo, useEffect, ReactNode } from 'react';
 import { Flex, Heading, useMediaQuery, FlexProps, HeadingProps } from '@chakra-ui/react';
 
-import { SelfMenu, SearchMenu } from '../menu';
+import { SelfMenu, SearchMenu, NotificationMenu } from '../menu';
 import { AuthWrapper } from '../wrappers';
 import ColorMode from '../components/color-mode/ColorMode';
 import { LayoutWrapper, Navbar, Sidebar, Body, MainBody } from '../nav';
 import { Align, SpaceBetween } from '../containers';
 import { useIsMobile, useAppDispatch } from '../hooks';
-import { refresh, useGetQuery, navigate } from '../store';
+import { unselectAll, useGetQuery, navigate } from '../store';
 import { padding, sizes } from '../config';
+import Footer from './Footer';
+import { IS_TENANT_PANEL } from '../config/lib/constants/panel';
+import WorkspaceSwitcher from '../tenant/WorkspaceSwitcher';
 
 const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
+const ICON_SIZE = 17;
+
+/*
+ * Every page renders inside Layout and keeps its own state above it, so each
+ * change on a page (a keystroke in the route builder, a toggle) re-rendered
+ * the whole sidebar and the navbar menus with it. Memoized, they re-render
+ * only on their own state — the sidebar data, the signed-in admin.
+ */
+const MemoSidebar = memo(Sidebar);
+
+const NavActions = memo(function NavActions({ sidebarData }: { sidebarData: any }) {
+	return (
+		<Align gap={1}>
+			{/* Dark mode is a switch in the account menu (SelfMenu), under Themes. */}
+			{/* <ColorMode
+				size={ICON_SIZE}
+				position='navbar'
+			/> */}
+			{/* The tenant panel: which project/organization, and switching. */}
+			{IS_TENANT_PANEL && <WorkspaceSwitcher />}
+			{sidebarData && (
+				<SearchMenu
+					sidebarData={sidebarData}
+					iconSize={ICON_SIZE}
+				/>
+			)}
+			{/* Notifications come from per-record access, which tenant projects don't have yet. */}
+			{!IS_TENANT_PANEL && <NotificationMenu iconSize={ICON_SIZE} />}
+			<SelfMenu iconSize={ICON_SIZE} />
+			{/* <CreateMenu /> */}
+		</Align>
+	);
+});
 
 export type FlexPropsType = FlexProps & {
 	children?: ReactNode;
@@ -25,6 +61,8 @@ type LayoutProps = FlexPropsType & {
 	type?: 'default' | 'pos';
 	hideColorMode?: boolean;
 	isLoading?: boolean;
+	/** The site footer under the page. Table pages turn it off: they page and scroll on their own. */
+	showFooter?: boolean;
 };
 
 const Layout: FC<LayoutProps> = ({
@@ -33,13 +71,19 @@ const Layout: FC<LayoutProps> = ({
 	path = '/dashboard',
 	hideColorMode = false,
 	isLoading,
+	showFooter = true,
 	...props
 }) => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		dispatch(navigate({ selected: path }));
-		dispatch(refresh());
+		// Not `refresh()` — that reset page/search/sort/filters back to
+		// defaults on every single page mount, which was clobbering the
+		// table's own URL-driven state (see useTableUrlSync) a moment after
+		// it hydrated. Row selection is still page-local and stale from a
+		// previous table, so that part still gets cleared.
+		dispatch(unselectAll());
 	}, []);
 
 	// Chakra UI v3: useMediaQuery expects an array and returns an array of booleans
@@ -53,8 +97,6 @@ const Layout: FC<LayoutProps> = ({
 
 	const { data, isFetching, isError } = useGetQuery({ path: `/sidebar/crm/${sidebarType}` });
 
-	const ICON_SIZE = 17;
-
 	return (
 		<AuthWrapper>
 			<LayoutWrapper>
@@ -66,28 +108,20 @@ const Layout: FC<LayoutProps> = ({
 					<SpaceBetween>
 						<Heading {...titleCss}>{title}</Heading>
 					</SpaceBetween>
-					<Align gap={1}>
-						<ColorMode
-							size={ICON_SIZE}
-							position='navbar'
-						/>
-						{data && (
-							<SearchMenu
-								sidebarData={data}
-								iconSize={ICON_SIZE}
-							/>
-						)}
-						<SelfMenu iconSize={ICON_SIZE} />
-						{/* <CreateMenu /> */}
-					</Align>
+					<NavActions sidebarData={data} />
 				</Navbar>
 				<Body>
-					{type == 'default' && <Sidebar />}
+					{type == 'default' && <MemoSidebar />}
 					<Flex
 						{...mainContainer}
 						pl={type !== 'default' ? 0 : sizes.HOME_NAV_LEFT}
+						// With a footer: at least a screen tall, the body taking the
+						// spare room, so a short or loading page keeps the footer at
+						// the bottom of the window rather than below the fold.
+						{...(showFooter && { minH: '100vh' })}
 						{...props}>
-						<MainBody>{!isLoading && children}</MainBody>
+						<MainBody grow={showFooter}>{!isLoading && children}</MainBody>
+						{showFooter && <Footer />}
 					</Flex>
 				</Body>
 				{!hideColorMode && <ColorMode size={ICON_SIZE} />}

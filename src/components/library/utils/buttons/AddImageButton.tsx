@@ -16,9 +16,10 @@ const AddImageButton: FC<AddImageButtonProps> = ({ children, size, ...props }) =
 			flexDir='column'
 			h={size || '100px'}
 			w={size || '100px'}
-			border='2px dashed #ccc'
+			border='2px dashed'
+			borderColor='border.emphasized'
 			borderRadius='8px'
-			color='#ccc'
+			color='fg.subtle'
 			userSelect='none'
 			gap={2}
 			{...props}>
@@ -27,7 +28,7 @@ const AddImageButton: FC<AddImageButtonProps> = ({ children, size, ...props }) =
 				size={30}
 			/>
 			<Heading
-				color='#ccc'
+				color='fg.subtle'
 				size='xs'>
 				{children || 'Add Image'}
 			</Heading>

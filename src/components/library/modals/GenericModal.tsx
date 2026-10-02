@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, ReactNode } from 'react';
-import { Dialog } from '@chakra-ui/react';
+import { Dialog, Portal } from '@chakra-ui/react';
 
 export type GenericModalProps = any & {
 	isOpen: boolean;
@@ -33,6 +33,14 @@ export type GenericModalProps = any & {
  *
  * This component provides a backward-compatible API similar to Chakra UI v2 Modal,
  * but uses the v3 Dialog components internally.
+ *
+ * Portalled, and its content is mounted only while open (`lazyMount` +
+ * `unmountOnExit`), like ConfirmModal. Without that a closed modal still sat
+ * in its parent's tree, hidden: every parent re-render re-rendered the whole
+ * modal body (FormulaModal inside the settings editor, the publish prompt
+ * inside RouteEditor), which is what made pages holding one feel slow. Keep
+ * state that must survive a close in the component that renders GenericModal,
+ * not inside its children.
  *
  * @example
  * ```tsx
@@ -89,9 +97,13 @@ const GenericModal: FC<GenericModalProps> = ({
 			preventScroll={blockScrollOnMount}
 			restoreFocus={returnFocusOnClose}
 			persistentElements={preserveScrollBarGap ? [() => document.body] : undefined}
+			lazyMount
+			unmountOnExit
 			{...props}>
-			<Dialog.Backdrop />
-			<Dialog.Positioner>{children}</Dialog.Positioner>
+			<Portal>
+				<Dialog.Backdrop />
+				<Dialog.Positioner>{children}</Dialog.Positioner>
+			</Portal>
 		</Dialog.Root>
 	);
 };

@@ -18,10 +18,48 @@ const THIRSTLE = '#D0C4DF';
 const BLACK = '#171717';
 
 export const colors: any = {
-	fg: {
-		value: { base: '#171717', _dark: '{colors.text.dark}' },
+	// A real neutral ramp. The legacy `gray` scale below is collapsed onto a
+	// handful of brand values, so Chakra's semantic layer can't derive anything
+	// usable from it — the semantic tokens in theme/index.ts point here instead.
+	neutral: {
+		50: '#fafafa',
+		100: '#f5f5f5',
+		200: '#ebebeb',
+		300: '#e0e0e0',
+		400: '#a3a3a3',
+		500: '#737373',
+		600: '#525252',
+		700: '#404040',
+		800: '#262626',
+		900: '#171717',
+		950: '#0a0a0a',
 	},
-	// ... other tokens
+
+	// Form controls share one surface so an input, a select and a textarea read
+	// as the same kind of thing.
+	field: {
+		bg: {
+			light: '#fff',
+			dark: '#0A0A0A',
+		},
+		border: {
+			light: BORDER_LIGHT,
+			dark: BORDER_DARK,
+		},
+		borderHover: {
+			light: '#d4d4d4',
+			dark: '#333',
+		},
+		placeholder: {
+			light: '#a3a3a3',
+			dark: '#6b6b6b',
+		},
+		focusRing: {
+			light: '#171717',
+			dark: '#d4d4d4',
+		},
+	},
+
 
 	brand: {
 		// 100: 'red',
@@ -161,6 +199,21 @@ export const colors: any = {
 			light: '#fff',
 			dark: '#0a0a0a',
 		},
+		/**
+		 * The glass version of the header, for the fixed logo strip and the
+		 * sticky search box.
+		 *
+		 * Translucent on purpose: `backdrop-filter` has nothing to reveal behind
+		 * an opaque background, which is why `styles.SIDEBAR_NAV` carried a blur
+		 * for months with no visible effect. The alpha is higher than the
+		 * navbar's 0.4 because sidebar rows pass *directly* beneath this strip —
+		 * at the navbar's value their text stayed legible through it and read as
+		 * a rendering fault rather than as glass.
+		 */
+		headerBlur: {
+			light: 'rgba(255, 255, 255, 0.55)',
+			dark: 'rgba(10, 10, 10, 0.55)',
+		},
 		borderBottom: {
 			light: '#ebebeb',
 			dark: BORDER_DARK,
@@ -176,6 +229,32 @@ export const colors: any = {
 		hover: {
 			bgLight: '#fff',
 			bgDark: 'transparent',
+		},
+		// Row fills: a faint wash on hover, a soft grey for the current page.
+		// Themes derive both from the item text mixed into the sidebar colour
+		// (applyTheme), so they stay quiet on every palette.
+		itemHover: {
+			light: '#f4f4f4',
+			dark: '#0e0e0e',
+		},
+		itemActive: {
+			light: '#eeeeee',
+			dark: '#171717',
+		},
+		// The vertical line down an expanded category. It has to sit a step
+		// lighter than the item text or it competes with the labels it is
+		// grouping — it marks the branch, it isn't content.
+		rail: {
+			light: '#e4e4e4',
+			dark: '#222',
+		},
+		// The hover underline. A step darker than the rail: the rail is a long
+		// continuous line and reads fine at #e4e4e4, but a short underline under
+		// one label at that value is invisible against the sidebar's own
+		// near-white. Still clearly faded against the selected row's #222.
+		hoverUnderline: {
+			light: '#c2c2c2',
+			dark: '#3d3d3d',
 		},
 
 		headerText: {
@@ -271,6 +350,7 @@ export const colors: any = {
 		700: PRIMARY,
 		800: 'black', //initial bg color of the load of colormode
 		900: 'black',
+		950: 'black',
 	},
 	image: {
 		50: '#ececec', //Primary For Light Mode
@@ -317,18 +397,35 @@ export const colors: any = {
 			dark: BORDER_DARK,
 		},
 		head: {
-			bgLight: '#fafafa',
+			// Deliberately the same as the row background rather than a tinted
+			// band: the header should read as a label row separated by its bottom
+			// rule, not as a filled strip sitting on top of the data.
+			//
+			// It still has to be *opaque*, though — the header is `position:
+			// sticky`, so a transparent one lets rows scroll through it and the
+			// labels end up printed over the data.
+			bgLight: '#fff',
 			bgDark: '#0A0A0A',
-			textDark: '#888',
-			textLight: '#222',
+			textDark: '#8f8f8f',
+			// Column labels are small uppercase text; muted keeps them from
+			// competing with the data underneath.
+			textLight: '#6b6b6b',
 		},
 		row: {
 			light: 'white',
 			dark: '#0A0A0A',
+			// Row hover — a tint just strong enough to track a row across wide
+			// tables without reading as a selection.
+			hoverLight: '#f7f7f7',
+			hoverDark: '#151515',
 		},
 	},
+	// Legacy alias for the form-control border. It used to be #ebebeb, a shade
+	// lighter than every input beside it, so a select in a drawer had a visibly
+	// fainter outline than the text field above it. Kept as a name (six call
+	// sites still reference it) but pointed at the same value as `field.border`.
 	selectBorder: {
-		light: '#ebebeb',
+		light: BORDER_LIGHT,
 		dark: BORDER_DARK,
 	},
 	//ecom-commers

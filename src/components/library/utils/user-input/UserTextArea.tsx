@@ -36,16 +36,13 @@ const UserTextArea: FC<InputContainerProps> = ({
 					<Textarea
 						minH='300px'
 						px={3}
-						borderColor='#ebebeb'
+						borderColor='border.muted'
 						borderRadius='sm'
 						// focusBorderColor={'#555'}
-						color='text.500'
-						bg='#ebebeb'
-						_dark={{
-							color: 'gray.300',
-						}}
+						color='fg'
+						bg='bg.muted'
 						placeholder={label}
-						_placeholder={{ fontSize: 16, fontWeight: '500', letterSpacing: '1px', color: '#999' }}
+						_placeholder={{ fontSize: 16, fontWeight: '500', letterSpacing: '1px', color: 'fg.subtle' }}
 						value={value}
 						{...props}
 					/>

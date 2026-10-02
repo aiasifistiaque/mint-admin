@@ -1,34 +1,24 @@
 import { FC, ReactNode } from 'react';
-import { NativeSelectFieldProps, NativeSelect } from '@chakra-ui/react';
-import { Icon } from '../../..';
+import Dropdown, { DropdownProps } from '../../../cl/Dropdown';
 
-type FilterSelectProps = NativeSelectFieldProps & {
+type FilterSelectProps = Omit<DropdownProps, 'onChange' | 'value'> & {
 	children: ReactNode;
+	name?: string;
+	value?: any;
+	/** Called with `{ target: { name, value } }`, as a native select's change event was. */
+	onChange?: (e: any) => void;
 };
 
-const FilterSelect: FC<FilterSelectProps> = ({ children, ...props }) => {
-	return (
-		<NativeSelect.Root size='xs'>
-			<NativeSelect.Field
-				color='text.light'
-				borderRadius='md'
-				fontSize='14px'
-				h={{ base: '42px', md: '28px' }}
-				boxShadow='md'
-				px={2}
-				borderColor='selectBorder.light'
-				_dark={{
-					color: 'text.dark',
-					borderColor: 'selectBorder.dark',
-				}}
-				{...props}>
-				{children}
-			</NativeSelect.Field>
-			<NativeSelect.Indicator>
-				<Icon name='select' />
-			</NativeSelect.Indicator>
-		</NativeSelect.Root>
-	);
-};
+const FilterSelect: FC<FilterSelectProps> = ({ children, name, value, onChange, ...props }) => (
+	<Dropdown
+		size='sm'
+		w='full'
+		name={name}
+		value={value}
+		onChange={v => onChange?.({ target: { name, value: v } })}
+		{...props}>
+		{children}
+	</Dropdown>
+);
 
 export default FilterSelect;

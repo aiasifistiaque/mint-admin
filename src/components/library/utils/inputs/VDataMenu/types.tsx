@@ -18,4 +18,8 @@ export type VDataMenuProps = InputProps & {
 	menuAddOnKey?: string;
 	addItem?: boolean;
 	valueKey?: string;
+	// FormInput hands these to every field input; stripped before the DOM spread.
+	formData?: any;
+	setFormData?: any;
+	setChangedData?: any;
 };

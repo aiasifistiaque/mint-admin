@@ -21,8 +21,8 @@ const MAX_H = '200px';
 const ItemOfMenu: FC<ItemOfMenuProps> = ({ children, filter, id, ...props }) => {
 	const { colorMode } = useColorMode();
 	const hoverBg = colorMode === 'light' ? 'hover.light' : 'hover.dark';
-	const itemBg = colorMode === 'light' ? 'brand.500' : 'brand.200';
-	const itemColor = colorMode === 'light' ? 'white' : '#4a4a4a';
+	const itemBg = 'accent.solid';
+	const itemColor = 'accent.contrast';
 
 	const isActive = (id: string): boolean => {
 		//return filters[filter] === id;

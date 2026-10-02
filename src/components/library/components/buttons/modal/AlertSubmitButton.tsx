@@ -6,12 +6,17 @@ type ModalSubmitButtonProps = ButtonProps & {
 	children?: ReactNode;
 };
 
-const AlertSubmitButton: FC<ModalSubmitButtonProps> = ({ children, ...props }) => {
+const AlertSubmitButton: FC<ModalSubmitButtonProps> = ({ children, isLoading, loading, ...props }) => {
 	return (
 		<Button
+			// `isLoading` is the v2 name callers still pass; Chakra v3 only knows `loading`.
+			loading={isLoading || loading}
+			loadingText='Processing'
+			spinnerPlacement='start'
 			type='submit'
-			px={3}
 			size='sm'
+			minW='84px'
+			px={4}
 			{...props}>
 			{children || 'Confirm'}
 		</Button>

@@ -52,6 +52,7 @@ const SendBulkSmsModal = ({ path, ids }: { path: string; ids: string[] }) => {
 			<MenuItem onClick={onOpen}>Send Marketing SMS</MenuItem>
 
 			<MenuModal
+				forceModal
 				isOpen={isOpen}
 				onClose={closeModal}>
 				<MenuModalHeader>Write your custom Message</MenuModalHeader>

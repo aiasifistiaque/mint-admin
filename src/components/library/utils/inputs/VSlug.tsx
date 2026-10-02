@@ -12,6 +12,10 @@ type InputContainerProps = InputProps & {
 	value: string;
 	placeholder?: any;
 	onChange: any;
+	// FormInput hands these to every field input; stripped before the DOM spread.
+	formData?: any;
+	setFormData?: any;
+	setChangedData?: any;
 };
 
 const VSlug: FC<InputContainerProps> = ({
@@ -21,6 +25,10 @@ const VSlug: FC<InputContainerProps> = ({
 	value,
 	helper,
 	onChange,
+	// FormInput's form-state props — not DOM attributes, so keep them out of `...props`.
+	formData: _formData,
+	setFormData: _setFormData,
+	setChangedData: _setChangedData,
 	...props
 }) => {
 	const handleChange = (e: any) => {

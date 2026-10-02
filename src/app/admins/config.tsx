@@ -1,14 +1,10 @@
-const fields = ['name', 'email', 'phone', 'role', 'isActive', 'github'];
-const tableFields = ['name', 'email', 'phone', 'role', 'isActive', 'github'];
+const fields = ['name', 'email', 'phone', 'role', 'isActive', 'invitationStatus', 'github'];
+const tableFields = ['name', 'email', 'phone', 'role', 'invitationStatus', 'isActive', 'github'];
 
 const formFields = [
 	{
-		sectionTitle: 'Basic Details',
-		fields: ['name', ['email', 'phone'], ['password', 'role']],
-	},
-	{
-		sectionTitle: 'Advanced Details',
-		fields: ['github'],
+		sectionTitle: 'Admin Access',
+		fields: ['role', 'isActive'],
 	},
 ];
 

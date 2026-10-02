@@ -9,30 +9,34 @@ export const wrapperCss: FlexProps = {
 export const containerCss: FlexProps = {
 	flexDir: { base: 'row', md: 'row' },
 	flexWrap: 'wrap',
-	gap: 2,
+	gap: 3,
 	justify: 'space-between',
 	align: { base: 'flex-start', md: 'center' },
-	pt: { base: 3, md: 4 },
+	pt: { base: 4, md: 6 },
+	pb: { base: 1, md: 2 },
 };
 
+// Page titles are the largest type on a table page, so they carry the tighter
+// tracking that large text needs to avoid looking spaced out.
 export const headingCss: TextProps = {
-	fontSize: { base: '1.5rem', md: '1.75rem' },
-	fontWeight: '600',
+	// The page's font, or the theme's heading typeface when it has one.
+	fontFamily: 'display',
+	fontSize: { base: '1.375rem', md: '1.5rem' },
+	fontWeight: 'display',
+	letterSpacing: '-0.02em',
+	lineHeight: '1.25',
 	color: 'text.light',
 	_dark: { color: 'text.dark' },
 };
 
 export const subHeadingCss: TextProps = {
-	fontSize: '15px',
-	_light: {
-		color: 'text.secondary.light',
-	},
-	_dark: {
-		color: 'text.secondary.dark',
-	},
+	fontSize: '14px',
+	lineHeight: '1.5',
+	color: 'fg.muted',
 };
 
 export const buttonGroupCss: FlexProps = {
 	gap: 2,
+	align: 'center',
 	justify: 'flex-end',
 };

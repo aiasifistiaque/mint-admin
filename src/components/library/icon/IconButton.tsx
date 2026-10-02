@@ -12,6 +12,7 @@ const IconButton = ({
 		if (tooltip)
 			return (
 				<Tooltip.Root
+					lazyMount
 					openDelay={200}
 					closeDelay={100}
 					positioning={{ placement: 'top' }}>

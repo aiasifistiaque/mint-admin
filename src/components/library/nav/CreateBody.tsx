@@ -13,7 +13,7 @@ const CreateBody: FC<FlexPropsType> = ({ children, ...props }) => {
 			w='100%'
 			pt={10}
 			minH='100vh'
-			bg={THEME == 'basic' ? 'background.100' : 'background.light'}
+			bg={THEME == 'basic' ? 'bg.muted' : 'background.light'}
 			_dark={{ bg: 'sidebar.dark' }}
 			px={6}
 			justify='center'

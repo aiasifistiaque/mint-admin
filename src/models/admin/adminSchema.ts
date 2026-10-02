@@ -48,12 +48,20 @@ const schema: SchemaProps = {
 	},
 	isActive: {
 		label: 'Active Status',
-		type: 'tag',
+		type: 'checkbox',
 		displayInTable: true,
 	},
 	isDeleted: {
 		label: 'Active Status',
 		type: 'tag',
+	},
+	invitationStatus: {
+		label: 'Invitation',
+		type: 'string',
+		tableType: 'invitation-status',
+		viewType: 'string',
+		displayInTable: true,
+		default: true,
 	},
 };
 
