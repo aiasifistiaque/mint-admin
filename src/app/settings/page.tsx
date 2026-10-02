@@ -164,7 +164,9 @@ const SettingsPage = () => {
 					<Text
 						fontSize='13px'
 						color='fg.muted'>
-						Your profile, sign-in & security, signature and how forms open. Only you see these.
+						{IS_TENANT_PANEL
+							? 'Your profile and sign-in & security. Only you see these.'
+							: 'Your profile, sign-in & security, signature and how forms open. Only you see these.'}
 					</Text>
 				</Box>
 
@@ -452,6 +454,8 @@ const SettingsPage = () => {
 				)}
 
 				{/* ------------------------------------------------- layout */}
+				{/* The tenant panel's forms always open in the side panel (useModalLayout). */}
+				{!IS_TENANT_PANEL && (
 				<SettingsCard
 					id='layout'
 					icon={<PanelRight size={16} />}
@@ -526,6 +530,7 @@ const SettingsPage = () => {
 						})}
 					</Grid>
 				</SettingsCard>
+				)}
 			</Flex>
 
 			<PromptDialog

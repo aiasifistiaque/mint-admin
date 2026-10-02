@@ -54,8 +54,8 @@ const Records = () => (
 			id='add'
 			title='Adding and editing'>
 			<P>
-				The add button opens the form — in a centred dialog or a side panel, as chosen in{' '}
-				<A href='/user-docs/account#profile'>your settings</A>, or on a page of its own if the page is set up that way.
+				The add button opens the form in a side panel that keeps the table in view (a sheet from the bottom on a phone), or
+				on a page of its own if the page is set up that way.
 				Required fields are marked; the server checks everything again on save and points at what’s wrong.
 			</P>
 			<List

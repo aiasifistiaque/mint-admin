@@ -38,10 +38,6 @@ const Account = () => (
 				Change your name, phone number and picture. Your email is how you sign in and can’t be changed here. Your role in the
 				organization you’re working in is shown too — the organization’s admins change it.
 			</P>
-			<P>
-				<strong>Form layout</strong> chooses how add and edit forms open on a computer: a <em>centred dialog</em>, or a{' '}
-				<em>side panel</em> that keeps the table in view. Phones always use a sheet from the bottom.
-			</P>
 		</Section>
 
 		<Section

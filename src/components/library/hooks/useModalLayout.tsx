@@ -1,5 +1,6 @@
 'use client';
 import { useGetSelfQuery } from '../store/services/authApi';
+import { IS_TENANT_PANEL } from '../config/lib/constants/panel';
 
 export type ModalLayout = 'modal' | 'drawer';
 
@@ -14,9 +15,10 @@ export type ModalLayout = 'modal' | 'drawer';
 // `data` is `undefined` on both the server and the client's first render (the
 // query only resolves after mount), so both agree on the 'drawer' fallback —
 // no hydration mismatch.
+// The tenant panel has no choice: its forms always open in the side panel.
 const useModalLayout = (): ModalLayout => {
-	const { data } = useGetSelfQuery({});
-	return data?.modalLayout === 'modal' ? 'modal' : 'drawer';
+	const { data } = useGetSelfQuery({}, { skip: IS_TENANT_PANEL });
+	return !IS_TENANT_PANEL && data?.modalLayout === 'modal' ? 'modal' : 'drawer';
 };
 
 export default useModalLayout;

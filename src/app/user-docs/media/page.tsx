@@ -31,10 +31,11 @@ const Media = () => (
 		<Section
 			id='what'
 			title='What it is'
-			lead='Build → Media: every image, video and file of the project, in folders.'>
+			lead='Files → Media library in the sidebar: every image, video and file of the project, in folders.'>
 			<P>
 				The image and file fields of your models pick from here, and anything uploaded in a form lands here too. Files have
-				public links, so your website can show them. The bottom of the page shows how much space it uses.
+				public links, so your website can show them. The bottom of the page shows how much space it uses. Anyone whose role
+				can view records — or build — sees it in the sidebar.
 			</P>
 			<P>
 				Whose library it is is the project’s choice (<A href='/user-docs/projects#media-library'>Media library</A>): its own,
