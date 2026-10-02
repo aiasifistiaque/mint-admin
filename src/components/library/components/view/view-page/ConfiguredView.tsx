@@ -9,6 +9,7 @@ import DataTable from '../../../cl/DataTable';
 import { DetailSkeleton } from '../../../cl/States';
 import ViewRow from './ViewRow';
 import { cellNode } from './cells';
+import { projectHref } from '../../../config/lib/constants/panel';
 
 /**
  * A record laid out by its route's `view` config — the sections, titles and
@@ -140,7 +141,7 @@ const ConfiguredView: FC<Props> = ({ slug, schema, view, isLoading, compact }) =
 										}))}
 										rows={item.rows}
 										rowKey={(r: any) => r._id}
-										onRowClick={(r: any) => window.location.assign(`/view/${item.route}/${r._id}`)}
+										onRowClick={(r: any) => window.location.assign(projectHref(`/view/${item.route}/${r._id}`))}
 									/>
 								) : (
 									<Text

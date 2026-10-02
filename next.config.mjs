@@ -1,6 +1,17 @@
+import { readdirSync } from 'fs';
+import { fileURLToPath } from 'url';
+
+// The app's top-level pages (src/app/<page>). In the tenant panel a first
+// segment that isn't one of them is a project: /<project>/<page> (src/proxy.ts,
+// panel.ts). Read here so the list never falls behind the folders.
+const APP_PAGES = readdirSync(fileURLToPath(new URL('./src/app', import.meta.url)), { withFileTypes: true })
+	.filter(d => d.isDirectory() && /^[a-z0-9]/.test(d.name))
+	.map(d => d.name);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: false,
+	env: { NEXT_PUBLIC_APP_PAGES: APP_PAGES.join(',') },
 	// The tenant panel (NEXT_PUBLIC_PANEL=tenant) can run next to the admin in dev
 	// from this same folder — each needs its own build output.
 	distDir: process.env.NEXT_DIST_DIR || '.next',

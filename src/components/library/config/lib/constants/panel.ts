@@ -23,26 +23,78 @@ export const API_ORIGIN = BACKEND.replace(/\/(tenant|admin)\/api\/?$/, '');
 
 /* ------------------------------------------------- the current project */
 
-const PROJECT_KEY = 'mint:tenant-project';
+/**
+ * Inside a project, the tenant panel's addresses start with it (docs/
+ * multi-tenancy D18): /<project>/<page>, where <project> is the project's
+ * publicSlug — so each tab can work in its own project, and a link names the
+ * project it's in. src/proxy.ts serves them from the app's own pages:
+ *
+ *   /acme-store                    → /dashboard
+ *   /acme-store/clients            → /t/clients          (a model's table)
+ *   /acme-store/clients/<id>       → /view/clients/<id>  (a record)
+ *   /acme-store/model-builder/new  → /model-builder/new  (PROJECT_PAGES)
+ *
+ * Organization and account pages (/projects, /org/…, /settings) have no project.
+ */
+export const PROJECT_PAGES = new Set([
+	'dashboard', 't', 'view', 'model-builder', 'builder', 'sidebar-builder', 'dashboard-builder', 'images', 'public-api',
+	'analytics',
+]);
 
-/** The project the tenant panel is working in (one per browser; switching reloads). */
-export const getProjectId = (): string | null => {
+// Every top-level page folder (next.config.mjs); any other first segment is a project.
+const APP_PAGES = new Set(['api', '_next', ...(process.env.NEXT_PUBLIC_APP_PAGES || '').split(',').filter(Boolean)]);
+
+/** Whether an address's first segment names a project rather than one of the app's pages. */
+export const isProjectSegment = (segment = ''): boolean => !APP_PAGES.has(segment) && /^[a-z0-9][a-z0-9-]*$/.test(segment);
+
+/** The project (publicSlug) the tab's address is in — tenant panel only. */
+export const getProjectSlug = (): string | null => {
 	if (!IS_TENANT_PANEL || typeof window === 'undefined') return null;
-	try {
-		const id = localStorage.getItem(PROJECT_KEY);
-		return id && /^[a-f0-9]{24}$/.test(id) ? id : null;
-	} catch {
-		return null;
-	}
+	const first = window.location.pathname.split('/')[1] || '';
+	return isProjectSegment(first) ? first : null;
 };
 
-export const setProjectId = (id: string | null) => {
-	try {
-		if (id) localStorage.setItem(PROJECT_KEY, id);
-		else localStorage.removeItem(PROJECT_KEY);
-	} catch {
-		/* storage blocked: the panel opens with no project */
-	}
+/** A project's address (the part after /<project>) → the app page that serves it. */
+export const projectPagePath = (segments: string[]): string => {
+	const [first, ...more] = segments;
+	if (!first) return '/dashboard';
+	if (PROJECT_PAGES.has(first)) return `/${segments.join('/')}`;
+	if (more.length === 1) return `/view/${first}/${more[0]}`;
+	return `/t/${segments.join('/')}`;
+};
+
+/**
+ * An app page's address inside a project (the reverse of projectPagePath):
+ * '/t/clients?status=open' → '/acme-store/clients?status=open'. Anything that
+ * isn't a project page, or with no project, is returned as it is.
+ */
+export const projectHref = (href: string, slug: string | null = getProjectSlug()): string => {
+	if (!IS_TENANT_PANEL || !slug || typeof href !== 'string' || !href.startsWith('/')) return href;
+	const cut = href.search(/[?#]/);
+	const path = cut === -1 ? href : href.slice(0, cut);
+	const rest = cut === -1 ? '' : href.slice(cut);
+	const segments = path.split('/').filter(Boolean);
+	const [first, ...more] = segments;
+	if (!first || !PROJECT_PAGES.has(first)) return href;
+	if (first === 'dashboard' && !more.length) return `/${slug}${rest}`;
+	if (first === 't' && more.length === 1) return `/${slug}/${more[0]}${rest}`;
+	if (first === 'view' && more.length === 2) return `/${slug}/${more.join('/')}${rest}`;
+	return `/${slug}/${segments.join('/')}${rest}`;
+};
+
+/**
+ * The project this browser last worked in, as a cookie: an address that
+ * doesn't name a project (/dashboard, or an older link to /model-builder) is
+ * sent into it by src/proxy.ts. Set whenever a tab in a project is in front
+ * (PanelGuard); cleared on leaving a project, switching organization, signing out.
+ */
+export const PROJECT_COOKIE = 'mint_project';
+
+export const rememberProject = (slug: string | null) => {
+	if (typeof document === 'undefined') return;
+	document.cookie = slug
+		? `${PROJECT_COOKIE}=${encodeURIComponent(slug)}; path=/; max-age=31536000; samesite=lax`
+		: `${PROJECT_COOKIE}=; path=/; max-age=0; samesite=lax`;
 };
 
 /* ------------------------------------------------------- API addresses */
@@ -50,14 +102,14 @@ export const setProjectId = (id: string | null) => {
 /**
  * Account and organization calls go to the tenant API's root; everything else
  * — tables, the builder, the sidebar, media — is inside the current project
- * (`<api>/p/<projectId>/…`), mirroring the admin API's paths.
+ * (`<api>/p/<publicSlug>/…`), mirroring the admin API's paths.
  */
 const ACCOUNT_PATH = /^\/?(auth|org|projects|invitations)(\/|\?|$)/;
 
 /** The base URL a request for `path` goes to. */
 export const apiBase = (path = ''): string => {
 	if (!IS_TENANT_PANEL) return BACKEND;
-	const project = getProjectId();
+	const project = getProjectSlug();
 	if (!project || ACCOUNT_PATH.test(path)) return BACKEND;
 	return `${BACKEND}/p/${project}`;
 };
@@ -72,24 +124,24 @@ export const apiUrl = (path = ''): string => {
 
 /**
  * Where "Home" is. The tenant panel's / is its public landing page (sign up,
- * sign in, or on to the dashboard), so its dashboard lives at /dashboard; the
- * super-admin panel's dashboard is / itself. Link and redirect home with this,
- * never a bare '/'.
+ * sign in, or on to the dashboard), so its dashboard lives at /dashboard —
+ * inside a project that's /<project> (projectHref); the super-admin panel's
+ * dashboard is / itself. Link and redirect home with this, never a bare '/'.
  */
 export const HOME = IS_TENANT_PANEL ? '/dashboard' : '/';
 
-/** `href`, with a link to '/' (a sidebar's Home or Dashboard entry) sent to HOME. */
-export const homeHref = (href: string): string => (href === '/' ? HOME : href);
+/** A sidebar link as this tab should follow it: '/' is HOME, and inside a project, the project's address. */
+export const homeHref = (href: string): string => projectHref(href === '/' ? HOME : href);
 
 /**
- * A model's table page. The tenant panel serves its projects' tables under
- * /t/<route>: the two panels are one app, and a project route named like one
- * of the admin's own pages (`/invoices`, `/clients`…) would otherwise open
- * that page instead of its table.
+ * A model's table page. The tenant panel serves its projects' tables at
+ * /<project>/<route> (the app page /t/<route>): the two panels are one app,
+ * and a project route named like one of the admin's own pages (`/invoices`,
+ * `/clients`…) would otherwise open that page instead of its table.
  */
 export const pagePath = (route = ''): string => {
 	const r = String(route).replace(/^\/+/, '');
-	return IS_TENANT_PANEL ? `/t/${r}` : `/${r}`;
+	return IS_TENANT_PANEL ? projectHref(`/t/${r}`) : `/${r}`;
 };
 
 /* ------------------------------------------------------------- guides */

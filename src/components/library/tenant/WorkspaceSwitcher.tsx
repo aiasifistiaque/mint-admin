@@ -7,7 +7,7 @@ import CustomMenuItem, { MenuItemStyle } from '../menu/CustomMenuItem';
 import { MenuContainer } from '../menu';
 import { useAppDispatch } from '../hooks';
 import { refreshAuth, useSwitchOrganizationMutation } from '../store';
-import { HOME, setProjectId } from '../config/lib/constants/panel';
+import { HOME, rememberProject } from '../config/lib/constants/panel';
 import { openProject, useWorkspace } from './useWorkspace';
 
 /**
@@ -27,7 +27,7 @@ const WorkspaceSwitcher: FC = () => {
 		if (id === organization._id) return;
 		const res = await switchOrg(id);
 		if ('data' in res && res.data?.token) {
-			setProjectId(null);
+			rememberProject(null);
 			dispatch(refreshAuth(res.data.token));
 			window.location.href = HOME;
 		}
@@ -102,7 +102,7 @@ const WorkspaceSwitcher: FC = () => {
 								key={p._id}
 								value={`project-${p._id}`}
 								icon={p.type === 'website' ? <Globe size={15} /> : <LayoutGrid size={15} />}
-								onClick={() => p._id !== project?._id && openProject(p._id)}>
+								onClick={() => p._id !== project?._id && openProject(p.publicSlug)}>
 								<Flex
 									flex={1}
 									align='center'

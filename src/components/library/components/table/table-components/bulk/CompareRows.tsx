@@ -9,6 +9,7 @@ import { useGetSchemaQuery } from '../../../../store/services/commonApi';
 import convertToViewFields from '../../../../model/functions/convertToViewFields';
 import getValue from '../../../../functions/getValue';
 import { BulkDialog, BulkProps, CancelButton, comparable, nameOf, renderField, useRecords } from './shared';
+import { projectHref } from '../../../../config/lib/constants/panel';
 
 const MAX = 4;
 const SKIP = ['_id', '__v', 'password'];
@@ -98,7 +99,7 @@ const CompareRows: FC<BulkProps> = ({ path, items, title }) => {
 									<Skeleton h='14px' />
 								) : (
 									<NextLink
-										href={`/view/${path}/${d._id}`}
+										href={projectHref(`/view/${path}/${d._id}`)}
 										target='_blank'>
 										<Text
 											fontSize='sm'

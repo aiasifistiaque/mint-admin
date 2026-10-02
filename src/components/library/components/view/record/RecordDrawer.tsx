@@ -18,6 +18,7 @@ import ViewRow from '../view-page/ViewRow';
 import ViewTabTable from '../view-page/ViewTabTable';
 import RecordOverview from './RecordOverview';
 import useRecordView from './useRecordView';
+import { projectHref } from '../../../config/lib/constants/panel';
 
 type Props = {
 	open: boolean;
@@ -117,7 +118,7 @@ const RecordDrawer: FC<Props> = ({ open, onClose, path, id, title, fields }) => 
 						asChild
 						size='xs'
 						variant='outline'>
-						<NextLink href={`/view/${path}/${id}`}>
+						<NextLink href={projectHref(`/view/${path}/${id}`)}>
 							<ExternalLink size={13} />
 							Open full page
 						</NextLink>

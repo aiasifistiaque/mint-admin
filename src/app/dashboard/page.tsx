@@ -6,7 +6,7 @@ import { LayoutDashboard } from 'lucide-react';
 
 import { Layout, Count, useGetByIdQuery, ShowSum, useGetDashboardQuery } from '@/components/library';
 import { DashboardGrid } from '@/components/library/dashboard/widgets';
-import { IS_TENANT_PANEL, getProjectId } from '@/components/library/config/lib/constants/panel';
+import { IS_TENANT_PANEL, getProjectSlug } from '@/components/library/config/lib/constants/panel';
 import ProjectsBoard from '@/components/library/tenant/ProjectsBoard';
 
 /**
@@ -16,7 +16,7 @@ import ProjectsBoard from '@/components/library/tenant/ProjectsBoard';
  */
 export default function Home() {
 	// The tenant panel with no project open: the organization's projects.
-	if (IS_TENANT_PANEL && !getProjectId())
+	if (IS_TENANT_PANEL && !getProjectSlug())
 		return (
 			<Layout
 				title='Home'

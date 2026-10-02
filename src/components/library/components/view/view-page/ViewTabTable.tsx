@@ -12,6 +12,7 @@ import Panel from '../../../cl/Panel';
 import DataTable from '../../../cl/DataTable';
 import { EmptyState, ErrorState, TableSkeleton } from '../../../cl/States';
 import { cellNode, cellText, firstImage, isImageKind } from './cells';
+import { projectHref } from '../../../config/lib/constants/panel';
 
 /**
  * One tab of a view page after Overview: the records of another route linked
@@ -224,7 +225,7 @@ const ViewTabTable: FC<Props> = ({ path, id, index, title }) => {
 	const from = total ? (page - 1) * limit + 1 : 0;
 	const to = Math.min(total, (page - 1) * limit + rows.length);
 	const name = data?.title || title;
-	const open = (r: any) => router.push(`/view/${data.route}/${r._id}`);
+	const open = (r: any) => router.push(projectHref(`/view/${data.route}/${r._id}`));
 
 	if (data?.allowed === false)
 		return (

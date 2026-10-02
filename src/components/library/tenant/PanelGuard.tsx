@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { HOME, IS_TENANT_PANEL, docsPath, setProjectId } from '../config/lib/constants/panel';
+import { HOME, IS_TENANT_PANEL, docsPath, getProjectSlug, rememberProject } from '../config/lib/constants/panel';
 import { ADMIN_ONLY_PAGES, TENANT_ONLY_PAGES } from './pages';
 import { useWorkspace } from './useWorkspace';
 
@@ -11,7 +11,10 @@ import { useWorkspace } from './useWorkspace';
  * - in the tenant panel the super admin's own pages (pages.ts) go home, and
  *   in the super-admin panel the tenant panel's do;
  * - in the tenant panel a /docs guide opens its user guide (/user-docs);
- * - a stored project this account can no longer see is forgotten.
+ * - a project in the address (/<project>/<page>) this account can't see sends
+ *   it to its projects; one it can see becomes the browser's last project
+ *   whenever this tab is in front, so a link that names no project
+ *   (/dashboard) opens this tab's (src/proxy.ts).
  */
 const PanelGuard = () => {
 	const pathname = usePathname() || '/';
@@ -27,9 +30,22 @@ const PanelGuard = () => {
 
 	useEffect(() => {
 		if (!IS_TENANT_PANEL || !staleProject) return;
-		setProjectId(null);
+		rememberProject(null);
 		window.location.href = '/projects';
 	}, [staleProject]);
+
+	useEffect(() => {
+		const slug = getProjectSlug();
+		if (!slug) return;
+		const remember = () => document.visibilityState === 'visible' && rememberProject(slug);
+		remember();
+		window.addEventListener('focus', remember);
+		document.addEventListener('visibilitychange', remember);
+		return () => {
+			window.removeEventListener('focus', remember);
+			document.removeEventListener('visibilitychange', remember);
+		};
+	}, [first]);
 
 	return null;
 };

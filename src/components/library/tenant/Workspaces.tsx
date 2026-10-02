@@ -13,7 +13,7 @@ import {
 	useSwitchOrganizationMutation,
 	useVerifyEmailMutation,
 } from '../store';
-import { HOME, setProjectId } from '../config/lib/constants/panel';
+import { HOME, rememberProject } from '../config/lib/constants/panel';
 import { Panel } from '../cl';
 import { useWorkspace } from './useWorkspace';
 import GuideLink from './GuideLink';
@@ -32,7 +32,7 @@ const useEnter = () => {
 	const dispatch = useAppDispatch();
 	return (token?: string) => {
 		if (!token) return;
-		setProjectId(null);
+		rememberProject(null);
 		dispatch(refreshAuth(token));
 		window.location.href = HOME;
 	};

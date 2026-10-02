@@ -90,11 +90,17 @@ const Projects = () => (
 		<Section
 			id='switching'
 			title='Switching projects'
-			lead='One project is open at a time, per browser.'>
+			lead='The address says which project you’re in.'>
 			<P>
-				Open another from the switcher at the top right, or from its card on <A href='/projects'>Projects</A>. The panel reloads
-				inside it. The browser remembers the open project, so you come back to it next time. Two tabs of the same browser are
-				in the same project.
+				Inside a project every address starts with its public name: <C>/acme-store</C> is its dashboard,{' '}
+				<C>/acme-store/clients</C> its Clients table, <C>/acme-store/clients/…</C> one client, and{' '}
+				<C>/acme-store/model-builder</C> its models. Bookmark or share any of them — they open in that project. Organization
+				pages (<A href='/projects'>Projects</A>, Members, Roles, Settings) have no project in the address.
+			</P>
+			<P>
+				Open another project from the switcher at the top right, or from its card on <A href='/projects'>Projects</A>. Each tab
+				keeps its own project, so two projects can be open side by side. <strong>Dashboard</strong> on the home page takes you
+				back to the project you worked in last.
 			</P>
 		</Section>
 

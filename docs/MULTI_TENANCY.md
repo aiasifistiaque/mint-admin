@@ -18,6 +18,13 @@ and its dashboard is `/dashboard`; the super admin's `/` stays the dashboard.
 Link or redirect home with `HOME` (panel.ts), never a bare `'/'` — the sidebar's
 `'/'` entries are mapped through `homeHref()`.
 
+**Project addresses:** inside a project the address is `/<publicSlug>/<page>`
+(`src/proxy.ts` rewrites it onto the app's page; `projectHref()` makes links;
+the project comes from the address, per tab). New page folders are picked up
+automatically (next.config.mjs). Link to a project page through `pagePath` /
+`projectHref` where you can; a bare `/model-builder` still works (redirect into
+the last project) but costs a round trip.
+
 **Sign-in:** the tenant panel keeps its token under `MINT_TENANT_TOKEN` (fixed,
 constants.tsx — `NEXT_PUBLIC_TOKEN_NAME` only sets the admin's), so both
 panels can be signed in side by side in one browser.

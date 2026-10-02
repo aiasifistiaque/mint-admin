@@ -85,7 +85,7 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 		const res = await create({ ...body, type });
 		if ('data' in res && res.data) {
 			close();
-			openProject(res.data._id);
+			openProject(res.data.publicSlug);
 		}
 	};
 
@@ -269,7 +269,7 @@ const ProjectCard: FC<{ project: TenantProject; current: boolean; canManage: boo
 				as='button'
 				// @ts-ignore — Flex as button
 				type='button'
-				onClick={() => !archived && openProject(project._id)}
+				onClick={() => !archived && openProject(project.publicSlug)}
 				direction='column'
 				align='flex-start'
 				gap={3}

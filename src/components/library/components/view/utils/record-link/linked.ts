@@ -1,3 +1,4 @@
+import { projectHref } from '../../../../config/lib/constants/panel';
 /**
  * Linked records: a field whose value is another record — a reference
  * (`client`), a list of them (`access`), or a populated owner (`addedBy`).
@@ -18,7 +19,7 @@ const ADMIN_KEYS = ['addedBy', 'createdBy', 'updatedBy', 'access'];
 
 export const fetchPathOf = (route: string) => FETCH_PATH[route] || route;
 export const viewRouteOf = (route: string) => VIEW_ROUTE[route] || route;
-export const viewHrefOf = (route: string, id: string) => `/view/${viewRouteOf(route)}/${id}`;
+export const viewHrefOf = (route: string, id: string) => projectHref(`/view/${viewRouteOf(route)}/${id}`);
 
 export const idOf = (item: any): string =>
 	item && typeof item === 'object' ? String(item._id || '') : typeof item === 'string' ? item : '';
