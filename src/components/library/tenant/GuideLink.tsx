@@ -22,6 +22,8 @@ const GUIDE_OF: Record<string, string> = {
 	projects: 'projects',
 	'media-library': 'projects',
 	'public-api': 'public-api',
+	reference: 'public-api',
+	tester: 'public-api',
 	customers: 'customers',
 	widget: 'customers',
 	websites: 'websites',

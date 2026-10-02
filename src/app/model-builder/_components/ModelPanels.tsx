@@ -359,11 +359,14 @@ const ModelPanels: FC<Props> = ({ working, onChange, mode, doc, base, targets, c
 				</Flex>
 			</Panel>
 
-			{/* Per-record access is built on admin accounts; projects don't have it yet (multi-tenancy D12). */}
-			{!IS_TENANT_PANEL && (
-				<Panel
+			{/* Per-record access: admins in the super-admin panel, the organization's people in a project (multi-tenancy D19). */}
+			<Panel
 					title='Access'
-					subtitle='Whether every record decides who can see it. The page permission still comes first: without it, no record shows.'
+					subtitle={
+						IS_TENANT_PANEL
+							? 'Whether every record decides who can see it. The role’s Records permissions still come first: without View, no record shows.'
+							: 'Whether every record decides who can see it. The page permission still comes first: without it, no record shows.'
+					}
 					actions={<DocLink section='models-access' />}>
 					<Flex
 						direction='column'
@@ -385,8 +388,12 @@ const ModelPanels: FC<Props> = ({ working, onChange, mode, doc, base, targets, c
 									color='fg.muted'>
 									Every record gets an owner (whoever creates it), a privacy and an access list. The form gains a{' '}
 									<em>Manage access</em> section where each record is set to Only me, Private or Public (Private to
-									start with); the people picker shows when it&apos;s Private, and everyone added is notified. Only
-									the owner can change access or delete the record.
+									start with); the people picker shows when it&apos;s Private
+									{IS_TENANT_PANEL
+										? ' and lists the members who can open this project'
+										: ', and everyone added is notified'}
+									. Only the owner can change access or delete the record.
+									{IS_TENANT_PANEL && ' Your public API only ever sees the records marked Public.'}
 								</Text>
 								{!isNew && !base?.access?.enabled && records > 0 && (
 									<Text
@@ -408,7 +415,6 @@ const ModelPanels: FC<Props> = ({ working, onChange, mode, doc, base, targets, c
 						)}
 					</Flex>
 				</Panel>
-			)}
 
 			<Panel
 				title='Fields'

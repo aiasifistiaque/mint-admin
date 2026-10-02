@@ -6,16 +6,21 @@ import { Badge, Box, Button, Checkbox, Flex, Skeleton, Switch, Text } from '@cha
 import { Copy, ExternalLink, Users } from 'lucide-react';
 import { Layout, useGetBuiltModelsQuery, useUpdatePublicApiMutation } from '@/components/library';
 import { Dropdown, Panel } from '@/components/library/cl';
-import { BACKEND } from '@/components/library/config/lib/constants/panel';
+import { BACKEND, pagePath } from '@/components/library/config/lib/constants/panel';
 import { useWorkspace } from '@/components/library/tenant';
 import GuideLink from '@/components/library/tenant/GuideLink';
 import type { PublicApi } from '@/components/library/store/services/tenantApi';
+import ApiReference from './_components/ApiReference';
+import ApiTester, { Trial } from './_components/ApiTester';
+import type { ApiInfo, Endpoint } from './_components/api';
 
 /**
  * The project's public API (tenant panel; backend routes-public): which models
  * the tenant's own site or app can read and write, whether that needs a
  * signed-in customer, and the snippets — the login widget and, for a website,
- * the analytics tracker. Building permission (`build`) changes them.
+ * the analytics tracker. Building permission (`build`) changes them. Below
+ * them, the API reference (from what the live API says it offers) and a tester
+ * that sends real requests to it.
  */
 
 const ACTIONS: { value: PublicApi['actions'][number]; label: string; method: string }[] = [
@@ -192,6 +197,25 @@ export default function PublicApiPage() {
 	const origin = publicBase();
 	const base = project ? `${origin}/public/api/${project.publicSlug}` : '';
 
+	// What the live API offers — fetched again whenever a model's switches change.
+	const [info, setInfo] = useState<ApiInfo | null>(null);
+	const [infoError, setInfoError] = useState('');
+	const offered = JSON.stringify(models.map(m => [m.route, m.publicApi || null]));
+	useEffect(() => {
+		if (!base) return;
+		let live = true;
+		fetch(`${base}/`)
+			.then(r => (r.ok ? r.json() : Promise.reject(new Error(`The API answered ${r.status}`))))
+			.then(data => live && (setInfo(data), setInfoError('')))
+			.catch(e => live && setInfoError(e?.message || 'Couldn’t reach the API'));
+		return () => {
+			live = false;
+		};
+	}, [base, offered]);
+
+	const [trial, setTrial] = useState<Trial | null>(null);
+	const tryIt = (e: Endpoint) => setTrial({ method: e.method, path: e.path, body: e.body, customer: e.customer, nonce: Date.now() });
+
 	return (
 		<Layout
 			title='Public API'
@@ -229,6 +253,21 @@ export default function PublicApiPage() {
 				</Panel>
 
 				{project && (
+					<ApiReference
+						base={base}
+						info={info}
+						error={infoError}
+						onTry={tryIt}
+					/>
+				)}
+				{project && (
+					<ApiTester
+						base={base}
+						trial={trial}
+					/>
+				)}
+
+				{project && (
 					<Panel
 						title='Use it'
 						subtitle='From any site or app — no key needed for open models.'
@@ -237,7 +276,7 @@ export default function PublicApiPage() {
 								size='xs'
 								variant='ghost'
 								asChild>
-								<NextLink href='/t/customers'>
+								<NextLink href={pagePath('customers')}>
 									<Users size={14} />
 									Customers
 								</NextLink>

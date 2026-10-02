@@ -208,12 +208,30 @@ const Models = () => (
 		<Section
 			id='models-access'
 			title='Who sees the records'
-			lead='Your role and your projects decide — not per model or per record.'>
+			lead='Your role and your projects decide — and, where a model needs it, each record.'>
 			<P>
 				In your organization, a model’s records are open to everyone who can open the project and whose role has{' '}
 				<em>Records: View</em> (Add, Edit and Delete likewise). To keep people to some work, give them only the projects it’s
-				in — see <A href='/user-docs/organization#project-access'>Which projects people open</A>. Records private to the
-				person who made them aren’t available in projects yet.
+				in — see <A href='/user-docs/organization#project-access'>Which projects people open</A>.
+			</P>
+			<P>
+				For confidential records — salaries, contracts, personal notes — switch on{' '}
+				<strong>Access → Restrict access to each record</strong> in the model. Every record then has an owner (whoever
+				created it) and a privacy, chosen in the form’s <em>Manage access</em> section:
+			</P>
+			<Terms
+				head={['Privacy', 'Who sees the record']}
+				rows={[
+					['Only me', 'Its owner alone.'],
+					['Private', 'Its owner and the people they add — anyone in the organization who can open this project.'],
+					['Public', 'Everyone who can view the model’s records.'],
+				]}
+			/>
+			<P>
+				Only the owner can change who has access, or delete the record. The table gains Privacy and Owner columns and filters.
+				Records that existed before you switched it on become Public, so nobody loses sight of them. Your{' '}
+				<A href='/user-docs/public-api'>public API</A> only ever reaches records marked Public, and anything your site sends in
+				is Public.
 			</P>
 			<P>
 				For the people using your site or app it’s different: a public model can be set to{' '}

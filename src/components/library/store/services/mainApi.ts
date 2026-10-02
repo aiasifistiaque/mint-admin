@@ -1,7 +1,8 @@
 // import { URL } from '../..';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { defaultSerializeQueryArgs } from '@reduxjs/toolkit/query';
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { apiUrl } from '../../config/lib/constants/panel';
+import { IS_TENANT_PANEL, apiUrl, getProjectSlug } from '../../config/lib/constants/panel';
 
 
 // Tag types for endpoints with fixed tags (providesTags: ['builder'] etc.).
@@ -195,6 +196,12 @@ const baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> =
 export const mainApi = createApi({
 	reducerPath: 'mainApi',
 	baseQuery,
+	// In the tenant panel the same path answers differently per project (and
+	// outside one): the tab's project is part of every cache key, so moving
+	// between a project's pages and the organization's — a client-side
+	// navigation, the cache kept — never shows one's data in the other.
+	serializeQueryArgs: args =>
+		IS_TENANT_PANEL ? `${getProjectSlug() || '-'}:${defaultSerializeQueryArgs(args)}` : defaultSerializeQueryArgs(args),
 	tagTypes: tags,
 	endpoints: builder => ({}),
 });

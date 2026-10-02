@@ -20,6 +20,8 @@ const SECTIONS = [
 	{ id: 'writing', title: 'Creating and updating' },
 	{ id: 'signed-in', title: 'Calling as a customer' },
 	{ id: 'errors', title: 'Errors and limits' },
+	{ id: 'reference', title: 'The API reference' },
+	{ id: 'tester', title: 'Trying requests' },
 	{ id: 'faq', title: 'Troubleshooting' },
 ];
 
@@ -247,6 +249,45 @@ const { doc, total, totalPages } = await res.json();`}
 				calls the API for every page view (server-side rendering), all those calls come from one address — cache the answers,
 				or call from the browser.
 			</P>
+		</Section>
+
+		<Section
+			id='reference'
+			title='The API reference'
+			lead='On the Public API page, below the models: every endpoint your site or app can call.'>
+			<P>
+				It’s made from what the live API says it offers, so it always matches the switches above it — turn a model or an
+				action on and its endpoint appears. Click an endpoint for its query parameters (paging, sorting and a filter for each
+				field), the body fields it takes, and an example response. Endpoints marked <strong>Customer</strong> need a signed-in
+				customer’s token. The customer sign-in endpoints are listed too, and for a website, the site and page endpoints.
+			</P>
+		</Section>
+
+		<Section
+			id='tester'
+			title='Trying requests'
+			lead='“Try it” sends a request to your live API from your browser and shows the answer.'>
+			<List
+				ordered
+				items={[
+					<>
+						Press <strong>Try</strong> on an endpoint in the reference — or pick a method and type a path, like{' '}
+						<C>/products?limit=5</C>.
+					</>,
+					<>
+						For a create or update, edit the example body. It starts with the model’s fields filled in by example.
+					</>,
+					<>
+						Press <strong>Send</strong>. You see the status, how long it took and the JSON that came back.{' '}
+						<strong>Copy as fetch</strong> gives you the same call for your code.
+					</>,
+				]}
+			/>
+			<P>
+				To try a customer-only endpoint, send <C>POST /auth/register</C> or <C>/auth/login</C> first: the tester keeps the token
+				and sends it with the next requests. After a list or a create, the record’s <C>_id</C> fills in the next <C>:id</C>.
+			</P>
+			<Note tone='warn'>Requests are real — a create, update or delete changes your project’s records.</Note>
 		</Section>
 
 		<Section
