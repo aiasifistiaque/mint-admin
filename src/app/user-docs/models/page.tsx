@@ -96,8 +96,11 @@ const Models = () => (
 			title='Names and addresses'>
 			<P>
 				From a title like “Invoices” the builder makes the name <C>Invoice</C> and the address <C>invoices</C> — the page’s
-				address in the panel and the model’s in the public API. If the project already has a model by that name, a number is
-				added (<C>Invoice2</C>) and shown before you save. Other projects don’t matter: each has its own names.
+				address in the panel and the model’s in the public API. Names belong to your project alone: other projects, and the
+				platform itself, can have a <C>Client</C> or an <C>Invoice</C> without touching yours. Only if this project already
+				has a model by that name is a number added (<C>Invoice2</C>), shown before you save. A few addresses are the
+				project’s own — <C>customers</C> is your site’s signed-in customers — so a <C>Customer</C> model keeps its name and
+				gets the address <C>customers2</C>.
 			</P>
 			<P>The name and address are fixed once the model exists. The title can change any time.</P>
 		</Section>
