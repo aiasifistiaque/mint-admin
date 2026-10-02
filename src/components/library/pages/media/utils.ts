@@ -6,11 +6,12 @@ import type { MediaFile, MediaFolder } from '../../store/services/mediaApi';
 import { TOKEN_NAME } from '../../config/lib/constants/constants';
 
 /** The media manager guide. Section ids are the anchors on /docs/media. */
-export const GUIDE = '/docs/media';
+export const GUIDE = docsPath('/docs/media');
 
 // Per request, like the API slice: the admin API, or the tenant panel's current project.
 export { BACKEND } from '../../config/lib/constants/panel';
 import { apiUrl } from '../../config/lib/constants/panel';
+import { docsPath } from '../../config/lib/constants/panel';
 
 /** Selection keys: `d:<id>` for folders, `f:<id>` for files. */
 export type ItemKey = `d:${string}` | `f:${string}`;

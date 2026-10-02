@@ -23,7 +23,7 @@ const ADMIN_LINKS: { label: string; href: string }[] = [
 
 // Support, status and issue reports are the super-admin panel's own pages.
 const TENANT_LINKS: { label: string; href: string }[] = [
-	{ label: 'Docs', href: '/docs' },
+	{ label: 'Guides', href: '/user-docs' },
 	{ label: 'Terms of Use', href: '/terms' },
 	{ label: 'Privacy Policy', href: '/privacy-policy' },
 ];

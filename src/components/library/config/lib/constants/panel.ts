@@ -74,3 +74,48 @@ export const pagePath = (route = ''): string => {
 	const r = String(route).replace(/^\/+/, '');
 	return IS_TENANT_PANEL ? `/t/${r}` : `/${r}`;
 };
+
+/* ------------------------------------------------------------- guides */
+
+/**
+ * The tenant panel's guides are the user guides (/user-docs); /docs belongs
+ * to the super-admin panel (its guides and the component library). Screens
+ * shared by both panels link to a /docs guide — `docsPath` turns that into
+ * the user guide covering the same thing, keeping the section anchor (the user
+ * guides use the same ids). In the super-admin panel it changes nothing.
+ */
+const USER_DOCS = '/user-docs';
+
+const userDocsFor = (guide: string, anchor: string): [string, string] => {
+	switch (guide) {
+		case '':
+			return ['', ''];
+		case 'builder':
+			if (/^mcp/.test(anchor)) return ['connect-ai', anchor];
+			if (/^features/.test(anchor)) return ['models', 'features'];
+			if (/^(models|notifications)/.test(anchor)) return ['models', anchor];
+			return ['pages', anchor];
+		case 'sidebar-builder':
+			return ['sidebar', anchor];
+		case 'dashboard-builder':
+			return ['dashboard', anchor];
+		case 'media':
+			return ['media', anchor];
+		case 'two-factor':
+			return ['account', anchor];
+		case 'themes':
+			return ['account', 'appearance'];
+		default:
+			return ['', ''];
+	}
+};
+
+/** A guide link for this panel: `/docs/<guide>#<section>`, or its user guide in the tenant panel. */
+export const docsPath = (href: string): string => {
+	if (!IS_TENANT_PANEL) return href;
+	const [path, anchor = ''] = href.split('#');
+	const match = path.match(/^\/docs(?:\/([^/?]+))?/);
+	if (!match) return href;
+	const [page, section] = userDocsFor(match[1] || '', anchor);
+	return `${USER_DOCS}${page ? `/${page}` : ''}${section ? `#${section}` : ''}`;
+};

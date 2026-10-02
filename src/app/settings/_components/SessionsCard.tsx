@@ -15,13 +15,14 @@ import {
 import { DeviceIcon, ago, deviceLabel, methodLabel, placeLabel, when } from '@/components/library/components/sessions/sessionView';
 import { toaster } from '@/components/ui/toaster';
 import { SettingsCard } from './ui';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
 
 const COMPACT = { size: 'sm', px: 3 } as const;
 const COLUMNS = { base: '1fr', md: 'minmax(0, 1.35fr) minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) 84px' };
 
 const DocLink: FC<{ anchor: string }> = ({ anchor }) => (
 	<Link
-		href={`/docs/two-factor#${anchor}`}
+		href={docsPath(`/docs/two-factor#${anchor}`)}
 		target='_blank'
 		rel='noreferrer'
 		fontSize='12px'

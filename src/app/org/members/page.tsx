@@ -1,8 +1,8 @@
 'use client';
 
-import { FC, FormEvent, useState } from 'react';
+import { FC, FormEvent, useMemo, useState } from 'react';
 import { Badge, Box, Button, Center, Field, Flex, Input, Skeleton, Text } from '@chakra-ui/react';
-import { MailPlus, RotateCw, ShieldCheck, Trash2, UserMinus, Users } from 'lucide-react';
+import { FolderKanban, MailPlus, RotateCw, ShieldCheck, Trash2, UserMinus, Users } from 'lucide-react';
 import {
 	Dialog,
 	DialogBody,
@@ -16,6 +16,7 @@ import {
 	useGetInvitationsQuery,
 	useGetMembersQuery,
 	useGetOrgRolesQuery,
+	useGetProjectsQuery,
 	useInviteMemberMutation,
 	useRemoveMemberMutation,
 	useResendInvitationMutation,
@@ -25,13 +26,14 @@ import { Dropdown, Panel, date } from '@/components/library/cl';
 import { styles } from '@/components/library/config';
 import { useWorkspace } from '@/components/library/tenant';
 import GuideLink from '@/components/library/tenant/GuideLink';
-import type { Member } from '@/components/library/store/services/tenantApi';
+import ProjectAccessPicker, { accessSummary } from '@/components/library/tenant/ProjectAccessPicker';
+import type { Member, ProjectAccess } from '@/components/library/store/services/tenantApi';
 
 /**
- * The organization's people (tenant panel): who's in it and with which role,
- * inviting someone by email, and the invitations still waiting. Changing
- * roles, removing people and inviting need the `manage-members` permission;
- * everyone can see the list.
+ * The organization's people (tenant panel): who's in it, with which role and
+ * which projects (WO-22), inviting someone by email with both, and the
+ * invitations still waiting. Changing roles and projects, removing people and
+ * inviting need the `manage-members` permission; everyone can see the list.
  */
 
 const errorText = (e: any) => e?.data?.message || 'Something went wrong — try again.';
@@ -45,6 +47,11 @@ const initials = (name = '') =>
 		.join('')
 		.toUpperCase();
 
+const ALL: ProjectAccess = { allProjects: true, projects: [] };
+
+/** Owner and Admin open every project, whatever access says (WO-22). */
+const opensEverything = (system?: string | null) => system === 'owner' || system === 'admin';
+
 const InviteDialog: FC<{ open: boolean; onClose: () => void }> = ({ open, onClose }) => {
 	const { data: roles } = useGetOrgRolesQuery();
 	const assignable = (roles?.doc || []).filter(r => r.system !== 'owner');
@@ -52,19 +59,22 @@ const InviteDialog: FC<{ open: boolean; onClose: () => void }> = ({ open, onClos
 	const [email, setEmail] = useState('');
 	const [name, setName] = useState('');
 	const [role, setRole] = useState('');
+	const [access, setAccess] = useState<ProjectAccess>(ALL);
 	const [invite, { isLoading, error, reset }] = useInviteMemberMutation();
+	const chosen = assignable.find(r => r._id === (role || member?._id));
 
 	const close = () => {
 		setEmail('');
 		setName('');
 		setRole('');
+		setAccess(ALL);
 		reset();
 		onClose();
 	};
 
 	const submit = async (e?: FormEvent) => {
 		e?.preventDefault();
-		const res = await invite({ email: email.trim(), name: name.trim(), role: role || member?._id || '' });
+		const res = await invite({ email: email.trim(), name: name.trim(), role: role || member?._id || '', ...access });
 		if ('data' in res) close();
 	};
 
@@ -118,6 +128,16 @@ const InviteDialog: FC<{ open: boolean; onClose: () => void }> = ({ open, onClos
 								/>
 							</Box>
 						</Box>
+						<Box>
+							<Text {...labelCss}>Projects</Text>
+							<Box mt={1.5}>
+								<ProjectAccessPicker
+									value={access}
+									onChange={setAccess}
+									everything={opensEverything(chosen?.system)}
+								/>
+							</Box>
+						</Box>
 						{error && (
 							<Text
 								role='alert'
@@ -144,11 +164,75 @@ const InviteDialog: FC<{ open: boolean; onClose: () => void }> = ({ open, onClos
 	);
 };
 
-const MemberRow: FC<{ m: Member; me: boolean; canManage: boolean; roles: { value: string; label: string }[] }> = ({ m, me, canManage, roles }) => {
+/** Which projects a member opens (WO-22), changed in a dialog. */
+const AccessDialog: FC<{ m: Member; open: boolean; onClose: () => void }> = ({ m, open, onClose }) => {
+	const [update, { isLoading, error, reset }] = useUpdateMemberMutation();
+	const [access, setAccess] = useState<ProjectAccess>({ allProjects: m.allProjects, projects: m.projects });
+	const close = () => {
+		reset();
+		onClose();
+	};
+	return (
+		<Dialog
+			isOpen={open}
+			onClose={close}
+			size='sm'
+			forceModal>
+			<DialogHeader
+				divider
+				icon={<FolderKanban size={17} strokeWidth={1.75} />}
+				description={`The projects ${m.user?.name} can open. Their role decides what they can do in them.`}>
+				Projects for {m.user?.name}
+			</DialogHeader>
+			<DialogCloseButton />
+			<DialogBody>
+				<Flex
+					direction='column'
+					gap={3}>
+					<ProjectAccessPicker
+						value={access}
+						onChange={setAccess}
+					/>
+					{error && (
+						<Text
+							role='alert'
+							fontSize='13px'
+							color='red.fg'>
+							{errorText(error)}
+						</Text>
+					)}
+				</Flex>
+			</DialogBody>
+			<DialogFooter>
+				<DiscardButton onClick={close}>Cancel</DiscardButton>
+				<Button
+					{...(styles.MODAL_BUTTON as any)}
+					loading={isLoading}
+					onClick={async () => {
+						const res = await update({ id: m._id, ...access });
+						if ('data' in res) close();
+					}}>
+					Save
+				</Button>
+			</DialogFooter>
+		</Dialog>
+	);
+};
+
+const MemberRow: FC<{ m: Member; me: boolean; canManage: boolean; roles: { value: string; label: string }[]; projectNames: Map<string, string> }> = ({
+	m,
+	me,
+	canManage,
+	roles,
+	projectNames,
+}) => {
 	const [update, updating] = useUpdateMemberMutation();
 	const [remove, removing] = useRemoveMemberMutation();
 	const [confirm, setConfirm] = useState(false);
+	const [editingAccess, setEditingAccess] = useState(false);
 	const owner = m.role?.system === 'owner';
+	const everything = opensEverything(m.role?.system);
+	const access = everything ? 'All projects' : accessSummary(m, projectNames);
 
 	return (
 		<Flex
@@ -202,6 +286,33 @@ const MemberRow: FC<{ m: Member; me: boolean; canManage: boolean; roles: { value
 					truncate>
 					{m.user?.email} · joined {date(m.joinedAt)}
 				</Text>
+				{canManage && !everything ? (
+					<Button
+						size='2xs'
+						variant='plain'
+						px={0}
+						h='auto'
+						fontSize='12px'
+						fontWeight='400'
+						color='fg.muted'
+						_hover={{ color: 'fg', textDecoration: 'underline' }}
+						title='Change which projects they can open'
+						onClick={() => setEditingAccess(true)}>
+						<FolderKanban size={12} />
+						{access}
+					</Button>
+				) : (
+					<Text
+						fontSize='12px'
+						color='fg.muted'
+						display='flex'
+						alignItems='center'
+						gap={1}
+						truncate>
+						<FolderKanban size={12} />
+						{access}
+					</Text>
+				)}
 			</Box>
 			<Box
 				w={{ base: '120px', md: '160px' }}
@@ -255,6 +366,13 @@ const MemberRow: FC<{ m: Member; me: boolean; canManage: boolean; roles: { value
 				loading={removing.isLoading}
 				confirmLabel={me ? 'Leave' : 'Remove'}
 			/>
+			{editingAccess && (
+				<AccessDialog
+					m={m}
+					open={editingAccess}
+					onClose={() => setEditingAccess(false)}
+				/>
+			)}
 		</Flex>
 	);
 };
@@ -293,7 +411,8 @@ const Invitations: FC = () => {
 						<Text
 							fontSize='12.5px'
 							color={i.expired ? 'orange.fg' : 'fg.muted'}>
-							{i.role?.name} · {i.expired ? 'expired' : `expires ${date(i.expiresAt)}`}
+							{i.role?.name} · {i.allProjects ? 'all projects' : `${i.projects.length} project${i.projects.length === 1 ? '' : 's'}`} ·{' '}
+							{i.expired ? 'expired' : `expires ${date(i.expiresAt)}`}
 							{i.invitedBy ? ` · by ${i.invitedBy.name}` : ''}
 						</Text>
 					</Box>
@@ -322,6 +441,8 @@ export default function MembersPage() {
 	const { self, can } = useWorkspace();
 	const { data, isLoading } = useGetMembersQuery();
 	const { data: roles } = useGetOrgRolesQuery();
+	const { data: projects } = useGetProjectsQuery();
+	const projectNames = useMemo(() => new Map((projects?.doc || []).map(p => [p._id, p.name])), [projects]);
 	const [inviting, setInviting] = useState(false);
 	const canManage = can('manage-members');
 	const roleItems = (roles?.doc || []).filter(r => r.system !== 'owner').map(r => ({ value: r._id, label: r.name }));
@@ -371,6 +492,7 @@ export default function MembersPage() {
 								me={m.user?._id === self?._id}
 								canManage={canManage}
 								roles={roleItems}
+								projectNames={projectNames}
 							/>
 						))
 					) : (

@@ -5,6 +5,7 @@ import NextLink from 'next/link';
 import { Box, Button, Flex, Link, Text } from '@chakra-ui/react';
 import { ArrowUpRight } from 'lucide-react';
 import Footer from '@/components/library/nav/Footer';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
 
 /**
  * The frame of the public site pages — Terms of Use, Privacy Policy, System
@@ -13,7 +14,7 @@ import Footer from '@/components/library/nav/Footer';
  */
 
 const NAV = [
-	{ href: '/docs', label: 'Docs' },
+	{ href: docsPath('/docs'), label: 'Docs' },
 	{ href: '/system-status', label: 'System Status' },
 ];
 

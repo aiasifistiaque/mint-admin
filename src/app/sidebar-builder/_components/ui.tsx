@@ -5,9 +5,10 @@ import { Box, Flex, Input, Link, Text } from '@chakra-ui/react';
 import { ExternalLink } from 'lucide-react';
 import { iconNames } from 'lucide-react/dynamic';
 import { LucideIcon } from '@/components/library';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
 
 /** The sidebar builder guide. Section ids are the anchors below. */
-export const GUIDE = '/docs/sidebar-builder';
+export const GUIDE = docsPath('/docs/sidebar-builder');
 
 /** Lucide's own catalogue — the names typed into an icon field come from here. */
 export const ICON_CATALOGUE = 'https://lucide.dev/icons/';

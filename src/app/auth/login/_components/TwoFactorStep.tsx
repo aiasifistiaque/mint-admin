@@ -11,11 +11,12 @@ import {
 	useVerifyTwoFactorPasskeyMutation,
 } from '@/components/library';
 import { passkeyError, passkeysSupported, startAuthentication } from '@/components/library/utils/functions/passkeys';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
 
 type Method = 'passkey' | 'email' | 'backup';
 type View = Method | 'choose';
 
-const GUIDE = '/docs/two-factor';
+const GUIDE = docsPath('/docs/two-factor');
 
 /** "How this works ↗", to a section of the guide in a new tab. */
 const DocLink: FC<{ anchor: string; children?: ReactNode }> = ({ anchor, children }) => (

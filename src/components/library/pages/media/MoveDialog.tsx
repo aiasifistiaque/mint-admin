@@ -6,6 +6,7 @@ import { ChevronRight, Folder, FolderPlus, HardDrive } from 'lucide-react';
 import { useCreateMediaFolderMutation, useGetMediaTreeQuery, MediaFolder } from '../../store/services/mediaApi';
 import DiscardButton from '../../components/buttons/DiscardButton';
 import { MediaDialog } from './ui';
+import { useMediaRoot } from './useMediaRoot';
 
 const NO_FOLDERS: MediaFolder[] = [];
 
@@ -27,6 +28,7 @@ type Props = {
  * into itself. A new folder can be made inside the highlighted one on the spot.
  */
 const MoveDialog: FC<Props> = ({ isOpen, onClose, current, movingFolders, count, busy, onConfirm }) => {
+	const ROOT = useMediaRoot();
 	const { data, isFetching } = useGetMediaTreeQuery(undefined, { skip: !isOpen });
 	const [createFolder, { isLoading: creating }] = useCreateMediaFolderMutation();
 	const [target, setTarget] = useState<string | null>(current);
@@ -169,7 +171,7 @@ const MoveDialog: FC<Props> = ({ isOpen, onClose, current, movingFolders, count,
 			names.unshift(byId.get(id)!.name);
 			id = byId.get(id)!.parent ? String(byId.get(id)!.parent) : null;
 		}
-		return names.join(' / ') || 'All Media';
+		return names.join(' / ') || ROOT;
 	};
 
 	const same = target === current;
@@ -276,7 +278,7 @@ const MoveDialog: FC<Props> = ({ isOpen, onClose, current, movingFolders, count,
 							<Text
 								fontSize='sm'
 								fontWeight='500'>
-								All Media
+								{ROOT}
 							</Text>
 							{current === null && (
 								<Text
@@ -300,7 +302,7 @@ const MoveDialog: FC<Props> = ({ isOpen, onClose, current, movingFolders, count,
 					px={2}
 					onClick={() => setNewName('')}>
 					<FolderPlus size={14} />
-					New folder in {target ? byId.get(target)?.name || 'this folder' : 'All Media'}
+					New folder in {target ? byId.get(target)?.name || 'this folder' : ROOT}
 				</Button>
 			) : (
 				<Flex

@@ -8,6 +8,7 @@ import { Dropdown } from '@/components/library/cl';
 import { cleanHref, defaultPermission, Item, itemProblem, Section } from './draft';
 import { DocLink, IconField, Label } from './ui';
 import { ModalFooter } from '@/components/library';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 
 export type PermissionGroup = { title: string; fields: { label: string; value: string }[] };
 
@@ -164,14 +165,19 @@ const ItemDialog: FC<Props> = ({ item, sectionKey, sections, permissions, isNew,
 									borderRadius='md'
 									p={3}>
 									<Toggle
-										label='Only people with a permission'
-										hint='Off shows it to everyone who can sign in. The page itself still checks access.'
+										label={IS_TENANT_PANEL ? 'Only people who can view records' : 'Only people with a permission'}
+										hint={
+											IS_TENANT_PANEL
+												? 'Off shows it to everyone who can open the project. On: only roles with View on records.'
+												: 'Off shows it to everyone who can sign in. The page itself still checks access.'
+										}
 										checked={draft.permissionProtected}
 										onChange={permissionProtected =>
 											set({ permissionProtected, permission: draft.permission || suggested })
 										}
 									/>
-									{draft.permissionProtected && (
+									{/* Projects have no per-page permissions to pick from (WO-21): the page's view key is used. */}
+									{draft.permissionProtected && !IS_TENANT_PANEL && (
 										<Box mt={3}>
 											<Flex
 												align='center'

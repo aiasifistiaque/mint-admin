@@ -8,11 +8,12 @@ import { radius } from '../config';
 import { Palette, Theme, THEMES } from '@/theme/palettes';
 import useAdminTheme from './useAdminTheme';
 import ModalFooter from '../modals/modal-components/CustomModalFooter';
+import { docsPath } from '../config/lib/constants/panel';
 
 /** A link into the themes guide, opened beside the window rather than in place of it. */
 const GuideLink: FC<{ section: string; label: string }> = ({ section, label }) => (
 	<Link
-		href={`/docs/themes#${section}`}
+		href={docsPath(`/docs/themes#${section}`)}
 		target='_blank'
 		rel='noopener noreferrer'
 		display='inline-flex'

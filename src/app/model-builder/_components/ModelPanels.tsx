@@ -5,6 +5,7 @@ import { Box, Flex, Grid, Input, Switch, Text, Textarea } from '@chakra-ui/react
 import { useCheckModelNameQuery } from '@/components/library';
 import { Dropdown, Panel } from '@/components/library/cl';
 import { DocLink } from '@/app/builder/_components/ui';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 import FieldsEditor, { LinkTarget } from './FieldsEditor';
 import {
 	EditableField,
@@ -358,53 +359,56 @@ const ModelPanels: FC<Props> = ({ working, onChange, mode, doc, base, targets, c
 				</Flex>
 			</Panel>
 
-			<Panel
-				title='Access'
-				subtitle='Whether every record decides who can see it. The page permission still comes first: without it, no record shows.'
-				actions={<DocLink section='models-access' />}>
-				<Flex
-					direction='column'
-					gap={4}>
-					<Switch.Root
-						size='sm'
-						checked={working.access.enabled}
-						onCheckedChange={e => setAccess({ enabled: e.checked })}>
-						<Switch.HiddenInput />
-						<Switch.Control>
-							<Switch.Thumb />
-						</Switch.Control>
-						<Switch.Label fontSize='sm'>Restrict access to each record</Switch.Label>
-					</Switch.Root>
-					{working.access.enabled && (
-						<>
-							<Text
-								fontSize='xs'
-								color='fg.muted'>
-								Every record gets an owner (whoever creates it), a privacy and an access list. The form gains a{' '}
-								<em>Manage access</em> section where each record is set to Only me, Private or Public (Private to
-								start with); the people picker shows when it&apos;s Private, and everyone added is notified. Only
-								the owner can change access or delete the record.
-							</Text>
-							{!isNew && !base?.access?.enabled && records > 0 && (
+			{/* Per-record access is built on admin accounts; projects don't have it yet (multi-tenancy D12). */}
+			{!IS_TENANT_PANEL && (
+				<Panel
+					title='Access'
+					subtitle='Whether every record decides who can see it. The page permission still comes first: without it, no record shows.'
+					actions={<DocLink section='models-access' />}>
+					<Flex
+						direction='column'
+						gap={4}>
+						<Switch.Root
+							size='sm'
+							checked={working.access.enabled}
+							onCheckedChange={e => setAccess({ enabled: e.checked })}>
+							<Switch.HiddenInput />
+							<Switch.Control>
+								<Switch.Thumb />
+							</Switch.Control>
+							<Switch.Label fontSize='sm'>Restrict access to each record</Switch.Label>
+						</Switch.Root>
+						{working.access.enabled && (
+							<>
 								<Text
 									fontSize='xs'
 									color='fg.muted'>
-									The {records} existing records have no owner yet: they become Public when you save, so nobody loses
-									sight of them.
+									Every record gets an owner (whoever creates it), a privacy and an access list. The form gains a{' '}
+									<em>Manage access</em> section where each record is set to Only me, Private or Public (Private to
+									start with); the people picker shows when it&apos;s Private, and everyone added is notified. Only
+									the owner can change access or delete the record.
 								</Text>
-							)}
-						</>
-					)}
-					{!isNew && base?.access?.enabled && !working.access.enabled && (
-						<Text
-							fontSize='xs'
-							color='orange.fg'>
-							Turning it off shows every record to everyone who can open the page. The owners and access lists
-							stay in the records, and come back if you turn it on again.
-						</Text>
-					)}
-				</Flex>
-			</Panel>
+								{!isNew && !base?.access?.enabled && records > 0 && (
+									<Text
+										fontSize='xs'
+										color='fg.muted'>
+										The {records} existing records have no owner yet: they become Public when you save, so nobody loses
+										sight of them.
+									</Text>
+								)}
+							</>
+						)}
+						{!isNew && base?.access?.enabled && !working.access.enabled && (
+							<Text
+								fontSize='xs'
+								color='orange.fg'>
+								Turning it off shows every record to everyone who can open the page. The owners and access lists
+								stay in the records, and come back if you turn it on again.
+							</Text>
+						)}
+					</Flex>
+				</Panel>
+			)}
 
 			<Panel
 				title='Fields'

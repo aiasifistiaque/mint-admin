@@ -39,6 +39,7 @@ import SettingsEditor, { SettingsField } from './SettingsEditor';
 import SectionsEditor from './SectionsEditor';
 import PublishDialog from './PublishDialog';
 import { BULK_MENU_TYPES, DEFAULT_ROW_MENU, ROW_MENU_TYPES, validateMenu } from './menuTypes';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 
 const DEFAULT_ADD_BUTTON = { title: 'Add Item', isModal: true };
 
@@ -49,7 +50,7 @@ const TABS = [
 	{ value: 'filters', label: 'Filters' },
 	{ value: 'form', label: 'Form' },
 	{ value: 'view', label: 'View' },
-	{ value: 'source', label: 'Source & versions' },
+	{ value: 'source', label: IS_TENANT_PANEL ? 'Versions' : 'Source & versions' },
 ];
 
 const Summary: FC<{
@@ -940,101 +941,104 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 					<Flex
 						direction='column'
 						gap={5}>
-				<Panel
-					title='Source'
-					subtitle='What the API serves for this route. Switching is live immediately and changes nothing else — drafts and versions stay.'>
-					<Flex
-						direction='column'
-						gap={4}>
-						{(['settings', 'config'] as const)
-							.filter(k => k === 'config' || hasSettings)
-							.map(k => {
-								const doc = k === 'settings' ? settingsDoc : config;
-								const diff = compare?.[k]?.published;
-								const global = data.global?.[k] || 'db';
-								const summary = !doc?.version
-									? 'No published copy — runs on the code file.'
-									: diff?.identical
-										? 'The published copy is identical to the code file.'
-										: diff
-											? k === 'settings'
-												? [
-														diff.added?.length && `${diff.added.length} added`,
-														diff.removed?.length && `${diff.removed.length} removed`,
-														diff.changed?.length &&
-															`${diff.changed.length} changed (${diff.changed
-																.slice(0, 4)
-																.map((c: any) => c.key)
-																.join(', ')}${diff.changed.length > 4 ? '…' : ''})`,
-														diff.reordered && 'reordered',
-												  ]
-														.filter(Boolean)
-														.join(', ') + ' vs the settings file.'
-												: `Differs from the config file in: ${[...diff.changed, ...diff.route.map((r: string) => `route.${r}`)].join(', ')}.`
-											: '';
-								return (
-									<Flex
-										key={k}
-										align='center'
-										justify='space-between'
-										gap={4}
-										flexWrap='wrap'>
-										<Box minW={0}>
+				{/* Projects have no code files to switch to (multi-tenancy). */}
+				{!IS_TENANT_PANEL && (
+					<Panel
+						title='Source'
+						subtitle='What the API serves for this route. Switching is live immediately and changes nothing else — drafts and versions stay.'>
+						<Flex
+							direction='column'
+							gap={4}>
+							{(['settings', 'config'] as const)
+								.filter(k => k === 'config' || hasSettings)
+								.map(k => {
+									const doc = k === 'settings' ? settingsDoc : config;
+									const diff = compare?.[k]?.published;
+									const global = data.global?.[k] || 'db';
+									const summary = !doc?.version
+										? 'No published copy — runs on the code file.'
+										: diff?.identical
+											? 'The published copy is identical to the code file.'
+											: diff
+												? k === 'settings'
+													? [
+															diff.added?.length && `${diff.added.length} added`,
+															diff.removed?.length && `${diff.removed.length} removed`,
+															diff.changed?.length &&
+																`${diff.changed.length} changed (${diff.changed
+																	.slice(0, 4)
+																	.map((c: any) => c.key)
+																	.join(', ')}${diff.changed.length > 4 ? '…' : ''})`,
+															diff.reordered && 'reordered',
+													  ]
+															.filter(Boolean)
+															.join(', ') + ' vs the settings file.'
+													: `Differs from the config file in: ${[...diff.changed, ...diff.route.map((r: string) => `route.${r}`)].join(', ')}.`
+												: '';
+									return (
+										<Flex
+											key={k}
+											align='center'
+											justify='space-between'
+											gap={4}
+											flexWrap='wrap'>
+											<Box minW={0}>
+												<Flex
+													gap={2}
+													align='center'>
+													<Text
+														fontSize='sm'
+														fontWeight='500'>
+														{k === 'settings' ? 'Settings' : 'Config'}
+													</Text>
+													<Badge
+														size='sm'
+														variant='subtle'
+														colorPalette={doc?.serving === 'db' ? 'green' : 'gray'}>
+														{doc?.serving === 'db' ? `Serving DB v${doc.version}` : 'Serving code file'}
+													</Badge>
+												</Flex>
+												<Text
+													fontSize='xs'
+													color='fg.muted'>
+													{summary}
+												</Text>
+											</Box>
 											<Flex
 												gap={2}
 												align='center'>
-												<Text
-													fontSize='sm'
-													fontWeight='500'>
-													{k === 'settings' ? 'Settings' : 'Config'}
-												</Text>
-												<Badge
-													size='sm'
-													variant='subtle'
-													colorPalette={doc?.serving === 'db' ? 'green' : 'gray'}>
-													{doc?.serving === 'db' ? `Serving DB v${doc.version}` : 'Serving code file'}
-												</Badge>
-											</Flex>
-											<Text
-												fontSize='xs'
-												color='fg.muted'>
-												{summary}
-											</Text>
-										</Box>
-										<Flex
-											gap={2}
-											align='center'>
-											<SegmentGroup.Root
-												size='xs'
-												disabled={!doc?.version || switching}
-												value={doc?.source || 'inherit'}
-												onValueChange={e => e.value && onSource(k, e.value as any)}>
-												<SegmentGroup.Indicator />
-												<SegmentGroup.Items
-													items={[
-														{ value: 'inherit', label: `Global (${global === 'db' ? 'DB' : 'code'})` },
-														{ value: 'db', label: 'DB' },
-														{ value: 'code', label: 'Code file' },
-													]}
-												/>
-											</SegmentGroup.Root>
-											{doc?.data && (
-												<Button
+												<SegmentGroup.Root
 													size='xs'
-													variant='ghost'
-													color='red.fg'
-													disabled={busy}
-													title='Delete the DB copy entirely; it is saved as a version first'
-													onClick={() => setConfirm(k === 'settings' ? 'reset-settings' : 'reset-config')}>
-													Delete copy
-												</Button>
-											)}
+													disabled={!doc?.version || switching}
+													value={doc?.source || 'inherit'}
+													onValueChange={e => e.value && onSource(k, e.value as any)}>
+													<SegmentGroup.Indicator />
+													<SegmentGroup.Items
+														items={[
+															{ value: 'inherit', label: `Global (${global === 'db' ? 'DB' : 'code'})` },
+															{ value: 'db', label: 'DB' },
+															{ value: 'code', label: 'Code file' },
+														]}
+													/>
+												</SegmentGroup.Root>
+												{doc?.data && (
+													<Button
+														size='xs'
+														variant='ghost'
+														color='red.fg'
+														disabled={busy}
+														title='Delete the DB copy entirely; it is saved as a version first'
+														onClick={() => setConfirm(k === 'settings' ? 'reset-settings' : 'reset-config')}>
+														Delete copy
+													</Button>
+												)}
+											</Flex>
 										</Flex>
-									</Flex>
-								);
-							})}
-					</Flex>
-				</Panel>
+									);
+								})}
+						</Flex>
+					</Panel>
+				)}
 
 				<Panel
 					title='Versions'

@@ -22,18 +22,27 @@ import { Panel } from '@/components/library/cl';
 import { styles } from '@/components/library/config';
 import { useWorkspace } from '@/components/library/tenant';
 import GuideLink from '@/components/library/tenant/GuideLink';
-import type { OrgRole } from '@/components/library/store/services/tenantApi';
+import type { OrgRole, PermissionCatalog } from '@/components/library/store/services/tenantApi';
 
 /**
  * The organization's roles (tenant panel): Owner, Admin and Member come with
- * every organization; others are made here. A role is a list of permissions —
- * organization actions, and per model (view / add / edit / delete), which
- * apply in every project that has that model's route.
+ * every organization; others are made here. A role is a set of the standard
+ * permissions (WO-21): records — view, add, edit, delete — in the projects a
+ * member can open, then project and organization actions. Which projects
+ * each member opens is set per member (Members, WO-22).
  */
 
 const errorText = (e: any) => e?.data?.message || 'Something went wrong — try again.';
-const ACTIONS = ['view', 'create', 'edit', 'delete'] as const;
-const ACTION_LABEL: Record<string, string> = { view: 'View', create: 'Add', edit: 'Edit', delete: 'Delete' };
+
+/** "Records: view, add · Build · Manage members" — a role at a glance. */
+const RECORD_LABEL: Record<string, string> = { 'records:view': 'view', 'records:create': 'add', 'records:edit': 'edit', 'records:delete': 'delete' };
+const summary = (permissions: string[], catalog?: PermissionCatalog) => {
+	if (permissions.includes('*')) return 'Everything';
+	const records = permissions.filter(k => RECORD_LABEL[k]).map(k => RECORD_LABEL[k]);
+	const rest = permissions.filter(k => !RECORD_LABEL[k]).map(k => catalog?.organization.find(p => p.key === k)?.label || k);
+	const parts = [...(records.length ? [`Records: ${records.join(', ')}`] : []), ...rest];
+	return parts.length ? parts.join(' · ') : 'No permissions';
+};
 
 const RoleDialog: FC<{ role: OrgRole | null; open: boolean; onClose: () => void }> = ({ role, open, onClose }) => {
 	const { data: catalog } = useGetOrgPermissionsQuery();
@@ -54,20 +63,14 @@ const RoleDialog: FC<{ role: OrgRole | null; open: boolean; onClose: () => void 
 		updating.reset();
 	}, [open, role?._id]);
 
-	// Every model route across the projects, once: a key applies wherever the route exists.
-	const models = useMemo(() => {
-		const seen = new Map<string, { title: string; route: string; projects: string[] }>();
-		for (const p of catalog?.projects || [])
-			for (const m of p.models) {
-				const hit = seen.get(m.route);
-				if (hit) hit.projects.push(p.name);
-				else seen.set(m.route, { title: m.title, route: m.route, projects: [p.name] });
-			}
-		return [...seen.values()].sort((a, b) => a.title.localeCompare(b.title));
+	// The standard permissions (WO-21) in their groups: Records first, then Projects, Organization.
+	const groups = useMemo(() => {
+		const out = new Map<string, PermissionCatalog['organization']>();
+		for (const p of catalog?.organization || []) out.set(p.group, [...(out.get(p.group) || []), p]);
+		return [...out.entries()];
 	}, [catalog]);
 
 	const toggle = (key: string) => setPerms(p => (p.includes(key) ? p.filter(k => k !== key) : [...p, key]));
-	const allData = perms.includes('data:*');
 
 	const submit = async (e?: FormEvent) => {
 		e?.preventDefault();
@@ -122,117 +125,87 @@ const RoleDialog: FC<{ role: OrgRole | null; open: boolean; onClose: () => void 
 						</Grid>
 
 						{!everything && (
-							<>
-								<Box>
-									<Text {...sectionCss}>Organization</Text>
-									<Flex
-										direction='column'
-										gap={2.5}
-										mt={2}>
-										{(catalog?.organization || []).map(p => (
-											<Checkbox.Root
-												key={p.key}
-												size='sm'
-												checked={perms.includes(p.key)}
-												onCheckedChange={() => toggle(p.key)}
-												alignItems='flex-start'>
-												<Checkbox.HiddenInput />
-												<Checkbox.Control mt='2px' />
-												<Checkbox.Label>
-													<Text
-														fontSize='13px'
-														fontWeight='500'>
-														{p.label}
-													</Text>
-													<Text
-														fontSize='12px'
-														color='fg.muted'>
-														{p.description}
-													</Text>
-												</Checkbox.Label>
-											</Checkbox.Root>
-										))}
-									</Flex>
-								</Box>
-
-								<Box>
-									<Text {...sectionCss}>Records, per model</Text>
-									<Text
-										fontSize='12px'
-										color='fg.muted'
-										mt={0.5}>
-										{allData
-											? '“All records” is on, so every model is covered.'
-											: 'A model’s permissions apply in every project that has it.'}
-									</Text>
-									{models.length ? (
-										<Box
-											mt={2}
-											borderWidth='1px'
-											borderColor='border'
-											borderRadius='md'
-											overflowX='auto'
-											opacity={allData ? 0.5 : 1}
-											pointerEvents={allData ? 'none' : undefined}>
+							<Flex
+								direction='column'
+								gap={4}>
+								{groups.map(([group, items]) =>
+									group === 'Records' ? (
+										<Box key={group}>
+											<Text {...sectionCss}>Records</Text>
+											<Text
+												fontSize='12px'
+												color='fg.muted'
+												mt={0.5}>
+												Every model’s records — and the project’s media, customers and analytics — in the projects each member can open.
+											</Text>
 											<Grid
-												templateColumns='minmax(140px, 1fr) repeat(4, 64px)'
-												minW='420px'
-												fontSize='12.5px'>
-												<Text {...headCss}>Model</Text>
-												{ACTIONS.map(a => (
-													<Text
-														key={a}
-														{...headCss}
-														textAlign='center'>
-														{ACTION_LABEL[a]}
-													</Text>
-												))}
-												{models.map(m => (
-													<Box
-														key={m.route}
-														display='contents'>
-														<Box {...cellCss}>
+												templateColumns={{ base: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }}
+												gap={2}
+												mt={2}>
+												{items.map(p => (
+													<Checkbox.Root
+														key={p.key}
+														size='sm'
+														checked={perms.includes(p.key)}
+														onCheckedChange={() => toggle(p.key)}
+														alignItems='flex-start'
+														p={2.5}
+														borderWidth='1px'
+														borderColor={perms.includes(p.key) ? 'border.emphasized' : 'border.muted'}
+														borderRadius='md'>
+														<Checkbox.HiddenInput />
+														<Checkbox.Control mt='2px' />
+														<Checkbox.Label>
 															<Text
-																fontWeight='500'
-																truncate>
-																{m.title}
+																fontSize='13px'
+																fontWeight='500'>
+																{p.label}
 															</Text>
 															<Text
 																fontSize='11.5px'
-																color='fg.muted'
-																truncate>
-																{m.projects.join(', ')}
+																color='fg.muted'>
+																{p.description}
 															</Text>
-														</Box>
-														{ACTIONS.map(a => (
-															<Flex
-																key={a}
-																{...cellCss}
-																justify='center'>
-																<Checkbox.Root
-																	size='sm'
-																	aria-label={`${ACTION_LABEL[a]} ${m.title}`}
-																	checked={perms.includes(`${a}-${m.route}`)}
-																	onCheckedChange={() => toggle(`${a}-${m.route}`)}>
-																	<Checkbox.HiddenInput />
-																	<Checkbox.Control />
-																</Checkbox.Root>
-															</Flex>
-														))}
-													</Box>
+														</Checkbox.Label>
+													</Checkbox.Root>
 												))}
 											</Grid>
 										</Box>
 									) : (
-										<Text
-											mt={2}
-											fontSize='12.5px'
-											color='fg.muted'>
-											No models yet — they show here once a project has some.
-										</Text>
-									)}
-								</Box>
-							</>
+										<Box key={group}>
+											<Text {...sectionCss}>{group}</Text>
+											<Flex
+												direction='column'
+												gap={2.5}
+												mt={2}>
+												{items.map(p => (
+													<Checkbox.Root
+														key={p.key}
+														size='sm'
+														checked={perms.includes(p.key)}
+														onCheckedChange={() => toggle(p.key)}
+														alignItems='flex-start'>
+														<Checkbox.HiddenInput />
+														<Checkbox.Control mt='2px' />
+														<Checkbox.Label>
+															<Text
+																fontSize='13px'
+																fontWeight='500'>
+																{p.label}
+															</Text>
+															<Text
+																fontSize='12px'
+																color='fg.muted'>
+																{p.description}
+															</Text>
+														</Checkbox.Label>
+													</Checkbox.Root>
+												))}
+											</Flex>
+										</Box>
+									)
+								)}
+							</Flex>
 						)}
 
 						{error && (
@@ -264,6 +237,7 @@ const RoleDialog: FC<{ role: OrgRole | null; open: boolean; onClose: () => void 
 export default function RolesPage() {
 	const { can } = useWorkspace();
 	const { data, isLoading } = useGetOrgRolesQuery();
+	const { data: catalog } = useGetOrgPermissionsQuery();
 	const [remove, removing] = useDeleteOrgRoleMutation();
 	const [editing, setEditing] = useState<OrgRole | null>(null);
 	const [open, setOpen] = useState(false);
@@ -342,8 +316,7 @@ export default function RolesPage() {
 										fontSize='12.5px'
 										color='fg.muted'
 										truncate>
-										{r.description ||
-											(r.permissions.includes('*') ? 'Everything' : `${r.permissions.length} permission${r.permissions.length === 1 ? '' : 's'}`)}
+										{r.description || summary(r.permissions, catalog)}
 									</Text>
 								</Box>
 								<Text
@@ -401,14 +374,4 @@ export default function RolesPage() {
 
 const labelCss: any = { fontSize: '13px', fontWeight: '600', m: 0 };
 const sectionCss: any = { fontSize: '13px', fontWeight: '600' };
-const headCss: any = {
-	px: 3,
-	py: 2,
-	fontSize: '11.5px',
-	fontWeight: '600',
-	color: 'fg.muted',
-	bg: 'bg.subtle',
-	borderBottomWidth: '1px',
-	borderColor: 'border.muted',
-};
-const cellCss: any = { px: 3, py: 2, borderBottomWidth: '1px', borderColor: 'border.muted', minW: 0, alignItems: 'center' };
+

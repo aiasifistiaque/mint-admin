@@ -3,6 +3,7 @@
 import { FC, ReactNode } from 'react';
 import { Box, Flex, Link, Switch, Text } from '@chakra-ui/react';
 import { ExternalLink } from 'lucide-react';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
 
 /**
  * Small pieces shared by the route builder and the model wizard, so a panel
@@ -12,7 +13,7 @@ import { ExternalLink } from 'lucide-react';
 /** The builder guide, opened beside the editor rather than in place of it. */
 export const DocLink: FC<{ section: string; label?: string }> = ({ section, label = 'How it works' }) => (
 	<Link
-		href={`/docs/builder#${section}`}
+		href={docsPath(`/docs/builder#${section}`)}
 		target='_blank'
 		rel='noopener noreferrer'
 		display='inline-flex'

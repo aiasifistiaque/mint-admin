@@ -36,6 +36,11 @@ export type Organization = {
 };
 
 export type ProjectType = 'app' | 'website';
+/** Whose media library a project uses (WO-23). */
+export type MediaScope = 'project' | 'organization';
+
+/** Which projects a member (or invitation) opens (WO-22): every one, or these ids. */
+export type ProjectAccess = { allProjects: boolean; projects: string[] };
 
 export type TenantProject = {
 	_id: string;
@@ -47,12 +52,13 @@ export type TenantProject = {
 	icon?: string;
 	color?: string;
 	domains?: string[];
+	mediaScope?: MediaScope;
 	isActive: boolean;
 	models?: number;
 	createdAt?: string;
 };
 
-export type Member = {
+export type Member = ProjectAccess & {
 	_id: string;
 	user: { _id: string; name: string; email: string; image?: string; twoFactorEnabled?: boolean };
 	role: { _id: string; name: string; system: SystemRole };
@@ -69,7 +75,7 @@ export type OrgRole = {
 	members: number;
 };
 
-export type Invitation = {
+export type Invitation = ProjectAccess & {
 	_id: string;
 	email: string;
 	name?: string;
@@ -81,9 +87,9 @@ export type Invitation = {
 	createdAt: string;
 };
 
+/** The standard permissions (WO-21), in their groups: Records, Projects, Organization. */
 export type PermissionCatalog = {
-	organization: { key: string; label: string; description: string }[];
-	projects: { _id: string; name: string; models: { title: string; route: string; keys: string[] }[] }[];
+	organization: { key: string; group: string; label: string; description: string }[];
 };
 
 export type InvitationInfo = {
@@ -91,7 +97,22 @@ export type InvitationInfo = {
 	name?: string;
 	organization: { name: string; logo?: string };
 	role?: string;
+	allProjects: boolean;
+	projects: string[];
 	existingAccount: boolean;
+	/** The reader is signed in to the invited account: joining takes one click. */
+	signedInAsInvitee?: boolean;
+	expiresAt: string;
+};
+
+/** An invitation to the signed-in account's (verified) email, shown in the app (WO-24). */
+export type MyInvitation = {
+	_id: string;
+	organization: { _id: string; name: string; logo?: string };
+	role?: string;
+	invitedBy?: string;
+	allProjects: boolean;
+	projects: string[];
 	expiresAt: string;
 };
 
@@ -148,8 +169,8 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: () => 'org/members',
 			providesTags: ['tenant-members'],
 		}),
-		updateMember: builder.mutation<Member, { id: string; role: string }>({
-			query: ({ id, role }) => ({ url: `org/members/${id}`, method: 'PUT', body: { role } }),
+		updateMember: builder.mutation<Member, { id: string; role?: string } & Partial<ProjectAccess>>({
+			query: ({ id, ...body }) => ({ url: `org/members/${id}`, method: 'PUT', body }),
 			invalidatesTags: ['tenant-members', 'tenant-roles'],
 		}),
 		removeMember: builder.mutation<{ message: string }, string>({
@@ -184,7 +205,7 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: () => 'org/invitations',
 			providesTags: ['tenant-invitations'],
 		}),
-		inviteMember: builder.mutation<Invitation, { email: string; name?: string; role: string }>({
+		inviteMember: builder.mutation<Invitation, { email: string; name?: string; role: string } & Partial<ProjectAccess>>({
 			query: body => ({ url: 'org/invitations', method: 'POST', body }),
 			invalidatesTags: ['tenant-invitations'],
 		}),
@@ -199,8 +220,28 @@ export const tenantApi = mainApi.injectEndpoints({
 		getTenantInvitation: builder.query<InvitationInfo, string>({
 			query: token => `invitations/${token}`,
 		}),
-		acceptTenantInvitation: builder.mutation<{ token: string; message: string }, { token: string; name?: string; phone?: string; password: string }>({
+		acceptTenantInvitation: builder.mutation<{ token: string; message: string }, { token: string; name?: string; phone?: string; password?: string }>({
 			query: ({ token, ...body }) => ({ url: `invitations/${token}/accept`, method: 'POST', body }),
+		}),
+
+		/* ------------------------------------ invitations for me (WO-24) */
+		getMyInvitations: builder.query<{ verified: boolean; email: string; doc: MyInvitation[] }, void>({
+			query: () => 'invitations/for-me',
+			providesTags: ['tenant-invitations', 'self'],
+		}),
+		acceptMyInvitation: builder.mutation<{ token: string; message: string }, string>({
+			query: id => ({ url: `invitations/for-me/${id}/accept`, method: 'POST' }),
+		}),
+		declineMyInvitation: builder.mutation<{ message: string }, string>({
+			query: id => ({ url: `invitations/for-me/${id}`, method: 'DELETE' }),
+			invalidatesTags: ['tenant-invitations'],
+		}),
+		sendEmailCode: builder.mutation<{ message: string; verified?: boolean }, void>({
+			query: () => ({ url: 'auth/verify-email/send', method: 'POST' }),
+		}),
+		verifyEmail: builder.mutation<{ message: string; verified: boolean }, { code: string }>({
+			query: body => ({ url: 'auth/verify-email', method: 'POST', body }),
+			invalidatesTags: ['self', 'tenant-invitations'],
 		}),
 
 		/* --------------------------------------------------------- projects */
@@ -208,7 +249,10 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: arg => `projects${arg && arg.archived ? '?archived=1' : ''}`,
 			providesTags: ['tenant-projects'],
 		}),
-		createProject: builder.mutation<TenantProject, { name: string; type: ProjectType; description?: string; domains?: string[]; color?: string; icon?: string }>({
+		createProject: builder.mutation<
+			TenantProject,
+			{ name: string; type: ProjectType; description?: string; domains?: string[]; color?: string; icon?: string; mediaScope?: MediaScope }
+		>({
 			query: body => ({ url: 'projects', method: 'POST', body }),
 			invalidatesTags: ['tenant-projects', 'self', 'tenant-org'],
 		}),
@@ -263,6 +307,11 @@ export const {
 	useCancelInvitationMutation,
 	useGetTenantInvitationQuery,
 	useAcceptTenantInvitationMutation,
+	useGetMyInvitationsQuery,
+	useAcceptMyInvitationMutation,
+	useDeclineMyInvitationMutation,
+	useSendEmailCodeMutation,
+	useVerifyEmailMutation,
 	useGetProjectsQuery,
 	useCreateProjectMutation,
 	useUpdateProjectMutation,

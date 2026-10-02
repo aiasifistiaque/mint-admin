@@ -19,6 +19,8 @@ import {
 	TableSkeleton,
 	when,
 } from '@/components/library/cl';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 
 type Row = {
 	route: string;
@@ -307,7 +309,7 @@ const BuilderPage = () => {
 						here — saved as a draft, then published — without a deploy. The code files stay as the fallback.
 					</Text>
 					<Link
-						href='/docs/builder'
+						href={docsPath('/docs/builder')}
 						target='_blank'
 						rel='noopener noreferrer'
 						display='inline-flex'
@@ -324,40 +326,43 @@ const BuilderPage = () => {
 					</Link>
 				</Flex>
 
-				<Panel
-					title='Source for every route'
-					subtitle='Whether routes run on their published DB copies or on the code files. A route can pin its own choice. Routes without a published copy always use code.'>
-					<Flex
-						gap={6}
-						flexWrap='wrap'>
-						{(['settings', 'config'] as const).map(kind => (
-							<Flex
-								key={kind}
-								align='center'
-								gap={3}>
-								<Text
-									fontSize='sm'
-									fontWeight='500'
-									w='64px'>
-									{kind === 'settings' ? 'Settings' : 'Config'}
-								</Text>
-								<SegmentGroup.Root
-									size='sm'
-									disabled={!data || switching}
-									value={global[kind]}
-									onValueChange={e => e.value && e.value !== global[kind] && setPending({ kind, to: e.value as any })}>
-									<SegmentGroup.Indicator />
-									<SegmentGroup.Items
-										items={[
-											{ value: 'db', label: 'DB copies' },
-											{ value: 'code', label: 'Code files' },
-										]}
-									/>
-								</SegmentGroup.Root>
-							</Flex>
-						))}
-					</Flex>
-				</Panel>
+				{/* Projects have no code files: every route runs on its DB copy (multi-tenancy). */}
+				{!IS_TENANT_PANEL && (
+					<Panel
+						title='Source for every route'
+						subtitle='Whether routes run on their published DB copies or on the code files. A route can pin its own choice. Routes without a published copy always use code.'>
+						<Flex
+							gap={6}
+							flexWrap='wrap'>
+							{(['settings', 'config'] as const).map(kind => (
+								<Flex
+									key={kind}
+									align='center'
+									gap={3}>
+									<Text
+										fontSize='sm'
+										fontWeight='500'
+										w='64px'>
+										{kind === 'settings' ? 'Settings' : 'Config'}
+									</Text>
+									<SegmentGroup.Root
+										size='sm'
+										disabled={!data || switching}
+										value={global[kind]}
+										onValueChange={e => e.value && e.value !== global[kind] && setPending({ kind, to: e.value as any })}>
+										<SegmentGroup.Indicator />
+										<SegmentGroup.Items
+											items={[
+												{ value: 'db', label: 'DB copies' },
+												{ value: 'code', label: 'Code files' },
+											]}
+										/>
+									</SegmentGroup.Root>
+								</Flex>
+							))}
+						</Flex>
+					</Panel>
+				)}
 
 				<Panel flush>
 					<Flex

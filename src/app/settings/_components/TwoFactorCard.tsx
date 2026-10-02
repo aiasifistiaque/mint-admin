@@ -24,9 +24,10 @@ import { deviceName, passkeyError, passkeysSupported, startRegistration } from '
 import { toaster } from '@/components/ui/toaster';
 import { Row, SettingsCard } from './ui';
 import PasskeyQrDialog, { ShownLink } from './PasskeyQrDialog';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
 
 const COMPACT = { size: 'sm', px: 3 } as const;
-const GUIDE = '/docs/two-factor';
+const GUIDE = docsPath('/docs/two-factor');
 
 const DocLink: FC<{ anchor: string; children?: ReactNode }> = ({ anchor, children }) => (
 	<Link

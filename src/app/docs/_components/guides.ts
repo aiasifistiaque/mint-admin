@@ -8,7 +8,8 @@ export type Guide = {
 	name: string;
 	description: string;
 	icon: LucideIcon;
-	group: 'Account & security' | 'Build your admin' | 'Everyday tools' | 'Reference';
+	/** The heading it's listed under on the docs home. */
+	group: string;
 	/** A few of the guide's sections — ids must match the guide's own SECTIONS. */
 	topics: { id: string; title: string }[];
 	/** Pages of their own inside the guide, listed after the topics. */
@@ -21,20 +22,6 @@ export type Guide = {
  * /docs, or it can't be found from either.
  */
 export const GUIDES: Guide[] = [
-	{
-		href: '/docs/tenancy',
-		title: 'Organizations',
-		name: 'Organizations & projects',
-		description: 'Your organization, its members and roles, and the apps and websites you build — with your own AI, a public API and analytics.',
-		icon: Building2,
-		group: 'Build your admin',
-		topics: [
-			{ id: 'members', title: 'Members and invitations' },
-			{ id: 'projects', title: 'Projects' },
-			{ id: 'public-api', title: 'Public API' },
-			{ id: 'analytics', title: 'Analytics' },
-		],
-	},
 	{
 		href: '/docs/two-factor',
 		title: 'Sign-in & security',
@@ -134,6 +121,20 @@ export const GUIDES: Guide[] = [
 			{ href: '/docs/components/dashboard', title: 'Dashboard' },
 		],
 	},
+	{
+		href: '/user-docs',
+		title: 'User guides',
+		name: 'User guides (tenants)',
+		description: 'What tenants read: organizations, projects, the builders, the public API, customer sign-in, websites and analytics. The tenant panel links only there.',
+		icon: Building2,
+		group: 'Reference',
+		topics: [],
+		pages: [
+			{ href: '/user-docs/getting-started', title: 'Getting started' },
+			{ href: '/user-docs/public-api', title: 'Public API' },
+			{ href: '/user-docs/websites', title: 'Website projects' },
+		],
+	},
 ];
 
-export const GUIDE_GROUPS: Guide['group'][] = ['Account & security', 'Build your admin', 'Everyday tools', 'Reference'];
+export const GUIDE_GROUPS: string[] = ['Account & security', 'Build your admin', 'Everyday tools', 'Reference'];

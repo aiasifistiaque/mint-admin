@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, FormEvent, ReactNode, useEffect, useState } from 'react';
-import { Box, Button, Center, Field, Flex, Grid, Input, Skeleton, Text, Textarea } from '@chakra-ui/react';
+import { Box, Button, Center, Field, Flex, Grid, Input, SegmentGroup, Skeleton, Text, Textarea } from '@chakra-ui/react';
 import { Archive, ArchiveRestore, Boxes, Globe, LayoutGrid, MoreHorizontal, Pencil, Plus, Trash2 } from 'lucide-react';
 import {
 	Dialog,
@@ -16,11 +16,12 @@ import {
 	useGetProjectsQuery,
 	useUpdateProjectMutation,
 } from '..';
-import type { ProjectType, TenantProject } from '../store/services/tenantApi';
+import type { MediaScope, ProjectType, TenantProject } from '../store/services/tenantApi';
 import { styles } from '../config';
 import { Panel } from '../cl';
 import { openProject, useWorkspace } from './useWorkspace';
 import GuideLink from './GuideLink';
+import Workspaces from './Workspaces';
 import { Menu } from '@chakra-ui/react';
 import CustomMenuItem, { MenuItemStyle } from '../menu/CustomMenuItem';
 import { MenuContainer } from '../menu';
@@ -39,14 +40,15 @@ const domainList = (text: string) =>
 		.filter(Boolean);
 
 /**
- * A project's name, kind and (for a website) domains: a new project, or —
- * with `project` — editing one (its kind can't change).
+ * A project's name, kind, media library (WO-23) and (for a website) domains:
+ * a new project, or — with `project` — editing one (its kind can't change).
  */
 const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantProject }> = ({ open, onClose, project }) => {
 	const [name, setName] = useState('');
 	const [type, setType] = useState<ProjectType>('app');
 	const [description, setDescription] = useState('');
 	const [domains, setDomains] = useState('');
+	const [mediaScope, setMediaScope] = useState<MediaScope>('project');
 	const [create, created] = useCreateProjectMutation();
 	const [update, updated] = useUpdateProjectMutation();
 	const { isLoading, error } = project ? updated : created;
@@ -57,6 +59,7 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 		setType(project?.type || 'app');
 		setDescription(project?.description || '');
 		setDomains((project?.domains || []).join(', '));
+		setMediaScope(project?.mediaScope || 'project');
 	}, [open, project?._id]);
 
 	const close = () => {
@@ -71,6 +74,7 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 		const body = {
 			name: name.trim(),
 			description: description.trim(),
+			mediaScope,
 			...(type === 'website' && { domains: domainList(domains) }),
 		};
 		if (project) {
@@ -180,6 +184,31 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 								<Field.HelperText {...helperCss}>Where the site runs. Analytics only counts visits from these. You can add them later.</Field.HelperText>
 							</Field.Root>
 						)}
+						<Box>
+							<Text {...labelCss}>Media library</Text>
+							<SegmentGroup.Root
+								size='sm'
+								mt={1.5}
+								value={mediaScope}
+								onValueChange={d => setMediaScope((d.value as MediaScope) || 'project')}
+								w='fit-content'>
+								<SegmentGroup.Indicator />
+								<SegmentGroup.Items
+									items={[
+										{ value: 'project', label: 'This project only' },
+										{ value: 'organization', label: 'Shared with the organization' },
+									]}
+								/>
+							</SegmentGroup.Root>
+							<Text
+								{...helperCss}
+								mt={1.5}>
+								{mediaScope === 'organization'
+									? 'Uses the organization’s shared library — the same images and files as every project that shares it.'
+									: 'Its own images and files, apart from the other projects.'}
+								{project && project.mediaScope !== mediaScope && ' Files stay where they were uploaded; switching back shows them again.'}
+							</Text>
+						</Box>
 						<Field.Root>
 							<Field.Label {...labelCss}>Description</Field.Label>
 							<Textarea
@@ -479,6 +508,7 @@ const ProjectsBoard: FC<{ welcome?: boolean }> = ({ welcome }) => {
 					</Flex>
 				)}
 			</Panel>
+			<Workspaces />
 			<ProjectDialog
 				open={creating}
 				onClose={() => setCreating(false)}

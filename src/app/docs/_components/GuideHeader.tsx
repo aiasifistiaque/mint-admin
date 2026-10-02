@@ -3,12 +3,12 @@
 import { FC, ReactNode } from 'react';
 import NextLink from 'next/link';
 import { Box, Flex, FlexProps, Link, Text } from '@chakra-ui/react';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, LucideIcon } from 'lucide-react';
 import { GUIDES } from './guides';
 
 /**
- * The top of every guide: its icon (from GUIDES, by `href`), title, a line on
- * what it covers, and a link to the screen it documents.
+ * The top of every guide: its icon (`icon`, or from GUIDES by `href`), title,
+ * a line on what it covers, and a link to the screen it documents.
  */
 const GuideHeader: FC<
 	FlexProps & {
@@ -16,9 +16,10 @@ const GuideHeader: FC<
 		title: string;
 		description: ReactNode;
 		open?: { href: string; label: string };
+		icon?: LucideIcon;
 	}
-> = ({ href, title, description, open, ...props }) => {
-	const Icon = GUIDES.find(g => g.href === href)?.icon || BookOpen;
+> = ({ href, title, description, open, icon, ...props }) => {
+	const Icon = icon || GUIDES.find(g => g.href === href)?.icon || BookOpen;
 	return (
 		<Flex
 			align='center'

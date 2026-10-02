@@ -3,9 +3,10 @@
 import { FC } from 'react';
 import { Link } from '@chakra-ui/react';
 import { ExternalLink } from 'lucide-react';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
 
 /** The dashboard builder guide. Section ids are the anchors below. */
-export const GUIDE = '/docs/dashboard-builder';
+export const GUIDE = docsPath('/docs/dashboard-builder');
 
 /** A link into the guide, opened beside the builder rather than in place of it. */
 export const DocLink: FC<{ section: string; label?: string }> = ({ section, label = 'How this works' }) => (

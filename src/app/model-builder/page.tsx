@@ -18,6 +18,7 @@ import {
 	TableSkeleton,
 	when,
 } from '@/components/library/cl';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
 
 type Row = {
 	_id: string;
@@ -226,7 +227,7 @@ const ModelBuilderPage = () => {
 						from any other model. Fine-tune its pages in the route builder like any other route.
 					</Text>
 					<Link
-						href='/docs/builder#models'
+						href={docsPath('/docs/builder#models')}
 						target='_blank'
 						rel='noopener noreferrer'
 						display='inline-flex'

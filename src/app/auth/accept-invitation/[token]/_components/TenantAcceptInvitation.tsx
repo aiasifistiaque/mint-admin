@@ -16,8 +16,9 @@ import {
 /**
  * Joining an organization from an emailed invitation (tenant panel —
  * /tenant/api/invitations/:token). Someone new makes their account here; an
- * existing account proves it's theirs with its password. Either way they land
- * in the organization that invited them.
+ * existing account proves it's theirs with its password — or, already signed
+ * in to it, joins in one click (WO-24). Either way they land in the
+ * organization that invited them, with the projects it gives (WO-22).
  */
 const TenantAcceptInvitation: FC = () => {
 	const { token } = useParams<{ token: string }>();
@@ -26,6 +27,8 @@ const TenantAcceptInvitation: FC = () => {
 	const [accept, { isLoading, error }] = useAcceptTenantInvitationMutation();
 	const [form, setForm] = useState({ name: '', phone: '', password: '', confirm: '' });
 	const existing = !!invitation?.existingAccount;
+	const oneClick = !!invitation?.signedInAsInvitee;
+	const projects = invitation ? (invitation.allProjects ? 'every project' : invitation.projects.join(', ') || 'no projects yet') : '';
 	const mismatch = !existing && form.confirm.length > 0 && form.password !== form.confirm;
 
 	const set = (k: keyof typeof form) => (e: any) => setForm(f => ({ ...f, [k]: e.target.value }));
@@ -33,7 +36,9 @@ const TenantAcceptInvitation: FC = () => {
 	const submit = async (e: FormEvent) => {
 		e.preventDefault();
 		if (mismatch) return;
-		const res = await accept({ token, password: form.password, ...(!existing && { name: form.name, phone: form.phone }) });
+		const res = await accept(
+			oneClick ? { token } : { token, password: form.password, ...(!existing && { name: form.name, phone: form.phone }) }
+		);
 		if ('data' in res && res.data?.token) dispatch(login({ token: res.data.token }));
 	};
 
@@ -58,12 +63,14 @@ const TenantAcceptInvitation: FC = () => {
 			title={invitation ? `Join ${invitation.organization.name}` : 'Join'}
 			subtitle={
 				invitation
-					? existing
-						? `Sign in to accept — you'll join as ${invitation.role}.`
-						: `Create your account — you'll join as ${invitation.role}.`
+					? oneClick
+						? `You're signed in as ${invitation.email}. You'll join as ${invitation.role}, with ${projects}.`
+						: existing
+						? `Sign in to accept — you'll join as ${invitation.role}, with ${projects}.`
+						: `Create your account — you'll join as ${invitation.role}, with ${projects}.`
 					: undefined
 			}
-			submitLabel={existing ? 'Sign in and join' : 'Create account and join'}
+			submitLabel={oneClick ? `Join ${invitation?.organization.name || ''}`.trim() : existing ? 'Sign in and join' : 'Create account and join'}
 			isLoading={isLoading || loadingInfo}
 			handleSubmit={submit}>
 			<VInput
@@ -96,16 +103,18 @@ const TenantAcceptInvitation: FC = () => {
 					/>
 				</>
 			)}
-			<VPassword
-				label={existing ? 'Your password' : 'Password'}
-				isRequired
-				size='md'
-				autoComplete={existing ? 'current-password' : 'new-password'}
-				autoFocus={existing}
-				value={form.password}
-				onChange={set('password')}
-				name='password'
-			/>
+			{!oneClick && (
+				<VPassword
+					label={existing ? 'Your password' : 'Password'}
+					isRequired
+					size='md'
+					autoComplete={existing ? 'current-password' : 'new-password'}
+					autoFocus={existing}
+					value={form.password}
+					onChange={set('password')}
+					name='password'
+				/>
+			)}
 			{!existing && (
 				<VPassword
 					label='Confirm password'

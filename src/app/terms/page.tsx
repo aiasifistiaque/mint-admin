@@ -3,6 +3,7 @@
 import NextLink from 'next/link';
 import { Link, Text } from '@chakra-ui/react';
 import SiteShell, { Clause } from '../_site/SiteShell';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
 
 /**
  * Terms of Use for the MINT admin. Public. A plain-language starting point —
@@ -35,7 +36,7 @@ const TermsPage = () => (
 				<li>
 					Keep your password private, and turn on two-factor sign-in (a passkey or email codes) — see{' '}
 					<Link asChild>
-						<NextLink href='/docs/two-factor'>Sign-in &amp; security</NextLink>
+						<NextLink href={docsPath('/docs/two-factor')}>Sign-in &amp; security</NextLink>
 					</Link>
 					.
 				</li>

@@ -30,6 +30,7 @@ import {
 	useImportRowsMutation,
 	useImportTemplateQuery,
 } from '../../../../store/services/bulkApi';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
 
 /**
  * Bulk upload — many records from an Excel, CSV or JSON file (the table
@@ -605,7 +606,7 @@ const ImportDialog: FC<{ open: boolean; onClose: () => void; path: string; title
 
 						<ModalFooter>
 							<Link
-								href='/docs/builder#table-upload'
+								href={docsPath('/docs/builder#table-upload')}
 								target='_blank'
 								rel='noopener noreferrer'
 								mr='auto'

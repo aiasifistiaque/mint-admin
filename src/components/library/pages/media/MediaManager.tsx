@@ -56,6 +56,7 @@ import useMarquee from './useMarquee';
 import DetailsDialog from './DetailsDialog';
 import UploadPanel from './UploadPanel';
 import { ConfirmDialog, DocLink, NameDialog } from './ui';
+import { useMediaRoot } from './useMediaRoot';
 import { fromDirectoryInput, readDroppedEntries, setUploadDispatch, uploadQueue } from './uploadQueue';
 import { useAppDispatch } from '../../hooks';
 import {
@@ -108,6 +109,7 @@ const isTyping = (el: EventTarget | null) => {
  * that keeps deleted items for 30 days.
  */
 const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
+	const ROOT = useMediaRoot();
 	const router = useRouter();
 	const appDispatch = useAppDispatch();
 	useEffect(() => setUploadDispatch(appDispatch), [appDispatch]);
@@ -595,7 +597,7 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 	const menuSel = menu ? splitKeys(menu.keys) : null;
 	const menuFiles = menuSel ? (menuSel.files.map(id => fileById.get(id)).filter(Boolean) as MediaFile[]) : [];
 	const menuOne = menu && menu.keys.length === 1 ? (menu.keys[0] as ItemKey) : null;
-	const title = isTrash ? 'Trash' : searching ? `Results for “${search}”` : path.length ? path[path.length - 1].name : 'All Media';
+	const title = isTrash ? 'Trash' : searching ? `Results for “${search}”` : path.length ? path[path.length - 1].name : ROOT;
 	// A failed load isn't an empty folder — say so and offer a retry.
 	const failed = isTrash ? trash.isError : browse.isError;
 	const empty = !loading && !failed && !folders.length && !files.length;
@@ -655,7 +657,7 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 						bg='bg.muted'
 						opacity={0.92}
 						pointerEvents='none'>
-						<Text fontSize='lg'>Drop files or folders to upload to {path.length ? path[path.length - 1].name : 'All Media'}</Text>
+						<Text fontSize='lg'>Drop files or folders to upload to {path.length ? path[path.length - 1].name : ROOT}</Text>
 					</Flex>
 				)}
 
@@ -694,7 +696,7 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 									asChild
 									{...crumbCss(null)}
 									{...crumbDrop(null)}>
-									<NextLink href='/images'>All Media</NextLink>
+									<NextLink href='/images'>{ROOT}</NextLink>
 								</Box>
 								{path.map((p, i) => (
 									<Flex
@@ -1299,8 +1301,8 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 			<DetailsDialog
 				isOpen={detailsOpen}
 				onClose={() => setDetailsOpen(false)}
-				name={path.length ? path[path.length - 1].name : 'All Media'}
-				location={path.length ? ['All Media', ...path.map(p => p.name)].join(' / ') : 'Top level'}
+				name={path.length ? path[path.length - 1].name : ROOT}
+				location={path.length ? [ROOT, ...path.map(p => p.name)].join(' / ') : 'Top level'}
 				folders={folders}
 				files={files}
 				totalFiles={browse.data?.totalFiles ?? files.length}
@@ -1345,10 +1347,10 @@ const MediaManager: FC<Props> = ({ folder, mode = 'browse' }) => {
 				location={
 					previewIndex >= 0
 						? searching
-							? locationOf(previewFiles[previewIndex]) || 'All Media'
+							? locationOf(previewFiles[previewIndex]) || ROOT
 							: isTrash
 								? 'Trash'
-								: path.map(p => p.name).join(' / ') || 'All Media'
+								: path.map(p => p.name).join(' / ') || ROOT
 						: undefined
 				}
 			/>

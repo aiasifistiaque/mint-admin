@@ -6,6 +6,7 @@ import { CheckCircle2, Copy, ExternalLink, Smartphone, TimerOff } from 'lucide-r
 import QRCode from 'qrcode';
 import { AlertDialogContent, AlertDialogHeader, ModalFooter, useCancelPasskeyLinkMutation, useGetPasskeyLinkQuery } from '@/components/library';
 import { toaster } from '@/components/ui/toaster';
+import { docsPath } from '@/components/library/config/lib/constants/panel';
 
 export type ShownLink = { _id: string; url: string; expiresAt: string | null };
 
@@ -222,7 +223,7 @@ const PasskeyQrDialog: FC<{ link: ShownLink | null; onClose: () => void; onRenew
 											Copy link instead
 										</Button>
 										<Link
-											href='/docs/two-factor#passkey-qr'
+											href={docsPath('/docs/two-factor#passkey-qr')}
 											target='_blank'
 											rel='noreferrer'
 											fontSize='12px'
