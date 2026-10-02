@@ -13,10 +13,13 @@ import {
  *
  * - /<project>/<page…> is served by the app page it stands for (a rewrite —
  *   the address stays as it is): /acme-store/clients → /t/clients.
- * - A project page's own address with no project in it (/dashboard, an older
- *   link to /model-builder) goes to the same page inside the project this
- *   browser last worked in (the PROJECT_COOKIE); with none it opens as it is
- *   (/dashboard is then the organization's projects).
+ * - A project page's own address with no project in it (an older link to
+ *   /model-builder) goes to the same page inside the project this browser last
+ *   worked in (the PROJECT_COOKIE); with none it opens as it is.
+ * - /dashboard alone is always the organization's home (its projects) — a
+ *   project's dashboard is /<project>. It used to follow the cookie too, so
+ *   Home and the landing page's Dashboard button opened whichever project
+ *   was last used.
  *
  * The super-admin panel's addresses are left alone.
  */
@@ -26,7 +29,7 @@ export function proxy(req: NextRequest) {
 	const segments = req.nextUrl.pathname.split('/').filter(Boolean);
 	const first = segments[0] || '';
 
-	if (PROJECT_PAGES.has(first)) {
+	if (PROJECT_PAGES.has(first) && !(first === 'dashboard' && segments.length === 1)) {
 		const last = req.cookies.get(PROJECT_COOKIE)?.value || '';
 		if (!isProjectSegment(last)) return NextResponse.next();
 		const url = req.nextUrl.clone();

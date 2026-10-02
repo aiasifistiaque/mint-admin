@@ -146,6 +146,22 @@ const ConnectAi = () => (
 					['build_feature', 'Build an agreed plan — models, fields, links, tabs, sidebar — all or nothing.'],
 					['update_page', 'Change a page’s columns, form, detail page or add button.'],
 					['query_records', 'Read records to answer a question (keys with Can read records).'],
+					['get_dashboard · update_dashboard', 'Read and change the dashboard’s widgets.'],
+					['create_records', 'Add records — or update them, matched by a field — checked like the form, all or nothing.'],
+					['set_public_api', 'Turn a model’s public API on or off.'],
+					['upload_media', 'Put an image into your Media library and get its address.'],
+					[
+						'describe_website · get_site · update_site_settings · upsert_page · site_snippets',
+						<>
+							Website projects: build a site that’s managed from here — see{' '}
+							<A
+								key='a'
+								href='/user-docs/websites#ai-site'>
+								Build your site with AI
+							</A>
+							.
+						</>,
+					],
 				]}
 			/>
 		</Section>
@@ -157,7 +173,7 @@ const ConnectAi = () => (
 				items={[
 					'The AI is told to plan with you and never build without a clear yes; Claude and ChatGPT also ask before any tool that writes.',
 					'A build is all or nothing: if any part fails, nothing is left half made.',
-					'It can’t delete models or records, and it only ever works in the key’s project.',
+					'It can’t delete models, records or pages (a website block it drops is archived, not deleted), and it only ever works in the key’s project.',
 					'Everything it builds is yours to change or remove in Models and Pages.',
 				]}
 			/>

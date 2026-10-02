@@ -37,7 +37,7 @@ const TenantAcceptInvitation: FC = () => {
 		e.preventDefault();
 		if (mismatch) return;
 		const res = await accept(
-			oneClick ? { token } : { token, password: form.password, ...(!existing && { name: form.name, phone: form.phone }) }
+			oneClick ? { token } : { token, password: form.password, ...(!existing && { name: (form.name || invitation?.name || '').trim(), phone: form.phone }) }
 		);
 		if ('data' in res && res.data?.token) dispatch(login({ token: res.data.token }));
 	};

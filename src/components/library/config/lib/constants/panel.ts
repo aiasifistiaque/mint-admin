@@ -38,7 +38,7 @@ export const API_ORIGIN = BACKEND.replace(/\/(tenant|admin)\/api\/?$/, '');
  */
 export const PROJECT_PAGES = new Set([
 	'dashboard', 't', 'view', 'model-builder', 'builder', 'sidebar-builder', 'dashboard-builder', 'images', 'public-api',
-	'analytics',
+	'analytics', 'site-setup',
 ]);
 
 // Every top-level page folder (next.config.mjs); any other first segment is a project.

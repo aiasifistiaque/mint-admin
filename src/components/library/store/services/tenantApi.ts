@@ -1,4 +1,4 @@
-import mainApi from './mainApi';
+import mainApi, { routeTags } from './mainApi';
 
 /**
  * The tenant panel's own calls (backend routes-tenant; docs:
@@ -128,6 +128,26 @@ export type AnalyticsTotals = { pageviews: number; visitors: number; sessions: n
 export type AnalyticsDim = 'paths' | 'referrers' | 'devices' | 'browsers' | 'os' | 'countries' | 'clicks' | 'events';
 export type AnalyticsRange = { from?: string; to?: string };
 export type PublicApi = { enabled: boolean; actions: ('list' | 'get' | 'create' | 'update' | 'delete')[]; auth: 'none' | 'customer'; ownerOnly: boolean };
+
+/** A website project's setup (WO-34, backend siteConfig.function.ts). */
+export type SiteConfig = {
+	tracking: { mintAnalytics: boolean; ga4: string; gtm: string; googleAds: string; metaPixel: string; tiktokPixel: string; linkedinPartner: string; clarity: string; hotjar: string };
+	code: { head: string; bodyStart: string; bodyEnd: string };
+	seo: { indexing: boolean; sitemap: boolean; robots: string; canonicalDomain: string; googleVerification: string; bingVerification: string };
+	redirects: { from: string; to: string; permanent: boolean }[];
+	headers: { source: string; name: string; value: string }[];
+	domains: string[];
+	origin: string;
+};
+export type SiteOverview = {
+	settings: { _id: string; siteName: string; logo: string; favicon: string; metaTitle: string; metaDescription: string } | null;
+	pages: { _id: string; name: string; path: string; status: string; seo: boolean; contents: number; updatedAt: string }[];
+	counts: { total: number; published: number; withSeo: number };
+	checklist: { key: string; label: string; done: boolean }[];
+	domains: string[];
+	origin: string;
+	kit: { settings: boolean; pages: boolean; seo: boolean; contents: boolean };
+};
 
 const rangeQuery = (r: AnalyticsRange = {}) => new URLSearchParams(Object.entries(r).filter(([, v]) => v) as [string, string][]).toString();
 
@@ -278,6 +298,19 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: ({ dim, limit, ...r }) => `analytics/top?dim=${dim}&limit=${limit || 8}&${rangeQuery(r)}`,
 			providesTags: ['tenant-analytics'],
 		}),
+		getSiteConfig: builder.query<SiteConfig, void>({
+			query: () => 'site-config',
+			providesTags: ['tenant-site'],
+		}),
+		updateSiteConfig: builder.mutation<SiteConfig, Partial<Omit<SiteConfig, 'origin'>>>({
+			query: body => ({ url: 'site-config', method: 'PUT', body }),
+			invalidatesTags: ['tenant-site'],
+		}),
+		getSiteOverview: builder.query<SiteOverview, void>({
+			query: () => 'site-overview',
+			// The kit's own tables too, so editing a page or its SEO refreshes it (routeTags registers them).
+			providesTags: () => routeTags('tenant-site', 'pages', 'seo', 'web-contents', 'site-settings'),
+		}),
 		updatePublicApi: builder.mutation<{ publicApi: PublicApi }, { id: string } & PublicApi>({
 			query: ({ id, ...body }) => ({ url: `builder/models/${id}/public-api`, method: 'PUT', body }),
 			invalidatesTags: ['builder'],
@@ -320,4 +353,7 @@ export const {
 	useGetAnalyticsSeriesQuery,
 	useGetAnalyticsTopQuery,
 	useUpdatePublicApiMutation,
+	useGetSiteConfigQuery,
+	useUpdateSiteConfigMutation,
+	useGetSiteOverviewQuery,
 } = tenantApi;

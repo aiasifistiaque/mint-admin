@@ -11,6 +11,15 @@ import { A, C, CodeBlock, H3, List, Note, P, Section, Terms } from '../../docs/_
 
 const SECTIONS = [
 	{ id: 'websites', title: 'What you get' },
+	{ id: 'site-overview', title: 'The website’s home' },
+	{ id: 'site-setup', title: 'Site setup' },
+	{ id: 'site-general', title: 'Name, logo and favicon' },
+	{ id: 'tracking', title: 'Tracking tags and pixels' },
+	{ id: 'site-code', title: 'Code in head and body' },
+	{ id: 'indexing', title: 'SEO, robots.txt and sitemap' },
+	{ id: 'redirects', title: 'Redirects and headers' },
+	{ id: 'site-domains', title: 'Domains' },
+	{ id: 'ai-site', title: 'Build your site with AI' },
 	{ id: 'kit', title: 'The website kit' },
 	{ id: 'settings', title: 'Site settings' },
 	{ id: 'build-a-page', title: 'Building a page' },
@@ -247,6 +256,182 @@ const about = await fetch('${PUBLIC_API}/pages/by-path?path=/about').then(r => r
 			<Note tone='warn'>
 				Rich content is HTML written by your team. Render it only from your own project, as here — never pass HTML from
 				visitors through the same path.
+			</Note>
+		</Section>
+
+		<Section
+			id='site-overview'
+			title='The website’s home'
+			lead='Open a website project and its dashboard is about the site.'>
+			<List
+				items={[
+					<>
+						<strong>Traffic</strong> — page views, visitors, visits and bounce rate for the last 30 days, against the 30 before,
+						and views per day. The full reports are on <A href='/user-docs/analytics'>Analytics</A>.
+					</>,
+					<>
+						<strong>Set up</strong> — what’s still missing: name, logo, favicon, default SEO, a published page, SEO on every
+						page, a domain, tracking. Each has a link to where it’s set; the list goes once everything is done.
+					</>,
+					<>
+						<strong>Pages</strong> — each page’s path, status, whether it has SEO, and how many content blocks it has.
+					</>,
+				]}
+			/>
+			<P>
+				Numbers, charts and lists you add in the <A href='/user-docs/dashboard'>dashboard builder</A> show below.
+			</P>
+		</Section>
+
+		<Section
+			id='site-setup'
+			title='Site setup'
+			lead='Site → Site setup: everything a website needs besides its pages, on one page.'>
+			<P>
+				Its tabs are <strong>General</strong>, <strong>Tracking</strong>, <strong>Code</strong>,{' '}
+				<strong>SEO & indexing</strong>, <strong>Redirects & headers</strong> and <strong>Domains</strong>. Each tab saves on
+				its own. Your site reads it all from the <A href='#site-api'>site API</A>, so a change is live within a minute with no
+				code change. Changing it needs the Build permission; domains need Manage projects.
+			</P>
+		</Section>
+
+		<Section
+			id='site-general'
+			title='Name, logo and favicon'>
+			<P>
+				<strong>General</strong> edits your <A href='#settings'>Site settings</A>: the site’s name, logo, favicon, colours
+				and font, the default title, description and share image used by pages without their own, and your contact details
+				and social links. Images come from your <A href='/user-docs/media'>Media library</A>.
+			</P>
+		</Section>
+
+		<Section
+			id='tracking'
+			title='Tracking tags and pixels'
+			lead='Paste an ID and the tag is on every page — the analytics script adds it.'>
+			<Terms
+				head={['Tag', 'The ID looks like']}
+				rows={[
+					['Google Analytics 4', <C key='a'>G-XXXXXXXXXX</C>],
+					['Google Tag Manager', <C key='b'>GTM-XXXXXXX</C>],
+					['Google Ads', <C key='c'>AW-123456789</C>],
+					['Meta Pixel', 'A long number'],
+					['TikTok Pixel', 'Capital letters and digits'],
+					['LinkedIn Insight', 'The partner ID, a number'],
+					['Microsoft Clarity', 'The project ID'],
+					['Hotjar', 'The site ID, a number'],
+				]}
+			/>
+			<P>
+				This works on any site with the <A href='/user-docs/analytics'>analytics script</A> on its pages. Page views on sites
+				that change pages without reloading are counted by the pixels too. <strong>MINT analytics</strong> turns the
+				panel’s own visit counting on or off. A site that renders its tags itself adds <C>data-no-tags</C> to the script.
+			</P>
+		</Section>
+
+		<Section
+			id='site-code'
+			title='Code in head and body'>
+			<P>
+				HTML for the <C>&lt;head&gt;</C>, the start of <C>&lt;body&gt;</C> and its end — a chat widget, another tag, a
+				verification snippet. Scripts in it run. Only add code you trust: it can do anything on your site.
+			</P>
+		</Section>
+
+		<Section
+			id='indexing'
+			title='SEO, robots.txt and sitemap'>
+			<List
+				items={[
+					<>
+						<strong>Let search engines index the site</strong> — off while you build; robots.txt then asks them all to stay
+						away.
+					</>,
+					<>
+						<strong>Sitemap</strong> — a sitemap.xml of your published pages, without those marked <em>Hide from search
+						engines</em>, named in robots.txt.
+					</>,
+					<>
+						<strong>Main domain</strong> — the address used in the sitemap and robots.txt.
+					</>,
+					<>
+						<strong>Google Search Console</strong> and <strong>Bing</strong> — the verification codes, added as meta tags.
+					</>,
+				]}
+			/>
+			<P>
+				Your site serves them from the site API: <C>/site/robots.txt</C> and <C>/site/sitemap.xml</C> — the tab shows the
+				full addresses. A site built with <A href='#ai-site'>AI</A> wires them up for you.
+			</P>
+		</Section>
+
+		<Section
+			id='redirects'
+			title='Redirects and headers'>
+			<P>
+				<strong>Redirects</strong> send an old address to a new page or another site — <em>301 permanent</em> when a page
+				moved for good, <em>302 temporary</em> otherwise. <strong>Response headers</strong> are sent with your pages, for
+				security (<C>X-Frame-Options</C>, <C>Content-Security-Policy</C>) or caching. Both come to your site in{' '}
+				<C>GET /site</C> under <C>config</C>; its code applies them (a site built with AI does).
+			</P>
+		</Section>
+
+		<Section
+			id='site-domains'
+			title='Domains'>
+			<P>
+				Where your site is live, e.g. <C>example.com</C> and <C>www.example.com</C>. Analytics only counts visits from these
+				(and from localhost while you build), so others can’t send visits in your name. With none, visits from anywhere
+				count.
+			</P>
+		</Section>
+
+		<Section
+			id='ai-site'
+			title='Build your site with AI'
+			lead='Build the site with Claude Code (or any AI editor) and it’s managed from here the moment it’s deployed.'>
+			<P>
+				<A href='/user-docs/connect-ai'>Connect your AI</A> to this website project, then ask it to build your site — “a
+				two-page site for my bakery: a home page and an about page, and a menu of our products”. While it writes the code, it
+				puts everything the site shows into this project instead of into the code:
+			</P>
+			<List
+				items={[
+					<>
+						<strong>Site settings</strong> — name, logo, favicon, colours, font, contact details, social links, default SEO, and
+						the domains it’s deployed on.
+					</>,
+					<>
+						<strong>Pages</strong> — each with its SEO and its <strong>content blocks</strong> in order: headings, text,
+						buttons, lists, cards, images.
+					</>,
+					<>
+						<strong>Images</strong> — uploaded to your <A href='/user-docs/media'>Media library</A>.
+					</>,
+					<>
+						<strong>Lists</strong> — products, services, team, testimonials — become models of their own, linked where they
+						belong, with their <A href='/user-docs/public-api'>public API</A> on.
+					</>,
+					<>
+						<strong>Analytics</strong> — the <A href='/user-docs/analytics'>tracker</A> on every page.
+					</>,
+				]}
+			/>
+			<P>
+				The site’s code reads all of it from the <A href='#site-api'>site API</A>. Once deployed, change a heading in{' '}
+				<strong>Contents</strong>, a price in <strong>Products</strong> or the favicon in <strong>Site settings</strong>, and
+				the live site shows it within a minute — no code change, no redeploy.
+			</P>
+			<H3>Building again</H3>
+			<P>
+				Asking the AI to rebuild or change the site updates the same pages, blocks and records rather than adding copies:
+				pages are matched by path, blocks by their slug on the page, list records by a field such as their slug. A block the
+				AI drops is archived — hidden from the site, still in the panel. Note that a rebuild writes the AI’s text over edits
+				you made in the panel to the same blocks.
+			</P>
+			<Note>
+				The AI shows you the pages and lists it plans before writing them, and nothing is saved if any part is invalid. Its
+				key needs <em>Can build</em>, and your role needs Build and Records: Add and Edit.
 			</Note>
 		</Section>
 

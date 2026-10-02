@@ -8,6 +8,8 @@ import { Layout, Count, useGetByIdQuery, ShowSum, useGetDashboardQuery } from '@
 import { DashboardGrid } from '@/components/library/dashboard/widgets';
 import { IS_TENANT_PANEL, getProjectSlug } from '@/components/library/config/lib/constants/panel';
 import ProjectsBoard from '@/components/library/tenant/ProjectsBoard';
+import WebsiteOverview from '@/components/library/tenant/WebsiteOverview';
+import { useWorkspace } from '@/components/library/tenant';
 
 /**
  * The dashboard: the widgets saved in the dashboard builder (/dashboard-builder),
@@ -30,6 +32,23 @@ export default function Home() {
 function Dashboard() {
 	const { data, isLoading } = useGetDashboardQuery();
 	const widgets = data?.widgets || [];
+	// A website's home starts with how the site is doing and what's left to set up (WO-34).
+	const { project } = useWorkspace();
+	if (IS_TENANT_PANEL && project?.type === 'website')
+		return (
+			<Layout
+				title='Dashboard'
+				path='dashboard'>
+				<WebsiteOverview />
+				{data?.saved && widgets.length ? (
+					<Flex
+						direction='column'
+						mt={4}>
+						<DashboardGrid widgets={widgets} />
+					</Flex>
+				) : null}
+			</Layout>
+		);
 
 	return (
 		<Layout

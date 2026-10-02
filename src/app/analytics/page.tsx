@@ -14,6 +14,7 @@ import { Dropdown, Panel, StatTile } from '@/components/library/cl';
 import { BarList, LineChart } from '@/components/library/dashboard/charts';
 import { useWorkspace } from '@/components/library/tenant';
 import GuideLink from '@/components/library/tenant/GuideLink';
+import { projectHref } from '@/components/library/config/lib/constants/panel';
 import type { AnalyticsDim, AnalyticsRange, AnalyticsTotals } from '@/components/library/store/services/tenantApi';
 
 /**
@@ -154,7 +155,7 @@ export default function AnalyticsPage() {
 								size='sm'
 								variant='outline'
 								asChild>
-								<NextLink href='/public-api'>Get the snippet</NextLink>
+								<NextLink href={projectHref('/public-api')}>Get the snippet</NextLink>
 							</Button>
 						</Flex>
 					</Panel>
