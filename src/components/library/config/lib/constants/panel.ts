@@ -15,6 +15,12 @@ export const IS_TENANT_PANEL = PANEL === 'tenant';
 
 export const BACKEND = (process.env.NEXT_PUBLIC_BACKEND || 'http://localhost:5000').replace(/\/+$/, '');
 
+/**
+ * Where tenants' sites call: the backend's root (the panel's API address
+ * without /tenant/api or /admin/api) — so examples carry the real address.
+ */
+export const API_ORIGIN = BACKEND.replace(/\/(tenant|admin)\/api\/?$/, '');
+
 /* ------------------------------------------------- the current project */
 
 const PROJECT_KEY = 'mint:tenant-project';
@@ -63,6 +69,17 @@ export const apiUrl = (path = ''): string => {
 };
 
 /* ------------------------------------------------------- page addresses */
+
+/**
+ * Where "Home" is. The tenant panel's / is its public landing page (sign up,
+ * sign in, or on to the dashboard), so its dashboard lives at /dashboard; the
+ * super-admin panel's dashboard is / itself. Link and redirect home with this,
+ * never a bare '/'.
+ */
+export const HOME = IS_TENANT_PANEL ? '/dashboard' : '/';
+
+/** `href`, with a link to '/' (a sidebar's Home or Dashboard entry) sent to HOME. */
+export const homeHref = (href: string): string => (href === '/' ? HOME : href);
 
 /**
  * A model's table page. The tenant panel serves its projects' tables under

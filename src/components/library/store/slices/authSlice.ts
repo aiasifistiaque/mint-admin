@@ -1,6 +1,7 @@
 'use client';
 
 import { REFRESH_TOKEN, TOKEN_NAME } from '../..';
+import { HOME } from '../../config/lib/constants/panel';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type AuthStateType = {
@@ -38,7 +39,7 @@ export const authSlice = createSlice({
 			state.loggedIn = true;
 			localStorage.setItem(TOKEN_NAME, token);
 			// localStorage.setItem(REFRESH_TOKEN, refreshToken);
-			void (document.location.href = '/');
+			void (document.location.href = HOME);
 		},
 		refresh: (state, action: PayloadAction<string>): void => {
 			localStorage.setItem(TOKEN_NAME, action.payload);

@@ -3,7 +3,7 @@
 import { FC, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge, Box, Button, Flex, Grid, Switch, Text } from '@chakra-ui/react';
-import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
+import { HOME, IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 import { ArrowLeft, ArrowRight, Check, ExternalLink, RotateCcw, Settings2 } from 'lucide-react';
 import {
 	Layout,
@@ -458,7 +458,7 @@ const ModelWizard = () => {
 					maxW='720px'>
 					<PageHeader
 						breadcrumbs={[
-							{ href: '/', title: 'Home' },
+							{ href: HOME, title: 'Home' },
 							{ href: '/model-builder', title: 'Models' },
 							{ href: '/model-builder/new', title: 'New model' },
 						]}
@@ -526,7 +526,7 @@ const ModelWizard = () => {
 				pb={10}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/', title: 'Home' },
+						{ href: HOME, title: 'Home' },
 						{ href: '/builder', title: 'Routes' },
 						{ href: '/model-builder', title: 'Models' },
 						{ href: '/model-builder/new', title: 'New model' },

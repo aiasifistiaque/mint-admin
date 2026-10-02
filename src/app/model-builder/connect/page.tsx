@@ -17,6 +17,7 @@ import DiscardButton from '@/components/library/components/buttons/DiscardButton
 import { ConfirmAction, ConsoleTabs, CopyValue, Dropdown, EmptyState, PageHeader, Panel, TableSkeleton, when } from '@/components/library/cl';
 import { toaster } from '@/components/ui/toaster';
 import { DocLink } from '@/app/builder/_components/ui';
+import { HOME } from '@/components/library/config/lib/constants/panel';
 
 /**
  * Connect your own AI — Claude (Desktop, claude.ai, Claude Code), ChatGPT,
@@ -387,7 +388,7 @@ const ConnectPage = () => {
 				maxW='960px'>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/', title: 'Home' },
+						{ href: HOME, title: 'Home' },
 						{ href: '/model-builder', title: 'Models' },
 						{ href: '/model-builder/connect', title: 'Connect your AI' },
 					]}

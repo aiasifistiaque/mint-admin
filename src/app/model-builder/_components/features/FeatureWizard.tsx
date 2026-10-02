@@ -41,6 +41,7 @@ import {
 	stepTitle,
 	wizardFromPlan,
 } from './featurePlan';
+import { HOME } from '@/components/library/config/lib/constants/panel';
 
 /**
  * A feature — several models and the links between them — planned from a
@@ -1158,7 +1159,7 @@ const FeatureWizard: FC = () => {
 	};
 
 	const crumbs = [
-		{ href: '/', title: 'Home' },
+		{ href: HOME, title: 'Home' },
 		{ href: '/model-builder', title: 'Models' },
 		{ href: '/model-builder/features', title: 'Features' },
 		{ href: '/model-builder/features/new', title: 'New feature' },

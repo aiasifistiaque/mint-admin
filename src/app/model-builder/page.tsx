@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge, Button, Flex, Link, Text } from '@chakra-ui/react';
-import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
+import { HOME, IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 import { BookOpen, ExternalLink, Plug, Plus, Sparkles } from 'lucide-react';
 import { Layout, useGetBuiltModelsQuery } from '@/components/library';
 import {
@@ -176,7 +176,7 @@ const ModelBuilderPage = () => {
 				pb={10}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/', title: 'Home' },
+						{ href: HOME, title: 'Home' },
 						{ href: '/builder', title: 'Routes' },
 						{ href: '/model-builder', title: 'Models' },
 					]}

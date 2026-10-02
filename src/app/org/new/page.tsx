@@ -4,7 +4,7 @@ import { FormEvent, useState } from 'react';
 import { Button, Field, Flex, Input, Text } from '@chakra-ui/react';
 import { Layout, refreshAuth, useAppDispatch, useCreateOrganizationMutation } from '@/components/library';
 import { Panel } from '@/components/library/cl';
-import { setProjectId } from '@/components/library/config/lib/constants/panel';
+import { HOME, setProjectId } from '@/components/library/config/lib/constants/panel';
 
 /**
  * Another organization, with you as its owner (tenant panel). The panel then
@@ -21,7 +21,7 @@ export default function NewOrganizationPage() {
 		if ('data' in res && res.data?.token) {
 			setProjectId(null);
 			dispatch(refreshAuth(res.data.token));
-			window.location.href = '/';
+			window.location.href = HOME;
 		}
 	};
 

@@ -10,6 +10,7 @@ import { DashboardGrid } from '@/components/library/dashboard/widgets';
 import { TYPE_LABEL, Widget, WidgetType, newId, newWidget } from '@/components/library/dashboard/types';
 import WidgetDialog from './_components/WidgetDialog';
 import { DocLink, GUIDE } from './_components/ui';
+import { HOME } from '@/components/library/config/lib/constants/panel';
 
 const ICON = { size: 14, strokeWidth: 1.75 };
 /** "1 number", "3 charts"; nothing for none. */
@@ -135,7 +136,7 @@ const DashboardBuilderPage = () => {
 				pb={dirty ? 20 : 4}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/', title: 'Home' },
+						{ href: HOME, title: 'Home' },
 						{ href: '/dashboard-builder', title: 'Dashboard Builder' },
 					]}
 					title='Dashboard Builder'

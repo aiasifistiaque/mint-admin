@@ -29,7 +29,8 @@ const GettingStarted = () => (
 				ordered
 				items={[
 					<>
-						Open <A href='/auth/register'>Create account</A>. Enter your name, your work email, a password of at least 8
+						On the <A href='/'>MINT home page</A> press <strong>Sign up</strong> (or open{' '}
+						<A href='/auth/register'>Create account</A>). Enter your name, your work email, a password of at least 8
 						characters, and the name of your organization — your company or team.
 					</>,
 					<>
@@ -38,7 +39,7 @@ const GettingStarted = () => (
 					</>,
 					<>
 						Press <strong>Create account</strong>. You’re signed in, as the owner of your new organization, on its projects
-						page.
+						page. Later, the home page’s <strong>Dashboard</strong> button brings you straight back in.
 					</>,
 				]}
 			/>

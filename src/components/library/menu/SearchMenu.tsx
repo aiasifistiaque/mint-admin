@@ -20,6 +20,7 @@ import ModalContentContainer from '../modals/modal-components/ModalContentContai
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SidebarItemType } from '../config/lib/sidebar/types';
+import { homeHref } from '../config/lib/constants/panel';
 import { Column } from '../containers';
 
 const SearchMenu = ({
@@ -95,6 +96,7 @@ const SearchMenu = ({
 
 			return {
 				...item,
+				href: homeHref(item.href),
 				sectionTitle: currentSection,
 				index,
 			};

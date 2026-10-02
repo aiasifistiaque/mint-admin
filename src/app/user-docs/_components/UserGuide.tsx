@@ -4,7 +4,7 @@ import { FC, ReactNode } from 'react';
 import NextLink from 'next/link';
 import { Box, Flex, Grid, Link, Text } from '@chakra-ui/react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { BACKEND } from '@/components/library/config/lib/constants/panel';
+import { API_ORIGIN } from '@/components/library/config/lib/constants/panel';
 import DocsShell from '../../docs/_components/DocsShell';
 import GuideHeader from '../../docs/_components/GuideHeader';
 import GuideNav from '../../docs/_components/GuideNav';
@@ -119,12 +119,7 @@ const Turn: FC<{ href: string; label: string; title: string; back?: boolean }> =
 	</Link>
 );
 
-/**
- * Where tenants' sites call: the backend's root (the panel's API address
- * without /tenant/api or /admin/api) — so the guides' examples carry the
- * real address.
- */
-export const API_ORIGIN = BACKEND.replace(/\/(tenant|admin)\/api\/?$/, '');
+export { API_ORIGIN };
 
 /** A project's public API, with `<project>` standing in for its public slug. */
 export const PUBLIC_API = `${API_ORIGIN}/public/api/<project>`;

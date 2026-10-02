@@ -1,134 +1,21 @@
-'use client';
-
-import NextLink from 'next/link';
-import { Button, Center, Flex, Grid, Skeleton, Text } from '@chakra-ui/react';
-import { LayoutDashboard } from 'lucide-react';
-
-import { Layout, Count, useGetByIdQuery, ShowSum, useGetDashboardQuery } from '@/components/library';
-import { DashboardGrid } from '@/components/library/dashboard/widgets';
-import { IS_TENANT_PANEL, getProjectId } from '@/components/library/config/lib/constants/panel';
-import ProjectsBoard from '@/components/library/tenant/ProjectsBoard';
+import type { Metadata } from 'next';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
+import Landing from './_landing/Landing';
+import Dashboard from './dashboard/page';
 
 /**
- * The dashboard: the widgets saved in the dashboard builder (/dashboard-builder),
- * or — until one is saved — the built-in cards below.
+ * The tenant panel's / is its public landing page — what MINT is, sign up,
+ * sign in, or on to the dashboard (/dashboard, panel.ts HOME). The
+ * super-admin panel's / is the dashboard itself.
  */
-export default function Home() {
-	// The tenant panel with no project open: the organization's projects.
-	if (IS_TENANT_PANEL && !getProjectId())
-		return (
-			<Layout
-				title='Home'
-				path='dashboard'>
-				<ProjectsBoard welcome />
-			</Layout>
-		);
-	return <Dashboard />;
+export const metadata: Metadata = IS_TENANT_PANEL
+	? {
+			title: 'MINT — Apps and websites for your business',
+			description:
+				'Describe what you keep track of and get a ready panel — tables, forms, dashboards — for your team, with a public API and customer sign-in for your own site or app.',
+	  }
+	: {};
+
+export default function Root() {
+	return IS_TENANT_PANEL ? <Landing /> : <Dashboard />;
 }
-
-function Dashboard() {
-	const { data, isLoading } = useGetDashboardQuery();
-	const widgets = data?.widgets || [];
-
-	return (
-		<Layout
-			title='Dashboard'
-			path='dashboard'>
-			{isLoading ? (
-				<Grid
-					pt={3}
-					gridTemplateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }}
-					gap={2}>
-					{[0, 1, 2].map(i => (
-						<Skeleton
-							key={i}
-							h='96px'
-						/>
-					))}
-				</Grid>
-			) : data?.saved && widgets.length ? (
-				<DashboardGrid widgets={widgets} />
-			) : IS_TENANT_PANEL ? (
-				<EmptyProjectDashboard />
-			) : (
-				<BuiltInDashboard />
-			)}
-		</Layout>
-	);
-}
-
-/** A tenant project with no dashboard yet: where to make one. */
-const EmptyProjectDashboard = () => (
-	<Flex
-		direction='column'
-		align='center'
-		textAlign='center'
-		gap={2}
-		py={16}>
-		<Center
-			boxSize='44px'
-			borderRadius='full'
-			bg='bg.muted'
-			color='fg.muted'>
-			<LayoutDashboard size={20} />
-		</Center>
-		<Text
-			fontSize='14px'
-			fontWeight='600'>
-			No dashboard yet
-		</Text>
-		<Text
-			fontSize='13px'
-			color='fg.muted'
-			maxW='380px'>
-			Add numbers, charts and recent records from this project’s models.
-		</Text>
-		<Button
-			asChild
-			mt={2}
-			size='sm'>
-			<NextLink href='/dashboard-builder'>Build the dashboard</NextLink>
-		</Button>
-	</Flex>
-);
-
-/** The dashboard as it was before the builder — shown until one is saved. */
-const BuiltInDashboard = () => {
-	const { data, isFetching, isError }: any = useGetByIdQuery({
-		path: 'sms/check',
-		id: 'balance',
-	});
-
-	return (
-		<Grid
-			pt={3}
-			gridTemplateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }}
-			gap={2}>
-			<Count
-				href='/views'
-				title='Website views'
-				path='views'
-			/>
-
-			<ShowSum
-				title='SMS Balance'
-				isLoading={isFetching}
-				isError={isError}>
-				BDT. {data?.balance || '--'}
-			</ShowSum>
-
-			<Count
-				title='Total Stores'
-				path='shops'
-			/>
-			<Count
-				title='Total Products'
-				path='products'
-			/>
-			<Count
-				title='Total Customers'
-				path='customers'
-			/>
-		</Grid>
-	);
-};

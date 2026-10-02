@@ -5,6 +5,7 @@ import { Box, Button, Flex, Grid, Link, Text } from '@chakra-ui/react';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import DocsShell from '../docs/_components/DocsShell';
 import GuideCard from '../docs/_components/GuideCard';
+import { HOME } from '@/components/library/config/lib/constants/panel';
 import { USER_DOCS_NAV, USER_GUIDES, USER_GUIDE_GROUPS } from './_components/guides';
 
 /**
@@ -69,7 +70,7 @@ const UserDocsHome = () => (
 					asChild
 					size='sm'
 					variant='outline'>
-					<NextLink href='/'>
+					<NextLink href={HOME}>
 						Open MINT
 						<ArrowUpRight size={14} />
 					</NextLink>

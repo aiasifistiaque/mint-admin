@@ -14,6 +14,7 @@ import {
 import { ConfirmAction, DetailSkeleton, ErrorState, PageHeader, Panel, when } from '@/components/library/cl';
 import { toaster } from '@/components/ui/toaster';
 import ModelPanels, { ModelWorking, modelBody, modelFromDoc, useFieldErrors } from './ModelPanels';
+import { HOME } from '@/components/library/config/lib/constants/panel';
 
 /**
  * Edit a model built in the model builder: its title, record code and
@@ -125,7 +126,7 @@ const ModelEditor: FC<{ id: string }> = ({ id }) => {
 				pb={10}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/', title: 'Home' },
+						{ href: HOME, title: 'Home' },
 						{ href: '/builder', title: 'Routes' },
 						{ href: '/model-builder', title: 'Models' },
 						{ href: `/model-builder/${id}`, title: doc.title },

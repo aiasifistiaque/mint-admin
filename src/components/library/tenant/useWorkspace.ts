@@ -1,7 +1,7 @@
 'use client';
 
 import { useGetSelfQuery } from '../store';
-import { IS_TENANT_PANEL, getProjectId, setProjectId } from '../config/lib/constants/panel';
+import { HOME, IS_TENANT_PANEL, getProjectId, setProjectId } from '../config/lib/constants/panel';
 import type { OrgRef, TenantProject } from '../store/services/tenantApi';
 import { can } from './can';
 
@@ -33,7 +33,7 @@ export const useWorkspace = ({ skip = false }: { skip?: boolean } = {}) => {
 };
 
 /** Opens a project: it becomes this browser's working project, and the panel starts over in it. */
-export const openProject = (id: string, to = '/') => {
+export const openProject = (id: string, to = HOME) => {
 	setProjectId(id);
 	window.location.href = to;
 };

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { sidebarData as fallback, useAppSelector, useGetQuery, useGetSelfQuery } from '../..';
+import { homeHref } from '../../config/lib/constants/panel';
 
 const COLLAPSED_KEY = 'emint_sidebar_collapsed';
 
@@ -57,7 +58,11 @@ const useSidebarNav = () => {
 	const title = self?.organization?.name || self?.shop?.name || process.env.NEXT_PUBLIC_STORE_NAME || 'Admin';
 
 	const isLoading = isFetching || !Array.isArray(sidebarData);
-	const source: NavItem[] = isLoading ? (fallback as any) : sidebarData;
+	const source: NavItem[] = useMemo(
+		// The sidebar's Home links to '/'; in the tenant panel that's the landing page (HOME).
+		() => ((isLoading ? fallback : sidebarData) as NavItem[]).map(item => ({ ...item, href: homeHref(item?.href) })),
+		[isLoading, sidebarData]
+	);
 
 	const { lead, sections } = useMemo(() => toSections(source ?? []), [source]);
 

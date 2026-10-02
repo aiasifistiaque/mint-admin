@@ -21,6 +21,7 @@ import SectionCard, { Drag, Over } from './_components/SectionCard';
 import SectionDialog from './_components/SectionDialog';
 import SidebarPreview from './_components/SidebarPreview';
 import { DocLink, GUIDE } from './_components/ui';
+import { HOME } from '@/components/library/config/lib/constants/panel';
 
 const SIDEBAR_TAG = `/sidebar/crm/${process.env.NEXT_PUBLIC_SIDEBAR_TYPE || 'generic'}`;
 const ALL = { page: 1, limit: 1000, sort: '-priority' };
@@ -263,7 +264,7 @@ const SidebarBuilderPage = () => {
 				pb={24}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/', title: 'Home' },
+						{ href: HOME, title: 'Home' },
 						{ href: '/sidebar-builder', title: 'Sidebar Builder' },
 					]}
 					title='Sidebar Builder'

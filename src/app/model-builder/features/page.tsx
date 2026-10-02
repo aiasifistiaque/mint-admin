@@ -3,7 +3,7 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Badge, Box, Button, Flex, Text } from '@chakra-ui/react';
-import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
+import { HOME, IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 import { Plug, Plus } from 'lucide-react';
 import { Layout, useGetBuiltFeaturesQuery } from '@/components/library';
 import { EmptyState, ErrorState, PageHeader, Panel, TableSkeleton, when } from '@/components/library/cl';
@@ -29,7 +29,7 @@ const FeaturesPage = () => {
 				maxW='960px'>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/', title: 'Home' },
+						{ href: HOME, title: 'Home' },
 						{ href: '/model-builder', title: 'Models' },
 						{ href: '/model-builder/features', title: 'Features' },
 					]}

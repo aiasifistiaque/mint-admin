@@ -19,7 +19,7 @@ import {
 	TableSkeleton,
 	when,
 } from '@/components/library/cl';
-import { docsPath } from '@/components/library/config/lib/constants/panel';
+import { HOME, docsPath } from '@/components/library/config/lib/constants/panel';
 import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 
 type Row = {
@@ -275,7 +275,7 @@ const BuilderPage = () => {
 				pb={10}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/', title: 'Home' },
+						{ href: HOME, title: 'Home' },
 						{ href: '/builder', title: 'Routes' },
 					]}
 					title='Routes'

@@ -39,7 +39,7 @@ import SettingsEditor, { SettingsField } from './SettingsEditor';
 import SectionsEditor from './SectionsEditor';
 import PublishDialog from './PublishDialog';
 import { BULK_MENU_TYPES, DEFAULT_ROW_MENU, ROW_MENU_TYPES, validateMenu } from './menuTypes';
-import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
+import { HOME, IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 
 const DEFAULT_ADD_BUTTON = { title: 'Add Item', isModal: true };
 
@@ -682,7 +682,7 @@ const RouteEditor: FC<{ route: string }> = ({ route }) => {
 				pb={10}>
 				<PageHeader
 					breadcrumbs={[
-						{ href: '/', title: 'Home' },
+						{ href: HOME, title: 'Home' },
 						{ href: '/builder', title: 'Routes' },
 						{ href: '#', title: route },
 					]}

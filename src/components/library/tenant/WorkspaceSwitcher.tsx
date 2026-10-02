@@ -7,7 +7,7 @@ import CustomMenuItem, { MenuItemStyle } from '../menu/CustomMenuItem';
 import { MenuContainer } from '../menu';
 import { useAppDispatch } from '../hooks';
 import { refreshAuth, useSwitchOrganizationMutation } from '../store';
-import { setProjectId } from '../config/lib/constants/panel';
+import { HOME, setProjectId } from '../config/lib/constants/panel';
 import { openProject, useWorkspace } from './useWorkspace';
 
 /**
@@ -29,7 +29,7 @@ const WorkspaceSwitcher: FC = () => {
 		if ('data' in res && res.data?.token) {
 			setProjectId(null);
 			dispatch(refreshAuth(res.data.token));
-			window.location.href = '/';
+			window.location.href = HOME;
 		}
 	};
 

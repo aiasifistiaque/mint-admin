@@ -13,7 +13,7 @@ import {
 	useSwitchOrganizationMutation,
 	useVerifyEmailMutation,
 } from '../store';
-import { setProjectId } from '../config/lib/constants/panel';
+import { HOME, setProjectId } from '../config/lib/constants/panel';
 import { Panel } from '../cl';
 import { useWorkspace } from './useWorkspace';
 import GuideLink from './GuideLink';
@@ -34,7 +34,7 @@ const useEnter = () => {
 		if (!token) return;
 		setProjectId(null);
 		dispatch(refreshAuth(token));
-		window.location.href = '/';
+		window.location.href = HOME;
 	};
 };
 

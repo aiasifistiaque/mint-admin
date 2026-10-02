@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import type { Guide } from '../../docs/_components/guides';
 import type { DocsNav } from '../../docs/_components/DocsNavbar';
+import { HOME } from '@/components/library/config/lib/constants/panel';
 
 /**
  * The user guides (/user-docs): everything someone using the platform needs —
@@ -261,7 +262,7 @@ export const USER_DOCS_NAV: DocsNav = {
 	home: '/user-docs',
 	brand: 'MINT Guides',
 	guides: USER_GUIDES.filter(g => IN_NAVBAR.includes(g.href.split('/').pop() || '')),
-	open: { href: '/', label: 'Open MINT' },
+	open: { href: HOME, label: 'Open MINT' },
 };
 
 /** The guide at `href`. */

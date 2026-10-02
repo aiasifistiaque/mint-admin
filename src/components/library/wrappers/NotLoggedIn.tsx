@@ -3,6 +3,7 @@ import { FlexProps } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { FC, useEffect, ReactNode } from 'react';
 import { useAuth } from '..';
+import { HOME } from '../config/lib/constants/panel';
 
 export type FlexPropsType = FlexProps & {
 	children?: ReactNode;
@@ -15,7 +16,7 @@ const NotLoggedIn: FC<FlexPropsType> = ({ children }) => {
 
 	useEffect(() => {
 		if (!isLoading && isLoggedIn) {
-			router.replace('/');
+			router.replace(HOME);
 		}
 	}, [isLoading]);
 

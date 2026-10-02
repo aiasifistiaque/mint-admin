@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { IS_TENANT_PANEL, docsPath, setProjectId } from '../config/lib/constants/panel';
+import { HOME, IS_TENANT_PANEL, docsPath, setProjectId } from '../config/lib/constants/panel';
 import { ADMIN_ONLY_PAGES, TENANT_ONLY_PAGES } from './pages';
 import { useWorkspace } from './useWorkspace';
 
@@ -17,12 +17,12 @@ const PanelGuard = () => {
 	const pathname = usePathname() || '/';
 	const router = useRouter();
 	const first = pathname.split('/')[1] || '';
-	// Signed-out pages (and the public guides) have no account to read.
-	const { staleProject } = useWorkspace({ skip: first === 'auth' || first === 'user-docs' || !IS_TENANT_PANEL });
+	// Signed-out pages (the landing page, sign-in, the public guides) have no account to read.
+	const { staleProject } = useWorkspace({ skip: !first || first === 'auth' || first === 'user-docs' || !IS_TENANT_PANEL });
 
 	useEffect(() => {
 		if (IS_TENANT_PANEL && first === 'docs') router.replace(docsPath(`${pathname}${window.location.hash}`));
-		else if (IS_TENANT_PANEL ? ADMIN_ONLY_PAGES.has(first) : TENANT_ONLY_PAGES.has(first)) router.replace('/');
+		else if (IS_TENANT_PANEL ? ADMIN_ONLY_PAGES.has(first) : TENANT_ONLY_PAGES.has(first)) router.replace(HOME);
 	}, [first]);
 
 	useEffect(() => {

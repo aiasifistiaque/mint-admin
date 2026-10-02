@@ -5,7 +5,7 @@ import NextLink from 'next/link';
 import { Box, Button, Flex, Link, Text } from '@chakra-ui/react';
 import { ArrowUpRight } from 'lucide-react';
 import Footer from '@/components/library/nav/Footer';
-import { docsPath } from '@/components/library/config/lib/constants/panel';
+import { HOME, IS_TENANT_PANEL, docsPath } from '@/components/library/config/lib/constants/panel';
 
 /**
  * The frame of the public site pages — Terms of Use, Privacy Policy, System
@@ -67,8 +67,8 @@ const SiteShell: FC<{ title: string; lead?: ReactNode; updated?: string; childre
 				asChild
 				size='xs'
 				variant='outline'>
-				<NextLink href='/'>
-					Open admin
+				<NextLink href={HOME}>
+					{IS_TENANT_PANEL ? 'Open dashboard' : 'Open admin'}
 					<ArrowUpRight size={13} />
 				</NextLink>
 			</Button>

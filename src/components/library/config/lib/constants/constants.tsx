@@ -1,11 +1,18 @@
 import { IS_TENANT_PANEL } from './panel';
 
-// The tenant panel keeps its own token: the two panels can be open side by side.
-export const TOKEN_NAME: string =
-	process.env.NEXT_PUBLIC_TOKEN_NAME || (IS_TENANT_PANEL ? 'MINT_TENANT_TOKEN' : 'MINT_CAFE_TOKEN_TWO');
+/**
+ * Where the sign-in token is kept in localStorage. The tenant panel's keys are
+ * fixed and its own — NEXT_PUBLIC_TOKEN_NAME / REFRESH_TOKEN only set the
+ * super-admin panel's — so the two panels never share a session, even on one
+ * origin (localhost) or when the tenant deployment copies the admin's env.
+ */
+export const TOKEN_NAME: string = IS_TENANT_PANEL
+	? 'MINT_TENANT_TOKEN'
+	: process.env.NEXT_PUBLIC_TOKEN_NAME || 'MINT_CAFE_TOKEN_TWO';
 
-export const REFRESH_TOKEN: string =
-	process.env.REFRESH_TOKEN || 'THINKCRYPT_ERP_REFRESH_TOKEN_TEST_ONE';
+export const REFRESH_TOKEN: string = IS_TENANT_PANEL
+	? 'MINT_TENANT_REFRESH_TOKEN'
+	: process.env.REFRESH_TOKEN || 'THINKCRYPT_ERP_REFRESH_TOKEN_TEST_ONE';
 
 export const STORE: string = process.env.NEXT_PUBLIC_STORE || '6587157f9b62eb0e74c9f2ef';
 
