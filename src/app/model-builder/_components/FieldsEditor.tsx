@@ -739,7 +739,7 @@ const FieldsEditor: FC<Props> = ({ fields, onChange, errors, targets, selfName, 
 											onChange={v => set(f.uid, { unique: v })}
 										/>
 									)}
-									{!f.unique && f.kind !== 'boolean' && (
+									{!f.unique && f.kind !== 'boolean' && f.kind !== 'password' && (
 										<Check
 											label='Index'
 											hint='Faster filtering and sorting on large collections'

@@ -7,6 +7,7 @@ import { renderViewItem as renderContent } from '../';
 import { SkeletonContent } from '../view-item/utils';
 import DetailRow from '../../../cl/DetailRow';
 import { linkFor } from '../utils/record-link/linked';
+import RevealSecret from '../../../cl/RevealSecret';
 
 type ViewRowProps = {
 	field: any;
@@ -20,6 +21,8 @@ type ViewRowProps = {
 	block?: boolean;
 	/** The whole record — lets a linked value (a reference, the owner) render as a RecordLink. */
 	doc?: any;
+	/** The record's route — a Password field reveals through it. */
+	route?: string;
 };
 
 /**
@@ -32,7 +35,7 @@ type ViewRowProps = {
  * value in a bordered two-column grid, so a view page looked like a different
  * product from the pages it sat beside.
  */
-const ViewRow: FC<ViewRowProps> = ({ field, value, isLoading, block, doc }) => {
+const ViewRow: FC<ViewRowProps> = ({ field, value, isLoading, block, doc, route }) => {
 	const { title, type, colorPalette, path, model, originalType, copy, id } = field;
 	const { copy: onCopy, setValue, copied } = useClipboard();
 
@@ -110,6 +113,22 @@ const ViewRow: FC<ViewRowProps> = ({ field, value, isLoading, block, doc }) => {
 	}
 
 	const isImage = type === 'image' || type === 'image-array';
+
+	// A Password field: the record never carries it, so it's never "empty" here.
+	if (type === 'secret')
+		return (
+			<DetailRow
+				label={title}
+				value={
+					<RevealSecret
+						path={route || ''}
+						id={doc?._id}
+						field={field.dataKey}
+						label={title}
+					/>
+				}
+			/>
+		);
 
 	return (
 		<DetailRow

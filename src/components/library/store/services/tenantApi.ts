@@ -129,15 +129,75 @@ export type AnalyticsDim = 'paths' | 'referrers' | 'devices' | 'browsers' | 'os'
 export type AnalyticsRange = { from?: string; to?: string };
 export type PublicApi = { enabled: boolean; actions: ('list' | 'get' | 'create' | 'update' | 'delete')[]; auth: 'none' | 'customer'; ownerOnly: boolean };
 
-/** A website project's setup (WO-34, backend siteConfig.function.ts). */
+/** A website project's settings (WO-34, WO-38; backend siteConfig.function.ts → WebsiteSettings). */
+export type SiteTracking = {
+	mintAnalytics: boolean;
+	ga4: string;
+	gtm: string;
+	googleAds: string;
+	metaPixel: string;
+	tiktokPixel: string;
+	linkedinPartner: string;
+	pinterestTag: string;
+	xPixel: string;
+	snapPixel: string;
+	clarity: string;
+	hotjar: string;
+};
+export type SiteTag = { _id?: string; name: string; location: 'head' | 'bodyStart' | 'bodyEnd'; content: string; enabled: boolean };
+export type SiteCheck = {
+	checkedAt: string;
+	origin: string;
+	reachable: boolean;
+	status?: number;
+	url?: string;
+	message: string;
+	script?: { found: boolean; tags: boolean };
+	items: { key: string; label: string; configured: string; inHtml: string[]; status: 'ok' | 'warning' | 'missing' | 'idle'; message: string }[];
+	extra: { key: string; label: string; ids: string[] }[];
+	serverSide: { meta?: { ok: boolean | null; note: string }; ga4?: { ok: boolean | null; note: string } };
+};
 export type SiteConfig = {
-	tracking: { mintAnalytics: boolean; ga4: string; gtm: string; googleAds: string; metaPixel: string; tiktokPixel: string; linkedinPartner: string; clarity: string; hotjar: string };
-	code: { head: string; bodyStart: string; bodyEnd: string };
-	seo: { indexing: boolean; sitemap: boolean; robots: string; canonicalDomain: string; googleVerification: string; bingVerification: string };
+	_id: string;
+	identity: { siteName: string; tagline: string; logo: string; favicon: string; footerText: string; primaryColor: string; secondaryColor: string; fontFamily: string };
+	contact: { email: string; phone: string; whatsapp: string; address: string; mapEmbedUrl: string; hours: string };
+	social: { facebook: string; instagram: string; x: string; linkedin: string; youtube: string; tiktok: string; pinterest: string };
+	seo: {
+		metaTitle: string;
+		titleTemplate: string;
+		metaDescription: string;
+		ogImage: string;
+		keywords: string[];
+		indexing: boolean;
+		sitemap: boolean;
+		robots: string;
+		canonicalDomain: string;
+		googleVerification: string;
+		bingVerification: string;
+	};
+	tracking: SiteTracking;
+	/** Whether each key is set — the keys themselves never leave the server. */
+	serverSide: { meta: { enabled: boolean; testEventCode: string; tokenSet: boolean }; ga4: { enabled: boolean; secretSet: boolean } };
+	headTags: SiteTag[];
 	redirects: { from: string; to: string; permanent: boolean }[];
 	headers: { source: string; name: string; value: string }[];
+	check: SiteCheck | null;
 	domains: string[];
 	origin: string;
+	updatedAt: string;
+	/** The old Site settings table (before WO-38), while the project still has it — its record was copied here. */
+	legacy: { _id: string; title: string } | null;
+};
+/** A change to the settings: any sections, each with only the keys that change. */
+export type SiteConfigPatch = {
+	[K in 'identity' | 'contact' | 'social' | 'seo' | 'tracking']?: Partial<SiteConfig[K]>;
+} & {
+	serverSide?: { meta?: { enabled?: boolean; testEventCode?: string }; ga4?: { enabled?: boolean } };
+	secrets?: { metaAccessToken?: string; ga4ApiSecret?: string };
+	headTags?: SiteTag[];
+	redirects?: SiteConfig['redirects'];
+	headers?: SiteConfig['headers'];
+	domains?: string[];
 };
 export type SiteOverview = {
 	settings: { _id: string; siteName: string; logo: string; favicon: string; metaTitle: string; metaDescription: string } | null;
@@ -319,14 +379,18 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: () => 'site-config',
 			providesTags: ['tenant-site'],
 		}),
-		updateSiteConfig: builder.mutation<SiteConfig, Partial<Omit<SiteConfig, 'origin'>>>({
+		updateSiteConfig: builder.mutation<SiteConfig, SiteConfigPatch>({
 			query: body => ({ url: 'site-config', method: 'PUT', body }),
+			invalidatesTags: ['tenant-site'],
+		}),
+		checkSite: builder.mutation<SiteCheck, void>({
+			query: () => ({ url: 'site-config/check', method: 'POST' }),
 			invalidatesTags: ['tenant-site'],
 		}),
 		getSiteOverview: builder.query<SiteOverview, void>({
 			query: () => 'site-overview',
 			// The kit's own tables too, so editing a page or its SEO refreshes it (routeTags registers them).
-			providesTags: () => routeTags('tenant-site', 'pages', 'seo', 'web-contents', 'site-settings'),
+			providesTags: () => routeTags('tenant-site', 'pages', 'seo', 'web-contents'),
 		}),
 		getProjectHistory: builder.query<{ doc: HistoryEntry[]; totalDocs: number; totalPages: number }, HistoryQuery>({
 			query: q => `history?${new URLSearchParams(Object.entries(q).filter(([, v]) => v !== undefined && v !== '').map(([k, v]) => [k, String(v)])).toString()}`,
@@ -380,6 +444,7 @@ export const {
 	useUpdatePublicApiMutation,
 	useGetSiteConfigQuery,
 	useUpdateSiteConfigMutation,
+	useCheckSiteMutation,
 	useGetSiteOverviewQuery,
 	useGetProjectHistoryQuery,
 	useGetHistoryFacetsQuery,

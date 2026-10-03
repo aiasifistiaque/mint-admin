@@ -63,7 +63,7 @@ const VPassword: FC<Props> = ({
 					autoComplete='new-password'
 					spellCheck={false}
 					placeholder={placeholder ? placeholder : label}
-					value={value}
+					value={value ?? ''}
 					{...props}
 				/>
 			</InputGroup>

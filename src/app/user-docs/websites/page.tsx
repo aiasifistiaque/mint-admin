@@ -14,14 +14,17 @@ const SECTIONS = [
 	{ id: 'site-overview', title: 'The website’s home' },
 	{ id: 'site-setup', title: 'Site setup' },
 	{ id: 'site-general', title: 'Name, logo and favicon' },
+	{ id: 'site-contact', title: 'Contact and social links' },
+	{ id: 'site-seo', title: 'Default SEO' },
 	{ id: 'tracking', title: 'Tracking tags and pixels' },
-	{ id: 'site-code', title: 'Code in head and body' },
-	{ id: 'indexing', title: 'SEO, robots.txt and sitemap' },
+	{ id: 'server-side', title: 'Server-side tracking' },
+	{ id: 'site-code', title: 'Code on every page' },
+	{ id: 'indexing', title: 'Indexing, robots.txt and sitemap' },
 	{ id: 'redirects', title: 'Redirects and headers' },
 	{ id: 'site-domains', title: 'Domains' },
+	{ id: 'site-check', title: 'Check the site' },
 	{ id: 'ai-site', title: 'Build your site with AI' },
 	{ id: 'kit', title: 'The website kit' },
-	{ id: 'settings', title: 'Site settings' },
 	{ id: 'build-a-page', title: 'Building a page' },
 	{ id: 'contents', title: 'Content blocks' },
 	{ id: 'seo', title: 'SEO' },
@@ -93,11 +96,10 @@ const Websites = () => (
 		<Section
 			id='kit'
 			title='The website kit'
-			lead='Four ordinary models, in a “Website” sidebar section. Change them like any model.'>
+			lead='Three ordinary models, in a “Website” sidebar section. Change them like any model.'>
 			<Terms
 				head={['Model (address)', 'Holds']}
 				rows={[
-					[<>Site settings (<C>site-settings</C>)</>, 'One record: name, logo, favicon, colours, font, contact details, social links, default SEO.'],
 					[<>Pages (<C>pages</C>)</>, 'Every page: its name, path, status, template, parent and place in the menu.'],
 					[<>SEO (<C>seo</C>)</>, 'Per page: title, description, share image, keywords, canonical URL, hide from search engines.'],
 					[<>Contents (<C>web-contents</C>)</>, 'The content blocks on each page: text, lists, cards, rich text, images, galleries, video.'],
@@ -108,15 +110,10 @@ const Websites = () => (
 				is what the site API uses. Add fields freely; keep the models’ addresses and that public API, or the site API can’t
 				find them.
 			</P>
-		</Section>
-
-		<Section
-			id='settings'
-			title='Site settings'>
 			<P>
-				Add one record under <strong>Site settings</strong>: site name, logo and favicon, footer text, primary and secondary
-				colour and font, email, phone, address and map link, Facebook, X, Instagram, YouTube and LinkedIn, and the default
-				meta title, description and share image used when a page has no SEO of its own. Only the first record is used.
+				The site’s own settings — name, logo, favicon, contact details, default SEO, tags — aren’t a model: they’re on{' '}
+				<A href='#site-setup'>Site setup</A>, one set per website. (Websites made before this had a <em>Site settings</em>{' '}
+				table; its record was copied to Site setup, and the table can be deleted in the model builder.)
 			</P>
 		</Section>
 
@@ -286,12 +283,13 @@ const about = await fetch('${PUBLIC_API}/pages/by-path?path=/about').then(r => r
 		<Section
 			id='site-setup'
 			title='Site setup'
-			lead='Site → Site setup: everything a website needs besides its pages, on one page.'>
+			lead='Site → Site setup: everything a website needs besides its pages, on one page — not a table.'>
 			<P>
-				Its tabs are <strong>General</strong>, <strong>Tracking</strong>, <strong>Code</strong>,{' '}
-				<strong>SEO & indexing</strong>, <strong>Redirects & headers</strong> and <strong>Domains</strong>. Each tab saves on
-				its own. Your site reads it all from the <A href='#site-api'>site API</A>, so a change is live within a minute with no
-				code change. Changing it needs the Build permission; domains need Manage projects.
+				Its tabs are <strong>General</strong>, <strong>Contact & social</strong>, <strong>SEO</strong>,{' '}
+				<strong>Tracking</strong>, <strong>Server-side</strong>, <strong>Code</strong>, <strong>Redirects & headers</strong>,{' '}
+				<strong>Domains</strong> and <strong>Check the site</strong>. Each setting is a card with its own Save, enabled once
+				you change something. Your site reads it all from the <A href='#site-api'>site API</A>, so a change is live within a
+				minute with no code change. Changing it needs the Build permission; domains need Manage projects.
 			</P>
 		</Section>
 
@@ -299,16 +297,36 @@ const about = await fetch('${PUBLIC_API}/pages/by-path?path=/about').then(r => r
 			id='site-general'
 			title='Name, logo and favicon'>
 			<P>
-				<strong>General</strong> edits your <A href='#settings'>Site settings</A>: the site’s name, logo, favicon, colours
-				and font, the default title, description and share image used by pages without their own, and your contact details
-				and social links. Images come from your <A href='/user-docs/media'>Media library</A>.
+				<strong>General</strong> has the site’s name, tagline, logo, favicon and footer text, and its theme: primary and
+				secondary colour and font. Images come from your <A href='/user-docs/media'>Media library</A>. The analytics script
+				adds the favicon to pages that don’t have one.
+			</P>
+		</Section>
+
+		<Section
+			id='site-contact'
+			title='Contact and social links'>
+			<P>
+				<strong>Contact & social</strong>: email, phone, WhatsApp, opening hours, address and a map embed, and the full
+				addresses of your Facebook, Instagram, X, LinkedIn, YouTube, TikTok and Pinterest pages. Your site shows the ones you
+				fill in.
+			</P>
+		</Section>
+
+		<Section
+			id='site-seo'
+			title='Default SEO'>
+			<P>
+				On the <strong>SEO</strong> tab: the default title, description, share image and keywords, used by any page without
+				its own SEO, and a <strong>title template</strong> — <C>%s · Acme</C> makes a page called “About us” show as “About
+				us · Acme”.
 			</P>
 		</Section>
 
 		<Section
 			id='tracking'
 			title='Tracking tags and pixels'
-			lead='Paste an ID and the tag is on every page — the analytics script adds it.'>
+			lead='Paste an ID, save its card, and the tag is on every page — the analytics script adds it.'>
 			<Terms
 				head={['Tag', 'The ID looks like']}
 				rows={[
@@ -318,6 +336,9 @@ const about = await fetch('${PUBLIC_API}/pages/by-path?path=/about').then(r => r
 					['Meta Pixel', 'A long number'],
 					['TikTok Pixel', 'Capital letters and digits'],
 					['LinkedIn Insight', 'The partner ID, a number'],
+					['Pinterest Tag', 'A long number'],
+					['X (Twitter) Pixel', <C key='x'>o1a2b</C>],
+					['Snap Pixel', 'A 36-character ID with dashes'],
 					['Microsoft Clarity', 'The project ID'],
 					['Hotjar', 'The site ID, a number'],
 				]}
@@ -330,17 +351,51 @@ const about = await fetch('${PUBLIC_API}/pages/by-path?path=/about').then(r => r
 		</Section>
 
 		<Section
-			id='site-code'
-			title='Code in head and body'>
+			id='server-side'
+			title='Server-side tracking'
+			lead='Browsers block a good share of tracking; this server can send the events too.'>
+			<Terms
+				head={['Provider', 'What the server sends — and what it needs']}
+				rows={[
+					[
+						'Meta Conversions API',
+						<>
+							Page views, Lead (a record your site sends in, e.g. a contact form) and CompleteRegistration (a customer signs up).
+							Needs the Meta Pixel ID and an access token from the pixel’s Conversions API settings.
+						</>,
+					],
+					[
+						'Google Analytics (Measurement Protocol)',
+						<>generate_lead and sign_up. Needs the Google Analytics ID and an API secret from your web data stream.</>,
+					],
+				]}
+			/>
 			<P>
-				HTML for the <C>&lt;head&gt;</C>, the start of <C>&lt;body&gt;</C> and its end — a chat widget, another tag, a
-				verification snippet. Scripts in it run. Only add code you trust: it can do anything on your site.
+				Turn each on in <strong>Site setup → Server-side</strong>. Keys are kept on the server: once saved, the panel only
+				shows that one is set, with Replace and Remove. Meta gets each page view from the pixel and the server with the same
+				event id, so it counts it once; Google can’t do that, so page views go to Google from the browser only. Visitors are
+				matched by IP address, browser and the platform’s cookie; an email or phone in a form is hashed before it’s sent.
+			</P>
+			<P>
+				So a lead is matched to the visitor who sent it, the site adds <C>window.MintAnalytics?.headers()</C> to the headers
+				of its own calls to the site API. Use Meta’s <strong>test event code</strong> while you check it in Events Manager →
+				Test events, then clear it.
+			</P>
+		</Section>
+
+		<Section
+			id='site-code'
+			title='Code on every page'>
+			<P>
+				Named pieces of HTML — a chat widget, another provider’s tag, a verification snippet — each placed in the{' '}
+				<C>&lt;head&gt;</C>, at the start of <C>&lt;body&gt;</C> or at its end. Add, edit, switch off or remove each one;
+				it’s saved straight away. Scripts in it run. Only add code you trust: it can do anything on your site.
 			</P>
 		</Section>
 
 		<Section
 			id='indexing'
-			title='SEO, robots.txt and sitemap'>
+			title='Indexing, robots.txt and sitemap'>
 			<List
 				items={[
 					<>
@@ -387,6 +442,19 @@ const about = await fetch('${PUBLIC_API}/pages/by-path?path=/about').then(r => r
 		</Section>
 
 		<Section
+			id='site-check'
+			title='Check the site'
+			lead='Is every tag really on the live site?'>
+			<P>
+				<strong>Check the site</strong> opens your live home page (the main domain, or the first domain) and shows each tag
+				set here as <em>On the site</em>, <em>Check this</em> or <em>Not on the site</em>. It also finds tags the page adds
+				by itself: the same ID twice means every visit is counted twice; another ID means the page has its own. Google Tag
+				Manager confirms your container exists, and Meta confirms the Conversions API token is valid and made for your
+				pixel. Each Tracking card shows its result from the last check.
+			</P>
+		</Section>
+
+		<Section
 			id='ai-site'
 			title='Build your site with AI'
 			lead='Build the site with Claude Code (or any AI editor) and it’s managed from here the moment it’s deployed.'>
@@ -398,7 +466,7 @@ const about = await fetch('${PUBLIC_API}/pages/by-path?path=/about').then(r => r
 			<List
 				items={[
 					<>
-						<strong>Site settings</strong> — name, logo, favicon, colours, font, contact details, social links, default SEO, and
+						<strong>Site setup</strong> — name, logo, favicon, colours, font, contact details, social links, default SEO, tags, and
 						the domains it’s deployed on.
 					</>,
 					<>
@@ -419,7 +487,7 @@ const about = await fetch('${PUBLIC_API}/pages/by-path?path=/about').then(r => r
 			/>
 			<P>
 				The site’s code reads all of it from the <A href='#site-api'>site API</A>. Once deployed, change a heading in{' '}
-				<strong>Contents</strong>, a price in <strong>Products</strong> or the favicon in <strong>Site settings</strong>, and
+				<strong>Contents</strong>, a price in <strong>Products</strong> or the favicon in <strong>Site setup</strong>, and
 				the live site shows it within a minute — no code change, no redeploy.
 			</P>
 			<H3>Building again</H3>
@@ -455,7 +523,7 @@ const about = await fetch('${PUBLIC_API}/pages/by-path?path=/about').then(r => r
 					['“No published page at that path”', <>The page is still a draft, or its path differs — <C>/about</C>, not <C>about</C>.</>],
 					['A block doesn’t show', 'It’s on another page, Draft, or Is visible is off.'],
 					['/site returns 404', 'The project is an app — the site API is for website projects.'],
-					[<>/site gives <C key='n'>settings: null</C></>, 'No Site settings record yet — or that model was renamed or made private.'],
+					['A tag isn’t on the site', 'Run Site setup → Check the site: it says whether the analytics script is on the page and which tags it found.'],
 					['The menu is missing a page', 'It isn’t published, or In the menu is off.'],
 					['Changes take a minute to appear', 'Your site caches the answers (revalidate: 60 above). That’s on your side.'],
 				]}

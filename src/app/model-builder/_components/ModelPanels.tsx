@@ -81,6 +81,9 @@ export const modelBody = (w: ModelWorking) => ({
 /** The name a new model asks for: the one typed, or the title made singular. */
 export const requestedName = (w: ModelWorking) => w.name.trim() || singular(w.title);
 
+/** 'Invoices' -> 'INV': the prefix offered when codes are switched on. */
+export const suggestPrefix = (title: string) => title.replace(/[^a-zA-Z0-9]/g, '').slice(0, 3).toUpperCase();
+
 export const codePreview = (c: ModelWorking['code']) => {
 	const digits = String(Math.max(c.start || 0, 0) || 1).padStart(Math.min(Math.max(c.padding || 1, 1), 12), '0');
 	return c.prefix.trim() ? `${c.prefix.trim().toUpperCase()}-${digits}` : digits;
@@ -284,7 +287,10 @@ const ModelPanels: FC<Props> = ({ working, onChange, mode, doc, base, targets, c
 					<Switch.Root
 						size='sm'
 						checked={working.code.enabled}
-						onCheckedChange={e => setCode({ enabled: e.checked })}>
+						// Switched on with no prefix, it offers one from the title — an empty box read as "INV" to people.
+						onCheckedChange={e =>
+							setCode({ enabled: e.checked, ...(e.checked && !working.code.prefix.trim() && { prefix: suggestPrefix(working.title || working.name || '') }) })
+						}>
 						<Switch.HiddenInput />
 						<Switch.Control>
 							<Switch.Thumb />
@@ -303,7 +309,7 @@ const ModelPanels: FC<Props> = ({ working, onChange, mode, doc, base, targets, c
 									fontFamily='mono'
 									maxLength={10}
 									value={working.code.prefix}
-									placeholder='INV'
+									placeholder='None'
 									onChange={e => setCode({ prefix: e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase() })}
 								/>
 							</Box>

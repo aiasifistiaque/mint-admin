@@ -60,7 +60,7 @@ const PublicApi = () => (
 			/>
 			<P>
 				The <A href='/public-api'>Public API</A> page shows each model’s address and ready-to-copy examples for the open
-				project. A website project’s Site settings, Pages, SEO and Contents start public, read-only — that’s how your site
+				project. A website project’s Pages, SEO and Contents start public, read-only — that’s how your site
 				reads them.
 			</P>
 		</Section>

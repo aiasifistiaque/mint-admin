@@ -49,6 +49,7 @@ const ConfiguredView: FC<Props> = ({ slug, schema, view, isLoading, compact }) =
 		<ViewRow
 			key={key}
 			doc={doc}
+			route={slug}
 			field={{
 				...field,
 				...(field.idKey ? { id: getValue({ dataKey: field.idKey, type: field.type, data: doc }) } : {}),

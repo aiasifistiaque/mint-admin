@@ -31,7 +31,7 @@ const FIX: Record<string, string> = {
 	name: '/site-setup',
 	logo: '/site-setup',
 	favicon: '/site-setup',
-	seo: '/site-setup',
+	seo: '/site-setup?tab=seo',
 	domain: '/site-setup?tab=domains',
 	tracking: '/site-setup?tab=tracking',
 };

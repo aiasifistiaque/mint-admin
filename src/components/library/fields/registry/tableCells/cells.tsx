@@ -12,6 +12,7 @@ import CustomTd from '@/components/library/components/table/table-components/dat
 import Align from '@/components/library/containers/AlignCenter';
 import Price from '@/components/library/utils/texts/Price';
 import SecretValue from '@/components/library/cl/SecretValue';
+import RevealSecret from '@/components/library/cl/RevealSecret';
 
 const dateCss: any = { fontSize: { base: '1rem', md: '.8rem' } };
 const badgeCss: BadgeProps = { fontSize: '12px', size: 'xs' };
@@ -125,6 +126,19 @@ export const PasswordCell = ({ children, ...props }: any) => (
 	<CustomTd {...props}>
 		<SecretValue
 			value={children}
+			size='xs'
+		/>
+	</CustomTd>
+);
+
+/** A built model's Password field: dots and a Reveal that asks for the person's own password. */
+export const SecretCell = ({ children, doc, item, secretPath, ...props }: any) => (
+	<CustomTd {...props}>
+		<RevealSecret
+			path={secretPath}
+			id={doc?._id}
+			field={item?.dataKey}
+			label={item?.title}
 			size='xs'
 		/>
 	</CustomTd>

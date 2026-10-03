@@ -11,6 +11,7 @@ import {
 	VImage,
 	useBuildStarterMutation,
 	useGetAllQuery,
+	useGetSiteConfigQuery,
 	useGetStartersQuery,
 	usePostMutation,
 	useUpdateByIdMutation,
@@ -332,11 +333,10 @@ const Footer: FC<{ onBack?: () => void; onNext: () => void; next: string; busy?:
 const WebsiteStart: FC<{ name: string }> = ({ name }) => {
 	const { can } = useWorkspace();
 	const [step, setStep] = useState(0);
-	const { data: settingsList, isLoading: loadingSettings } = useGetAllQuery({ path: 'site-settings', limit: 1, sort: 'createdAt' });
+	const { data: site, isLoading: loadingSettings } = useGetSiteConfigQuery();
 	const { data: pageList } = useGetAllQuery({ path: 'pages', limit: 100 });
 	const { data: seoList } = useGetAllQuery({ path: 'seo', limit: 100 });
 	const { data: blockList } = useGetAllQuery({ path: 'web-contents', limit: 100 });
-	const settings = settingsList?.doc?.[0] || null;
 	const home = (pageList?.doc || []).find((p: any) => p.path === '/') || null;
 	const [post, posting] = usePostMutation();
 	const [update, updating] = useUpdateByIdMutation();
@@ -345,8 +345,11 @@ const WebsiteStart: FC<{ name: string }> = ({ name }) => {
 
 	const [brand, setBrand] = useState({ siteName: name, logo: '', favicon: '', primaryColor: '#111827' });
 	useEffect(() => {
-		if (settings) setBrand(b => ({ siteName: settings.siteName || b.siteName, logo: settings.logo || '', favicon: settings.favicon || '', primaryColor: settings.primaryColor || b.primaryColor }));
-	}, [settings?._id]);
+		if (site) {
+			const i = site.identity;
+			setBrand(b => ({ siteName: i.siteName || b.siteName, logo: i.logo || '', favicon: i.favicon || '', primaryColor: i.primaryColor && i.primaryColor !== '#000000' ? i.primaryColor : b.primaryColor }));
+		}
+	}, [site?._id]);
 	const [hero, setHero] = useState({ headline: '', intro: '', btnText: '', url: '', description: '' });
 	const [live, setLive] = useState({ domain: '', ga4: '' });
 	const busy = posting.isLoading || updating.isLoading || configuring.isLoading;
@@ -361,8 +364,8 @@ const WebsiteStart: FC<{ name: string }> = ({ name }) => {
 
 	const saveBrand = async () => {
 		setFailure(null);
-		const body = { ...brand, metaTitle: settings?.metaTitle || brand.siteName };
-		const res: any = settings ? await update({ path: 'site-settings', id: settings._id, body }) : await post({ path: 'site-settings', body });
+		// The project's website settings (WO-38), not a record in a table.
+		const res: any = await saveConfig({ identity: brand, ...(!site?.seo.metaTitle && brand.siteName && { seo: { metaTitle: brand.siteName } }) });
 		if (!fail(res)) setStep(1);
 	};
 

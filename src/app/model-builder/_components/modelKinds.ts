@@ -29,7 +29,8 @@ export type FieldKind =
 	| 'reference'
 	| 'references'
 	| 'section'
-	| 'sectionlist';
+	| 'sectionlist'
+	| 'password';
 
 export const KINDS: { value: FieldKind; label: string; hint: string; group: string; hidden?: boolean }[] = [
 	{ value: 'text', label: 'Text', hint: 'A short line: a name, a title, a phone number', group: 'Text' },
@@ -38,6 +39,12 @@ export const KINDS: { value: FieldKind; label: string; hint: string; group: stri
 	{ value: 'email', label: 'Email', hint: 'Checked to be an email address, stored in lower case', group: 'Text' },
 	{ value: 'url', label: 'Link', hint: 'A web address, shown as a link', group: 'Text' },
 	{ value: 'color', label: 'Color', hint: 'A colour, picked with a colour picker', group: 'Text' },
+	{
+		value: 'password',
+		label: 'Password',
+		hint: 'Stored encrypted and hidden everywhere; to see it, people re-enter their own password',
+		group: 'Text',
+	},
 	{ value: 'number', label: 'Number', hint: 'Sortable; can have a minimum and maximum', group: 'Values' },
 	{
 		value: 'formula',
@@ -109,8 +116,10 @@ export const ENUM_KINDS: FieldKind[] = ['text', 'number', 'select', 'multiselect
 export const NEEDS_OPTIONS: FieldKind[] = ['select', 'multiselect'];
 /** Kinds stored as a list — their default is a list too. */
 export const ARRAY_KINDS: FieldKind[] = ['multiselect', 'tags', 'images', 'files', 'references'];
-export const NO_DEFAULT_KINDS: FieldKind[] = ['reference', 'references', 'formula', 'section', 'sectionlist'];
-const CANT_BE_UNIQUE: FieldKind[] = ['boolean', 'editor', 'textarea', 'formula', ...ARRAY_KINDS, ...SECTION_KINDS];
+export const NO_DEFAULT_KINDS: FieldKind[] = ['reference', 'references', 'formula', 'section', 'sectionlist', 'password'];
+/** Encrypted and hidden — its key may say what it holds (password, pin, token). Same as the backend's SECRET_KINDS. */
+export const SECRET_KINDS: FieldKind[] = ['password'];
+const CANT_BE_UNIQUE: FieldKind[] = ['boolean', 'editor', 'textarea', 'formula', 'password', ...ARRAY_KINDS, ...SECTION_KINDS];
 export const canBeUnique = (kind: FieldKind) => !CANT_BE_UNIQUE.includes(kind);
 export const hasLength = (kind: FieldKind) => ['text', 'email', 'url', 'textarea', 'editor'].includes(kind);
 export const hasOptions = (f: Pick<EditableField, 'kind' | 'options'>) =>
@@ -238,6 +247,10 @@ export const toServer = (fields: EditableField[]): any[] =>
 		if (out.min === null || out.min === undefined || Number.isNaN(out.min)) delete out.min;
 		if (out.max === null || out.max === undefined || Number.isNaN(out.max)) delete out.max;
 		if (!canBeUnique(f.kind)) delete out.unique;
+		if (SECRET_KINDS.includes(f.kind)) {
+			delete out.index;
+			delete out.searchable;
+		}
 		if (NO_DEFAULT_KINDS.includes(f.kind)) delete out.default;
 		if (Array.isArray(out.default) && !ARRAY_KINDS.includes(f.kind)) delete out.default;
 		if (ARRAY_KINDS.includes(f.kind) && out.default !== undefined && !Array.isArray(out.default)) delete out.default;
@@ -290,7 +303,8 @@ export const validateFields = (
 		if (RESERVED_KEYS.includes(f.key)) return fail(f.uid, 'key', `“${f.key}” is reserved`);
 		if (accessEnabled && ACCESS_KEYS.includes(f.key))
 			return fail(f.uid, 'key', `“${f.key}” is used by access control — pick another key`);
-		if (SENSITIVE.test(f.key)) return fail(f.uid, 'key', 'Secrets (passwords, tokens…) can’t be stored here');
+		if (SENSITIVE.test(f.key) && !SECRET_KINDS.includes(f.kind))
+			return fail(f.uid, 'key', 'A password, token or other secret needs the Password kind — it’s stored encrypted and hidden');
 		const lower = f.key.toLowerCase();
 		if (seen.has(lower)) return fail(f.uid, 'key', 'Another field has this key');
 		seen.set(lower, f.uid);

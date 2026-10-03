@@ -213,7 +213,7 @@ export const USER_GUIDES: Guide[] = [
 		href: '/user-docs/websites',
 		title: 'Websites',
 		name: 'Website projects',
-		description: 'Site settings, pages, per-page SEO and content blocks — and rendering them on your site in two calls.',
+		description: 'Site setup, pages, per-page SEO and content blocks — and rendering them on your site in two calls.',
 		icon: Globe,
 		group: 'Go live',
 		topics: [

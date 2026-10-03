@@ -15,6 +15,7 @@ const SECTIONS = [
 	{ id: 'models-names', title: 'Names and addresses' },
 	{ id: 'models-code', title: 'Record codes' },
 	{ id: 'models-fields', title: 'Fields' },
+	{ id: 'models-password', title: 'Password fields' },
 	{ id: 'models-sections', title: 'Sections and lists' },
 	{ id: 'formulas', title: 'Calculated fields' },
 	{ id: 'models-links', title: 'Linking models' },
@@ -113,6 +114,10 @@ const Models = () => (
 				like <C>INV-0001</C>. Two records created at the same moment never share one. Turning codes on for a model that has
 				records gives them codes, oldest first; a new prefix applies from then on.
 			</P>
+			<P>
+				Switching codes on fills in a prefix from the title (Invoices → <C>INV</C>); change it, or clear it for plain
+				numbers (<C>0001</C>). <strong>First code</strong> beside it shows exactly what the next record gets.
+			</P>
 		</Section>
 
 		<Section
@@ -142,6 +147,7 @@ const Models = () => (
 					['Video', 'An uploaded video'],
 					['Link to a record / records', 'One or more records of another model — a booking’s guest, a post’s tags'],
 					['Section / Section list', 'A group of fields, or rows of them (see below)'],
+					['Password', 'A login or key you keep for someone — stored encrypted, hidden until you re-enter your password (see below)'],
 				]}
 			/>
 			<List
@@ -159,6 +165,29 @@ const Models = () => (
 						secret-looking names like <C>password</C> or <C>token</C>. Every model gets <C>createdAt</C> and <C>updatedAt</C>{' '}
 						on its own.
 					</>,
+				]}
+			/>
+		</Section>
+
+		<Section
+			id='models-password'
+			title='Password fields'
+			lead='For a credential you keep on a record — a client’s portal login, a Wi-Fi key, a supplier account.'>
+			<P>
+				A field of the kind <strong>Password</strong> is stored encrypted. It’s never in a table’s data, a record, an export,
+				the public API or an AI’s answers — tables and record pages show dots. The eye beside them asks for{' '}
+				<strong>your own sign-in password</strong>, then shows the value, with copy, for a minute.
+			</P>
+			<List
+				items={[
+					<>The edit form starts empty: leave it empty to keep the stored value, or type a new one to replace it.</>,
+					<>Only people who can see the record can reveal it — the role’s View permission and the record’s own access still apply.</>,
+					<>History says the password changed, never what it was or is.</>,
+					<>
+						It can’t be unique, searched, sorted or filtered, and has no default. A key that says what it holds (
+						<C>password</C>, <C>pin</C>, <C>token</C>) needs this kind — any other kind refuses it.
+					</>,
+					<>Not for your app’s own sign-in passwords: your site’s customers sign in through the public API’s customer accounts.</>,
 				]}
 			/>
 		</Section>
