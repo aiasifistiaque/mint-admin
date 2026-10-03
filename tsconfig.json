@@ -37,7 +37,9 @@
     "../../dd/dd-admin/src/components/library/utils/texts/JsonView.tsx",
     ".next/dev/types/**/*.ts",
     ".next-tenant/types/**/*.ts",
-    ".next-tenant/dev/types/**/*.ts"
+    ".next-tenant/dev/types/**/*.ts",
+    ".next-tenantscratch/types/**/*.ts",
+    ".next-tenantscratch/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -15,7 +15,14 @@ const SECTIONS = [
 	{ id: 'who', title: 'Who may call it' },
 	{ id: 'address', title: 'The address' },
 	{ id: 'requests', title: 'Requests' },
-	{ id: 'list', title: 'Listing and filtering' },
+	{ id: 'list', title: 'Listing and paging' },
+	{ id: 'sorting', title: 'Sorting' },
+	{ id: 'filters', title: 'Filters' },
+	{ id: 'filter-kinds', title: 'Filters by kind of field' },
+	{ id: 'dates', title: 'Filtering by date' },
+	{ id: 'search', title: 'Search' },
+	{ id: 'fields', title: 'Choosing fields' },
+	{ id: 'recipes', title: 'Recipes' },
 	{ id: 'shape', title: 'What comes back' },
 	{ id: 'writing', title: 'Creating and updating' },
 	{ id: 'signed-in', title: 'Calling as a customer' },
@@ -132,31 +139,306 @@ const { doc, total, totalPages } = await res.json();`}
 
 		<Section
 			id='list'
-			title='Listing and filtering'>
+			title='Listing and paging'
+			lead='GET /<model> answers one page of records at a time, with the numbers you need to page through the rest.'>
 			<Terms
 				head={['Query', 'Does']}
 				rows={[
-					[<C key='p'>page</C>, 'Which page, from 1.'],
-					[<C key='l'>limit</C>, 'Records per page: 20 unless you ask, at most 100.'],
+					[<C key='p'>page</C>, 'Which page, from 1. 1 unless you ask. Past the last page you get an empty list and the same total.'],
+					[<C key='l'>limit</C>, 'Records per page: 20 unless you ask, 1 to 100. More than 100 counts as 100.'],
+				]}
+			/>
+			<P>
+				Every list answers <C>{'{ doc, total, page, limit, totalPages }'}</C>: <C>doc</C> is this page’s records,{' '}
+				<C>total</C> how many records match your filters across every page, and <C>totalPages</C> how many pages that makes
+				at this <C>limit</C>. There’s another page while <C>page &lt; totalPages</C>.
+			</P>
+			<CodeBlock
+				label='Page 2, 12 to a page'
+				code={`GET ${PUBLIC_API}/products?page=2&limit=12
+
+{ "doc": [ …12 records… ], "total": 37, "page": 2, "limit": 12, "totalPages": 4 }`}
+			/>
+			<P>
+				Pages are stable: records that sort the same are always put in the same order, so paging never shows a record twice
+				or skips one — unless records are added or removed while you page.
+			</P>
+			<CodeBlock
+				label='Every record, page by page'
+				code={`async function all(model, query = {}) {
+  const records = [];
+  for (let page = 1; ; page++) {
+    const params = new URLSearchParams({ ...query, page, limit: 100 });
+    const res = await fetch(\`${PUBLIC_API}/\${model}?\${params}\`);
+    if (!res.ok) throw new Error((await res.json()).message);
+    const { doc, totalPages } = await res.json();
+    records.push(...doc);
+    if (page >= totalPages) return records;
+  }
+}`}
+			/>
+			<Note>
+				Fetching everything costs one request per 100 records and counts toward the rate limit (see{' '}
+				<A href='#errors'>Errors and limits</A>). For a page your visitors see, ask for just the page they’re on.
+			</Note>
+		</Section>
+
+		<Section
+			id='sorting'
+			title='Sorting'
+			lead='sort names a field; a minus in front reverses it.'>
+			<Terms
+				head={['Query', 'Order']}
+				rows={[
+					[<C key='1'>sort=-createdAt</C>, 'Newest first — the default when you don’t say.'],
+					[<C key='2'>sort=price</C>, 'Lowest price first (A→Z for text, oldest first for dates, false before true).'],
+					[<C key='3'>sort=-price</C>, 'Highest price first.'],
+					[<C key='4'>sort=-featured,price</C>, 'Featured first, then by price within each — up to three fields, comma-separated.'],
+				]}
+			/>
+			<P>
+				You can sort by any of the model’s own fields and by <C>createdAt</C>, <C>updatedAt</C>, <C>code</C> and{' '}
+				<C>_id</C>. A field the list can’t sort by is skipped; if none is left, the default applies. The reference on the{' '}
+				<A href='/public-api'>Public API</A> page lists each model’s sortable fields.
+			</P>
+		</Section>
+
+		<Section
+			id='filters'
+			title='Filters'
+			lead='Add a field’s key to the address to get only the records that match — the same way the panel’s own lists filter.'>
+			<P>
+				<C>&lt;field&gt;=&lt;value&gt;</C> keeps the records whose field equals the value. For anything else, add an operator to
+				the field’s key with an underscore: <C>&lt;field&gt;_&lt;operator&gt;=&lt;value&gt;</C>.
+			</P>
+			<CodeBlock
+				label='Live products from 10 to 50, cheapest first'
+				code={`GET ${PUBLIC_API}/products?status=live&price_gte=10&price_lte=50&sort=price`}
+			/>
+			<Terms
+				head={['Operator', 'Keeps records where the field…']}
+				rows={[
+					[<C key='eq'>status=live</C>, 'equals the value. On a list field (tags, options you can pick several of, several links): has it. On a date: falls on that day.'],
+					[<C key='ne'>status_ne=draft</C>, 'doesn’t equal it (a list field: doesn’t have it).'],
+					[<C key='in'>status_in=live,sold</C>, 'is any of these, comma-separated. Repeating the name does the same: status=live&status=sold.'],
+					[<C key='nin'>status_nin=draft,sold</C>, 'is none of these.'],
+					[<C key='gt'>price_gt=10 · price_gte=10</C>, 'is greater than · greater than or equal to the value (numbers and dates).'],
+					[<C key='lt'>price_lt=50 · price_lte=50</C>, 'is less than · less than or equal to the value (numbers and dates).'],
+					[<C key='bt'>price_btwn=10_50</C>, 'is between the two, both included: from_to. Leave one end out for open-ended — price_btwn=100_ is 100 and up.'],
+					[<C key='co'>name_contains=shoe</C>, 'contains the text, any case — “Trail Shoe”, “SHOES”. The value is plain text, not a pattern.'],
+					[<C key='al'>tags_all=run,trail</C>, 'has all of these (tags, options you can pick several of, several links).'],
+				]}
+			/>
+			<H3>How filters combine</H3>
+			<List
+				items={[
+					<>Every filter must match: <C>status=live&amp;featured=true</C> is live <em>and</em> featured.</>,
+					<>
+						Two operators on one field make a range: <C>price_gte=10&amp;price_lt=20</C>.
+					</>,
+					<>
+						For “this or that” on one field use <C>_in</C>. Filters on different fields can’t be OR-ed — make two requests, or
+						use <A href='#search'>search</A>.
+					</>,
+					<>
+						Filters, <C>search</C>, <C>sort</C>, <C>page</C>, <C>limit</C> and <C>fields</C> all work together, in any order.
+						<C>total</C> and <C>totalPages</C> count what matches.
+					</>,
+				]}
+			/>
+			<H3>What the API does with a name it doesn’t know</H3>
+			<P>
+				It ignores it, so cache busters like <C>?v=2</C> are harmless — but so is a typo: <C>?staus=live</C> filters nothing.
+				If a filter seems to be ignored, check the key in Models (it’s the key, not the label, and it’s case-sensitive). A
+				value the API can’t read is an error instead, with the reason: <C>price=cheap</C> answers 400 “price must be a
+				number”, and so does an operator the field doesn’t take, like <C>status_gte</C>.
+			</P>
+			<Note>
+				Use underscores, not brackets: <C>price_gte=10</C>, never <C>price[gte]=10</C> (that answers 400). Keys with an
+				underscore of their own work as they are: <C>contact_email=…</C>, <C>contact_email_contains=…</C>.
+			</Note>
+			<H3>Writing the address</H3>
+			<P>
+				Values with spaces, <C>&amp;</C>, <C>+</C>, <C>#</C> or accents must be encoded. Let the browser do it:
+			</P>
+			<CodeBlock
+				label='Build the query with URLSearchParams'
+				code={`const params = new URLSearchParams({
+  status: 'live',
+  price_btwn: '10_50',
+  name_contains: 'trail & road',   // encoded for you
+  sort: '-createdAt',
+  page: '1',
+  limit: '12',
+});
+const res = await fetch(\`${PUBLIC_API}/products?\${params}\`);`}
+			/>
+		</Section>
+
+		<Section
+			id='filter-kinds'
+			title='Filters by kind of field'
+			lead='What each kind of field takes. Fields not listed here (images, files, rich text, colours, sections, passwords) can’t be filtered.'>
+			<Terms
+				head={['Field kind', 'Value and operators']}
+				rows={[
 					[
-						<C key='s'>sort</C>,
+						'Text, email, link, long text',
 						<>
-							A field, <C>-</C> first for newest/highest first: <C>sort=price</C>, <C>sort=-createdAt</C> (the default).
+							Exact text (equals is exact and case-sensitive; emails ignore case). <C>_ne</C>, <C>_in</C>, <C>_nin</C>,{' '}
+							<C>_contains</C> (any case).
 						</>,
 					],
 					[
-						<C key='f'>&lt;field&gt;=&lt;value&gt;</C>,
+						'Options (pick one)',
 						<>
-							Only records whose field equals the value: <C>status=published</C>, <C>featured=true</C>, <C>price=10</C>,{' '}
-							<C>category=&lt;id&gt;</C> for a linked record. Text, email, link, options, tags, number, yes/no, date and
-							linked-record fields can be filtered.
+							One of the field’s values — the value, not the label. <C>_ne</C>, <C>_in</C>, <C>_nin</C>.
 						</>,
+					],
+					[
+						'Number, calculated (formula)',
+						<>
+							A number: <C>10</C>, <C>12.5</C>, <C>-3</C>. <C>_ne</C>, <C>_in</C>, <C>_nin</C>, <C>_gt</C>, <C>_gte</C>,{' '}
+							<C>_lt</C>, <C>_lte</C>, <C>_btwn</C>.
+						</>,
+					],
+					[
+						'Yes / no',
+						<>
+							<C>true</C> or <C>false</C> (<C>1</C> and <C>0</C> work too). <C>_ne</C>. A record saved without the box
+							ticked counts as <C>false</C>.
+						</>,
+					],
+					[
+						'Date',
+						<>
+							See <A href='#dates'>Filtering by date</A>. <C>_ne</C>, <C>_gt</C>, <C>_gte</C>, <C>_lt</C>, <C>_lte</C>,{' '}
+							<C>_btwn</C>.
+						</>,
+					],
+					[
+						'Link to one record',
+						<>
+							The linked record’s <C>_id</C>: <C>category=66f0c1d2e3a4b5c6d7e8f901</C>. <C>_ne</C>, <C>_in</C>, <C>_nin</C>.
+						</>,
+					],
+					[
+						'Tags, options (pick several), links to several records',
+						<>
+							Equals means “has it”: <C>tags=sale</C>. <C>_ne</C> (doesn’t have it), <C>_in</C> (has any), <C>_nin</C> (has
+							none), <C>_all</C> (has every one).
+						</>,
+					],
+					[
+						<C key='c'>createdAt, updatedAt</C>,
+						'Every model has these two dates, and filters by them like any date — handy for “new this week” and for syncing what changed.',
 					],
 				]}
 			/>
+			<P>
+				<C>GET {PUBLIC_API}/</C> lists, for each model with List on, its <C>filters</C> (each field’s key, kind and
+				operators), the fields <C>search</C> looks through, and the fields it can <C>sort</C> by.
+			</P>
+		</Section>
+
+		<Section
+			id='dates'
+			title='Filtering by date'
+			lead='Dates take a day, a moment, or a shortcut.'>
+			<Terms
+				head={['Value', 'Means']}
+				rows={[
+					[<C key='d'>2026-10-04</C>, 'That whole day (UTC). releasedOn=2026-10-04 is anything on the 4th.'],
+					[<C key='t'>2026-10-04T09:30:00Z</C>, 'That exact moment. Add a zone (Z, +06:00) — without one the server’s time zone (UTC) is used.'],
+					[<C key='today'>today</C>, 'Today (UTC).'],
+					[<C key='w'>week · month · year</C>, 'The last 7 days · month · year, up to the end of today.'],
+					[<C key='n'>days_30 · months_3</C>, 'The last 30 days · 3 months, up to the end of today.'],
+				]}
+			/>
+			<P>With a plain day, the operators work in whole days, the way people say it:</P>
+			<Terms
+				head={['Query', 'Keeps']}
+				rows={[
+					[<C key='1'>date_gte=2026-10-01</C>, 'From the 1st on, the 1st included.'],
+					[<C key='2'>date_lte=2026-10-31</C>, 'Up to the end of the 31st, the 31st included.'],
+					[<C key='3'>date_gt=2026-10-01</C>, 'From the 2nd on.'],
+					[<C key='4'>date_lt=2026-10-31</C>, 'Up to the end of the 30th.'],
+					[<C key='5'>date_btwn=2026-10-01_2026-10-31</C>, 'All of October, both ends included.'],
+					[<C key='6'>createdAt=week</C>, 'Added in the last 7 days.'],
+					[<C key='7'>updatedAt_gte=2026-10-04T09:30:00Z</C>, 'Changed since that moment — for keeping a copy in sync.'],
+				]}
+			/>
+		</Section>
+
+		<Section
+			id='search'
+			title='Search'
+			lead='search=<words> keeps records where any text field contains the words, ignoring case.'>
+			<P>
+				It looks through the model’s text, email, long text, options and tags fields, and matches the words as one piece of
+				text: <C>search=trail shoe</C> finds “Trail Shoe 2”, not “shoe for the trail”. It works alongside filters and sorting,
+				and isn’t a ranked search — sort the results as you like. At most 100 characters are used.
+			</P>
 			<CodeBlock
-				label='Filtered list'
-				code={`GET ${PUBLIC_API}/products?category=66f0c1d2e3a4b5c6d7e8f901&featured=true&sort=price&page=2`}
+				label='A search box'
+				code={`const params = new URLSearchParams({ search: input.value, status: 'live', limit: '10' });
+const { doc } = await fetch(\`${PUBLIC_API}/products?\${params}\`).then(r => r.json());`}
+			/>
+			<Note>
+				While someone types, wait about 300 ms after the last key before you send (debounce) — a request per key press soon
+				reaches the rate limit.
+			</Note>
+		</Section>
+
+		<Section
+			id='fields'
+			title='Choosing fields'
+			lead='fields=<keys> answers with just those fields of each record — smaller and faster, for menus, cards and dropdowns.'>
+			<CodeBlock
+				label='Only names and prices'
+				code={`GET ${PUBLIC_API}/products?fields=name,price&limit=100
+
+{ "doc": [ { "_id": "66f0…", "name": "Trail shoe", "price": 89 }, … ], "total": 37, … }`}
+			/>
+			<P>
+				<C>_id</C> always comes back. Keys the model doesn’t have are skipped; if none of them is known, every field comes
+				back. Linked records named in <C>fields</C> still come with their name. <C>fields</C> only changes what comes back —
+				you can filter and sort by fields you didn’t ask for.
+			</P>
+		</Section>
+
+		<Section
+			id='recipes'
+			title='Recipes'>
+			<Terms
+				head={['You want', 'Request']}
+				rows={[
+					['A shop page: one category, a price range, cheapest first, 24 to a page', <C key='1'>GET /products?category=&lt;id&gt;&amp;price_btwn=20_100&amp;sort=price&amp;limit=24&amp;page=1</C>],
+					['The newest three posts for a home page', <C key='2'>GET /posts?status=published&amp;sort=-createdAt&amp;limit=3</C>],
+					['Featured items only', <C key='3'>GET /products?featured=true</C>],
+					['Anything tagged sale or new', <C key='4'>GET /products?tags_in=sale,new</C>],
+					['Upcoming events, soonest first', <C key='5'>GET /events?startsOn_gte=today&amp;sort=startsOn</C>],
+					['Bookings for one day', <C key='6'>GET /bookings?date=2026-10-14</C>],
+					['What changed since your last sync', <C key='7'>GET /products?updatedAt_gt=2026-10-04T09:30:00Z&amp;sort=updatedAt&amp;limit=100</C>],
+					['A dropdown of names', <C key='8'>GET /categories?fields=name&amp;sort=name&amp;limit=100</C>],
+					['How many records match, without the records', <C key='9'>GET /orders?status=open&amp;fields=_id&amp;limit=1</C>],
+				]}
+			/>
+			<P>
+				The last one reads <C>total</C> from the answer. Every list endpoint on the <A href='/public-api'>Public API</A> page
+				comes with examples made from that model’s own fields — press <strong>Try</strong> on one to send it.
+			</P>
+			<CodeBlock
+				label='“Load more” (infinite scroll)'
+				code={`let page = 0, totalPages = 1;
+async function loadMore() {
+  if (page >= totalPages) return;            // nothing left
+  page += 1;
+  const res = await fetch(\`${PUBLIC_API}/products?status=live&sort=-createdAt&limit=12&page=\${page}\`);
+  const data = await res.json();
+  totalPages = data.totalPages;
+  render(data.doc);                          // append to what's shown
+}`}
 			/>
 		</Section>
 
@@ -167,6 +449,7 @@ const { doc, total, totalPages } = await res.json();`}
 				A list is <C>{'{ doc, total, page, limit, totalPages }'}</C>; one record is the record itself. A record has{' '}
 				<C>_id</C>, <C>code</C> (when the model numbers records), <C>createdAt</C>, <C>updatedAt</C> and the model’s own
 				fields — nothing else. Linked records come with their name: <C>{'"category": { "_id": "…", "name": "Shoes" }'}</C>.
+				Records you archive in the panel never come out — not in lists, and not by their <C>_id</C>.
 			</P>
 			<CodeBlock
 				label='A list response'
@@ -223,7 +506,13 @@ const { doc, total, totalPages } = await res.json();`}
 			<Terms
 				head={['Status', 'Means']}
 				rows={[
-					['400', <>Something isn’t valid; <C>message</C> says what (“Quantity is required”).</>],
+					[
+						'400',
+						<>
+							Something isn’t valid; <C>message</C> says what — a body (“Quantity is required”) or a list’s query (“price
+							must be a number”, “status can’t use _gte — it takes status_ne, status_in, status_nin”).
+						</>,
+					],
 					[
 						'401',
 						<>
@@ -257,9 +546,12 @@ const { doc, total, totalPages } = await res.json();`}
 			lead='On the Public API page, below the models: every endpoint your site or app can call.'>
 			<P>
 				It’s made from what the live API says it offers, so it always matches the switches above it — turn a model or an
-				action on and its endpoint appears. Click an endpoint for its query parameters (paging, sorting and a filter for each
-				field), the body fields it takes, and an example response. Endpoints marked <strong>Customer</strong> need a signed-in
-				customer’s token. The customer sign-in endpoints are listed too, and for a website, the site and page endpoints.
+				action on and its endpoint appears. Above the models, <strong>Lists: paging, sorting and filters</strong> sums up the
+				query parameters and operators every list takes. Click an endpoint for the rest: a list shows its sortable and
+				searchable fields, every filter its fields take (with their operators and allowed values) and example requests made
+				from its own fields, each with <strong>Try</strong>; a create or update shows the body fields; every endpoint shows an
+				example response. Endpoints marked <strong>Customer</strong> need a signed-in customer’s token. The customer sign-in
+				endpoints are listed too, and for a website, the site and page endpoints.
 			</P>
 		</Section>
 
@@ -299,7 +591,14 @@ const { doc, total, totalPages } = await res.json();`}
 					['404 for everything', 'Check the project’s public name in the address, and that the project isn’t archived.'],
 					['404 for one model', 'It isn’t Public, or the action you’re calling isn’t ticked.'],
 					['401', 'The model is for signed-in customers — sign in with the widget, or send the customer’s token.'],
-					['A field is missing from the answer', 'Only the model’s own fields come out; check the field’s key in Models.'],
+					['A field is missing from the answer', 'Only the model’s own fields come out; check the field’s key in Models — and that fields= doesn’t leave it out.'],
+					[
+						'A filter changes nothing',
+						'The name isn’t one of the model’s filterable keys, so it’s ignored — check the spelling and case of the key (not the label) in Models. Images, files, rich text and sections can’t be filtered.',
+					],
+					['A text filter finds nothing', <>Equals is exact and case-sensitive. Use <C key='c'>_contains</C> or <C key='s'>search</C> for “contains, any case”.</>],
+					['A date filter is a day off', 'Plain days are UTC. For your own time zone, send moments with the zone: date_gte=2026-10-04T00:00:00+06:00.'],
+					['A record is in the panel but not in the API', 'It’s archived, it’s kept private to some of the team, or the model is own-records-only.'],
 					['A customer can’t see an order made in the panel', 'Own-records-only models show customers only what they created.'],
 				]}
 			/>
