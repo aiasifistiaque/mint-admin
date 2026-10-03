@@ -8,6 +8,7 @@ import { Toaster } from '@/components/ui/toaster';
 import ThemeSync from '@/components/library/theme/ThemeSync';
 import SessionGuard from './SessionGuard';
 import PanelGuard from '@/components/library/tenant/PanelGuard';
+import PreviewBanner from '@/components/library/tenant/PreviewBanner';
 
 export function Providers({ children }: { children: React.ReactNode }) {
 	return (
@@ -18,6 +19,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
 				{/* The tenant panel's page rules; nothing in the super-admin panel. */}
 				<PanelGuard />
 				{children}
+				{/* Signed in to a template preview (docs/templates T-04): say so on every page. */}
+				<PreviewBanner />
 				<Toaster />
 			</ChakraProvider>
 		</Provider>

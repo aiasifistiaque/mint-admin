@@ -35,7 +35,7 @@ export type Organization = {
 	createdAt?: string;
 };
 
-export type ProjectType = 'app' | 'website';
+export type ProjectType = 'app' | 'website' | 'api';
 /** Whose media library a project uses (WO-23). */
 export type MediaScope = 'project' | 'organization';
 
@@ -55,6 +55,8 @@ export type TenantProject = {
 	mediaScope?: MediaScope;
 	isActive: boolean;
 	models?: number;
+	/** A template preview in the sandbox (docs/templates T-04). */
+	preview?: { expiresAt: string; from: 'draft' | 'published' };
 	createdAt?: string;
 };
 

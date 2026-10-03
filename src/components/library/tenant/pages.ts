@@ -16,9 +16,9 @@ export const ADMIN_ONLY_PAGES = new Set([
 	'permissions', 'plannedfeatures', 'plannedmodels', 'plannedpages', 'plannedprojects', 'portfolios', 'print',
 	'products', 'props', 'purchased-themes', 'qr', 'report-issue', 'repos', 'resources', 'roles', 'sellers',
 	'servicecat', 'services', 'sessions', 'shops', 'solutions', 'subscriptions', 'suppliers', 'support-tickets',
-	'support', 'system-status', 'tcclients', 'teams', 'techstacks', 'test', 'themes', 'user-feedback-success',
+	'support', 'system-status', 'tcclients', 'teams', 'techstacks', 'templates', 'test', 'themes', 'user-feedback-success',
 	'user-feedback', 'users', 'vercel-doc', 'vercels', 'views',
 ]);
 
 /** The tenant panel's own pages; the super-admin panel sends them home. */
-export const TENANT_ONLY_PAGES = new Set(['org', 't', 'analytics', 'public-api']);
+export const TENANT_ONLY_PAGES = new Set(['org', 't', 'analytics', 'public-api', 'preview']);
