@@ -31,7 +31,6 @@ export { default as Dropdown } from './Dropdown';
 export type { DropdownItem, DropdownProps } from './Dropdown';
 export { default as ConfirmAction } from './ConfirmAction';
 export { default as CopyValue } from './CopyValue';
-export { default as RevealSecret } from './RevealSecret';
 export { default as PageHeader } from './PageHeader';
 export { default as Crumbs } from './Crumbs';
 export { EmptyState, ErrorState, TableSkeleton, DetailSkeleton } from './States';

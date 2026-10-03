@@ -17,7 +17,6 @@ import {
 	DataArrayCountCell,
 	InvitationStatusCell,
 	PasswordCell,
-	SecretCell,
 } from './cells';
 import HistoryCell from './HistoryCell';
 
@@ -48,7 +47,7 @@ export const TABLE_CELLS: Partial<Record<TableTypeId, ComponentType<any>>> = {
  * Kept as an opt-in set because every other cell spreads its rest props onto
  * the <td>: handing `doc` to all of them would put an object on a DOM node.
  */
-export const CELLS_WITH_DOC = new Set(['history', 'secret']);
+export const CELLS_WITH_DOC = new Set(['history']);
 
 // Not in TABLE_CELLS/TableTypeId — genuinely new, narrow fields (invitation
 // status; the history sentence) rather than extensions of the shared type
@@ -57,6 +56,5 @@ export const CELLS_WITH_DOC = new Set(['history', 'secret']);
 export const getTableCell = (type: TableTypeId | string | undefined) => {
 	if (type === 'invitation-status') return InvitationStatusCell;
 	if (type === 'history') return HistoryCell;
-	if (type === 'secret') return SecretCell;
 	return (type && TABLE_CELLS[type as TableTypeId]) || TextCell;
 };

@@ -16,8 +16,6 @@ type TableDataPropsType = TableCellProps &
 		item?: any;
 		copy?: boolean;
 		colorTheme?: any;
-		/** A Password cell's route — it reveals through it (cells.tsx SecretCell). */
-		secretPath?: string;
 	};
 
 const TableData: FC<TableDataPropsType> = ({

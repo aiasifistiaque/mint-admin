@@ -26,7 +26,6 @@ export * from './services/builderApi';
 export * from './services/dashboardApi';
 export * from './services/totalsApi';
 export * from './services/bulkApi';
-export * from './services/secretApi';
 export * from './services/notificationsApi';
 export * from './services/issuesApi';
 export * from './services/supportApi';

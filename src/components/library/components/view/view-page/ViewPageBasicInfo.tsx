@@ -72,7 +72,6 @@ const ViewPageBasicInfo: FC<ViewPageBasicInfoProps> = ({ slug, id, schema, layou
 			{items.map((field: any, index: number) => (
 				<ViewRow
 					doc={data}
-					route={slug}
 					key={`${field.dataKey}-${index}`}
 					field={{
 						...field,

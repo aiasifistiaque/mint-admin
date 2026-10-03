@@ -147,7 +147,7 @@ const Models = () => (
 					['Video', 'An uploaded video'],
 					['Link to a record / records', 'One or more records of another model — a booking’s guest, a post’s tags'],
 					['Section / Section list', 'A group of fields, or rows of them (see below)'],
-					['Password', 'A login or key you keep for someone — stored encrypted, hidden until you re-enter your password (see below)'],
+					['Password', 'A login or key you keep for someone — shown as dots until you click the eye (see below)'],
 				]}
 			/>
 			<List
@@ -174,14 +174,15 @@ const Models = () => (
 			title='Password fields'
 			lead='For a credential you keep on a record — a client’s portal login, a Wi-Fi key, a supplier account.'>
 			<P>
-				A field of the kind <strong>Password</strong> is stored encrypted. It’s never in a table’s data, a record, an export,
-				the public API or an AI’s answers — tables and record pages show dots. The eye beside them asks for{' '}
-				<strong>your own sign-in password</strong>, then shows the value, with copy, for a minute.
+				A field of the kind <strong>Password</strong> shows as dots in tables, on record pages and in the form. Click the eye
+				to see it; the copy button copies it without showing it.
 			</P>
 			<List
 				items={[
-					<>The edit form starts empty: leave it empty to keep the stored value, or type a new one to replace it.</>,
-					<>Only people who can see the record can reveal it — the role’s View permission and the record’s own access still apply.</>,
+					<>
+						It’s hidden on screen only: anyone who can see the record — in the panel, an export or the API — can read it. Keep
+						such models to the people who need them (roles and record access).
+					</>,
 					<>History says the password changed, never what it was or is.</>,
 					<>
 						It can’t be unique, searched, sorted or filtered, and has no default. A key that says what it holds (

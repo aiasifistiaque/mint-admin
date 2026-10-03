@@ -1027,7 +1027,7 @@ const BuilderDocs = () => {
 									'Section list',
 									'A list of rows of fields you choose · rows added in a dialog and listed as a table; count in the table; a table with number columns added up on the detail page',
 								],
-								['Password', 'String, encrypted (AES-256-GCM), select: false · password input; dots and a Reveal in the table and on the detail page'],
+								['Password', 'String · password input; dots with show and copy in the table and on the detail page'],
 							]}
 						/>
 
@@ -1038,16 +1038,12 @@ const BuilderDocs = () => {
 						/>
 						<P>
 							A <strong>Password</strong> field holds a credential kept for someone — a client&apos;s portal login, a
-							Wi-Fi key. It is encrypted with <C>SECRET_ENCRYPTION_KEY</C> before it&apos;s stored, is{' '}
-							<C>select: false</C>, and is stripped from every response — lists (even <C>?fields=password</C>),
-							records, exports, the public API and MCP. Tables and detail pages show dots and an eye: the eye asks
-							for the person&apos;s own sign-in password and calls <C>POST /&lt;route&gt;/:id/reveal</C>, which
-							checks the route&apos;s read permission and the record&apos;s access, then that password, and returns
-							the value. Wrong passwords are a 400 (never a 401) and limited per address.
+							Wi-Fi key. It is stored and returned like a text field; the panel shows it as dots, with an eye to
+							show it and a copy button. Hidden on screen only — whoever can read the record (panel, export, API)
+							can read it.
 						</P>
 						<List
 							items={[
-								'The edit form starts empty: empty keeps the stored value, a new one replaces it. Bulk import and bulk edits encrypt too.',
 								'History records that it changed, never the value.',
 								'It can’t be unique, indexed, searched, sorted, filtered or defaulted, and isn’t allowed inside a section.',
 								'A key that names a secret (password, token, pin…) is only accepted with this kind.',

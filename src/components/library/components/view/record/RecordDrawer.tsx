@@ -71,7 +71,6 @@ const RecordDrawer: FC<Props> = ({ open, onClose, path, id, title, fields }) => 
 					<ViewRow
 						key={`${field.dataKey}-${i}`}
 						doc={doc}
-						route={path}
 						field={field}
 						value={doc && getValue({ dataKey: field.dataKey, type: field.type, data: doc })}
 						isLoading={isFetching}

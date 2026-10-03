@@ -42,7 +42,7 @@ export const KINDS: { value: FieldKind; label: string; hint: string; group: stri
 	{
 		value: 'password',
 		label: 'Password',
-		hint: 'Stored encrypted and hidden everywhere; to see it, people re-enter their own password',
+		hint: 'A login or key kept for someone — shown as dots, click the eye to see it',
 		group: 'Text',
 	},
 	{ value: 'number', label: 'Number', hint: 'Sortable; can have a minimum and maximum', group: 'Values' },
@@ -117,7 +117,7 @@ export const NEEDS_OPTIONS: FieldKind[] = ['select', 'multiselect'];
 /** Kinds stored as a list — their default is a list too. */
 export const ARRAY_KINDS: FieldKind[] = ['multiselect', 'tags', 'images', 'files', 'references'];
 export const NO_DEFAULT_KINDS: FieldKind[] = ['reference', 'references', 'formula', 'section', 'sectionlist', 'password'];
-/** Encrypted and hidden — its key may say what it holds (password, pin, token). Same as the backend's SECRET_KINDS. */
+/** Shown as dots — its key may say what it holds (password, pin, token). Same as the backend's SECRET_KINDS. */
 export const SECRET_KINDS: FieldKind[] = ['password'];
 const CANT_BE_UNIQUE: FieldKind[] = ['boolean', 'editor', 'textarea', 'formula', 'password', ...ARRAY_KINDS, ...SECTION_KINDS];
 export const canBeUnique = (kind: FieldKind) => !CANT_BE_UNIQUE.includes(kind);
@@ -304,7 +304,7 @@ export const validateFields = (
 		if (accessEnabled && ACCESS_KEYS.includes(f.key))
 			return fail(f.uid, 'key', `“${f.key}” is used by access control — pick another key`);
 		if (SENSITIVE.test(f.key) && !SECRET_KINDS.includes(f.kind))
-			return fail(f.uid, 'key', 'A password, token or other secret needs the Password kind — it’s stored encrypted and hidden');
+			return fail(f.uid, 'key', 'A password, token or other secret needs the Password kind — it’s shown as dots until clicked');
 		const lower = f.key.toLowerCase();
 		if (seen.has(lower)) return fail(f.uid, 'key', 'Another field has this key');
 		seen.set(lower, f.uid);

@@ -165,8 +165,6 @@ const TableRowComponent: FC<TableProps> = ({
 							toLocaleStr={toLocaleStr}
 							colorPalette={colorPalette}
 							type={type}
-							// A Password cell reveals through the route (RevealSecret).
-							secretPath={type === 'secret' ? path : undefined}
 							item={val}
 							// `item` is the column's schema entry; `doc` is the row itself.
 							// Cells that render one value never need it, but a few (the
