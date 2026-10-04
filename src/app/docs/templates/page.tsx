@@ -393,6 +393,14 @@ const TemplatesDocs = () => {
 							once, for five minutes. Nobody else sees it. Previews are deleted after 24 hours; open one again or delete it
 							early from the Preview dialog.
 						</P>
+						<P>
+							A big template (a dozen models and their sample data) takes a few minutes to build on the server. The dialog
+							then says it’s building and the preview shows in its list as <em>Building…</em> until it’s ready — open it
+							there. If the build fails, the list says why (kept for an hour) and nothing else is left behind. Only one
+							preview of a template builds at a time; asking again meanwhile points at the one already building. Through the
+							Templates MCP, <C>preview_template</C> answers with a preview id and Claude asks <C>preview_status</C> for the
+							link.
+						</P>
 						<Note>The preview uses the saved draft — save first. A draft with problems can’t be previewed.</Note>
 					</Section>
 

@@ -18,6 +18,8 @@ import { Label, errorMessage } from '../../_components/ui';
  * Preview: the template built into a throwaway project in the sandbox
  * organization (deleted after 24 hours), opened in the tenant panel with a
  * single-use link. The questions are answered here, as a tenant would.
+ * A big template keeps building on the server after the request answers
+ * (202 `building`): the list below polls until it's ready or failed.
  */
 const PreviewDialog: FC<{ open: boolean; onClose: () => void; doc: any; dirty: boolean }> = ({ open, onClose, doc, dirty }) => {
 	const questions: any[] = doc.draft?.questions || [];
@@ -27,8 +29,11 @@ const PreviewDialog: FC<{ open: boolean; onClose: () => void; doc: any; dirty: b
 	const [preview, { isLoading }] = usePreviewTemplateMutation();
 	const [reopen] = useOpenTemplatePreviewMutation();
 	const [remove] = useDeleteTemplatePreviewMutation();
-	const { data } = useGetTemplatePreviewsQuery(doc._id, { skip: !open });
+	const [poll, setPoll] = useState(false);
+	const { data } = useGetTemplatePreviewsQuery(doc._id, { skip: !open, pollingInterval: poll ? 5000 : 0 });
 	const previews = data?.doc || [];
+	const building = previews.some((p: any) => p.status === 'building');
+	useEffect(() => setPoll(building), [building]);
 	const errors = doc.validation?.errors || [];
 
 	useEffect(() => {
@@ -46,6 +51,14 @@ const PreviewDialog: FC<{ open: boolean; onClose: () => void; doc: any; dirty: b
 	const run = async () => {
 		try {
 			const res = await preview({ id: doc._id, from, answers, sampleData }).unwrap();
+			if (res.status === 'building') {
+				toaster.create({
+					type: 'info',
+					title: res.already ? 'A preview is already being built' : 'Building the preview',
+					description: 'A template this size takes a few minutes. It shows in the list below — open it there when it’s ready.',
+				});
+				return;
+			}
 			go(res.url);
 			const n = res.result?.models?.length || 0;
 			toaster.create({ type: 'success', title: 'Preview built', description: `${n} model${n === 1 ? '' : 's'} — opened in a new tab. It’s deleted in 24 hours.` });
@@ -157,7 +170,7 @@ const PreviewDialog: FC<{ open: boolean; onClose: () => void; doc: any; dirty: b
 							fontSize='sm'
 							fontWeight='600'
 							mb={2}>
-							Previews still open ({previews.length})
+							Previews ({previews.length})
 						</Text>
 						{previews.map((p: any) => (
 							<Flex
@@ -173,17 +186,33 @@ const PreviewDialog: FC<{ open: boolean; onClose: () => void; doc: any; dirty: b
 									<Text
 										fontSize='sm'
 										truncate>
-										{p.from === 'published' ? 'Published version' : 'Draft'} · built {when(p.createdAt)}
+										{p.from === 'published' ? 'Published version' : 'Draft'} · {p.status === 'ready' ? 'built' : 'started'} {when(p.createdAt)}
 									</Text>
-									<Text
-										fontSize='xs'
-										color='fg.muted'>
-										Deleted {when(p.expiresAt)}
-									</Text>
+									{p.status === 'building' ? (
+										<Text
+											fontSize='xs'
+											color='fg.muted'>
+											Building… it opens once it’s ready
+										</Text>
+									) : p.status === 'failed' ? (
+										<Text
+											fontSize='xs'
+											color='red.fg'
+											lineClamp={3}>
+											Not built — {p.error}
+										</Text>
+									) : (
+										<Text
+											fontSize='xs'
+											color='fg.muted'>
+											Deleted {when(p.expiresAt)}
+										</Text>
+									)}
 								</Box>
 								<Button
 									size='2xs'
 									variant='outline'
+									disabled={p.status !== 'ready'}
 									onClick={async () => {
 										try {
 											go((await reopen({ projectId: p._id }).unwrap()).url);
@@ -198,6 +227,7 @@ const PreviewDialog: FC<{ open: boolean; onClose: () => void; doc: any; dirty: b
 									aria-label='Delete now'
 									size='2xs'
 									variant='ghost'
+									disabled={p.status === 'building'}
 									onClick={() => remove({ projectId: p._id })}>
 									<Trash2 size={12} />
 								</IconButton>
