@@ -191,6 +191,11 @@ const TemplatesDocs = () => {
 							<code>now+3w</code>, <code>now-2m</code> or <code>now+1y</code> (days, weeks, months, years). Use these for
 							anything the dashboard counts by date, so “this month” still has numbers long after the template was written.
 						</P>
+						<P>
+							Records are checked the way the build will save them — a required value left out, a choice that isn’t one of
+							the field’s options, a number or date that isn’t one, or a link to a record the sample data doesn’t have is a
+							problem that names the record, so the preview doesn’t fail half-way.
+						</P>
 						<P>Tenants choose whether to include sample data when they start a project.</P>
 					</Section>
 
@@ -260,8 +265,10 @@ const TemplatesDocs = () => {
 						<P>
 							Each public model has <strong>Example requests</strong>: every endpoint as curl and as fetch, with the model’s
 							fields filled in by example — the same the project’s reference shows, with the project’s own address in place of{' '}
-							<code>&lt;project&gt;</code>. Writing to a model open to anyone is a warning: fine for a contact form, otherwise
-							require signed-in customers. An API template with no endpoints is a warning too.
+							<code>&lt;project&gt;</code>. A model open to anyone with <strong>create only</strong> is a form (contact, newsletter):
+							anyone can send, nobody can read back. Any other write open to anyone is a warning — require signed-in
+							customers. An API template with no endpoints is a warning too, and so is a model whose address is taken in every
+							project (<code>/projects</code> would become <code>/projects2</code>): give it a route of its own.
 						</P>
 					</Section>
 
@@ -278,7 +285,8 @@ const TemplatesDocs = () => {
 						</P>
 						<P>
 							Without an address the webhook is made <strong>switched off</strong> (a warning, not an error) and the project
-							fills it in on its Webhooks page. Deliveries are signed with a secret made for each project (HMAC-SHA256,{' '}
+							fills it in on its Webhooks page. The address question can be optional with no default: a tenant who skips it gets
+							the webhook switched off, and that's no warning. Deliveries are signed with a secret made for each project (HMAC-SHA256,{' '}
 							<code>x-mint-signature</code>) and retried 3 times; the tenant’s guide explains checking them. A preview makes the
 							webhooks too, so Send test works there.
 						</P>
