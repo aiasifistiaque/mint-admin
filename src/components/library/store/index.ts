@@ -30,5 +30,6 @@ export * from './services/notificationsApi';
 export * from './services/issuesApi';
 export * from './services/supportApi';
 export * from './services/tenantApi';
+export * from './services/templatesApi';
 
 export * from './store';

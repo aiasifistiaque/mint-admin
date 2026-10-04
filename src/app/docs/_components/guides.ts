@@ -1,4 +1,4 @@
-import { Blocks, Building2, Component, Images, LayoutDashboard, LucideIcon, Palette, PanelLeft, ShieldCheck } from 'lucide-react';
+import { Blocks, Building2, Component, Images, LayoutDashboard, LayoutTemplate, LucideIcon, Palette, PanelLeft, ShieldCheck } from 'lucide-react';
 
 export type Guide = {
 	href: string;
@@ -74,6 +74,20 @@ export const GUIDES: Guide[] = [
 			{ id: 'widgets', title: 'Widgets' },
 			{ id: 'charts', title: 'Charts' },
 			{ id: 'access', title: 'Who sees what' },
+		],
+	},
+	{
+		href: '/docs/templates',
+		title: 'Templates',
+		name: 'Template Studio',
+		description: 'Make the templates tenants start projects from — apps, APIs and websites — check, preview and publish them, or let Claude write them.',
+		icon: LayoutTemplate,
+		group: 'Build your admin',
+		topics: [
+			{ id: 'new', title: 'Making a template' },
+			{ id: 'preview', title: 'Previews' },
+			{ id: 'publish', title: 'Publishing' },
+			{ id: 'mcp', title: 'Writing templates with Claude' },
 		],
 	},
 	{
