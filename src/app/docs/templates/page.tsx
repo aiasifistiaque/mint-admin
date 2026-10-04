@@ -186,6 +186,11 @@ const TemplatesDocs = () => {
 							so add the records others link to first. <strong>Generate with AI</strong> writes believable records from the
 							model’s fields and the overview; they’re added to the list for you to check, and saved only when you save.
 						</P>
+						<P>
+							A date can be written relative to the day the project is built: <code>now</code>, <code>now-12d</code>,{' '}
+							<code>now+3w</code>, <code>now-2m</code> or <code>now+1y</code> (days, weeks, months, years). Use these for
+							anything the dashboard counts by date, so “this month” still has numbers long after the template was written.
+						</P>
 						<P>Tenants choose whether to include sample data when they start a project.</P>
 					</Section>
 

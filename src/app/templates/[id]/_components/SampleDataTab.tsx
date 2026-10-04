@@ -334,7 +334,8 @@ const RecordDialog: FC<{
 						input = (
 							<Input
 								size='sm'
-								type={f.kind === 'number' ? 'number' : f.kind === 'date' ? 'date' : f.kind === 'email' ? 'email' : 'text'}
+								// A date written relative to the build day ("now-12d") stays text so it can be read and changed.
+								type={f.kind === 'number' ? 'number' : f.kind === 'date' && !/^now/i.test(String(v ?? '')) ? 'date' : f.kind === 'email' ? 'email' : 'text'}
 								value={v ?? ''}
 								onChange={e => set(f.key, f.kind === 'number' ? (e.target.value === '' ? '' : Number(e.target.value)) : e.target.value)}
 							/>
