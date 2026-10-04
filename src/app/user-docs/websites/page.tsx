@@ -31,6 +31,7 @@ const SECTIONS = [
 	{ id: 'menu', title: 'The menu' },
 	{ id: 'site-api', title: 'The site API' },
 	{ id: 'render', title: 'Rendering your site' },
+	{ id: 'starter-code', title: 'Starter code from a template' },
 	{ id: 'more', title: 'Blogs, products and more' },
 	{ id: 'faq', title: 'Troubleshooting' },
 ];
@@ -511,6 +512,19 @@ const about = await fetch('${PUBLIC_API}/pages/by-path?path=/about').then(r => r
 				one, open to anyone), and your site lists them through the <A href='/user-docs/public-api'>public API</A>. Add the{' '}
 				<A href='/user-docs/customers'>sign-in widget</A> for members’ areas, and the{' '}
 				<A href='/user-docs/analytics'>tracker</A> to count visits.
+			</P>
+		</Section>
+
+		<Section
+			id='starter-code'
+			title='Starter code from a template'
+			lead='A website made from a template can come with the code its site starts from.'>
+			<P>
+				When the template has starter code, the website’s home shows a <strong>Starter code</strong> card: a link to the
+				repository, a <strong>Deploy it</strong> button for its host, and the settings (environment variables) the code needs —
+				your project’s API address and public name already filled in. Copy the repository (or press Deploy it), paste the settings
+				where the host asks for them, and the site shows your pages and content straight away. Change the code as you like; it
+				reads everything through the <A href='#site-api'>site API</A>.
 			</P>
 		</Section>
 

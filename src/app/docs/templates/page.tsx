@@ -284,6 +284,12 @@ const TemplatesDocs = () => {
 						title='Website pages'
 						lead='Website templates: the site’s pages, by path, with their place in the menu.'>
 						<P>A page has a path (“/”, “/about”), a name, a status, a page template, a menu position and a parent page.</P>
+						<P>
+							The <strong>Pages</strong> tab shows them as a tree, each child under its parent. Open a page to change it;{' '}
+							<strong>Add a page under it</strong> makes a child. Changing a path carries its children with it, and removing a
+							page moves its children up a level. Draft and archived pages are made but not served to the site. Without a “/” page
+							there’s a warning — every site needs a home.
+						</P>
 					</Section>
 
 					<Section
@@ -291,6 +297,13 @@ const TemplatesDocs = () => {
 						title='Content blocks'
 						lead='The editable pieces of a page: a hero, a list of features, a gallery.'>
 						<P>Each block has a slug unique on its page and a category that tells the site how to show it.</P>
+						<P>
+							On the <strong>Content</strong> tab, pick a page and add its blocks in the order the page shows them. The category
+							decides which fields a block uses — Content: text, the line under it, a button and an image; Rich content: HTML;
+							List and List of links: one item per line; Cards: image, title, sub title and text each; Image, Gallery, Video:
+							their addresses. They become the kit’s Contents records; the site’s code finds each by page and slug, so pick
+							slugs a developer would (“hero”, “services”, “team”).
+						</P>
 					</Section>
 
 					<Section
@@ -298,6 +311,11 @@ const TemplatesDocs = () => {
 						title='SEO'
 						lead='Each page’s title and description in search results.'>
 						<P>Give both or neither — half an entry is a problem. Pages without SEO are a warning.</P>
+						<P>
+							The <strong>SEO</strong> tab has a card per page: title and description with their lengths, a share image, a
+							canonical address, keywords and “keep it out of search results”, beside a preview of the search result. The preview
+							shows placeholders as written; they’re filled for each project.
+						</P>
 					</Section>
 
 					<Section
@@ -308,6 +326,11 @@ const TemplatesDocs = () => {
 							Use <C>{'{{project}}'}</C> or a question’s key where the tenant’s own name belongs, e.g. a title template{' '}
 							<C>{'%s · {{project}}'}</C>.
 						</P>
+						<P>
+							The <strong>Site settings</strong> tab has the cards of a project’s Site setup page — Branding, Theme, Contact,
+							Social, SEO defaults — writing the template instead of a project. Images are addresses here; the tenant uploads their
+							own later. Leave a field empty and the project keeps its own default.
+						</P>
 					</Section>
 
 					<Section
@@ -317,6 +340,12 @@ const TemplatesDocs = () => {
 						<P>
 							<C>{'{{api}}'}</C> and <C>{'{{slug}}'}</C> in the environment variables are filled in for each project, so the
 							deployed site talks to the right API.
+						</P>
+						<P>
+							On the <strong>Starter code</strong> tab: the repository’s https address, the framework, and a deploy link —{' '}
+							<strong>Make a Vercel link</strong> builds one that asks for the variables. Variable names are capitals, digits
+							and <C>_</C>; a bad or repeated name is an error, an empty value a warning. The project’s website home shows a
+							Starter code card with the repository, a Deploy it button and the variables, filled in.
 						</P>
 					</Section>
 

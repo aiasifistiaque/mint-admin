@@ -48,6 +48,7 @@ const GUIDE_OF: Record<string, string> = {
 	redirects: 'websites',
 	'site-domains': 'websites',
 	'site-overview': 'websites',
+	'starter-code': 'websites',
 	analytics: 'analytics',
 	'connect-ai': 'connect-ai',
 };

@@ -206,7 +206,11 @@ export const TABS: { value: string; label: string; parts: string[]; types?: Temp
 	{ value: 'roles', label: 'Roles', parts: ['roles'], types: ['app', 'api'] },
 	{ value: 'endpoints', label: 'Public API', parts: ['endpoints'] },
 	{ value: 'webhooks', label: 'Webhooks', parts: ['webhooks'], types: ['api'] },
-	{ value: 'website', label: 'Website', parts: ['website'], types: ['website'] },
+	{ value: 'website-pages', label: 'Pages', parts: ['website'], types: ['website'] },
+	{ value: 'website-content', label: 'Content', parts: ['website'], types: ['website'] },
+	{ value: 'website-seo', label: 'SEO', parts: ['website'], types: ['website'] },
+	{ value: 'website-settings', label: 'Site settings', parts: ['website'], types: ['website'] },
+	{ value: 'website-starter', label: 'Starter code', parts: ['website'], types: ['website'] },
 	{ value: 'questions', label: 'Questions', parts: ['questions'] },
 	{ value: 'sampleData', label: 'Sample data', parts: ['sampleData'] },
 	{ value: 'guide', label: 'Setup guide', parts: ['guide'] },
@@ -227,8 +231,17 @@ export const PART_LABEL: Record<string, string> = {
 	guide: 'Setup guide',
 };
 
-/** The tab a part is edited in. */
-export const tabOfPart = (part: string) => TABS.find(t => t.parts.includes(part))?.value || 'overview';
+/** The tab a part is edited in — for the website part, by where in it (`path`) the problem is. */
+export const tabOfPart = (part: string, path = '') => {
+	if (part === 'website') {
+		if (path.startsWith('website.settings')) return 'website-settings';
+		if (path.startsWith('website.starter')) return 'website-starter';
+		if (path.includes('.seo')) return 'website-seo';
+		if (path.includes('.contents')) return 'website-content';
+		return 'website-pages';
+	}
+	return TABS.find(t => t.parts.includes(part))?.value || 'overview';
+};
 
 export const errorMessage = (e: any, fallback: string) => {
 	const d = e?.data;

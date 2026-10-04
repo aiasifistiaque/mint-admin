@@ -57,6 +57,8 @@ export type TenantProject = {
 	models?: number;
 	/** A template preview in the sandbox (docs/templates T-04). */
 	preview?: { expiresAt: string; from: 'draft' | 'published' };
+	/** A website template's starter code, filled for this project (docs/templates T-10). */
+	starter?: { repoUrl: string; framework?: string; deployUrl?: string; env: { key: string; value: string }[] };
 	createdAt?: string;
 };
 

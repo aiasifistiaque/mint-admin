@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Box, Button, Flex, Tabs, Text } from '@chakra-ui/react';
 import { Eye, RefreshCw, Rocket } from 'lucide-react';
@@ -20,6 +20,20 @@ import VersionsTab from './_components/VersionsTab';
 import PartSummary from './_components/PartSummary';
 import EndpointsTab, { EndpointSpec } from './_components/EndpointsTab';
 import WebhooksTab, { WebhookSpec } from './_components/WebhooksTab';
+import WebsitePagesTab from './_components/WebsitePagesTab';
+import WebsiteContentTab from './_components/WebsiteContentTab';
+import WebsiteSeoTab from './_components/WebsiteSeoTab';
+import WebsiteSettingsTab from './_components/WebsiteSettingsTab';
+import WebsiteStarterTab from './_components/WebsiteStarterTab';
+import { siteFrom, siteTo } from './_components/website';
+
+const WEBSITE_TABS: Record<string, FC<any>> = {
+	'website-pages': WebsitePagesTab,
+	'website-content': WebsiteContentTab,
+	'website-seo': WebsiteSeoTab,
+	'website-settings': WebsiteSettingsTab,
+	'website-starter': WebsiteStarterTab,
+};
 import SidebarTab, { Section } from './_components/SidebarTab';
 import DashboardTab from './_components/DashboardTab';
 import RolesTab from './_components/RolesTab';
@@ -76,6 +90,8 @@ const ADAPTERS: Partial<Record<TemplatePart, { from: (draft: any) => any; to: (w
 		from: d => (d.webhooks || []).map((h: any) => ({ events: [], url: '', note: '', ...h })),
 		to: (w: WebhookSpec[]) => w.map(h => ({ ...h, url: h.url.trim(), note: h.note.trim() })),
 	},
+	// One working copy for the five website tabs.
+	website: { from: d => siteFrom(d.website), to: siteTo },
 	sampleData: { from: d => d.sampleData || {}, to: w => w },
 	guide: { from: d => ({ steps: d.guide?.steps || [], faq: d.guide?.faq || [] }), to: w => w },
 };
@@ -130,7 +146,7 @@ const EditTemplatePage = () => {
 	}, [edits, id, savePart]);
 
 	const go = (issue: TemplateIssue, index?: number) => {
-		setTab(tabOfPart(issue.part));
+		setTab(tabOfPart(issue.part, issue.path));
 		setFocus({ part: issue.part, index, at: Date.now() });
 	};
 
@@ -224,6 +240,20 @@ const EditTemplatePage = () => {
 						onChange={change('webhooks')}
 					/>
 				);
+			case 'website-pages':
+			case 'website-content':
+			case 'website-seo':
+			case 'website-settings':
+			case 'website-starter': {
+				const Tab = WEBSITE_TABS[value];
+				return (
+					<Tab
+						{...props}
+						value={valueOf('website')}
+						onChange={change('website')}
+					/>
+				);
+			}
 			case 'sampleData':
 				return (
 					<SampleDataTab

@@ -5,10 +5,11 @@ import NextLink from 'next/link';
 import { Badge, Box, Button, Center, Flex, Grid, Image, Link, Skeleton, Text } from '@chakra-ui/react';
 import { Check, Circle, ExternalLink, Globe } from 'lucide-react';
 import { useGetAnalyticsSeriesQuery, useGetAnalyticsSummaryQuery, useGetSiteOverviewQuery } from '../store';
-import { Panel, StatTile } from '../cl';
+import { CopyValue, Panel, StatTile } from '../cl';
 import { LineChart } from '../dashboard/charts';
 import { pagePath, projectHref } from '../config/lib/constants/panel';
 import GuideLink from './GuideLink';
+import type { TenantProject } from '../store/services/tenantApi';
 import { useWorkspace } from './useWorkspace';
 
 /**
@@ -83,6 +84,69 @@ const Traffic: FC = () => {
 					points={(series?.days || []).map(d => ({ key: d.date, value: d.pageviews }))}
 				/>
 			)}
+		</Panel>
+	);
+};
+
+/** The template's starter code (docs/templates T-10): the repository, a deploy button and the settings, filled for this project. */
+const StarterCode: FC<{ starter: NonNullable<TenantProject['starter']> }> = ({ starter }) => {
+	const env = (starter.env || []).map(e => `${e.key}=${e.value}`).join('\n');
+	return (
+		<Panel
+			title='Starter code'
+			subtitle={`The code your site starts from${starter.framework ? ` — ${starter.framework}` : ''}`}
+			actions={<GuideLink section='starter-code' />}>
+			<Flex
+				direction='column'
+				gap={3}>
+				<Flex
+					gap={2}
+					wrap='wrap'>
+					<Button
+						asChild
+						size='xs'
+						variant='outline'>
+						<Link
+							href={starter.repoUrl}
+							target='_blank'
+							rel='noreferrer'>
+							The repository <ExternalLink size={12} />
+						</Link>
+					</Button>
+					{starter.deployUrl && (
+						<Button
+							asChild
+							size='xs'>
+							<Link
+								href={starter.deployUrl}
+								target='_blank'
+								rel='noreferrer'>
+								Deploy it <ExternalLink size={12} />
+							</Link>
+						</Button>
+					)}
+				</Flex>
+				{env && (
+					<Box>
+						<Text
+							fontSize='12px'
+							color='fg.muted'
+							mb={1}>
+							Its settings (environment variables) — already filled in for this project:
+						</Text>
+						<Flex
+							direction='column'
+							gap={1}>
+							{(starter.env || []).map(e => (
+								<CopyValue
+									key={e.key}
+									value={`${e.key}=${e.value}`}
+								/>
+							))}
+						</Flex>
+					</Box>
+				)}
+			</Flex>
 		</Panel>
 	);
 };
@@ -207,6 +271,8 @@ const WebsiteOverview: FC = () => {
 					</Panel>
 				)}
 			</Grid>
+
+			{project?.starter?.repoUrl && <StarterCode starter={project.starter} />}
 
 			<Panel
 				title='Pages'

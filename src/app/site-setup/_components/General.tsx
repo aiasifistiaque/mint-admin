@@ -178,7 +178,7 @@ export const GeneralTab: FC<Props> = props => (
 
 /* ---------------------------------------------------- contact & social */
 
-const CONTACT: { key: keyof SiteConfig['contact']; label: string; placeholder?: string; help?: string; long?: boolean }[] = [
+export const CONTACT: { key: keyof SiteConfig['contact']; label: string; placeholder?: string; help?: string; long?: boolean }[] = [
 	{ key: 'email', label: 'Email', placeholder: 'hello@example.com' },
 	{ key: 'phone', label: 'Phone', placeholder: '+880 1…' },
 	{ key: 'whatsapp', label: 'WhatsApp', placeholder: '+880 1…', help: 'The number for a “Chat on WhatsApp” button' },
@@ -187,7 +187,7 @@ const CONTACT: { key: keyof SiteConfig['contact']; label: string; placeholder?: 
 	{ key: 'mapEmbedUrl', label: 'Map embed URL', placeholder: 'https://www.google.com/maps/embed?…', help: 'Google Maps → Share → Embed a map → the src address' },
 ];
 
-const SOCIAL: { key: keyof SiteConfig['social']; label: string; placeholder: string }[] = [
+export const SOCIAL: { key: keyof SiteConfig['social']; label: string; placeholder: string }[] = [
 	{ key: 'facebook', label: 'Facebook', placeholder: 'https://facebook.com/…' },
 	{ key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/…' },
 	{ key: 'x', label: 'X (Twitter)', placeholder: 'https://x.com/…' },
