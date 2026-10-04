@@ -129,6 +129,48 @@ export type RegisterBody = {
 export type AnalyticsTotals = { pageviews: number; visitors: number; sessions: number; pagesPerSession: number; bounceRate: number };
 export type AnalyticsDim = 'paths' | 'referrers' | 'devices' | 'browsers' | 'os' | 'countries' | 'clicks' | 'events';
 export type AnalyticsRange = { from?: string; to?: string };
+/** An outgoing webhook (backend routes-tenant/webhooks.router.ts, docs/templates T-09). Its secret is never read back. */
+export type WebhookEvent = 'create' | 'update' | 'delete';
+export type Webhook = {
+	_id: string;
+	route: string;
+	events: WebhookEvent[];
+	url: string;
+	note: string;
+	active: boolean;
+	lastDelivery: { at: string; event: string; ok: boolean; status?: number; error?: string; test?: boolean } | null;
+	createdAt: string;
+	updatedAt: string;
+};
+export type WebhookDelivery = {
+	_id: string;
+	delivery: string;
+	event: string;
+	route: string;
+	record: string | null;
+	source: 'panel' | 'api' | 'test';
+	url: string;
+	body: string;
+	ok: boolean;
+	pending: boolean;
+	status: number | null;
+	response: string;
+	error: string;
+	attempts: number;
+	durationMs: number | null;
+	createdAt: string;
+	finishedAt: string | null;
+};
+export type WebhookInput = { route?: string; events?: WebhookEvent[]; url?: string; note?: string; active?: boolean };
+/** What an API project's dashboard shows (GET /api-overview). */
+export type ApiOverview = {
+	endpoints: { route: string; title: string; actions: string[]; auth: 'none' | 'customer'; ownerOnly: boolean }[];
+	calls: { method: string; path: string; route: string; status: number; ms: number; customer: boolean; at: string }[];
+	day: { calls: number; failed: number };
+	webhooks: { total: number; active: number };
+	deliveries: WebhookDelivery[];
+};
+
 export type PublicApi = { enabled: boolean; actions: ('list' | 'get' | 'create' | 'update' | 'delete')[]; auth: 'none' | 'customer'; ownerOnly: boolean };
 
 /** A website project's settings (WO-34, WO-38; backend siteConfig.function.ts → WebsiteSettings). */
@@ -404,7 +446,41 @@ export const tenantApi = mainApi.injectEndpoints({
 		}),
 		updatePublicApi: builder.mutation<{ publicApi: PublicApi }, { id: string } & PublicApi>({
 			query: ({ id, ...body }) => ({ url: `builder/models/${id}/public-api`, method: 'PUT', body }),
-			invalidatesTags: ['builder'],
+			invalidatesTags: ['builder', 'tenant-webhooks'],
+		}),
+
+		/* ---------------------------- webhooks and the API overview (T-09) */
+		getWebhooks: builder.query<{ doc: Webhook[]; models: { route: string; title: string }[]; events: WebhookEvent[] }, void>({
+			query: () => 'webhooks',
+			providesTags: ['tenant-webhooks'],
+		}),
+		createWebhook: builder.mutation<{ doc: Webhook; secret: string }, WebhookInput>({
+			query: body => ({ url: 'webhooks', method: 'POST', body }),
+			invalidatesTags: ['tenant-webhooks', 'history'],
+		}),
+		updateWebhook: builder.mutation<Webhook, { id: string } & WebhookInput>({
+			query: ({ id, ...body }) => ({ url: `webhooks/${id}`, method: 'PUT', body }),
+			invalidatesTags: ['tenant-webhooks', 'history'],
+		}),
+		deleteWebhook: builder.mutation<{ message: string }, string>({
+			query: id => ({ url: `webhooks/${id}`, method: 'DELETE' }),
+			invalidatesTags: ['tenant-webhooks', 'history'],
+		}),
+		replaceWebhookSecret: builder.mutation<{ secret: string }, string>({
+			query: id => ({ url: `webhooks/${id}/secret`, method: 'POST' }),
+			invalidatesTags: ['history'],
+		}),
+		testWebhook: builder.mutation<WebhookDelivery, string>({
+			query: id => ({ url: `webhooks/${id}/test`, method: 'POST' }),
+			invalidatesTags: ['tenant-webhooks'],
+		}),
+		getWebhookDeliveries: builder.query<{ doc: WebhookDelivery[] }, string>({
+			query: id => `webhooks/${id}/deliveries`,
+			providesTags: ['tenant-webhooks'],
+		}),
+		getApiOverview: builder.query<ApiOverview, void>({
+			query: () => 'api-overview',
+			providesTags: ['tenant-webhooks', 'builder'],
 		}),
 	}),
 });
@@ -450,4 +526,12 @@ export const {
 	useGetSiteOverviewQuery,
 	useGetProjectHistoryQuery,
 	useGetHistoryFacetsQuery,
+	useGetWebhooksQuery,
+	useCreateWebhookMutation,
+	useUpdateWebhookMutation,
+	useDeleteWebhookMutation,
+	useReplaceWebhookSecretMutation,
+	useTestWebhookMutation,
+	useGetWebhookDeliveriesQuery,
+	useGetApiOverviewQuery,
 } = tenantApi;

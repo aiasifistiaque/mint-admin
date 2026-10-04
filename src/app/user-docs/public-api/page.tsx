@@ -2,6 +2,7 @@
 
 import UserGuide, { PUBLIC_API } from '../_components/UserGuide';
 import { A, C, CodeBlock, H3, List, Note, P, Section, Terms } from '../../docs/_components/prose';
+import { PAYLOAD_EXAMPLE, VERIFY_NODE } from '../../webhooks/_components/verify';
 
 /**
  * The public API (backend routes-public/public.router.ts), for tenants and the
@@ -28,7 +29,10 @@ const SECTIONS = [
 	{ id: 'signed-in', title: 'Calling as a customer' },
 	{ id: 'errors', title: 'Errors and limits' },
 	{ id: 'reference', title: 'The API reference' },
+	{ id: 'examples', title: 'Example requests' },
 	{ id: 'tester', title: 'Trying requests' },
+	{ id: 'webhooks', title: 'Webhooks' },
+	{ id: 'verify-signatures', title: 'Checking a webhook is real' },
 	{ id: 'faq', title: 'Troubleshooting' },
 ];
 
@@ -51,7 +55,7 @@ const PublicApi = () => (
 		<Section
 			id='turn-on'
 			title='Making a model public'
-			lead='Audience → Public API. Needs the Build permission.'>
+			lead='Audience → Public API (in an API project: API → Public API). Needs the Build permission.'>
 			<List
 				ordered
 				items={[
@@ -556,6 +560,34 @@ async function loadMore() {
 		</Section>
 
 		<Section
+			id='examples'
+			title='Example requests'
+			lead='Every endpoint in the reference comes as a request you can paste: curl or fetch.'>
+			<P>
+				Open an endpoint and its <strong>Example request</strong> is at the top — switch between <strong>curl</strong> for a
+				terminal and <strong>fetch</strong> for your site or app, and copy it. The address is your project’s, the body has the
+				model’s fields filled in by example, and an endpoint for signed-in customers carries the{' '}
+				<C>Authorization: Bearer &lt;customer token&gt;</C> header to fill in. For instance, creating a booking:
+			</P>
+			<CodeBlock
+				label='curl'
+				code={`curl -X POST 'https://…/public/api/your-project/bookings' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"guest":"Ada Lovelace","nights":2}'`}
+			/>
+			<CodeBlock
+				label='fetch'
+				code={`const res = await fetch('https://…/public/api/your-project/bookings', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ guest: 'Ada Lovelace', nights: 2 }),
+});
+const data = await res.json();
+if (!res.ok) throw new Error(data.message);`}
+			/>
+		</Section>
+
+		<Section
 			id='tester'
 			title='Trying requests'
 			lead='“Try it” sends a request to your live API from your browser and shows the answer.'>
@@ -583,12 +615,97 @@ async function loadMore() {
 		</Section>
 
 		<Section
+			id='webhooks'
+			title='Webhooks'
+			lead='Your project telling your own server when records change. Webhooks page; needs the Build permission.'>
+			<P>
+				Where the public API lets your site ask for records, a webhook sends them as they change: a new booking to your front-desk
+				system, a paid order to the warehouse, anything to Zapier. Whether the change was made in the panel, through the public
+				API or by an AI assistant, the project <C>POST</C>s the record to an address of yours.
+			</P>
+			<List
+				ordered
+				items={[
+					<>
+						On <A href='/webhooks'>Webhooks</A>, press <strong>Add a webhook</strong>.
+					</>,
+					<>Pick the model and when it’s sent: a record created, changed, deleted — any of them.</>,
+					<>
+						Give the address your server listens on, starting with <C>https://</C>, and a note on what it does with it. Without an
+						address the webhook stays off.
+					</>,
+					<>
+						Copy the <strong>secret</strong> that’s shown — it isn’t shown again. Your server uses it to check each request
+						(next section). Lost it? The key button makes a new one; the old one stops matching at once.
+					</>,
+					<>
+						Press <strong>Send test</strong>. Your server gets an <C>event: "test"</C> request with the model’s newest record
+						(or an example), and the answer shows straight away.
+					</>,
+				]}
+			/>
+			<P>Each request has a JSON body like this:</P>
+			<CodeBlock
+				label='body'
+				code={PAYLOAD_EXAMPLE}
+			/>
+			<Terms
+				head={['', 'How it works']}
+				rows={[
+					['Success', <>Any 2xx answer. Answer quickly — after 10 seconds it counts as no answer.</>],
+					[
+						'Retries',
+						<>
+							Anything else is tried 3 more times, waiting longer each time (about 15 seconds, 1 minute, 4 minutes). The{' '}
+							<C>delivery</C> id stays the same, so skip one you’ve already handled.
+						</>,
+					],
+					['The log', <>Deliveries on each webhook: the last 50, with what was sent, what came back and how many tries.</>],
+					['Fields', <>The record’s own fields, as the public API gives them — never password fields.</>],
+					[
+						'Addresses',
+						<>Servers on the internet only: addresses inside a private network, or the server’s own, are turned away.</>,
+					],
+				]}
+			/>
+			<Note>
+				An API template can make webhooks for you, asking for the address when the project is made. Off ones are waiting for an
+				address — add it and switch them on.
+			</Note>
+		</Section>
+
+		<Section
+			id='verify-signatures'
+			title='Checking a webhook is real'
+			lead='Anyone can send your server a request; only your project can sign one with the secret.'>
+			<P>
+				Every request carries <C>x-mint-event</C>, <C>x-mint-delivery</C>, <C>x-mint-timestamp</C> (seconds) and{' '}
+				<C>x-mint-signature</C>. The signature is <C>sha256=</C> followed by the HMAC-SHA256, in hex, of the timestamp, a dot and
+				the body exactly as it arrived — keyed with the webhook’s secret. Work it out yourself and compare; turn away a request
+				that doesn’t match or whose timestamp is more than a few minutes old. In Node:
+			</P>
+			<CodeBlock
+				label='Node'
+				code={VERIFY_NODE}
+			/>
+			<Note tone='warn'>
+				Use the raw body. Parsing the JSON and turning it back into text can change spacing or order, and the signature no longer
+				matches.
+			</Note>
+		</Section>
+
+		<Section
 			id='faq'
 			title='Troubleshooting'>
 			<Terms
 				head={['Symptom', 'Why, and what to do']}
 				rows={[
 					['404 for everything', 'Check the project’s public name in the address, and that the project isn’t archived.'],
+					[
+						'A webhook says “Couldn’t reach it” or “No answer in 10 seconds”',
+						'Your server is down, the address is wrong, or it answers too slowly — answer first, then do the work. Send test shows the answer straight away.',
+					],
+					['The signature never matches', 'Use the body exactly as it arrived (not re-serialised JSON), and the secret shown last — making a new one retires the old.'],
 					['404 for one model', 'It isn’t Public, or the action you’re calling isn’t ticked.'],
 					['401', 'The model is for signed-in customers — sign in with the widget, or send the customer’s token.'],
 					['A field is missing from the answer', 'Only the model’s own fields come out; check the field’s key in Models — and that fields= doesn’t leave it out.'],

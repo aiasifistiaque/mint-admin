@@ -13,13 +13,15 @@ export type ApiModel = {
 	actions: string[];
 	auth: 'none' | 'customer';
 	ownerOnly: boolean;
+	/** What the site or app uses it for (a template's endpoint note). */
+	note?: string;
 	fields: ApiField[];
 	/** What its list takes — sent by the backend when List is on (routes-public listCapabilities). */
 	filters?: ApiFilter[];
 	search?: string[];
 	sort?: string[];
 };
-export type ApiInfo = { name: string; type: 'app' | 'website'; slug: string; models: ApiModel[] };
+export type ApiInfo = { name: string; type: 'app' | 'website' | 'api'; slug: string; models: ApiModel[] };
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -215,3 +217,37 @@ export const SITE_ENDPOINTS: Endpoint[] = [
 ];
 
 export const METHOD_TONE: Record<Method, string> = { GET: 'green', POST: 'blue', PUT: 'orange', DELETE: 'red' };
+
+/* ------------------------------------------------ example requests (T-09) */
+
+const quote = (s: string) => `'${s.replace(/'/g, `'\\''`)}'`;
+
+/**
+ * An endpoint as a request you can paste: curl for a terminal, fetch for a
+ * site or app. `:id` becomes an example id; a customer endpoint carries the
+ * Authorization header to fill in. Shown on each endpoint of the reference,
+ * in the studio's Endpoints tab and in user-docs/public-api#examples.
+ */
+export const exampleRequests = (base: string, e: Endpoint): { curl: string; fetch: string } => {
+	const url = `${base}${e.path.replace(':id', '66f0c1d2e3a4b5c6d7e8f901')}`;
+	const headers: Record<string, string> = {
+		...(e.body && { 'Content-Type': 'application/json' }),
+		...(e.customer && { Authorization: 'Bearer <customer token>' }),
+	};
+	const curl = [
+		`curl${e.method === 'GET' ? '' : ` -X ${e.method}`} ${quote(url)}`,
+		...Object.entries(headers).map(([k, v]) => `  -H ${quote(`${k}: ${v}`)}`),
+		...(e.body ? [`  -d ${quote(JSON.stringify(e.body))}`] : []),
+	].join(' \\\n');
+	const options = [
+		...(e.method !== 'GET' ? [`  method: '${e.method}',`] : []),
+		...(Object.keys(headers).length ? [`  headers: ${JSON.stringify(headers, null, 2).replace(/\n/g, '\n  ')},`] : []),
+		...(e.body ? [`  body: JSON.stringify(${JSON.stringify(e.body, null, 2).replace(/\n/g, '\n  ')}),`] : []),
+	];
+	const fetchCode = [
+		`const res = await fetch('${url}'${options.length ? `, {\n${options.join('\n')}\n}` : ''});`,
+		'const data = await res.json();',
+		"if (!res.ok) throw new Error(data.message); // 400, 401, 404, 429 — see the reference",
+	].join('\n');
+	return { curl, fetch: fetchCode };
+};

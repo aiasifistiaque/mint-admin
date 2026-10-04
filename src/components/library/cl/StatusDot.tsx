@@ -13,7 +13,8 @@ export type StatusTone = 'running' | 'idle' | 'pending' | 'failed' | 'maintenanc
  * the visual weight, which is what lets the one genuinely bad row catch the eye.
  */
 const TONE_COLOR: Record<StatusTone, string> = {
-	running: 'green.500',
+	// green.fg, not green.500: colors.theme.ts maps the green scale onto the brand black.
+	running: 'green.fg',
 	idle: 'fg.subtle',
 	pending: 'orange.400',
 	failed: 'red.500',

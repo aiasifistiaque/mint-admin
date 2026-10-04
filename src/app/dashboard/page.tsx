@@ -9,6 +9,7 @@ import { DashboardGrid } from '@/components/library/dashboard/widgets';
 import { IS_TENANT_PANEL, getProjectSlug, projectHref } from '@/components/library/config/lib/constants/panel';
 import ProjectsBoard from '@/components/library/tenant/ProjectsBoard';
 import WebsiteOverview from '@/components/library/tenant/WebsiteOverview';
+import ApiOverview from '@/components/library/tenant/ApiOverview';
 import { useWorkspace } from '@/components/library/tenant';
 
 /**
@@ -32,14 +33,15 @@ export default function Home() {
 function Dashboard() {
 	const { data, isLoading } = useGetDashboardQuery();
 	const widgets = data?.widgets || [];
-	// A website's home starts with how the site is doing and what's left to set up (WO-34).
+	// A website's home starts with how the site is doing and what's left to set up (WO-34);
+	// an API's with its address, endpoints and recent calls (docs/templates T-09).
 	const { project } = useWorkspace();
-	if (IS_TENANT_PANEL && project?.type === 'website')
+	if (IS_TENANT_PANEL && (project?.type === 'website' || project?.type === 'api'))
 		return (
 			<Layout
 				title='Dashboard'
 				path='dashboard'>
-				<WebsiteOverview />
+				{project.type === 'website' ? <WebsiteOverview /> : <ApiOverview />}
 				{data?.saved && widgets.length ? (
 					<Flex
 						direction='column'

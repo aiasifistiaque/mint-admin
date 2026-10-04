@@ -2,7 +2,7 @@
 
 import { FC, FormEvent, ReactNode, useEffect, useState } from 'react';
 import { Box, Button, Center, Field, Flex, Grid, Input, SegmentGroup, Skeleton, Text, Textarea } from '@chakra-ui/react';
-import { Archive, ArchiveRestore, Boxes, Globe, LayoutGrid, MoreHorizontal, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Archive, ArchiveRestore, Boxes, Globe, LayoutGrid, MoreHorizontal, Pencil, PlugZap, Plus, Trash2 } from 'lucide-react';
 import {
 	Dialog,
 	DialogBody,
@@ -29,9 +29,13 @@ import { MenuContainer } from '../menu';
 const errorText = (e: any) => e?.data?.message || 'Something went wrong — try again.';
 
 const TYPES: { value: ProjectType; title: string; hint: string; icon: ReactNode }[] = [
-	{ value: 'app', title: 'App', hint: 'Your own models, pages, sidebar and dashboard — an internal tool, a CRM, an API.', icon: <LayoutGrid size={18} /> },
+	{ value: 'app', title: 'App', hint: 'Your own models, pages, sidebar and dashboard — an internal tool, a CRM.', icon: <LayoutGrid size={18} /> },
 	{ value: 'website', title: 'Website', hint: 'Pages, SEO, content blocks and site settings, with a site API and analytics.', icon: <Globe size={18} /> },
+	{ value: 'api', title: 'API', hint: 'A backend for your own app or site: models behind endpoints, customer sign-in, webhooks.', icon: <PlugZap size={18} /> },
 ];
+
+/** A project's kind, as a word and an icon. */
+const KIND: Record<ProjectType, { label: string; icon: ReactNode }> = Object.fromEntries(TYPES.map(t => [t.value, { label: t.title, icon: t.icon }])) as any;
 
 const domainList = (text: string) =>
 	text
@@ -126,7 +130,7 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 								<Text {...labelCss}>Kind</Text>
 								<Grid
 									mt={1.5}
-									templateColumns={{ base: '1fr', sm: '1fr 1fr' }}
+									templateColumns={{ base: '1fr', sm: 'repeat(3, 1fr)' }}
 									gap={2}>
 									{TYPES.map(t => {
 										const on = type === t.value;
@@ -283,7 +287,7 @@ const ProjectCard: FC<{ project: TenantProject; current: boolean; canManage: boo
 					borderRadius='md'
 					bg='bg.muted'
 					color='fg.muted'>
-					{project.type === 'website' ? <Globe size={18} /> : <LayoutGrid size={18} />}
+					{(KIND[project.type] || KIND.app).icon}
 				</Center>
 				<Box minW={0}>
 					<Text
@@ -297,14 +301,14 @@ const ProjectCard: FC<{ project: TenantProject; current: boolean; canManage: boo
 						color='fg.muted'
 						lineClamp={2}
 						minH='2lh'>
-						{project.description || (project.type === 'website' ? 'Website' : 'App')}
+						{project.description || (KIND[project.type] || KIND.app).label}
 					</Text>
 				</Box>
 				<Flex
 					gap={3}
 					fontSize='12px'
 					color='fg.muted'>
-					<Text>{project.type === 'website' ? 'Website' : 'App'}</Text>
+					<Text>{(KIND[project.type] || KIND.app).label}</Text>
 					<Text>
 						{project.models || 0} model{project.models === 1 ? '' : 's'}
 					</Text>
@@ -423,7 +427,7 @@ const ProjectsBoard: FC<{ welcome?: boolean }> = ({ welcome }) => {
 			)}
 			<Panel
 				title='Projects'
-				subtitle='Apps and websites in this organization'
+				subtitle='Apps, websites and APIs in this organization'
 				actions={
 					<Flex
 						align='center'
@@ -495,7 +499,7 @@ const ProjectsBoard: FC<{ welcome?: boolean }> = ({ welcome }) => {
 							fontSize='13px'
 							color='fg.muted'
 							maxW='360px'>
-							A project is an app or a website: its own models, pages, sidebar and dashboard.
+							A project is an app, a website or an API: its own models, pages, sidebar and dashboard.
 						</Text>
 						{canCreate && (
 							<Button

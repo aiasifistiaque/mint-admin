@@ -96,7 +96,10 @@ const TemplatesDocs = () => {
 							head={['Type', 'What a project from it is']}
 							rows={[
 								['App', 'A business app: models with tables, forms and detail pages, a sidebar, a dashboard and roles. Finance management, CRM, HR.'],
-								['API', 'A backend for the tenant’s own app or site: models with public endpoints, customer sign-in and webhooks. A booking or orders API.'],
+								[
+									'API',
+									'A backend for the tenant’s own app or site: models with public endpoints, customer sign-in and webhooks. A booking or orders API. The project is an API project — its sidebar leads with Public API, Webhooks and Customers, and its dashboard opens on the base address, endpoints and recent calls.',
+								],
 								['Website', 'A site’s content: pages with SEO and content blocks, site settings, starter code, plus models for longer lists (blog posts, products).'],
 							]}
 						/>
@@ -249,13 +252,31 @@ const TemplatesDocs = () => {
 							Per model: the actions (list, read, create, update, delete), whether customers must sign in, whether they only
 							see their own records, and a note on what the endpoint is for — shown in the project’s API reference.
 						</P>
+						<P>
+							Each public model has <strong>Example requests</strong>: every endpoint as curl and as fetch, with the model’s
+							fields filled in by example — the same the project’s reference shows, with the project’s own address in place of{' '}
+							<code>&lt;project&gt;</code>. Writing to a model open to anyone is a warning: fine for a contact form, otherwise
+							require signed-in customers. An API template with no endpoints is a warning too.
+						</P>
 					</Section>
 
 					<Section
 						id='webhooks'
 						title='Webhooks'
 						lead='API templates: calls the project makes to the tenant’s server when records change.'>
-						<P>Choose the events per model. The receiving address is asked when the template is used.</P>
+						<P>
+							Each webhook: a model, the events that send it (a record created, changed, deleted) and the address. Every
+							tenant’s server is different, so the address is usually a question: add one of kind “A web address” on the
+							Questions tab (key e.g. <code>orders_webhook_url</code>), save, and pick it as the address — it becomes{' '}
+							<code>{'{{orders_webhook_url}}'}</code>. A fixed <code>https://</code> address works when every tenant sends to the
+							same place.
+						</P>
+						<P>
+							Without an address the webhook is made <strong>switched off</strong> (a warning, not an error) and the project
+							fills it in on its Webhooks page. Deliveries are signed with a secret made for each project (HMAC-SHA256,{' '}
+							<code>x-mint-signature</code>) and retried 3 times; the tenant’s guide explains checking them. A preview makes the
+							webhooks too, so Send test works there.
+						</P>
 					</Section>
 
 					<Section

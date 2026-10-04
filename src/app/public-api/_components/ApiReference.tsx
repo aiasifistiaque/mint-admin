@@ -5,6 +5,7 @@ import { Badge, Box, Button, Flex, Text } from '@chakra-ui/react';
 import { ChevronDown, ChevronRight, Lock, Play } from 'lucide-react';
 import { CopyValue, Panel } from '@/components/library/cl';
 import GuideLink from '@/components/library/tenant/GuideLink';
+import ExampleRequest from './ExampleRequest';
 import {
 	AUTH_ENDPOINTS,
 	ApiInfo,
@@ -142,8 +143,16 @@ export const MethodBadge: FC<{ method: Endpoint['method'] }> = ({ method }) => (
 );
 
 /** What an endpoint takes and returns. */
-const details = (e: Endpoint, model: ApiModel | undefined, onTry: (e: Endpoint) => void): ReactNode => {
-	const parts: ReactNode[] = [];
+const details = (e: Endpoint, model: ApiModel | undefined, onTry: (e: Endpoint) => void, base: string): ReactNode => {
+	const parts: ReactNode[] = [
+		<Box key='example'>
+			<Label>Example request</Label>
+			<ExampleRequest
+				base={base}
+				e={e}
+			/>
+		</Box>,
+	];
 	if (model && e.method === 'GET' && !e.path.endsWith(':id')) {
 		const filters = filtersOf(model);
 		const label = (key: string) => model.fields.find(f => f.key === key)?.label || { createdAt: 'Created', updatedAt: 'Last changed' }[key] || key;
@@ -313,9 +322,9 @@ const details = (e: Endpoint, model: ApiModel | undefined, onTry: (e: Endpoint) 
 	return parts;
 };
 
-const EndpointRow: FC<{ e: Endpoint; model?: ApiModel; onTry: (e: Endpoint) => void }> = ({ e, model, onTry }) => {
+const EndpointRow: FC<{ e: Endpoint; base: string; model?: ApiModel; onTry: (e: Endpoint) => void }> = ({ e, base, model, onTry }) => {
 	const [open, setOpen] = useState(false);
-	const body = details(e, model, onTry);
+	const body = details(e, model, onTry, base);
 	const hasDetails = Array.isArray(body) && body.length > 0;
 	return (
 		<Box
@@ -542,11 +551,12 @@ const ApiReference: FC<{ base: string; info: ApiInfo | null; error?: string; onT
 				<Group
 					key={m.route}
 					title={m.title}
-					note={m.auth === 'customer' ? (m.ownerOnly ? 'Signed-in customers · own records' : 'Signed-in customers') : 'Open to anyone'}>
+					note={`${m.auth === 'customer' ? (m.ownerOnly ? 'Signed-in customers · own records' : 'Signed-in customers') : 'Open to anyone'}${m.note ? ` — ${m.note}` : ''}`}>
 					{endpointsOf(m).map(e => (
 						<EndpointRow
 							key={`${e.method} ${e.path}`}
 							e={e}
+							base={base}
 							model={m}
 							onTry={onTry}
 						/>
@@ -571,6 +581,7 @@ const ApiReference: FC<{ base: string; info: ApiInfo | null; error?: string; onT
 					<EndpointRow
 						key={`${e.method} ${e.path}`}
 						e={e}
+						base={base}
 						onTry={onTry}
 					/>
 				))}
@@ -584,6 +595,7 @@ const ApiReference: FC<{ base: string; info: ApiInfo | null; error?: string; onT
 						<EndpointRow
 							key={`${e.method} ${e.path}`}
 							e={e}
+							base={base}
 							onTry={onTry}
 						/>
 					))}

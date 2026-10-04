@@ -7,7 +7,8 @@ import { A, C, List, Note, P, Section, Terms } from '../../docs/_components/pros
 
 const SECTIONS = [
 	{ id: 'projects', title: 'What a project is' },
-	{ id: 'kinds', title: 'Apps and websites' },
+	{ id: 'kinds', title: 'Apps, websites and APIs' },
+	{ id: 'api', title: 'API projects' },
 	{ id: 'create', title: 'Creating a project' },
 	{ id: 'get-started', title: 'Getting started' },
 	{ id: 'history', title: 'History' },
@@ -41,7 +42,7 @@ const Projects = () => (
 
 		<Section
 			id='kinds'
-			title='Apps and websites'
+			title='Apps, websites and APIs'
 			lead='Picked when you create a project; it can’t change later.'>
 			<Terms
 				head={['Kind', 'Starts with']}
@@ -57,9 +58,42 @@ const Projects = () => (
 							readable by your site — plus a site API and <A href='/user-docs/analytics'>analytics</A>.
 						</>,
 					],
+					[
+						'API',
+						<>
+							An empty start, like an app, but laid out as a back end for your own app or site: its{' '}
+							<A href='/user-docs/projects#api'>API</A> leads the sidebar and its dashboard.
+						</>,
+					],
 				]}
 			/>
-			<P>Both get the same builders, public API and customer sign-in. A website just starts further along.</P>
+			<P>All three get the same builders, public API, webhooks and customer sign-in. A website just starts further along.</P>
+		</Section>
+
+		<Section
+			id='api'
+			title='API projects'
+			lead='For when the project is the back end of something you build yourself — a mobile app, a booking site, a partner integration.'>
+			<P>
+				An API project has the same models and records as an app; what changes is what it puts first. Its sidebar starts with{' '}
+				<strong>API</strong>: <A href='/user-docs/public-api'>Public API</A> (which models are open, and the reference with
+				example requests), <A href='/user-docs/public-api#webhooks'>Webhooks</A> and{' '}
+				<A href='/user-docs/customers'>Customers</A>. Its dashboard opens on the API itself:
+			</P>
+			<List
+				items={[
+					<>
+						The <strong>base address</strong> your app calls, to copy.
+					</>,
+					<>The endpoints that are on, with their methods, and which need a signed-in customer.</>,
+					<>Calls in the last 24 hours and how many failed, and the 20 latest calls (kept a week — method, path, answer, never what was sent).</>,
+					<>How many webhooks are on, and their latest deliveries.</>,
+				]}
+			/>
+			<P>
+				Widgets from the <A href='/user-docs/dashboard'>dashboard builder</A> go underneath. An API template starts the project
+				with its models, endpoints and webhooks already set up.
+			</P>
 		</Section>
 
 		<Section

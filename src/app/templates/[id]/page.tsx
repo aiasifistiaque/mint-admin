@@ -18,6 +18,8 @@ import SampleDataTab from './_components/SampleDataTab';
 import GuideTab from './_components/GuideTab';
 import VersionsTab from './_components/VersionsTab';
 import PartSummary from './_components/PartSummary';
+import EndpointsTab, { EndpointSpec } from './_components/EndpointsTab';
+import WebhooksTab, { WebhookSpec } from './_components/WebhooksTab';
 import SidebarTab, { Section } from './_components/SidebarTab';
 import DashboardTab from './_components/DashboardTab';
 import RolesTab from './_components/RolesTab';
@@ -65,6 +67,14 @@ const ADAPTERS: Partial<Record<TemplatePart, { from: (draft: any) => any; to: (w
 	roles: {
 		from: d => (d.roles || []).map((r: any) => ({ name: '', description: '', permissions: [], ...r })),
 		to: (w: any[]) => w.map(r => ({ ...r, name: r.name.trim() })),
+	},
+	endpoints: {
+		from: d => (d.endpoints || []).map((e: any) => ({ actions: [], auth: 'none', ownerOnly: false, note: '', ...e })),
+		to: (w: EndpointSpec[]) => w.map(e => ({ ...e, note: e.note.trim(), ownerOnly: e.auth === 'customer' && e.ownerOnly })),
+	},
+	webhooks: {
+		from: d => (d.webhooks || []).map((h: any) => ({ events: [], url: '', note: '', ...h })),
+		to: (w: WebhookSpec[]) => w.map(h => ({ ...h, url: h.url.trim(), note: h.note.trim() })),
 	},
 	sampleData: { from: d => d.sampleData || {}, to: w => w },
 	guide: { from: d => ({ steps: d.guide?.steps || [], faq: d.guide?.faq || [] }), to: w => w },
@@ -196,6 +206,22 @@ const EditTemplatePage = () => {
 						{...props}
 						value={valueOf('roles')}
 						onChange={change('roles')}
+					/>
+				);
+			case 'endpoints':
+				return (
+					<EndpointsTab
+						{...props}
+						value={valueOf('endpoints')}
+						onChange={change('endpoints')}
+					/>
+				);
+			case 'webhooks':
+				return (
+					<WebhooksTab
+						{...props}
+						value={valueOf('webhooks')}
+						onChange={change('webhooks')}
 					/>
 				);
 			case 'sampleData':
