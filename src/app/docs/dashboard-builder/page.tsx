@@ -22,6 +22,7 @@ const SECTIONS = [
 	{ id: 'numbers', title: 'Numbers' },
 	{ id: 'charts', title: 'Charts' },
 	{ id: 'recent', title: 'Recent items' },
+	{ id: 'templates', title: 'Templates overview' },
 	{ id: 'filters', title: 'Conditions' },
 	{ id: 'access', title: 'Who sees what' },
 	{ id: 'preview', title: 'The preview' },
@@ -317,6 +318,19 @@ const DashboardBuilderDocs = () => {
 						/>
 						<P>
 							On the dashboard, the first column links to the record&apos;s page.
+						</P>
+					</Section>
+
+					<Section
+						id='templates'
+						title='Templates overview'
+						lead='Template Studio at a glance — on the super admin’s dashboard only.'>
+						<P>
+							<strong>Add templates overview</strong> puts Template Studio on the home page: how many templates are published,
+							drafts (never published), have problems to fix and are archived; the most used (projects made from them and
+							previews); and the recently changed, each linking to its template. It reads no model and has nothing to set — its
+							pencil switches it between full and half width. Admins who can’t view templates don’t see it. Tenants’ project
+							dashboards don’t offer it.
 						</P>
 					</Section>
 

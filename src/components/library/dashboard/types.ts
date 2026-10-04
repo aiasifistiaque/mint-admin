@@ -12,7 +12,8 @@ import { OptionFilter, optionQuery } from '../functions/optionFilters';
  * list filters (the same shape a record picker's optionFilters have).
  */
 
-export type WidgetType = 'stat' | 'chart' | 'recent';
+/** `templates`: Template Studio's overview — the super admin panel only (docs/templates T-11). */
+export type WidgetType = 'stat' | 'chart' | 'recent' | 'templates';
 export type WidgetSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 export type Metric = 'count' | 'sum' | 'avg';
 export type Range = 'all' | 'today' | '7d' | '30d' | '90d' | 'month' | '12m' | 'year';
@@ -66,7 +67,7 @@ export const RANGE_LABEL: Record<Range, string> = {
 	all: 'All time',
 };
 
-export const TYPE_LABEL: Record<WidgetType, string> = { stat: 'Number', chart: 'Chart', recent: 'Recent items' };
+export const TYPE_LABEL: Record<WidgetType, string> = { stat: 'Number', chart: 'Chart', recent: 'Recent items', templates: 'Templates overview' };
 
 /** A donut's slices beyond these fold into "Other" — the palette's validated hues. */
 export const DONUT_MAX = 7;
@@ -75,6 +76,7 @@ export const newId = () => `w${Date.now().toString(36)}${Math.random().toString(
 
 export const newWidget = (type: WidgetType): Widget => {
 	const base = { id: newId(), type, route: '', title: '', filters: [] };
+	if (type === 'templates') return { ...base, route: 'templates', size: 'full' };
 	if (type === 'stat') return { ...base, size: 'sm', metric: 'count', range: 'all', dateField: 'createdAt' };
 	if (type === 'chart')
 		return { ...base, size: 'lg', metric: 'count', range: '30d', dateField: 'createdAt', group: 'time', chart: 'bar', interval: 'day' };
@@ -146,6 +148,7 @@ export const bucketLabel = (key: string, interval: Interval = 'day', long = fals
 
 /** A readable title when none is set: "Projects · count, last 30 days". */
 export const defaultTitle = (w: Widget, modelLabel?: string) => {
+	if (w.type === 'templates') return 'Templates';
 	const what = modelLabel || w.route || 'Pick a model';
 	if (w.type === 'recent') return `Latest ${what.toLowerCase()}`;
 	const metric = w.metric === 'sum' ? `Total ${w.field || ''}` : w.metric === 'avg' ? `Average ${w.field || ''}` : '';

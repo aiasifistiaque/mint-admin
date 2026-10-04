@@ -19,6 +19,8 @@ import {
 	withUnit,
 } from './types';
 import { pagePath } from '../config/lib/constants/panel';
+import { useGetTemplateStatsQuery } from '../store/services/templatesApi';
+import type { TemplateStatRow } from '../store/services/templatesApi';
 
 /**
  * The dashboard's widgets and the grid they sit in — used by the dashboard
@@ -374,8 +376,148 @@ const RecentWidget: FC<WidgetProps> = ({ w, index, editing, preview }) => {
 	);
 };
 
+const TYPE_WORD: Record<string, string> = { app: 'App', api: 'API', website: 'Website' };
+
+const TemplateRows: FC<{ title: string; rows: TemplateStatRow[]; aside: (t: TemplateStatRow) => ReactNode; empty: string; links: boolean }> = ({ title, rows, aside, empty, links }) => (
+	<Box minW={0}>
+		<Text
+			fontSize='xs'
+			fontWeight='600'
+			color='fg.muted'
+			mb={1}>
+			{title}
+		</Text>
+		{!rows.length && <Note>{empty}</Note>}
+		{rows.map(t => (
+			<Flex
+				key={t.key}
+				align='center'
+				gap={2}
+				py={1}
+				fontSize='xs'
+				borderTopWidth='1px'
+				borderColor='border.muted'
+				_first={{ borderTopWidth: 0 }}>
+				<Text
+					flex={1}
+					truncate
+					fontWeight='500'>
+					{links ? (
+						<NextLink href={`/templates/${t.key}`}>
+							<Text
+								as='span'
+								_hover={{ textDecoration: 'underline' }}>
+								{t.name}
+							</Text>
+						</NextLink>
+					) : (
+						t.name
+					)}
+				</Text>
+				<Text color='fg.muted'>{TYPE_WORD[t.type] || t.type}</Text>
+				{aside(t)}
+			</Flex>
+		))}
+	</Box>
+);
+
+/** Template Studio at a glance (docs/templates T-11): counts, the most used, the recently changed. */
+const TemplatesWidget: FC<WidgetProps> = ({ w, index, editing, preview }) => {
+	const q = useGetTemplateStatsQuery();
+	const explain = !!(editing || preview);
+	const status = errorStatus(q.error);
+	if ((status === 403 || status === 401) && !explain) return null;
+	const d = q.data;
+	const links = !editing && !preview;
+	const tiles: [string, number | undefined, string?][] = [
+		['Published', d?.published],
+		['Drafts', d?.drafts],
+		['With problems', d?.withProblems, d?.withProblems ? 'red.fg' : undefined],
+		['Archived', d?.archived],
+	];
+	return (
+		<Frame
+			w={{ ...w, route: links ? 'templates' : '' }}
+			index={index}
+			editing={editing}
+			subtitle='Blueprints tenants start projects from'>
+			{status === 403 || status === 401 ? (
+				<Note>You can’t view templates — admins without access won’t see this widget.</Note>
+			) : q.error ? (
+				<Note tone='error'>{errorText(q.error)}</Note>
+			) : !d ? (
+				<Skeleton h='120px' />
+			) : (
+				<Flex
+					direction='column'
+					gap={4}>
+					<Grid
+						templateColumns='repeat(4, minmax(0, 1fr))'
+						gap={3}>
+						{tiles.map(([label, n, color]) => (
+							<Box key={label}>
+								<Text
+									fontSize='2xl'
+									fontWeight='600'
+									lineHeight='1.1'
+									color={color}>
+									{formatNumber(n ?? 0)}
+								</Text>
+								<Text
+									fontSize='xs'
+									color='fg.muted'>
+									{label}
+								</Text>
+							</Box>
+						))}
+					</Grid>
+					<Grid
+						templateColumns={{ base: '1fr', md: '1fr 1fr' }}
+						gap={4}>
+						<TemplateRows
+							title='Most used'
+							rows={d.mostUsed}
+							links={links}
+							empty='Nothing published yet.'
+							aside={t => (
+								<Text
+									color='fg.muted'
+									whiteSpace='nowrap'>
+									{t.applied} project{t.applied === 1 ? '' : 's'} · {t.previews} preview{t.previews === 1 ? '' : 's'}
+								</Text>
+							)}
+						/>
+						<TemplateRows
+							title='Recently changed'
+							rows={d.recent}
+							links={links}
+							empty='No templates yet.'
+							aside={t => (
+								<Text
+									whiteSpace='nowrap'
+									color={t.errors ? 'red.fg' : 'fg.muted'}>
+									{t.errors ? `${t.errors} to fix · ` : ''}
+									{t.status === 'published' ? `v${t.version}` : t.status} · {new Date(t.updatedAt).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
+								</Text>
+							)}
+						/>
+					</Grid>
+				</Flex>
+			)}
+		</Frame>
+	);
+};
+
 export const WidgetView: FC<WidgetProps> = props =>
-	props.w.type === 'stat' ? <StatWidget {...props} /> : props.w.type === 'chart' ? <ChartWidget {...props} /> : <RecentWidget {...props} />;
+	props.w.type === 'templates' ? (
+		<TemplatesWidget {...props} />
+	) : props.w.type === 'stat' ? (
+		<StatWidget {...props} />
+	) : props.w.type === 'chart' ? (
+		<ChartWidget {...props} />
+	) : (
+		<RecentWidget {...props} />
+	);
 
 /** The dashboard's grid: 12 columns wide, 6 on a tablet, one on a phone. */
 export const DashboardGrid: FC<{ widgets: Widget[]; editing?: Editing; preview?: boolean }> = ({ widgets, editing, preview }) => (

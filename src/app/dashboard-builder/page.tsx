@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Flex, IconButton, Link, Text } from '@chakra-ui/react';
-import { BarChart3, BookOpen, Copy, Hash, ListOrdered, Pencil, RotateCcw, Save, Trash2, Undo2 } from 'lucide-react';
+import { BarChart3, BookOpen, Copy, Hash, LayoutTemplate, ListOrdered, Pencil, RotateCcw, Save, Trash2, Undo2 } from 'lucide-react';
 import { Layout, useGetDashboardQuery, useResetDashboardMutation, useSaveDashboardMutation } from '@/components/library';
 import { ConfirmAction, DetailSkeleton, EmptyState, ErrorState, PageHeader } from '@/components/library/cl';
 import { toaster } from '@/components/ui/toaster';
@@ -10,7 +10,7 @@ import { DashboardGrid } from '@/components/library/dashboard/widgets';
 import { TYPE_LABEL, Widget, WidgetType, newId, newWidget } from '@/components/library/dashboard/types';
 import WidgetDialog from './_components/WidgetDialog';
 import { DocLink, GUIDE } from './_components/ui';
-import { HOME } from '@/components/library/config/lib/constants/panel';
+import { HOME, IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 
 const ICON = { size: 14, strokeWidth: 1.75 };
 /** "1 number", "3 charts"; nothing for none. */
@@ -19,6 +19,8 @@ const ADD: { type: WidgetType; icon: any; label: string }[] = [
 	{ type: 'stat', icon: Hash, label: 'Number' },
 	{ type: 'chart', icon: BarChart3, label: 'Chart' },
 	{ type: 'recent', icon: ListOrdered, label: 'Recent items' },
+	// Template Studio's overview — only the super admin panel has templates (T-11). No settings: added as it is.
+	...(IS_TENANT_PANEL ? [] : [{ type: 'templates' as WidgetType, icon: LayoutTemplate, label: 'Templates overview' }]),
 ];
 
 /**
@@ -93,14 +95,26 @@ const DashboardBuilderPage = () => {
 
 	const actions = (w: Widget, index: number) => (
 		<>
-			<IconButton
-				size='2xs'
-				variant='ghost'
-				aria-label='Edit widget'
-				title='Edit'
-				onClick={() => setEditing({ widget: w, isNew: false })}>
-				<Pencil {...ICON} />
-			</IconButton>
+			{w.type === 'templates' ? (
+				// Nothing to set on it but its width.
+				<IconButton
+					size='2xs'
+					variant='ghost'
+					aria-label={w.size === 'full' ? 'Make it half width' : 'Make it full width'}
+					title={w.size === 'full' ? 'Half width' : 'Full width'}
+					onClick={() => setWidgets(list => list.map(x => (x.id === w.id ? { ...x, size: x.size === 'full' ? 'lg' : 'full' } : x)))}>
+					<Pencil {...ICON} />
+				</IconButton>
+			) : (
+				<IconButton
+					size='2xs'
+					variant='ghost'
+					aria-label='Edit widget'
+					title='Edit'
+					onClick={() => setEditing({ widget: w, isNew: false })}>
+					<Pencil {...ICON} />
+				</IconButton>
+			)}
 			<IconButton
 				size='2xs'
 				variant='ghost'
@@ -159,7 +173,7 @@ const DashboardBuilderPage = () => {
 									size='sm'
 									variant='outline'
 									disabled={isLoading || saving}
-									onClick={() => setEditing({ widget: newWidget(a.type), isNew: true })}>
+									onClick={() => (a.type === 'templates' ? setWidgets(list => [...list, newWidget('templates')]) : setEditing({ widget: newWidget(a.type), isNew: true }))}>
 									<a.icon {...ICON} />
 									Add {a.label.toLowerCase()}
 								</Button>
@@ -250,7 +264,7 @@ const DashboardBuilderPage = () => {
 											key={a.type}
 											size='sm'
 											variant='outline'
-											onClick={() => setEditing({ widget: newWidget(a.type), isNew: true })}>
+											onClick={() => (a.type === 'templates' ? setWidgets(list => [...list, newWidget('templates')]) : setEditing({ widget: newWidget(a.type), isNew: true }))}>
 											<a.icon {...ICON} />
 											{a.label}
 										</Button>

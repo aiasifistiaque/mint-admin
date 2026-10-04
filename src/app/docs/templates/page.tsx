@@ -460,6 +460,17 @@ const TemplatesDocs = () => {
 							label='Claude Code'
 							code={'claude mcp add --transport http emint-templates https://<your-api>/templates/mcp/emt_…'}
 						/>
+						<P>
+							<strong>Connect Claude</strong> (top of the gallery, <C>/templates/connect</C>) makes the keys and shows this
+							command — and the Claude Desktop / claude.ai connector URL — with the key filled in, plus prompts to start with.
+							claude.ai and Claude Desktop reach the backend from the internet, so they need its deployed https address; Claude
+							Code on the same computer can use localhost. Check it’s connected with <C>/mcp</C> in Claude Code, then ask it to
+							list the templates.
+						</P>
+						<P>
+							The dashboard builder’s <strong>Templates overview</strong> widget puts the studio on the home page: published,
+							drafts, with problems, the most used and the recently changed.
+						</P>
 					</Section>
 
 					<Section

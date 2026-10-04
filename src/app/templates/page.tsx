@@ -4,7 +4,7 @@ import { useMemo, useRef, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Badge, Box, Button, Flex, Grid, Image, Input, Text } from '@chakra-ui/react';
-import { Camera, FileUp, Plus, Search } from 'lucide-react';
+import { Camera, FileUp, Plus, Search, Sparkles } from 'lucide-react';
 import { Layout, useGetTemplatesQuery, useImportTemplateFileMutation } from '@/components/library';
 import { Dropdown, EmptyState, ErrorState, PageHeader, TableSkeleton, when } from '@/components/library/cl';
 import { HOME } from '@/components/library/config/lib/constants/panel';
@@ -89,6 +89,15 @@ const TemplatesPage = () => {
 								hidden
 								onChange={e => onImport(e.target.files?.[0])}
 							/>
+							<Button
+								asChild
+								size='sm'
+								variant='outline'>
+								<NextLink href='/templates/connect'>
+									<Sparkles size={14} />
+									Connect Claude
+								</NextLink>
+							</Button>
 							<Button
 								size='sm'
 								variant='outline'

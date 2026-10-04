@@ -23,6 +23,8 @@ export type TemplatePart =
 	| 'website'
 	| 'sampleData'
 	| 'guide';
+export type TemplateStatRow = { key: string; name: string; type: string; status: string; version: number; applied: number; previews: number; errors: number; updatedAt: string };
+export type TemplateStats = { published: number; drafts: number; archived: number; withProblems: number; mostUsed: TemplateStatRow[]; recent: TemplateStatRow[] };
 export type TemplateIssue = { severity: 'error' | 'explain' | 'warning'; part: TemplatePart; path: string; message: string; fix: string };
 export type TemplateValidation = {
 	ok: boolean;
@@ -146,6 +148,11 @@ export const templatesApi = mainApi.injectEndpoints({
 			query: ({ id }) => ({ url: `templates/keys/${id}`, method: 'DELETE' }),
 			invalidatesTags: ['template-keys'],
 		}),
+		/** The Templates dashboard widget (T-11). */
+		getTemplateStats: builder.query<TemplateStats, void>({
+			query: () => 'templates/stats',
+			providesTags: ['templates'],
+		}),
 	}),
 });
 
@@ -173,4 +180,5 @@ export const {
 	useGetTemplateKeysQuery,
 	useCreateTemplateKeyMutation,
 	useRevokeTemplateKeyMutation,
+	useGetTemplateStatsQuery,
 } = templatesApi;
