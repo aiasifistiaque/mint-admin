@@ -6,7 +6,7 @@ import { useCreateTemplateMutation } from '@/components/library';
 import type { TemplateType } from '@/components/library/store/services/templatesApi';
 import { toaster } from '@/components/ui/toaster';
 import StudioDialog from './StudioDialog';
-import { Label, TYPES, errorMessage } from './ui';
+import { GuideLink, Label, TYPES, errorMessage } from './ui';
 
 /** New template: its type (each says what it holds), name, category and one-line summary — then the editor. */
 const NewTemplateDialog: FC<{ open: boolean; onClose: () => void; onCreated: (doc: any) => void }> = ({ open, onClose, onCreated }) => {
@@ -59,7 +59,12 @@ const NewTemplateDialog: FC<{ open: boolean; onClose: () => void; onCreated: (do
 				direction='column'
 				gap={4}>
 				<Box>
-					<Label hint='What a project made from it is. Fixed once created.'>Type</Label>
+					<Flex
+						align='baseline'
+						justify='space-between'>
+						<Label hint='What a project made from it is. Fixed once created.'>Type</Label>
+						<GuideLink section='types' />
+					</Flex>
 					<Grid
 						templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }}
 						gap={2}>

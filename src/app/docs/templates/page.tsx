@@ -400,6 +400,21 @@ const TemplatesDocs = () => {
 							— publishing never changes a tenant’s project. Publishing needs no problems, every explanation, saved changes,
 							and something changed since the last version. It needs the <C>edit-template-publishing</C> permission.
 						</P>
+						<List
+							ordered
+							items={[
+								<>
+									Save your changes, and check the list at the top is clear of <strong>Problems</strong> and{' '}
+									<strong>Still to explain</strong> (warnings don’t matter here).
+								</>,
+								<>Preview it once more — the preview builds the draft exactly as a tenant would get it.</>,
+								<>
+									Press <strong>Publish</strong> (top of the editor, or on Versions &amp; publish). The dialog lists anything still
+									blocking it and says what publishing will and won’t change.
+								</>,
+								<>Write what changed — “Added budgets”, “Clearer setup guide” — and publish. The version number goes up by one.</>,
+							]}
+						/>
 					</Section>
 
 					<Section
@@ -410,6 +425,11 @@ const TemplatesDocs = () => {
 							<strong>Restore into draft</strong> copies a version into the draft. Nothing is published until you publish
 							again.
 						</P>
+						<P>
+							Versions &amp; publish lists them newest first — number, notes, who published it and when. The draft is marked{' '}
+							<em>changed</em> while it differs from the latest version, and the gallery shows it. Previews can be built from the
+							draft or from the published version, to compare.
+						</P>
 					</Section>
 
 					<Section
@@ -419,6 +439,19 @@ const TemplatesDocs = () => {
 						<P>
 							Changes apply at once. The key — the template’s address in the API and the MCP — can change until the template
 							is first published. Archiving takes a published template out of the gallery without losing it.
+						</P>
+						<Terms
+							head={['Choice', 'Who can start a project from it']}
+							rows={[
+								['Everyone', 'Every organization. The default.'],
+								['Only some organizations', 'The ones you pick below it — for a client’s own template, or to try one with a few tenants first.'],
+								['Hidden — nobody, for now', 'Nobody, though it stays published; projects already made from it are unaffected.'],
+							]}
+						/>
+						<P>
+							A key is lowercase letters, digits and hyphens. A few words are the studio’s own pages and can’t be keys:{' '}
+							<C>connect</C>, <C>new</C>, <C>keys</C>, <C>meta</C>, <C>stats</C>, <C>import</C>, <C>previews</C>, <C>mcp</C>,{' '}
+							<C>capture</C>.
 						</P>
 					</Section>
 

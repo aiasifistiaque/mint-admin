@@ -7,7 +7,7 @@ import { Endpoint, exampleRequests } from './api';
 
 /**
  * An endpoint as a request to paste — curl or fetch (api.ts exampleRequests).
- * On the tenant's API reference and in the studio's Endpoints tab.
+ * On the tenant's API reference and in the studio's Public API tab.
  */
 const ExampleRequest: FC<{ base: string; e: Endpoint }> = ({ base, e }) => {
 	const [as, setAs] = useState<'curl' | 'fetch'>('curl');

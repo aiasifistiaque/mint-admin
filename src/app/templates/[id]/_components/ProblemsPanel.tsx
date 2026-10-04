@@ -90,9 +90,9 @@ const ProblemsPanel: FC<{ validation: any; onGo: (issue: TemplateIssue, index?: 
 								color='fg.muted'>
 								{k.hint}
 							</Text>
-							{k.key === 'errors' && (
+							{(k.key === 'errors' || k.key === 'explain') && (
 								<Box ml='auto'>
-									<GuideLink section='validate' />
+									<GuideLink section={k.key === 'explain' ? 'explanations' : 'validate'} />
 								</Box>
 							)}
 						</Flex>

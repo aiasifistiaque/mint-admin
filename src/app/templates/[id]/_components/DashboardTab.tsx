@@ -103,7 +103,7 @@ const WidgetEditor: FC<{ w: Widget; models: TemplateModel[]; onChange: (w: Widge
 				{w.type !== 'recent' && (
 					<>
 						<Box>
-							<Label>Shows</Label>
+							<Label hint='Count the records, or add up or average a number field.'>Shows</Label>
 							<Dropdown
 								value={w.metric || 'count'}
 								onChange={metric => set({ metric: metric as any, ...(metric === 'count' && { field: undefined }) })}>
@@ -130,7 +130,7 @@ const WidgetEditor: FC<{ w: Widget; models: TemplateModel[]; onChange: (w: Widge
 							</Box>
 						)}
 						<Box>
-							<Label>Over</Label>
+							<Label hint='Which records count, by when they’re dated.'>Over</Label>
 							<Dropdown
 								value={w.range || 'all'}
 								onChange={range => set({ range: range as any, ...(range === 'all' && { compare: undefined }) })}>
@@ -200,7 +200,7 @@ const WidgetEditor: FC<{ w: Widget; models: TemplateModel[]; onChange: (w: Widge
 				{w.type === 'chart' && (
 					<>
 						<Box>
-							<Label>Along</Label>
+							<Label hint='Over time, or broken down by a field’s values.'>Along</Label>
 							<Dropdown
 								value={w.group || 'time'}
 								onChange={group =>
@@ -211,7 +211,7 @@ const WidgetEditor: FC<{ w: Widget; models: TemplateModel[]; onChange: (w: Widge
 							</Dropdown>
 						</Box>
 						<Box>
-							<Label>Chart</Label>
+							<Label hint='How it’s drawn.'>Chart</Label>
 							<Dropdown
 								value={w.chart || 'bar'}
 								onChange={chart => set({ chart: chart as any })}>
@@ -238,7 +238,7 @@ const WidgetEditor: FC<{ w: Widget; models: TemplateModel[]; onChange: (w: Widge
 							</Box>
 						) : (
 							<Box>
-								<Label>One bar per</Label>
+								<Label hint='How long each bar or point covers.'>One bar per</Label>
 								<Dropdown
 									value={w.interval || 'day'}
 									onChange={interval => set({ interval: interval as any })}>
@@ -252,7 +252,7 @@ const WidgetEditor: FC<{ w: Widget; models: TemplateModel[]; onChange: (w: Widge
 				)}
 				{w.type === 'recent' && (
 					<Box>
-						<Label>How many</Label>
+						<Label hint='Rows in the list, newest first.'>How many</Label>
 						<Input
 							size='sm'
 							type='number'

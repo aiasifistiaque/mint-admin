@@ -226,7 +226,7 @@ const quote = (s: string) => `'${s.replace(/'/g, `'\\''`)}'`;
  * An endpoint as a request you can paste: curl for a terminal, fetch for a
  * site or app. `:id` becomes an example id; a customer endpoint carries the
  * Authorization header to fill in. Shown on each endpoint of the reference,
- * in the studio's Endpoints tab and in user-docs/public-api#examples.
+ * in the studio's Public API tab and in user-docs/public-api#examples.
  */
 export const exampleRequests = (base: string, e: Endpoint): { curl: string; fetch: string } => {
 	const url = `${base}${e.path.replace(':id', '66f0c1d2e3a4b5c6d7e8f901')}`;

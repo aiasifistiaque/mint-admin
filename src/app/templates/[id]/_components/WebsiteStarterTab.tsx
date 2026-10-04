@@ -66,7 +66,7 @@ const WebsiteStarterTab: FC<TabProps<Site>> = ({ doc, value, onChange }) => {
 						/>
 					</Box>
 					<Box>
-						<Label>Framework</Label>
+						<Label hint='What it’s written in — the dashboard says so.'>Framework</Label>
 						<Dropdown
 							size='sm'
 							value={s.framework}
