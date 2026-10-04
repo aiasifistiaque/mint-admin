@@ -18,6 +18,10 @@ import SampleDataTab from './_components/SampleDataTab';
 import GuideTab from './_components/GuideTab';
 import VersionsTab from './_components/VersionsTab';
 import PartSummary from './_components/PartSummary';
+import SidebarTab, { Section } from './_components/SidebarTab';
+import DashboardTab from './_components/DashboardTab';
+import RolesTab from './_components/RolesTab';
+import { newId } from '@/components/library/dashboard/types';
 import PublishDialog from './_components/PublishDialog';
 import PreviewDialog from './_components/PreviewDialog';
 
@@ -51,6 +55,16 @@ const ADAPTERS: Partial<Record<TemplatePart, { from: (draft: any) => any; to: (w
 		from: d => d.questions || [],
 		to: (w: any[]) =>
 			w.map(q => ({ ...q, options: (q.options || []).map((o: any) => ({ value: o.value.trim(), label: (o.label || o.value).trim() })).filter((o: any) => o.value) })),
+	},
+	sidebar: {
+		from: d => (d.sidebar || []).map((s: any) => ({ name: '', icon: '', description: '', ...s, items: (s.items || []).map((i: any) => ({ label: '', ...i })) })),
+		to: (w: Section[]) => w.map(s => ({ ...s, name: s.name.trim(), items: s.items.map(i => ({ model: i.model, label: i.label.trim() })) })),
+	},
+	// A widget written by Claude may come without an id; the dashboard needs one.
+	dashboard: { from: d => (d.dashboard || []).map((w: any) => ({ size: 'md', ...w, id: w.id || newId() })), to: w => w },
+	roles: {
+		from: d => (d.roles || []).map((r: any) => ({ name: '', description: '', permissions: [], ...r })),
+		to: (w: any[]) => w.map(r => ({ ...r, name: r.name.trim() })),
 	},
 	sampleData: { from: d => d.sampleData || {}, to: w => w },
 	guide: { from: d => ({ steps: d.guide?.steps || [], faq: d.guide?.faq || [] }), to: w => w },
@@ -158,6 +172,30 @@ const EditTemplatePage = () => {
 						{...props}
 						value={valueOf('questions')}
 						onChange={change('questions')}
+					/>
+				);
+			case 'sidebar':
+				return (
+					<SidebarTab
+						{...props}
+						value={valueOf('sidebar')}
+						onChange={change('sidebar')}
+					/>
+				);
+			case 'dashboard':
+				return (
+					<DashboardTab
+						{...props}
+						value={valueOf('dashboard')}
+						onChange={change('dashboard')}
+					/>
+				);
+			case 'roles':
+				return (
+					<RolesTab
+						{...props}
+						value={valueOf('roles')}
+						onChange={change('roles')}
 					/>
 				);
 			case 'sampleData':

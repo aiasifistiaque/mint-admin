@@ -201,6 +201,11 @@ const TemplatesDocs = () => {
 						id='sidebar'
 						title='Sidebar'
 						lead='The sections of a new project’s sidebar, in order, and the template’s pages in each.'>
+						<P>
+							Add a section, give it a name and an icon, and pick which of the template’s pages sit in it, in order. A label
+							replaces a page’s title in the sidebar only. The preview beside the sections shows the sidebar as a new project gets
+							it: the template’s sections first, then the project’s own.
+						</P>
 						<P>Models not placed in a section go to the section named on the Models tab, or the project’s first one.</P>
 					</Section>
 
@@ -208,14 +213,32 @@ const TemplatesDocs = () => {
 						id='dashboard'
 						title='Dashboard'
 						lead='The project’s home page: numbers, charts and recent lists from the template’s models.'>
-						<P>Widgets are the dashboard builder’s, pointed at the template’s models by name.</P>
+						<P>
+							Widgets are the dashboard builder’s, pointed at the template’s models by name; the build swaps in the routes the
+							models get. A <strong>Number</strong> counts records or adds up (or averages) a number field over a period; a <strong>Chart</strong>{' '}
+							does the same per day, week or month, or broken down by a choice, yes/no or link field; <strong>Recent items</strong> lists
+							the latest records with the columns picked.
+						</P>
+						<P>
+							Nothing exists to draw yet, so each widget is described in a sentence — “Total of Amount in Transactions by Kind,
+							last 30 days” — and the layout sketch shows how wide each one sits. Give every widget a title; one without is a
+							warning.
+						</P>
 					</Section>
 
 					<Section
 						id='roles'
 						title='Roles'
 						lead='Organization roles the template suggests, besides Owner, Admin and Member.'>
-						<P>A role that already exists in the tenant’s organization is left as it is; only new names are added.</P>
+						<P>
+							Each role has a name, a description and the organization permissions it grants, grouped as Records, Projects and
+							Organization with what each one allows. An Accountant who records transactions but can’t invite anyone gets View,
+							Add and Edit under Records and nothing else.
+						</P>
+						<P>
+							A role that already exists in the tenant’s organization is left as it is; only new names are added. Owner, Admin
+							and Member are in every organization, so those names are never added.
+						</P>
 					</Section>
 
 					<Section
