@@ -171,6 +171,34 @@ export type WidgetsView = {
 };
 export type WidgetsPatch = { widgets?: Record<string, Partial<WidgetSettings>>; theme?: Partial<WidgetTheme> };
 
+/** A published template a new project can start from (backend routes-tenant/templates.router.ts). */
+export type TemplateQuestion = {
+	key: string;
+	label: string;
+	help: string;
+	kind: 'text' | 'textarea' | 'select' | 'currency' | 'locale' | 'color' | 'image' | 'email' | 'url';
+	options?: { value: string; label: string }[];
+	default: string;
+	required: boolean;
+};
+export type ProjectTemplateCard = {
+	key: string;
+	name: string;
+	summary: string;
+	icon: string;
+	version: number;
+	inside: { models: string[]; pages: string[]; sampleRecords: number };
+	questions: TemplateQuestion[];
+};
+export type TemplateApplying = {
+	status: 'building' | 'ready' | 'failed' | null;
+	key?: string;
+	name?: string;
+	error?: string;
+	problems?: string[];
+	result?: { models: { name: string; title: string; route: string }[]; pages: string[]; records: Record<string, number>; warnings: string[] };
+};
+
 export type Webhook = {
 	_id: string;
 	route: string;
@@ -496,7 +524,7 @@ export const tenantApi = mainApi.injectEndpoints({
 			invalidatesTags: ['builder', 'tenant-webhooks'],
 		}),
 
-		/* ---------------------------- webhooks and the API overview (T-09) */
+		/* ---------------------------------------- site widgets (docs/widgets) */
 		getWidgets: builder.query<WidgetsView, void>({
 			query: () => 'widgets',
 			providesTags: ['tenant-widgets'],
@@ -505,6 +533,19 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: body => ({ url: 'widgets', method: 'PUT', body }),
 			invalidatesTags: ['tenant-widgets'],
 		}),
+
+		/* ------------------------- start from a template (docs/templates T-14) */
+		getProjectTemplates: builder.query<{ doc: ProjectTemplateCard[] }, void>({
+			query: () => 'templates',
+		}),
+		applyProjectTemplate: builder.mutation<{ status: 'building'; key: string; name: string }, { key: string; answers: Record<string, string>; sampleData: boolean }>({
+			query: ({ key, ...body }) => ({ url: `templates/${key}/apply`, method: 'POST', body }),
+		}),
+		getTemplateApplying: builder.query<TemplateApplying, void>({
+			query: () => 'templates/applying',
+		}),
+
+		/* ---------------------------- webhooks and the API overview (T-09) */
 		getWebhooks: builder.query<{ doc: Webhook[]; models: { route: string; title: string }[]; events: WebhookEvent[] }, void>({
 			query: () => 'webhooks',
 			providesTags: ['tenant-webhooks'],
@@ -548,6 +589,9 @@ export const {
 	useCreateOrganizationMutation,
 	useGetWidgetsQuery,
 	useSaveWidgetsMutation,
+	useGetProjectTemplatesQuery,
+	useApplyProjectTemplateMutation,
+	useGetTemplateApplyingQuery,
 	useSwitchOrganizationMutation,
 	useTransferOwnershipMutation,
 	useGetMembersQuery,

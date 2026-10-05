@@ -136,12 +136,21 @@ const Projects = () => (
 						any other.
 					</>,
 					<>
-						<strong>A website</strong> — three steps: its name, logo, favicon and colour; its home page (headline, introduction,
-						a button and the search description); and, if you know them, its domain and Google Analytics ID. Then build the
-						rest yourself, or <A href='/user-docs/websites#ai-site'>with your AI</A>.
+						<strong>A website</strong> — start from a website template, or set it up yourself in three steps: its name, logo,
+						favicon and colour; its home page (headline, introduction, a button and the search description); and, if you know
+						them, its domain and Google Analytics ID. Then build the rest yourself, or{' '}
+						<A href='/user-docs/websites#ai-site'>with your AI</A>.
+					</>,
+					<>
+						<strong>An API</strong> — start from an API template when there is one, or build your models as for an app.
 					</>,
 				]}
 			/>
+			<P>
+				A website or API template asks a few questions first (your business name, say) and can add sample records to try it
+				with. It then makes its pages, models, settings and sidebar in the background, usually within a minute; you can leave
+				the page while it works. A template only goes into a new project, once.
+			</P>
 			<P>
 				Every step can be skipped. Come back any time from the dashboard (<em>Get started</em>) or at{' '}
 				<C>/&lt;project&gt;/get-started</C>. Setting a project up needs the Build permission.
