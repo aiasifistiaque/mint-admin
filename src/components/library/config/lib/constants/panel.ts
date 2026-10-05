@@ -147,13 +147,15 @@ export const pagePath = (route = ''): string => {
 /* ------------------------------------------------------------- guides */
 
 /**
- * The tenant panel's guides are the user guides (/user-docs); /docs belongs
- * to the super-admin panel (its guides and the component library). Screens
- * shared by both panels link to a /docs guide — `docsPath` turns that into
- * the user guide covering the same thing, keeping the section anchor (the user
- * guides use the same ids). In the super-admin panel it changes nothing.
+ * The user guides live on their own site (mint-docs, docs.mintapp.shop); the
+ * app's old /user-docs addresses redirect there (next.config.mjs). /docs
+ * belongs to the super-admin panel (its guides and the component library).
+ * Screens shared by both panels link to a /docs guide — in the tenant panel
+ * `docsPath` turns that into the user guide covering the same thing, keeping
+ * the section anchor (the user guides use the same ids). In the super-admin
+ * panel it changes nothing.
  */
-const USER_DOCS = '/user-docs';
+export const DOCS_URL = (process.env.NEXT_PUBLIC_DOCS_URL || 'https://docs.mintapp.shop').replace(/\/+$/, '');
 
 const userDocsFor = (guide: string, anchor: string): [string, string] => {
 	switch (guide) {
@@ -186,5 +188,5 @@ export const docsPath = (href: string): string => {
 	const match = path.match(/^\/docs(?:\/([^/?]+))?/);
 	if (!match) return href;
 	const [page, section] = userDocsFor(match[1] || '', anchor);
-	return `${USER_DOCS}${page ? `/${page}` : ''}${section ? `#${section}` : ''}`;
+	return `${DOCS_URL}${page ? `/${page}` : ''}${section ? `#${section}` : ''}`;
 };

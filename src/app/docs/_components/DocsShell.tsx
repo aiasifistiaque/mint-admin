@@ -1,7 +1,6 @@
 'use client';
 
 import { FC, ReactNode, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { Box } from '@chakra-ui/react';
 import { AuthWrapper } from '@/components/library';
 import { IS_TENANT_PANEL, docsPath } from '@/components/library/config/lib/constants/panel';
@@ -29,10 +28,10 @@ const DocsShell: FC<{ current: string; requireLogin?: boolean; nav?: DocsNav; ch
 	nav,
 	children,
 }) => {
-	const router = useRouter();
 	const toUserGuide = IS_TENANT_PANEL && !nav;
 	useEffect(() => {
-		if (toUserGuide) router.replace(docsPath(`${window.location.pathname}${window.location.hash}`));
+		// The user guides are another site (DOCS_URL): a full page load.
+		if (toUserGuide) window.location.replace(docsPath(`${window.location.pathname}${window.location.hash}`));
 	}, [toUserGuide]);
 	if (toUserGuide) return null;
 

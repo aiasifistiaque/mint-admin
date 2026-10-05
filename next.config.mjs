@@ -8,10 +8,21 @@ const APP_PAGES = readdirSync(fileURLToPath(new URL('./src/app', import.meta.url
 	.filter(d => d.isDirectory() && /^[a-z0-9]/.test(d.name))
 	.map(d => d.name);
 
+// The user guides moved to their own site (mint-docs). Same paths without the
+// /user-docs prefix and the same #anchors, so every old link and bookmark lands
+// on the same section (the browser keeps the #anchor across a redirect).
+const DOCS_URL = (process.env.NEXT_PUBLIC_DOCS_URL || 'https://docs.mintapp.shop').replace(/\/+$/, '');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: false,
 	env: { NEXT_PUBLIC_APP_PAGES: APP_PAGES.join(',') },
+	async redirects() {
+		return [
+			{ source: '/user-docs', destination: DOCS_URL, permanent: false },
+			{ source: '/user-docs/:path*', destination: `${DOCS_URL}/:path*`, permanent: false },
+		];
+	},
 	// The tenant panel (NEXT_PUBLIC_PANEL=tenant) can run next to the admin in dev
 	// from this same folder — each needs its own build output.
 	distDir: process.env.NEXT_DIST_DIR || '.next',
