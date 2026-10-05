@@ -171,6 +171,28 @@ export type WidgetsView = {
 	updatedAt: string | null;
 };
 export type WidgetsPatch = { widgets?: Record<string, Partial<WidgetSettings>>; theme?: Partial<WidgetTheme> };
+/** The shop behind the cart (backend functions/shop.function.ts, docs/widgets W-05): which model is the catalogue and what its fields mean. */
+export type ShopMapping = {
+	product: {
+		model: string;
+		fields: { name: string; price: string; compareAtPrice?: string; image?: string; stock?: string; status?: string; variants?: string };
+		activeValues?: (string | boolean)[];
+		variant?: { name: string; price?: string; priceChange?: string; stock?: string };
+	};
+	cart: { model: string; fields: { product: string; quantity: string; variant?: string; label?: string } } | null;
+	currency: string;
+};
+export type ShopModelField = { key: string; label: string; kind: string; ref?: string; options?: { value: string; label: string }[]; fields?: { key: string; label: string; kind: string }[] };
+export type ShopModel = { name: string; title: string; route: string; publicApi: { enabled: boolean; ownerOnly: boolean; auth: string }; fields: ShopModelField[] };
+export type ShopView = {
+	shop: ShopMapping | null;
+	/** What's saved, when it no longer fits the models (`problem` says why). */
+	saved: ShopMapping | null;
+	problem: string | null;
+	/** A suggestion from the models' names and fields. */
+	guess: ShopMapping | null;
+	models: ShopModel[];
+};
 
 /** A published template a new project can start from (backend routes-tenant/templates.router.ts). */
 export type TemplateQuestion = {
@@ -543,6 +565,14 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: body => ({ url: 'widgets', method: 'PUT', body }),
 			invalidatesTags: ['tenant-widgets'],
 		}),
+		getWidgetsShop: builder.query<ShopView, void>({
+			query: () => 'widgets/shop',
+			providesTags: ['tenant-widgets'],
+		}),
+		saveWidgetsShop: builder.mutation<ShopView, { shop: ShopMapping | null }>({
+			query: body => ({ url: 'widgets/shop', method: 'PUT', body }),
+			invalidatesTags: ['tenant-widgets'],
+		}),
 
 		/* ------------------------- start from a template (docs/templates T-14) */
 		getProjectTemplates: builder.query<{ doc: ProjectTemplateCard[] }, void>({
@@ -603,6 +633,8 @@ export const {
 	useCreateOrganizationMutation,
 	useGetWidgetsQuery,
 	useSaveWidgetsMutation,
+	useGetWidgetsShopQuery,
+	useSaveWidgetsShopMutation,
 	useGetProjectTemplatesQuery,
 	useGetNewProjectTemplatesQuery,
 	useApplyProjectTemplateMutation,

@@ -9,7 +9,8 @@ import { useWorkspace } from '@/components/library/tenant';
 import GuideLink from '@/components/library/tenant/GuideLink';
 import { API_ORIGIN } from '@/components/library/config/lib/constants/panel';
 import { toaster } from '@/components/ui/toaster';
-import { useGetWidgetsQuery, useSaveWidgetsMutation } from '@/components/library/store/services/tenantApi';
+import { useGetWidgetsQuery, useGetWidgetsShopQuery, useSaveWidgetsMutation } from '@/components/library/store/services/tenantApi';
+import ShopPanel from './_components/ShopPanel';
 import type { WidgetSettings, WidgetTheme, WidgetType } from '@/components/library/store/services/tenantApi';
 
 /**
@@ -27,7 +28,6 @@ const PROVIDER_NAMES: Record<string, string> = { stripe: 'Stripe', sslcommerz: '
 
 /** What's planned next (docs/widgets) — shown so tenants know what's coming. */
 const COMING = [
-	{ title: 'Cart', text: 'Add-to-cart buttons on any product, a cart that follows customers between devices.' },
 	{ title: 'Checkout & payments', text: 'Address, delivery and payment — priced by the server, paid only when the provider confirms.' },
 	{ title: 'My orders', text: 'Order history and tracking in the account widget.' },
 	{ title: 'Forms', text: 'Contact and newsletter forms drawn from your models, with spam protection.' },
@@ -66,10 +66,11 @@ const Code: FC<{ children: string }> = ({ children }) => (
 );
 
 /** A page that loads mint.js with these (unsaved) settings — sandboxed, so nothing signs in. */
-const Preview: FC<{ slug: string; theme: WidgetTheme; name: string; settings: WidgetSettings; snippet: string }> = ({ slug, theme, name, settings, snippet }) => {
+const Preview: FC<{ slug: string; theme: WidgetTheme; name: string; settings: WidgetSettings; snippet: string; currency?: string }> = ({ slug, theme, name, settings, snippet, currency }) => {
 	const [dark, setDark] = useState(false);
 	const [html, setHtml] = useState('');
-	const config = JSON.stringify({ theme, widgets: { [name]: { options: settings.options, texts: settings.texts } } });
+	// The cart's preview shows two sample products in the shop's currency (mint.js draws them; nothing is fetched).
+	const config = JSON.stringify({ theme, widgets: { [name]: { options: settings.options, texts: settings.texts } }, shop: { currency: currency || 'USD' } });
 	useEffect(() => {
 		// Typing in a text box shouldn't reload the preview on every key.
 		const t = setTimeout(() => {
@@ -80,7 +81,7 @@ const Preview: FC<{ slug: string; theme: WidgetTheme; name: string; settings: Wi
 					`<script>window.__MINT_PREVIEW__=${safe}</script>` +
 					// Browsers don't let a sandboxed frame reach a local API (dev), so say so rather than stay blank.
 					`<script src="${API_ORIGIN}/public/mint.js" data-project="${slug}" onerror="window.__mintFailed=1"></script></head>` +
-					`<body><div style="display:flex;justify-content:flex-end">${snippet}</div>` +
+					`<body><div style="display:flex;justify-content:flex-end;align-items:center;gap:10px;flex-wrap:wrap">${snippet}</div>` +
 					`<p id="failed" hidden style="font-size:13px;opacity:.7">The preview couldn’t load mint.js from ${API_ORIGIN}.</p>` +
 					`<script>if(window.__mintFailed)document.getElementById('failed').hidden=false</script></body></html>`
 			);
@@ -155,11 +156,13 @@ const OptionInput: FC<{ o: WidgetType['options'][number]; value: any; onChange: 
 	);
 };
 
-const WidgetPanel: FC<{ type: WidgetType; value: WidgetSettings; theme: WidgetTheme; slug: string; onChange: (v: WidgetSettings) => void }> = ({
+const WidgetPanel: FC<{ type: WidgetType; value: WidgetSettings; theme: WidgetTheme; slug: string; currency?: string; needsShop?: boolean; onChange: (v: WidgetSettings) => void }> = ({
 	type,
 	value,
 	theme,
 	slug,
+	currency,
+	needsShop,
 	onChange,
 }) => {
 	const [texts, setTexts] = useState(false);
@@ -189,6 +192,14 @@ const WidgetPanel: FC<{ type: WidgetType; value: WidgetSettings; theme: WidgetTh
 				mb={4}>
 				{type.description}
 			</Text>
+			{needsShop && (
+				<Text
+					fontSize='13px'
+					color='orange.fg'
+					mb={4}>
+					Set up the Shop above first — the cart can’t be switched on without it.
+				</Text>
+			)}
 			<Grid
 				templateColumns={{ base: '1fr', lg: 'minmax(0, 1fr) minmax(0, 1fr)' }}
 				gap={5}>
@@ -248,6 +259,13 @@ const WidgetPanel: FC<{ type: WidgetType; value: WidgetSettings; theme: WidgetTh
 							mt={1}>
 							Anywhere in your HTML, as many times as you like. Add <code>data-</code> attributes to change an option there,
 							e.g. <code>data-layout=&quot;button&quot;</code>.
+							{type.name === 'cart' && (
+								<>
+									{' '}
+									Put <code>data-mint-add</code> on any button with the product’s id (its record’s ID) — add{' '}
+									<code>data-mint-variant=&quot;Large&quot;</code> to skip the variant picker.
+								</>
+							)}
 						</Text>
 					</Box>
 				</Flex>
@@ -257,6 +275,7 @@ const WidgetPanel: FC<{ type: WidgetType; value: WidgetSettings; theme: WidgetTh
 					name={type.name}
 					settings={value}
 					snippet={type.snippet}
+					currency={currency}
 				/>
 			</Grid>
 			{!value.enabled && (
@@ -277,6 +296,7 @@ export default function WidgetsPage() {
 	const { data, isLoading } = useGetWidgetsQuery(undefined, { skip: !allowed });
 	const { data: org } = useGetOrganizationQuery();
 	const [save, saving] = useSaveWidgetsMutation();
+	const { data: shop } = useGetWidgetsShopQuery(undefined, { skip: !allowed });
 	const [draft, setDraft] = useState<Draft | null>(null);
 
 	useEffect(() => {
@@ -329,7 +349,7 @@ export default function WidgetsPage() {
 						color='fg.muted'
 						lineHeight='1.6'
 						mb={3}>
-						Widgets are ready-made pieces for your own website or app — sign-in today; cart, checkout, forms and more next.
+						Widgets are ready-made pieces for your own website or app — sign-in and a cart today; checkout, forms and more next.
 						Add this tag once to every page (in <code>&lt;head&gt;</code> or before <code>&lt;/body&gt;</code>), then put each
 						widget where it should appear. They take your colours, don’t touch your site’s styles, and your own code can use
 						them through <code>window.Mint</code>.
@@ -430,6 +450,8 @@ export default function WidgetsPage() {
 					)}
 				</Panel>
 
+				{allowed && <ShopPanel />}
+
 				{isLoading || !draft || !data ? (
 					<Skeleton h='420px' />
 				) : (
@@ -440,6 +462,8 @@ export default function WidgetsPage() {
 							value={draft.widgets[type.name]}
 							theme={draft.theme}
 							slug={project?.publicSlug || ''}
+							currency={shop?.shop?.currency || shop?.guess?.currency}
+							needsShop={type.name === 'cart' && !!shop && !shop.shop}
 							onChange={v => setDraft(d => (d ? { ...d, widgets: { ...d.widgets, [type.name]: v } } : d))}
 						/>
 					))

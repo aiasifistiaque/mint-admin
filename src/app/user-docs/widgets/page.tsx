@@ -5,7 +5,7 @@ import { A, C, CodeBlock, List, Note, P, Section, Terms } from '../../docs/_comp
 
 /**
  * Site widgets (backend docs/widgets): the mint.js script, the shared look,
- * the login widget, window.Mint and what's coming. The panel's Widgets page
+ * the login widget, the shop and the cart (W-05), window.Mint and what's coming. The panel's Widgets page
  * (src/app/widgets) links each panel here — the section ids are GuideLink
  * targets (GuideLink.tsx GUIDE_OF).
  */
@@ -14,6 +14,8 @@ const SECTIONS = [
 	{ id: 'add-mint', title: 'Add MINT to your site' },
 	{ id: 'look', title: 'The look' },
 	{ id: 'login', title: 'Login & account' },
+	{ id: 'shop', title: 'Shop' },
+	{ id: 'cart', title: 'Cart' },
 	{ id: 'mint-js', title: 'Mint in your own code' },
 	{ id: 'coming-next', title: 'Coming next' },
 	{ id: 'faq', title: 'Troubleshooting' },
@@ -110,6 +112,73 @@ const Widgets = () => (
 		</Section>
 
 		<Section
+			id='shop'
+			title='Shop'
+			lead='Tell the widgets which model is your catalogue. The cart, and later checkout, read prices and stock from it.'>
+			<P>
+				Widgets don’t assume what your models are called. On the Widgets page, under <em>Shop</em>, pick the model that
+				holds your products and say what its fields mean. If your project came from the E-commerce or Products & orders
+				template, this is filled in for you: check it and save.
+			</P>
+			<Terms
+				head={['Part', 'What it is']}
+				rows={[
+					['Name, Price', 'Required. A text field and a number (or formula) field.'],
+					['Compare-at price', 'The old price, shown crossed out when it’s higher than the price.'],
+					['Image', 'An image or images field; the first image shows in the cart.'],
+					['Stock', 'A number field. Leave it as none if you never run out. A cart can’t hold more than is in stock.'],
+					['Status', <>Which values mean <em>for sale</em>, e.g. Active. Drafts and archived products can’t be added to a cart.</>],
+					['Variants', 'A list field (sizes, colours) with a name, then either the product’s price plus or minus, or a price of its own, and optionally its own stock.'],
+					['Carts kept in', <>MINT (nothing to set up), or a model of yours with a link to the products model and a quantity field. Your own model shows every cart line as a record your team sees; its public API must be on, owner-only.</>],
+					['Currency', 'The three-letter code your prices are in, e.g. BDT or USD.'],
+				]}
+			/>
+			<Note>
+				Prices are always read from your catalogue on our server. A page can’t change what something costs, however its
+				code is edited. Change a price in the panel and every cart shows the new one.
+			</Note>
+		</Section>
+
+		<Section
+			id='cart'
+			title='Cart'
+			lead='Add-to-cart buttons on any product, a cart button with a count, and a cart drawer.'>
+			<P>
+				Set up the <A href='#shop'>Shop</A> first, then switch the Cart on. Put the cart where it should show, and{' '}
+				<C>data-mint-add</C> on any button with the product’s ID (the ID on its record page):
+			</P>
+			<CodeBlock
+				label='cart and add-to-cart buttons'
+				code={`<div data-mint="cart"></div>
+
+<button data-mint-add="PRODUCT_ID">Add to cart</button>
+<button data-mint-add="PRODUCT_ID" data-mint-variant="Large" data-mint-quantity="2">Add two, large</button>`}
+			/>
+			<P>
+				A product with variants opens a picker that shows each variant’s price and which ones are sold out. Name the
+				variant with <C>data-mint-variant</C> to skip it.
+			</P>
+			<Terms
+				head={['Option', 'Choices']}
+				rows={[
+					['Layout', <>A cart button that opens a drawer (suits a header), or the cart itself on the page (suits a <C>/cart</C> page).</>],
+					['Checkout page', <>Where the Checkout button goes, e.g. <C>/checkout</C>. Empty: no Checkout button. The checkout widget is coming next.</>],
+					['Open the cart when something’s added', 'Off: a short “Added to your cart” message instead.'],
+				]}
+			/>
+			<P>
+				<strong>Guests and accounts.</strong> A guest’s cart is kept in their browser. When they sign in or create an
+				account, it joins their account’s cart, and from then on it follows them between phone and laptop. Signing out
+				leaves an empty cart on that browser.
+			</P>
+			<P>
+				<strong>Stock and prices.</strong> If someone asks for more than you have, the quantity is cut to what’s in stock
+				and the cart says so. Sold-out products stay in the cart, marked, and aren’t counted in the subtotal. Products
+				you stop selling disappear from carts.
+			</P>
+		</Section>
+
+		<Section
 			id='mint-js'
 			title='Mint in your own code'
 			lead='mint.js gives your page’s scripts window.Mint.'>
@@ -123,7 +192,12 @@ const Widgets = () => (
 					[<C key='o'>Mint.auth.signOut()</C>, 'Signs out on this browser.'],
 					[<C key='c'>Mint.auth.onChange(cb)</C>, 'Calls cb with the customer (or null) on every sign-in and sign-out.'],
 					[<C key='a'>Mint.api(path, init)</C>, <>Calls your public API, as the customer when one is signed in. Gives a <C>fetch</C> Response.</>],
-					[<C key='e'>Mint.on(event, cb)</C>, <>Listens for widget events, e.g. <C>auth</C>. They also fire on <C>document</C> as <C>mint:auth</C>.</>],
+					[<C key='e'>Mint.on(event, cb)</C>, <>Listens for widget events, e.g. <C>auth</C> or <C>cart</C>. They also fire on <C>document</C> as <C>mint:auth</C>, <C>mint:cart</C>.</>],
+					[<C key='cr'>await Mint.cart.ready</C>, 'Waits until the cart is loaded. Then Mint.cart.lines, .count, .subtotal and .currency are set.'],
+					[<C key='ca'>Mint.cart.add(id, {'{ variant, quantity }'})</C>, 'Adds a product. Gives the updated cart.'],
+					[<C key='cs'>Mint.cart.set(id, quantity, variant)</C>, <>Sets a line’s quantity; 0 removes it. Also <C>remove(id, variant)</C> and <C>clear()</C>.</>],
+					[<C key='cp'>Mint.cart.product(id)</C>, 'A product as the cart sees it: name, price, variants with their price and stock.'],
+					[<C key='cf'>Mint.cart.format(amount)</C>, 'An amount in your currency, written the visitor’s way.'],
 				]}
 			/>
 			<CodeBlock
@@ -151,9 +225,6 @@ const Widgets = () => (
 			lead='Being built now, roughly in this order.'>
 			<List
 				items={[
-					<>
-						<strong>Cart</strong>: add-to-cart buttons on any product, and a cart that follows the customer between devices.
-					</>,
 					<>
 						<strong>Checkout & payments</strong>: address, delivery and payment, with prices worked out on the server. Payments go
 						to your own merchant account. Which providers you can use depends on your organization’s country: Stripe everywhere,
@@ -186,6 +257,8 @@ const Widgets = () => (
 					['A change doesn’t show', 'Sites pick up saved changes within a minute. Reload the page.'],
 					['The colours clash with my page', <>Set <em>Light or dark</em> to Always light or Always dark, or pick a colour under <em>Look</em>.</>],
 					['Signed in, but my API calls get 401', <>Use <C>Mint.api</C>: plain <C>fetch</C> doesn’t send the customer’s token.</>],
+					['The cart won’t switch on', <>Set up the <A href='#shop'>Shop</A> first and save it.</>],
+					['An add-to-cart button does nothing', <>Check the product ID (a wrong one, or a product that isn’t for sale, shows “Not found”) and that it isn’t sold out.</>],
 				]}
 			/>
 		</Section>

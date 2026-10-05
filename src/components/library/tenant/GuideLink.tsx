@@ -46,6 +46,8 @@ const GUIDE_OF: Record<string, string> = {
 	'add-mint': 'widgets',
 	look: 'widgets',
 	login: 'widgets',
+	shop: 'widgets',
+	cart: 'widgets',
 	'mint-js': 'widgets',
 	'coming-next': 'widgets',
 	websites: 'websites',
