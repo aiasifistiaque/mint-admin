@@ -1,4 +1,5 @@
 import {
+	Blocks,
 	Boxes,
 	Building2,
 	ChartLine,
@@ -209,6 +210,20 @@ export const USER_GUIDES: Guide[] = [
 			{ id: 'mint-auth', title: 'MintAuth in your code' },
 			{ id: 'own-form', title: 'Your own sign-in form' },
 			{ id: 'manage', title: 'Managing customers' },
+		],
+	},
+	{
+		href: '/user-docs/widgets',
+		title: 'Widgets',
+		name: 'Site widgets',
+		description: 'Ready-made pieces for your own site — sign-in today, cart and checkout next — added with one script and styled to match.',
+		icon: Blocks,
+		group: 'Go live',
+		topics: [
+			{ id: 'add-mint', title: 'Add MINT to your site' },
+			{ id: 'look', title: 'The look' },
+			{ id: 'login', title: 'Login & account' },
+			{ id: 'mint-js', title: 'Mint in your own code' },
 		],
 	},
 	{

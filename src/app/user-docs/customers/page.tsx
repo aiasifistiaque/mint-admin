@@ -61,6 +61,10 @@ const Customers = () => (
 					'The signed-in customer is remembered in their browser for 30 days.',
 				]}
 			/>
+			<Note>
+				The newer <A href='/user-docs/widgets#login'>Login & account widget</A> does the same with options, your own texts
+				and your site’s look, set in the panel under Widgets.
+			</Note>
 		</Section>
 
 		<Section

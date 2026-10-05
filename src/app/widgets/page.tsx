@@ -78,8 +78,11 @@ const Preview: FC<{ slug: string; theme: WidgetTheme; name: string; settings: Wi
 				`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">` +
 					`<style>body{margin:0;padding:20px;min-height:100vh;box-sizing:border-box;background:${dark ? '#111113' : '#f5f5f4'};color:${dark ? '#eee' : '#222'};font-family:system-ui,sans-serif}</style>` +
 					`<script>window.__MINT_PREVIEW__=${safe}</script>` +
-					`<script src="${API_ORIGIN}/public/mint.js" data-project="${slug}"></script></head>` +
-					`<body><div style="display:flex;justify-content:flex-end">${snippet}</div></body></html>`
+					// Browsers don't let a sandboxed frame reach a local API (dev), so say so rather than stay blank.
+					`<script src="${API_ORIGIN}/public/mint.js" data-project="${slug}" onerror="window.__mintFailed=1"></script></head>` +
+					`<body><div style="display:flex;justify-content:flex-end">${snippet}</div>` +
+					`<p id="failed" hidden style="font-size:13px;opacity:.7">The preview couldn’t load mint.js from ${API_ORIGIN}.</p>` +
+					`<script>if(window.__mintFailed)document.getElementById('failed').hidden=false</script></body></html>`
 			);
 		}, 350);
 		return () => clearTimeout(t);
