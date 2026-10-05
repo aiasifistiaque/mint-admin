@@ -41,7 +41,9 @@
     ".next-tenantscratch/types/**/*.ts",
     ".next-tenantscratch/dev/types/**/*.ts",
     ".next-adminscratch/types/**/*.ts",
-    ".next-adminscratch/dev/types/**/*.ts"
+    ".next-adminscratch/dev/types/**/*.ts",
+    ".next-tenant5021/types/**/*.ts",
+    ".next-tenant5021/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
