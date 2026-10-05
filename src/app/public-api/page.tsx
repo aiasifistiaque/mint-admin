@@ -12,12 +12,13 @@ import GuideLink from '@/components/library/tenant/GuideLink';
 import type { PublicApi } from '@/components/library/store/services/tenantApi';
 import ApiReference from './_components/ApiReference';
 import ApiTester, { Trial } from './_components/ApiTester';
+import ReadOnlyFields from './_components/ReadOnlyFields';
 import type { ApiInfo, Endpoint } from './_components/api';
 
 /**
  * The project's public API (tenant panel; backend routes-public): which models
  * the tenant's own site or app can read and write, whether that needs a
- * signed-in customer, and the snippets — the login widget and, for a website,
+ * signed-in customer, which fields only the team sets (read-only), and the snippets — the login widget and, for a website,
  * the analytics tracker. Building permission (`build`) changes them. Below
  * them, the API reference (from what the live API says it offers) and a tester
  * that sends real requests to it.
@@ -31,7 +32,7 @@ const ACTIONS: { value: PublicApi['actions'][number]; label: string; method: str
 	{ value: 'delete', label: 'Delete', method: 'DELETE /<route>/:id' },
 ];
 
-const OFF: PublicApi = { enabled: false, actions: [], auth: 'none', ownerOnly: false };
+const OFF: PublicApi = { enabled: false, actions: [], auth: 'none', ownerOnly: false, readOnlyFields: [] };
 
 /** The API's public address: the backend's root, without /tenant/api. */
 const publicBase = () => BACKEND.replace(/\/tenant\/api\/?$/, '');
@@ -77,7 +78,7 @@ const Snippet: FC<{ code: string; label: string }> = ({ code, label }) => {
 
 const ModelRow: FC<{ model: any; base: string; editable: boolean }> = ({ model, base, editable }) => {
 	const [update, { isLoading, error }] = useUpdatePublicApiMutation();
-	const saved: PublicApi = { ...OFF, ...(model.publicApi || {}), actions: model.publicApi?.actions || [] };
+	const saved: PublicApi = { ...OFF, ...(model.publicApi || {}), actions: model.publicApi?.actions || [], readOnlyFields: model.publicApi?.readOnlyFields || [] };
 	const [api, setApi] = useState<PublicApi>(saved);
 	useEffect(() => setApi(saved), [JSON.stringify(model.publicApi || {})]);
 
@@ -85,7 +86,10 @@ const ModelRow: FC<{ model: any; base: string; editable: boolean }> = ({ model, 
 		setApi(next);
 		// Turning it on with nothing chosen starts with reading.
 		const body = next.enabled && !next.actions.length ? { ...next, actions: ['list', 'get'] as PublicApi['actions'] } : next;
-		update({ id: model._id, ...body });
+		// Refused (a read-only field with no default, say): back to what's saved; the message stays below.
+		update({ id: model._id, ...body })
+			.unwrap()
+			.catch(() => setApi(saved));
 	};
 	const toggleAction = (a: PublicApi['actions'][number]) =>
 		save({ ...api, actions: api.actions.includes(a) ? api.actions.filter(x => x !== a) : [...api.actions, a] });
@@ -176,6 +180,14 @@ const ModelRow: FC<{ model: any; base: string; editable: boolean }> = ({ model, 
 						/>
 					</Box>
 				</Flex>
+			)}
+			{api.enabled && (api.actions.includes('create') || api.actions.includes('update')) && (
+				<ReadOnlyFields
+					fields={model.fields || []}
+					value={api.readOnlyFields || []}
+					disabled={!editable || isLoading}
+					onChange={readOnlyFields => save({ ...api, readOnlyFields })}
+				/>
 			)}
 			{error && (
 				<Text

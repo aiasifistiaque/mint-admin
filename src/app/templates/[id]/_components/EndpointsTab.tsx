@@ -6,6 +6,7 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import { Dropdown, Panel } from '@/components/library/cl';
 import { BACKEND } from '@/components/library/config/lib/constants/panel';
 import ExampleRequest from '@/app/public-api/_components/ExampleRequest';
+import ReadOnlyFields from '@/app/public-api/_components/ReadOnlyFields';
 import { ApiModel, endpointsOf } from '@/app/public-api/_components/api';
 import { Intro, Label } from '../../_components/ui';
 import { TemplateModel, templateModels } from './models';
@@ -13,12 +14,21 @@ import type { TabProps } from './types';
 
 /**
  * The Public API tab: which of the template's models the new project opens to
- * the tenant's own site or app, with which actions, for whom, and a note the
+ * the tenant's own site or app, with which actions, for whom, which fields
+ * only the business sets (read-only — never written by the API), and a note the
  * project's API reference shows. Each model's endpoints come with example
  * requests (curl and fetch) — the same as the project's reference shows.
  */
 
-export type EndpointSpec = { model: string; actions: string[]; auth: 'none' | 'customer'; ownerOnly: boolean; note: string };
+export type EndpointSpec = {
+	model: string;
+	actions: string[];
+	auth: 'none' | 'customer';
+	ownerOnly: boolean;
+	/** Field keys the public API never writes (an order's status): creates get the default, updates ignore them. */
+	readOnly?: string[];
+	note: string;
+};
 
 const ACTIONS = [
 	{ value: 'list', label: 'List', method: 'GET /<route>' },
@@ -40,7 +50,14 @@ const asApiModel = (m: TemplateModel, e: EndpointSpec): ApiModel => ({
 	ownerOnly: e.ownerOnly,
 	fields: m.fields
 		.filter((f: any) => f.key && f.kind !== 'section' && f.kind !== 'sectionlist')
-		.map((f: any) => ({ key: f.key, label: f.label || f.key, kind: f.kind, required: !!f.required, options: (f.options || []).map((o: any) => o?.value ?? o) })),
+		.map((f: any) => ({
+			key: f.key,
+			label: f.label || f.key,
+			kind: f.kind,
+			required: !!f.required,
+			options: (f.options || []).map((o: any) => o?.value ?? o),
+			readOnly: f.kind === 'formula' || (e.readOnly || []).includes(f.key),
+		})),
 });
 
 const Examples: FC<{ m: TemplateModel; e: EndpointSpec }> = ({ m, e }) => {
@@ -100,7 +117,9 @@ const EndpointsTab: FC<TabProps<EndpointSpec[]>> = ({ doc, value, onChange }) =>
 			<Intro section='endpoints'>
 				Which of the template’s models the new project opens to the tenant’s own site or app — a booking form that creates
 				bookings, an app that lists products — and who may call them: anyone, or customers who signed in to the project. The note
-				says what each is for; the project’s API reference shows it. Everything else stays private to the panel.
+				says what each is for; the project’s API reference shows it. Where customers create or update records, tick the read-only
+				fields only the business sets — an order’s status, a payment reference — so a request can’t mark its own order paid.
+				Everything else stays private to the panel.
 			</Intro>
 
 			<Panel
@@ -207,6 +226,13 @@ const EndpointsTab: FC<TabProps<EndpointSpec[]>> = ({ doc, value, onChange }) =>
 											onChange={x => set(m.name, { note: x.target.value })}
 										/>
 									</Box>
+									{(e.actions.includes('create') || e.actions.includes('update')) && (
+										<ReadOnlyFields
+											fields={m.fields}
+											value={e.readOnly || []}
+											onChange={readOnly => set(m.name, { readOnly })}
+										/>
+									)}
 									{mine.map((x: any, k: number) => (
 										<Text
 											key={k}

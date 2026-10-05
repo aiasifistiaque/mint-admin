@@ -270,6 +270,14 @@ const TemplatesDocs = () => {
 							customers. An API template with no endpoints is a warning too, and so is a model whose address is taken in every
 							project (<code>/projects</code> would become <code>/projects2</code>): give it a route of its own.
 						</P>
+						<P>
+							Where the API creates or updates records, tick its <strong>read-only fields</strong> (<code>readOnly</code> in the
+							blueprint and the MCP): what only the business sets — an order’s status, payment reference, tracking link; a
+							booking’s confirmation. The project’s API never writes them: a create gets the field’s default, an update leaves it
+							as it is — so a customer can’t send <code>{'"status": "paid"'}</code>. A key that isn’t one of the model’s fields
+							is an error, and so is a required field with no default while create is on (every create would fail): give it a
+							default. Use it on every model customers write to.
+						</P>
 					</Section>
 
 					<Section

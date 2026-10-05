@@ -190,6 +190,7 @@ export const USER_GUIDES: Guide[] = [
 		group: 'Go live',
 		topics: [
 			{ id: 'turn-on', title: 'Making a model public' },
+			{ id: 'read-only', title: 'Read-only fields' },
 			{ id: 'list', title: 'Listing and paging' },
 			{ id: 'filters', title: 'Filters' },
 			{ id: 'search', title: 'Search' },

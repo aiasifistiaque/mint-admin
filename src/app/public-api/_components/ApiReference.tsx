@@ -20,6 +20,7 @@ import {
 	exampleRecord,
 	filtersOf,
 	listExamples,
+	sendable,
 } from './api';
 
 /**
@@ -259,12 +260,13 @@ const details = (e: Endpoint, model: ApiModel | undefined, onTry: (e: Endpoint) 
 		);
 	}
 	if (model && (e.method === 'POST' || e.method === 'PUT')) {
+		const readOnly = model.fields.filter(f => !sendable(f) && f.kind !== 'formula');
 		parts.push(
 			<Box key='b'>
 				<Label>Body (JSON)</Label>
 				<Params
 					rows={model.fields
-						.filter(f => f.kind !== 'formula')
+						.filter(sendable)
 						.map(f => [
 							f.key,
 							f.kind,
@@ -278,6 +280,13 @@ const details = (e: Endpoint, model: ApiModel | undefined, onTry: (e: Endpoint) 
 					color='fg.muted'
 					mt={1.5}>
 					Other keys are ignored. Calculated fields are worked out by the server.
+					{readOnly.length > 0 && (
+						<>
+							{' '}
+							Read-only — set by the business, never by the API (sent, they’re ignored{e.method === 'POST' ? '; a new record gets their default' : ''}):{' '}
+							<Mono>{readOnly.map(f => f.key).join(', ')}</Mono>.
+						</>
+					)}
 				</Text>
 			</Box>
 		);
@@ -532,6 +541,8 @@ const ApiReference: FC<{ base: string; info: ApiInfo | null; error?: string; onT
 					isn’t valid, 401 the endpoint needs a signed-in customer, 404 not found (or not public), 429 too many requests — wait a
 					moment. Endpoints marked <em>Customer</em> need <code>Authorization: Bearer &lt;token&gt;</code>, the token from sign-in.
 					{models.some(m => m.ownerOnly) && ' On “own records” models each customer only reaches the records they created.'}
+					{models.some(m => m.fields.some(f => f.readOnly && f.kind !== 'formula')) &&
+						' Read-only fields (an order’s status, a payment reference) are set by your team, never by a request: sent, they’re ignored.'}
 				</Text>
 			</Flex>
 

@@ -4,7 +4,15 @@
  * tester build from it: endpoints, example bodies, example responses.
  */
 
-export type ApiField = { key: string; label: string; kind: string; required: boolean; options?: string[] };
+export type ApiField = {
+	key: string;
+	label: string;
+	kind: string;
+	required: boolean;
+	options?: string[];
+	/** Never written by the API — a formula, or a field the builder made read-only (an order's status). Sent, it's ignored. */
+	readOnly?: boolean;
+};
 /** A field a list can be filtered by, and its operators (`eq` is `key=value`, the rest `key_<op>=value`). */
 export type ApiFilter = { key: string; kind: string; ops: string[] };
 export type ApiModel = {
@@ -132,8 +140,8 @@ export const listExamples = (m: ApiModel): { path: string; note: string }[] => {
 	return out;
 };
 
-// Formula fields are worked out by the server; they come back but can't be sent.
-const sendable = (f: ApiField) => f.kind !== 'formula';
+// Formula fields are worked out by the server and read-only ones are the business's: they come back but can't be sent.
+export const sendable = (f: ApiField) => f.kind !== 'formula' && !f.readOnly;
 
 /** A plausible value for a field, for example bodies and responses. */
 export const exampleOf = (f: ApiField): any => {

@@ -173,7 +173,14 @@ export type ApiOverview = {
 	deliveries: WebhookDelivery[];
 };
 
-export type PublicApi = { enabled: boolean; actions: ('list' | 'get' | 'create' | 'update' | 'delete')[]; auth: 'none' | 'customer'; ownerOnly: boolean };
+export type PublicApi = {
+	enabled: boolean;
+	actions: ('list' | 'get' | 'create' | 'update' | 'delete')[];
+	auth: 'none' | 'customer';
+	ownerOnly: boolean;
+	/** Fields the public API never writes (an order's status) — creates get the default, updates ignore them. */
+	readOnlyFields?: string[];
+};
 
 /** A website project's settings (WO-34, WO-38; backend siteConfig.function.ts → WebsiteSettings). */
 export type SiteTracking = {

@@ -14,6 +14,7 @@ const SECTIONS = [
 	{ id: 'public-api', title: 'What it is' },
 	{ id: 'turn-on', title: 'Making a model public' },
 	{ id: 'who', title: 'Who may call it' },
+	{ id: 'read-only', title: 'Read-only fields' },
 	{ id: 'address', title: 'The address' },
 	{ id: 'requests', title: 'Requests' },
 	{ id: 'list', title: 'Listing and paging' },
@@ -67,6 +68,10 @@ const PublicApi = () => (
 						<strong>Update</strong>, <strong>Delete</strong>.
 					</>,
 					<>Choose who may call it (next section). Changes apply at once.</>,
+					<>
+						With Create or Update ticked, tick the <A href='#read-only'>read-only fields</A> — what only your team sets, like an
+						order’s status.
+					</>,
 				]}
 			/>
 			<P>
@@ -103,6 +108,34 @@ const PublicApi = () => (
 		</Section>
 
 		<Section
+			id='read-only'
+			title='Read-only fields'
+			lead='What only your team sets — never a request. Public API → the model → Read-only fields (shown when Create or Update is ticked).'>
+			<P>
+				A customer who can create an order shouldn’t be able to send <C>{'"status": "paid"'}</C> with it. Tick the fields your
+				business controls — an order’s status, payment reference, tracking link; a booking’s confirmation — and the API never
+				writes them:
+			</P>
+			<Terms
+				head={['Request', 'What happens to a read-only field']}
+				rows={[
+					['Create (POST)', 'Whatever is sent for it is ignored; the new record gets the field’s default (or stays empty).'],
+					['Update (PUT)', 'Whatever is sent for it is ignored; it keeps the value it has. The other fields are still saved.'],
+					['List, Read one', 'It comes back as usual — your site can show the status, it just can’t change it.'],
+				]}
+			/>
+			<P>
+				Requests aren’t refused for sending one, so a site can send back a record it read. Your team still changes these fields
+				in the panel as usual — a webhook on the model tells your server when a new order comes in. <C>GET {PUBLIC_API}/</C> and the{' '}
+				<A href='#reference'>API reference</A> mark them <C>readOnly</C>; calculated (formula) fields are always read-only.
+			</P>
+			<Note tone='warn'>
+				A required field with no default can’t be read-only while Create is on — every new record would be missing it. Give the
+				field a default in Models (an order’s status: <C>pending</C>), or let the API write it.
+			</Note>
+		</Section>
+
+		<Section
 			id='address'
 			title='The address'>
 			<P>
@@ -116,7 +149,8 @@ const PublicApi = () => (
 			/>
 			<P>
 				<C>GET {PUBLIC_API}/</C> describes the project: its name and kind, and every public model with its actions, who may
-				call it, and its fields (key, label, kind, required, allowed values) — handy for checking what’s on.
+				call it, and its fields (key, label, kind, required, allowed values, and <C>readOnly</C> on those a request can’t write)
+				— handy for checking what’s on.
 			</P>
 		</Section>
 
@@ -472,7 +506,10 @@ async function loadMore() {
 			title='Creating and updating'>
 			<List
 				items={[
-					'Send the model’s fields as JSON. Anything else is ignored; calculated (formula) fields are worked out on the server, whatever you send.',
+					<>
+						Send the model’s fields as JSON. Anything else is ignored; calculated (formula) fields are worked out on the server,
+						and <A href='#read-only'>read-only fields</A> are left to your team, whatever you send.
+					</>,
 					'Create answers 201 with the new record. Update changes only the fields you send and answers with the record.',
 					'The same checks as the panel apply: required fields, allowed values, min/max, unique fields.',
 				]}
@@ -717,6 +754,17 @@ if (!res.ok) throw new Error(data.message);`}
 					['A date filter is a day off', 'Plain days are UTC. For your own time zone, send moments with the zone: date_gte=2026-10-04T00:00:00+06:00.'],
 					['A record is in the panel but not in the API', 'It’s archived, it’s kept private to some of the team, or the model is own-records-only.'],
 					['A customer can’t see an order made in the panel', 'Own-records-only models show customers only what they created.'],
+					[
+						'A field I send doesn’t change',
+						<>
+							It’s <A href='#read-only'>read-only</A> on the Public API page (only your team sets it), or it’s calculated. GET{' '}
+							<C key='g'>/</C> marks both <C key='r'>readOnly</C>.
+						</>,
+					],
+					[
+						'Can’t make a field read-only: “required and has no default”',
+						'With Create on, every new record needs it. Give the field a default in Models, then tick it.',
+					],
 				]}
 			/>
 		</Section>
