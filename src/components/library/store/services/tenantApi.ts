@@ -187,7 +187,7 @@ export type ProjectTemplateCard = {
 	summary: string;
 	icon: string;
 	version: number;
-	inside: { models: string[]; pages: string[]; sampleRecords: number };
+	inside: { models: string[]; pages: string[]; sidebar?: string[]; widgets?: number; roles?: string[]; sampleRecords: number };
 	questions: TemplateQuestion[];
 };
 export type TemplateApplying = {
@@ -196,7 +196,16 @@ export type TemplateApplying = {
 	name?: string;
 	error?: string;
 	problems?: string[];
-	result?: { models: { name: string; title: string; route: string }[]; pages: string[]; records: Record<string, number>; warnings: string[] };
+	result?: {
+		models: { name: string; title: string; route: string }[];
+		pages: string[];
+		categories?: string[];
+		widgets?: number;
+		roles?: { created: string[]; skipped: string[] };
+		endpoints?: string[];
+		records: Record<string, number>;
+		warnings: string[];
+	};
 };
 
 export type Webhook = {

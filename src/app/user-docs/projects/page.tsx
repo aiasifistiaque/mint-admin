@@ -130,10 +130,8 @@ const Projects = () => (
 			<List
 				items={[
 					<>
-						<strong>An app</strong> — start from a template (<em>Clients & invoices</em>, <em>Projects & tasks</em>,{' '}
-						<em>Leads pipeline</em>, <em>Products & stock</em>), build your first model step by step, or{' '}
-						<A href='/user-docs/connect-ai'>describe it to your AI</A>. A template makes ordinary models you can change like
-						any other.
+						<strong>An app</strong> — start from a template (a CRM, finance, inventory, clients & invoices and more), build
+						your first model step by step, or <A href='/user-docs/connect-ai'>describe it to your AI</A>.
 					</>,
 					<>
 						<strong>A website</strong> — start from a website template, or set it up yourself in three steps: its name, logo,
@@ -147,9 +145,10 @@ const Projects = () => (
 				]}
 			/>
 			<P>
-				A website or API template asks a few questions first (your business name, say) and can add sample records to try it
-				with. It then makes its pages, models, settings and sidebar in the background, usually within a minute; you can leave
-				the page while it works. A template only goes into a new project, once.
+				Every template — app, API or website — works the same way. It asks a few questions first (your business name, say)
+				and can add sample records to try it with. Then it builds the whole thing in the background, usually within a minute:
+				models, pages, sidebar, dashboard, roles and sample records. You can leave the page while it works. Everything it
+				makes is ordinary and changes like anything you built yourself. A template only goes into a new project, once.
 			</P>
 			<P>
 				Every step can be skipped. Come back any time from the dashboard (<em>Get started</em>) or at{' '}

@@ -30,10 +30,10 @@ import type { ProjectTemplateCard, TemplateQuestion } from '@/components/library
 
 /**
  * A new project's first stop (WO-35), opened right after it's created:
- * an app picks a starter template, the model wizard or its own AI; a website
- * (or an API project) can start from a published template of its kind
+ * any project can start from a published template of its kind
  * (docs/templates T-14: questions, sample data, built in the background), or
- * get its name, logo, favicon and colour, a home page, and (optionally) its
+ * set itself up: an app or API with the model wizard or its own AI, a website
+ * with its name, logo, favicon and colour, a home page, and (optionally) its
  * domain and Google Analytics — then the overview takes over. Skippable;
  * everything it makes is ordinary and changes later in the usual places.
  */
@@ -122,9 +122,14 @@ const Choice: FC<{ icon: any; title: string; text: string; href: string; cta: st
 	</Panel>
 );
 
-const AppStart: FC<{ name: string }> = ({ name }) => {
+/**
+ * An app's own start: the model wizard or its AI — and, only when no app
+ * template is published (`starters`), the built-in model-only starters.
+ * Published templates are offered by TemplateStart first, with the full build.
+ */
+const AppStart: FC<{ name: string; starters?: boolean }> = ({ name, starters = true }) => {
 	const router = useRouter();
-	const { data, isLoading } = useGetStartersQuery();
+	const { data, isLoading } = useGetStartersQuery(undefined, { skip: !starters });
 	const [build, { isLoading: building, error, originalArgs }] = useBuildStarterMutation();
 
 	const use = async (key: string) => {
@@ -136,80 +141,86 @@ const AppStart: FC<{ name: string }> = ({ name }) => {
 	return (
 		<Shell
 			title={`Set up ${name}`}
-			lead='Start with the records you’ll keep. Pick a template, build your first model step by step, or describe it to your AI.'>
-			<Panel
-				title='Start from a template'
-				subtitle='Ready-made models you can change afterwards — fields, pages and all.'
-				actions={<GuideLink section='projects' />}>
-				{isLoading ? (
-					<Skeleton h='160px' />
-				) : (
-					<Grid
-						templateColumns={{ base: '1fr', md: '1fr 1fr' }}
-						gap={3}>
-						{(data?.doc || []).map(s => {
-							const Icon = STARTER_ICONS[s.icon] || Boxes;
-							const busy = building && originalArgs === s.key;
-							return (
-								<Flex
-									key={s.key}
-									direction='column'
-									gap={2}
-									p={4}
-									borderWidth='1px'
-									borderColor='border.muted'
-									borderRadius='md'>
+			lead={
+				starters
+					? 'Start with the records you’ll keep. Pick a template, build your first model step by step, or describe it to your AI.'
+					: 'Start with the records you’ll keep: build your first model step by step, or describe it to your AI.'
+			}>
+			{starters && (
+				<Panel
+					title='Start from a template'
+					subtitle='Ready-made models you can change afterwards — fields, pages and all.'
+					actions={<GuideLink section='projects' />}>
+					{isLoading ? (
+						<Skeleton h='160px' />
+					) : (
+						<Grid
+							templateColumns={{ base: '1fr', md: '1fr 1fr' }}
+							gap={3}>
+							{(data?.doc || []).map(s => {
+								const Icon = STARTER_ICONS[s.icon] || Boxes;
+								const busy = building && originalArgs === s.key;
+								return (
 									<Flex
-										align='center'
-										gap={2}>
-										<Icon size={16} />
+										key={s.key}
+										direction='column'
+										gap={2}
+										p={4}
+										borderWidth='1px'
+										borderColor='border.muted'
+										borderRadius='md'>
+										<Flex
+											align='center'
+											gap={2}>
+											<Icon size={16} />
+											<Text
+												fontSize='14px'
+												fontWeight='600'>
+												{s.title}
+											</Text>
+										</Flex>
 										<Text
-											fontSize='14px'
-											fontWeight='600'>
-											{s.title}
+											fontSize='12.5px'
+											color='fg.muted'
+											flex={1}>
+											{s.description}
 										</Text>
+										<Flex
+											align='center'
+											gap={1.5}
+											wrap='wrap'>
+											{s.models.map(m => (
+												<Badge
+													key={m}
+													size='sm'
+													variant='subtle'>
+													{m}
+												</Badge>
+											))}
+											<Button
+												ml='auto'
+												size='xs'
+												loading={busy}
+												disabled={building && !busy}
+												onClick={() => use(s.key)}>
+												Use this
+											</Button>
+										</Flex>
 									</Flex>
-									<Text
-										fontSize='12.5px'
-										color='fg.muted'
-										flex={1}>
-										{s.description}
-									</Text>
-									<Flex
-										align='center'
-										gap={1.5}
-										wrap='wrap'>
-										{s.models.map(m => (
-											<Badge
-												key={m}
-												size='sm'
-												variant='subtle'>
-												{m}
-											</Badge>
-										))}
-										<Button
-											ml='auto'
-											size='xs'
-											loading={busy}
-											disabled={building && !busy}
-											onClick={() => use(s.key)}>
-											Use this
-										</Button>
-									</Flex>
-								</Flex>
-							);
-						})}
-					</Grid>
-				)}
-				{error && (
-					<Text
-						mt={3}
-						fontSize='12.5px'
-						color='red.fg'>
-						{errorText(error)}
-					</Text>
-				)}
-			</Panel>
+								);
+							})}
+						</Grid>
+					)}
+					{error && (
+						<Text
+							mt={3}
+							fontSize='12.5px'
+							color='red.fg'>
+							{errorText(error)}
+						</Text>
+					)}
+				</Panel>
+			)}
 			<Grid
 				templateColumns={{ base: '1fr', md: '1fr 1fr' }}
 				gap={4}>
@@ -666,6 +677,8 @@ const QuestionInput: FC<{ q: TemplateQuestion; value: string; onChange: (v: stri
 	);
 };
 
+const count = (n: number | undefined, what: string) => (n ? `${n} ${what}${n === 1 ? '' : 's'}` : '');
+
 /** The build, polled while it runs; then where to go, or why it failed. */
 const Applying: FC<{ onBack: () => void }> = ({ onBack }) => {
 	const [polling, setPolling] = useState(true);
@@ -678,7 +691,7 @@ const Applying: FC<{ onBack: () => void }> = ({ onBack }) => {
 		return (
 			<Shell
 				title={`Setting up ${data?.name || 'your template'}…`}
-				lead='Making its models, pages and settings, and adding the sample records. Bigger templates take a minute or two — you can leave this page; it carries on.'>
+				lead='Making its models, pages, sidebar, dashboard and roles, and adding the sample records. Bigger templates take a minute or two — you can leave this page; it carries on.'>
 				<Panel>
 					<Skeleton
 						h='8px'
@@ -722,9 +735,12 @@ const Applying: FC<{ onBack: () => void }> = ({ onBack }) => {
 		<Shell
 			title={`${data.name} is ready`}
 			lead={[
-				r?.pages?.length ? `${r.pages.length} page${r.pages.length === 1 ? '' : 's'}` : '',
-				r?.models?.length ? `${r.models.length} model${r.models.length === 1 ? '' : 's'}` : '',
-				records ? `${records} sample record${records === 1 ? '' : 's'}` : '',
+				count(r?.pages?.length, 'page'),
+				count(r?.models?.length, 'model'),
+				count(r?.categories?.length, 'sidebar section'),
+				count(r?.widgets, 'dashboard widget'),
+				count(r?.roles?.created?.length, 'role'),
+				count(records, 'sample record'),
 			]
 				.filter(Boolean)
 				.join(', ')
@@ -784,6 +800,21 @@ const TemplateForm: FC<{ t: ProjectTemplateCard; onBack: () => void; onStarted: 
 							<strong>Models:</strong> {t.inside.models.join(', ')}
 						</Text>
 					)}
+					{!!t.inside.sidebar?.length && (
+						<Text>
+							<strong>Sidebar:</strong> {t.inside.sidebar.join(', ')}
+						</Text>
+					)}
+					{!!t.inside.widgets && (
+						<Text>
+							<strong>Dashboard:</strong> {count(t.inside.widgets, 'widget')}
+						</Text>
+					)}
+					{!!t.inside.roles?.length && (
+						<Text>
+							<strong>Roles:</strong> {t.inside.roles.join(', ')}
+						</Text>
+					)}
 				</Flex>
 			</Panel>
 			{!!t.questions.length && (
@@ -835,7 +866,7 @@ const TemplateForm: FC<{ t: ProjectTemplateCard; onBack: () => void; onStarted: 
 					wrap='wrap'>
 					<Switch.Root
 						size='sm'
-						checked={sampleData}
+						checked={sampleData && !!t.inside.sampleRecords}
 						disabled={!t.inside.sampleRecords}
 						onCheckedChange={e => setSampleData(!!e.checked)}>
 						<Switch.HiddenInput />
@@ -874,11 +905,13 @@ const TemplateForm: FC<{ t: ProjectTemplateCard; onBack: () => void; onStarted: 
 };
 
 /**
- * A website or API project's first choice when published templates of its
- * kind exist: one of them, or set it up yourself (`fallback`). A build that's
+ * Every project's first choice when published templates of its kind exist:
+ * one of them — built whole (models, pages, sidebar, dashboard, roles, sample
+ * records) — or set it up yourself (`own`, else `fallback`); with none
+ * published, `fallback`. A build that's
  * running or just finished shows instead, so a reload mid-build carries on.
  */
-const TemplateStart: FC<{ name: string; kind: string; fallback: ReactNode }> = ({ name, kind, fallback }) => {
+const TemplateStart: FC<{ name: string; kind: string; fallback: ReactNode; own?: ReactNode }> = ({ name, kind, fallback, own: ownView }) => {
 	const { data, isLoading } = useGetProjectTemplatesQuery();
 	const { data: applying, isLoading: checking } = useGetTemplateApplyingQuery(undefined, { refetchOnMountOrArgChange: true });
 	const [picked, setPicked] = useState<ProjectTemplateCard | null>(null);
@@ -904,7 +937,8 @@ const TemplateStart: FC<{ name: string; kind: string; fallback: ReactNode }> = (
 	};
 	if (started || (!dismissed && (applying?.status === 'building' || applying?.status === 'ready'))) return <Applying onBack={back} />;
 	const templates = data?.doc || [];
-	if (own || !templates.length) return <>{fallback}</>;
+	if (!templates.length) return <>{fallback}</>;
+	if (own) return <>{ownView ?? fallback}</>;
 	if (picked)
 		return (
 			<TemplateForm
@@ -1044,13 +1078,23 @@ export default function GetStartedPage() {
 				fallback={<WebsiteStart name={project.name} />}
 			/>
 		);
-	if (project.type === 'api')
-		return (
-			<TemplateStart
-				name={project.name}
-				kind='API'
-				fallback={<AppStart name={project.name} />}
-			/>
-		);
-	return <AppStart name={project.name} />;
+	return (
+		<TemplateStart
+			name={project.name}
+			kind={project.type === 'api' ? 'API' : 'app'}
+			// No templates published: an app still gets the built-in model starters; an API, only the wizard and AI.
+			fallback={
+				<AppStart
+					name={project.name}
+					starters={project.type !== 'api'}
+				/>
+			}
+			own={
+				<AppStart
+					name={project.name}
+					starters={false}
+				/>
+			}
+		/>
+	);
 }
