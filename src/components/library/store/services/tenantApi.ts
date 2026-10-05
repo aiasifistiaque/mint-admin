@@ -194,6 +194,27 @@ export type ShopView = {
 	models: ShopModel[];
 };
 
+/* The organization's own email server (backend routes-tenant/org/mail.router.ts, docs/messaging M-02). */
+export type MailSettings = {
+	host: string;
+	port: number;
+	secure: boolean;
+	username: string;
+	/** The password is never sent back — only whether one is stored. */
+	passwordSet: boolean;
+	fromName: string;
+	fromAddress: string;
+	replyTo: string;
+	customerWelcome: boolean;
+	verifiedAt: string | null;
+	lastError: string;
+	lastErrorAt: string | null;
+	updatedAt?: string;
+};
+export type MailSettingsInput = Omit<MailSettings, 'passwordSet' | 'verifiedAt' | 'lastError' | 'lastErrorAt' | 'updatedAt'> & { password: string };
+export type MailLogEntry = { _id: string; kind: string; to: string; subject: string; status: 'sent' | 'failed'; error: string; project: string | null; createdAt: string };
+export type MailView = { settings: MailSettings | null; messages: MailLogEntry[]; ports: number[] };
+
 /** A published template a new project can start from (backend routes-tenant/templates.router.ts). */
 export type TemplateQuestion = {
 	key: string;
@@ -574,6 +595,24 @@ export const tenantApi = mainApi.injectEndpoints({
 			invalidatesTags: ['tenant-widgets'],
 		}),
 
+		/* ------------------------ the organization's email (docs/messaging M-02) */
+		getOrgMail: builder.query<MailView, void>({
+			query: () => 'org/mail',
+			providesTags: ['tenant-mail'],
+		}),
+		saveOrgMail: builder.mutation<{ settings: MailSettings }, MailSettingsInput>({
+			query: body => ({ url: 'org/mail', method: 'PUT', body }),
+			invalidatesTags: ['tenant-mail'],
+		}),
+		testOrgMail: builder.mutation<{ message: string; settings: MailSettings }, { to?: string }>({
+			query: body => ({ url: 'org/mail/test', method: 'POST', body }),
+			invalidatesTags: ['tenant-mail'],
+		}),
+		removeOrgMail: builder.mutation<{ message: string }, void>({
+			query: () => ({ url: 'org/mail', method: 'DELETE' }),
+			invalidatesTags: ['tenant-mail'],
+		}),
+
 		/* ------------------------- start from a template (docs/templates T-14) */
 		getProjectTemplates: builder.query<{ doc: ProjectTemplateCard[] }, void>({
 			query: () => 'templates',
@@ -634,6 +673,10 @@ export const {
 	useGetWidgetsQuery,
 	useSaveWidgetsMutation,
 	useGetWidgetsShopQuery,
+	useGetOrgMailQuery,
+	useSaveOrgMailMutation,
+	useTestOrgMailMutation,
+	useRemoveOrgMailMutation,
 	useSaveWidgetsShopMutation,
 	useGetProjectTemplatesQuery,
 	useGetNewProjectTemplatesQuery,
