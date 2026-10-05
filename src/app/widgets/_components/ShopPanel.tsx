@@ -77,7 +77,7 @@ const describe = (shop: ShopMapping, models: ShopModel[]) => {
 };
 
 const ShopPanel: FC = () => {
-	const { data, isLoading } = useGetWidgetsShopQuery();
+	const { data, isLoading, isError } = useGetWidgetsShopQuery();
 	const [save, saving] = useSaveWidgetsShopMutation();
 	const [draft, setDraft] = useState<ShopMapping | null>(null);
 	const [clearing, setClearing] = useState(false);
@@ -121,6 +121,8 @@ const ShopPanel: FC = () => {
 		}
 	};
 
+	// The panel can ship before the backend has the shop (Heroku deploys by hand): hide rather than spin.
+	if (isError) return null;
 	if (isLoading || !data || !draft)
 		return (
 			<Panel
