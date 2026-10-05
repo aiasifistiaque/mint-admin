@@ -138,6 +138,39 @@ export type AnalyticsDim = 'paths' | 'referrers' | 'devices' | 'browsers' | 'os'
 export type AnalyticsRange = { from?: string; to?: string };
 /** An outgoing webhook (backend routes-tenant/webhooks.router.ts, docs/templates T-09). Its secret is never read back. */
 export type WebhookEvent = 'create' | 'update' | 'delete';
+/* Site widgets (backend functions/widgets.function.ts, docs/widgets W-03/W-04). */
+export type WidgetOption = {
+	key: string;
+	label: string;
+	kind: 'select' | 'boolean' | 'text' | 'number';
+	options?: { value: string; label: string }[];
+	default: any;
+	help: string;
+	min?: number;
+	max?: number;
+};
+export type WidgetType = {
+	name: string;
+	title: string;
+	summary: string;
+	description: string;
+	guide: string;
+	options: WidgetOption[];
+	texts: { key: string; label: string; default: string }[];
+	snippet: string;
+};
+export type WidgetSettings = { enabled: boolean; options: Record<string, any>; texts: Record<string, string> };
+export type WidgetTheme = { primaryColor: string; fontFamily: string; radius: number; colorMode: 'auto' | 'light' | 'dark' };
+export type WidgetsView = {
+	catalog: WidgetType[];
+	widgets: Record<string, WidgetSettings>;
+	theme: WidgetTheme;
+	/** The tag a site adds once per page. */
+	script: string;
+	updatedAt: string | null;
+};
+export type WidgetsPatch = { widgets?: Record<string, Partial<WidgetSettings>>; theme?: Partial<WidgetTheme> };
+
 export type Webhook = {
 	_id: string;
 	route: string;
@@ -464,6 +497,14 @@ export const tenantApi = mainApi.injectEndpoints({
 		}),
 
 		/* ---------------------------- webhooks and the API overview (T-09) */
+		getWidgets: builder.query<WidgetsView, void>({
+			query: () => 'widgets',
+			providesTags: ['tenant-widgets'],
+		}),
+		saveWidgets: builder.mutation<WidgetsView, WidgetsPatch>({
+			query: body => ({ url: 'widgets', method: 'PUT', body }),
+			invalidatesTags: ['tenant-widgets'],
+		}),
 		getWebhooks: builder.query<{ doc: Webhook[]; models: { route: string; title: string }[]; events: WebhookEvent[] }, void>({
 			query: () => 'webhooks',
 			providesTags: ['tenant-webhooks'],
@@ -505,6 +546,8 @@ export const {
 	useUpdateOrganizationMutation,
 	useGetMyOrganizationsQuery,
 	useCreateOrganizationMutation,
+	useGetWidgetsQuery,
+	useSaveWidgetsMutation,
 	useSwitchOrganizationMutation,
 	useTransferOwnershipMutation,
 	useGetMembersQuery,
