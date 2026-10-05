@@ -29,6 +29,9 @@ export type Organization = {
 	slug: string;
 	logo?: string;
 	plan?: string;
+	/** Its country's code (docs/widgets W-02) — decides `paymentProviders`. */
+	country?: string;
+	paymentProviders?: string[];
 	owner: string;
 	onboarding?: Onboarding;
 	counts?: { members: number; projects: number; websites: number };
@@ -125,6 +128,8 @@ export type RegisterBody = {
 	email: string;
 	password: string;
 	organization: string;
+	/** The organization's country code, e.g. BD. */
+	country: string;
 	onboarding?: Onboarding;
 };
 
@@ -295,7 +300,7 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: () => 'org',
 			providesTags: ['tenant-org'],
 		}),
-		updateOrganization: builder.mutation<Organization, { name?: string; logo?: string; onboarding?: Onboarding }>({
+		updateOrganization: builder.mutation<Organization, { name?: string; logo?: string; country?: string; onboarding?: Onboarding }>({
 			query: body => ({ url: 'org', method: 'PUT', body }),
 			invalidatesTags: ORG,
 		}),
@@ -303,7 +308,7 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: () => 'org/list',
 			providesTags: ['tenant-org'],
 		}),
-		createOrganization: builder.mutation<{ token: string; organization: Organization }, { name: string; onboarding?: Onboarding }>({
+		createOrganization: builder.mutation<{ token: string; organization: Organization }, { name: string; country: string; onboarding?: Onboarding }>({
 			query: body => ({ url: 'org', method: 'POST', body }),
 		}),
 		switchOrganization: builder.mutation<{ token: string }, string>({

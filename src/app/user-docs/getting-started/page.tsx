@@ -31,11 +31,13 @@ const GettingStarted = () => (
 					<>
 						On the <A href='/'>MINT home page</A> press <strong>Sign up</strong> (or open{' '}
 						<A href='/auth/register'>Create account</A>). Enter your name, your work email, a password of at least 8
-						characters, and the name of your organization — your company or team.
+						characters, the name of your organization — your company or team — and the country it’s based in (search by name or
+						dialling code). The country decides the payment options your sites can offer: in Bangladesh, SSLCommerz and bKash as
+						well as Stripe; elsewhere, Stripe.
 					</>,
 					<>
-						Tell us about your business: industry, team size, your role, your website and country, what you want to build and
-						how you heard about us. Every question is optional — skip any of them.
+						Tell us about your business: industry, team size, your role, your website, what you want to build and how you heard
+						about us. Every question is optional — skip any of them.
 					</>,
 					<>
 						Press <strong>Create account</strong>. You’re signed in, as the owner of your new organization, on its projects

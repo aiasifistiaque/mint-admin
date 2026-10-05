@@ -15,6 +15,9 @@ import { useWorkspace } from '@/components/library/tenant';
 import GuideLink from '@/components/library/tenant/GuideLink';
 import { GOALS, HEARD_FROM, INDUSTRIES, TEAM_SIZES } from '@/components/library/tenant/onboarding';
 import type { Onboarding } from '@/components/library/store/services/tenantApi';
+import CountrySelect from '@/components/library/tenant/CountrySelect';
+
+const PROVIDER_NAMES: Record<string, string> = { stripe: 'Stripe', sslcommerz: 'SSLCommerz', bkash: 'bKash' };
 
 /**
  * The organization's settings (tenant panel): its name, the answers about the
@@ -29,12 +32,14 @@ const Details: FC = () => {
 	const { can } = useWorkspace();
 	const [save, { isLoading: saving, error, isSuccess, reset }] = useUpdateOrganizationMutation();
 	const [name, setName] = useState('');
+	const [country, setCountry] = useState('');
 	const [about, setAbout] = useState<Onboarding>({});
 	const editable = can('manage-organization');
 
 	useEffect(() => {
 		if (!org) return;
 		setName(org.name);
+		setCountry(org.country || '');
 		setAbout(org.onboarding || {});
 	}, [org?._id]);
 
@@ -45,10 +50,12 @@ const Details: FC = () => {
 
 	const submit = async (e: FormEvent) => {
 		e.preventDefault();
-		const { businessName, industry, teamSize, role, website, country, heardFrom, heardFromOther, goals } = about;
+		// onboarding.country is the old free-text answer; the organization's country is `country` above.
+		const { businessName, industry, teamSize, role, website, heardFrom, heardFromOther, goals } = about;
 		await save({
 			name: name.trim(),
-			onboarding: { businessName, industry, teamSize, role, website, country, heardFrom, heardFromOther, goals: goals || [] },
+			...(country && { country }),
+			onboarding: { businessName, industry, teamSize, role, website, country: about.country, heardFrom, heardFromOther, goals: goals || [] },
 		});
 	};
 
@@ -127,13 +134,25 @@ const Details: FC = () => {
 									onChange={e => set('website')(e.target.value)}
 								/>
 							</Field.Root>
-							<Field.Root>
+							<Field.Root required>
 								<Field.Label {...labelCss}>Country</Field.Label>
-								<Input
+								<CountrySelect
 									size='sm'
-									value={about.country || ''}
-									onChange={e => set('country')(e.target.value)}
+									value={country}
+									disabled={!editable}
+									invalid={!country}
+									onChange={code => {
+										reset();
+										setCountry(code);
+									}}
 								/>
+								<Field.HelperText fontSize='12px'>
+									{country === org.country && org.paymentProviders?.length
+										? `Payments your sites can take here: ${org.paymentProviders.map(p => PROVIDER_NAMES[p] || p).join(', ')}.`
+										: country
+										? 'Save to see the payment options for this country.'
+										: 'Pick where the organization is based — it decides the payment options its sites can offer.'}
+								</Field.HelperText>
 							</Field.Root>
 							<Box>
 								<Text {...labelCss}>Heard about us from</Text>

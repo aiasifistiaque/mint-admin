@@ -38,9 +38,13 @@ const Organization = () => (
 				another.
 			</P>
 			<P>
-				<A href='/org/settings'>Organization → Settings</A> holds its name and the business details you gave at sign-up:
-				business name, industry, team size, website, country, how you heard about us, and what you’re building. Changing them
-				needs the <em>Edit the organization</em> permission.
+				<A href='/org/settings'>Organization → Settings</A> holds its name, its <strong>country</strong> and the business
+				details you gave at sign-up: business name, industry, team size, website, how you heard about us, and what you’re
+				building. Changing them needs the <em>Edit the organization</em> permission.
+			</P>
+			<P>
+				The country decides which payment providers the organization’s sites can take payments with — in Bangladesh,
+				SSLCommerz and bKash as well as Stripe; elsewhere, Stripe. The settings show the ones on offer under the country.
 			</P>
 		</Section>
 
@@ -52,7 +56,8 @@ const Organization = () => (
 				Your own organization and every one you’ve been invited to are listed under <strong>Your organizations</strong> on{' '}
 				<A href='/projects'>Projects</A>, with your role in each, and in the switcher at the top right under{' '}
 				<strong>Organization</strong>. Pick one to work in it — the panel reloads with its projects.{' '}
-				<strong>New organization</strong> (in the switcher) starts another, with you as its owner.
+				<strong>New organization</strong> (in the switcher) starts another, with you as its owner — give it a name and its
+				country.
 			</P>
 			<P>
 				Your account, password and two-step sign-in are the same in all of them; your role, and the projects you can open,

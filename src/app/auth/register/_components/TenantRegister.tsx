@@ -7,6 +7,7 @@ import { ArrowLeft } from 'lucide-react';
 import { LoginContainer, VInput, VPassword, login, useAppDispatch, useTenantRegisterMutation } from '@/components/library';
 import { Dropdown } from '@/components/library/cl';
 import { GOALS, HEARD_FROM, INDUSTRIES, TEAM_SIZES } from '@/components/library/tenant/onboarding';
+import CountrySelect from '@/components/library/tenant/CountrySelect';
 
 /**
  * Sign-up for the tenant platform, in two steps on the sign-in card: the
@@ -80,13 +81,12 @@ const TenantRegister: FC = () => {
 	const dispatch = useAppDispatch();
 	const [register, { isLoading, error }] = useTenantRegisterMutation();
 	const [step, setStep] = useState<1 | 2>(1);
-	const [account, setAccount] = useState({ name: '', email: '', password: '', organization: '' });
+	const [account, setAccount] = useState({ name: '', email: '', password: '', organization: '', country: '' });
 	const [about, setAbout] = useState({
 		industry: '',
 		teamSize: '',
 		role: '',
 		website: '',
-		country: '',
 		heardFrom: '',
 		heardFromOther: '',
 		goals: [] as string[],
@@ -94,7 +94,7 @@ const TenantRegister: FC = () => {
 
 	const setA = (k: keyof typeof account) => (e: any) => setAccount(a => ({ ...a, [k]: e.target.value }));
 	const accountReady =
-		account.name.trim() && /\S+@\S+\.\S+/.test(account.email) && account.password.length >= 8 && account.organization.trim();
+		account.name.trim() && /\S+@\S+\.\S+/.test(account.email) && account.password.length >= 8 && account.organization.trim() && account.country;
 
 	const submit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -107,6 +107,7 @@ const TenantRegister: FC = () => {
 			email: account.email.trim(),
 			password: account.password,
 			organization: account.organization.trim(),
+			country: account.country,
 			onboarding: {
 				businessName: account.organization.trim(),
 				...Object.fromEntries(Object.entries(about).filter(([, v]) => (Array.isArray(v) ? v.length : v))),
@@ -192,6 +193,29 @@ const TenantRegister: FC = () => {
 						onChange={setA('organization')}
 						name='organization'
 					/>
+					<Box>
+						<Text
+							fontSize='13px'
+							fontWeight='600'
+							mb={1.5}>
+							Country{' '}
+							<Text
+								as='span'
+								color='red.fg'>
+								*
+							</Text>
+						</Text>
+						<CountrySelect
+							value={account.country}
+							onChange={code => setAccount(a => ({ ...a, country: code }))}
+						/>
+						<Text
+							fontSize='12px'
+							color='fg.muted'
+							mt={1}>
+							Where your organization is based — it decides the payment options your sites can offer.
+						</Text>
+					</Box>
 				</>
 			) : (
 				<>
@@ -227,19 +251,6 @@ const TenantRegister: FC = () => {
 								value={about.role}
 								placeholder='e.g. Founder'
 								onChange={e => setAbout(a => ({ ...a, role: e.target.value }))}
-							/>
-						</Field.Root>
-						<Field.Root flex={1}>
-							<Field.Label
-								fontSize='13px'
-								fontWeight='600'>
-								Country · <Text as='span' fontWeight='400' color='fg.muted'>optional</Text>
-							</Field.Label>
-							<Input
-								size='md'
-								value={about.country}
-								autoComplete='country-name'
-								onChange={e => setAbout(a => ({ ...a, country: e.target.value }))}
 							/>
 						</Field.Root>
 					</Flex>
