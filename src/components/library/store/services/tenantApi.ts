@@ -128,8 +128,8 @@ export type RegisterBody = {
 	email: string;
 	password: string;
 	organization: string;
-	/** The organization's country code, e.g. BD. */
-	country: string;
+	/** The organization's country code, e.g. BD (left out only when the server has no countries list). */
+	country?: string;
 	onboarding?: Onboarding;
 };
 
@@ -308,7 +308,7 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: () => 'org/list',
 			providesTags: ['tenant-org'],
 		}),
-		createOrganization: builder.mutation<{ token: string; organization: Organization }, { name: string; country: string; onboarding?: Onboarding }>({
+		createOrganization: builder.mutation<{ token: string; organization: Organization }, { name: string; country?: string; onboarding?: Onboarding }>({
 			query: body => ({ url: 'org', method: 'POST', body }),
 		}),
 		switchOrganization: builder.mutation<{ token: string }, string>({

@@ -7,7 +7,7 @@ import { ArrowLeft } from 'lucide-react';
 import { LoginContainer, VInput, VPassword, login, useAppDispatch, useTenantRegisterMutation } from '@/components/library';
 import { Dropdown } from '@/components/library/cl';
 import { GOALS, HEARD_FROM, INDUSTRIES, TEAM_SIZES } from '@/components/library/tenant/onboarding';
-import CountrySelect from '@/components/library/tenant/CountrySelect';
+import CountrySelect, { useCountries } from '@/components/library/tenant/CountrySelect';
 
 /**
  * Sign-up for the tenant platform, in two steps on the sign-in card: the
@@ -93,8 +93,14 @@ const TenantRegister: FC = () => {
 	});
 
 	const setA = (k: keyof typeof account) => (e: any) => setAccount(a => ({ ...a, [k]: e.target.value }));
+	// A server without the countries list (deployed before it) mustn't block sign-up: then the country waits for settings.
+	const { error: noCountries } = useCountries();
 	const accountReady =
-		account.name.trim() && /\S+@\S+\.\S+/.test(account.email) && account.password.length >= 8 && account.organization.trim() && account.country;
+		account.name.trim() &&
+		/\S+@\S+\.\S+/.test(account.email) &&
+		account.password.length >= 8 &&
+		account.organization.trim() &&
+		(account.country || noCountries);
 
 	const submit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -107,7 +113,7 @@ const TenantRegister: FC = () => {
 			email: account.email.trim(),
 			password: account.password,
 			organization: account.organization.trim(),
-			country: account.country,
+			...(account.country && { country: account.country }),
 			onboarding: {
 				businessName: account.organization.trim(),
 				...Object.fromEntries(Object.entries(about).filter(([, v]) => (Array.isArray(v) ? v.length : v))),

@@ -5,7 +5,7 @@ import { Button, Field, Flex, Input, Text } from '@chakra-ui/react';
 import { Layout, refreshAuth, useAppDispatch, useCreateOrganizationMutation } from '@/components/library';
 import { Panel } from '@/components/library/cl';
 import { HOME, rememberProject } from '@/components/library/config/lib/constants/panel';
-import CountrySelect from '@/components/library/tenant/CountrySelect';
+import CountrySelect, { useCountries } from '@/components/library/tenant/CountrySelect';
 
 /**
  * Another organization, with you as its owner (tenant panel). The panel then
@@ -16,11 +16,13 @@ export default function NewOrganizationPage() {
 	const dispatch = useAppDispatch();
 	const [name, setName] = useState('');
 	const [country, setCountry] = useState('');
+	// A server without the countries list mustn't block making an organization.
+	const { error: noCountries } = useCountries();
 	const [create, { isLoading, error }] = useCreateOrganizationMutation();
 
 	const submit = async (e: FormEvent) => {
 		e.preventDefault();
-		const res = await create({ name: name.trim(), country });
+		const res = await create({ name: name.trim(), ...(country && { country }) });
 		if ('data' in res && res.data?.token) {
 			rememberProject(null);
 			dispatch(refreshAuth(res.data.token));
@@ -83,7 +85,7 @@ export default function NewOrganizationPage() {
 									type='submit'
 									size='sm'
 									loading={isLoading}
-									disabled={!name.trim() || !country}>
+									disabled={!name.trim() || (!country && !noCountries)}>
 									Create and switch
 								</Button>
 							</Flex>
