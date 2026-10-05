@@ -28,8 +28,7 @@ const PROVIDER_NAMES: Record<string, string> = { stripe: 'Stripe', sslcommerz: '
 
 /** What's planned next (docs/widgets) — shown so tenants know what's coming. */
 const COMING = [
-	{ title: 'Checkout & payments', text: 'Address, delivery and payment — priced by the server, paid only when the provider confirms.' },
-	{ title: 'My orders', text: 'Order history and tracking in the account widget.' },
+	{ title: 'More ways to pay', text: 'SSLCommerz, bKash, cash on delivery and bank transfer; refunds from the order.' },
 	{ title: 'Forms', text: 'Contact and newsletter forms drawn from your models, with spam protection.' },
 	{ title: 'Booking', text: 'Free slots worked out on the server — no double bookings.' },
 	{ title: 'WhatsApp button', text: 'A floating button that opens a chat with a ready message.' },
@@ -197,7 +196,7 @@ const WidgetPanel: FC<{ type: WidgetType; value: WidgetSettings; theme: WidgetTh
 					fontSize='13px'
 					color='orange.fg'
 					mb={4}>
-					Set up the Shop above first — the cart can’t be switched on without it.
+					Set up the Shop above first{type.name === 'cart' ? '' : ', with its Orders'} — this widget can’t be switched on without it.
 				</Text>
 			)}
 			<Grid
@@ -349,7 +348,7 @@ export default function WidgetsPage() {
 						color='fg.muted'
 						lineHeight='1.6'
 						mb={3}>
-						Widgets are ready-made pieces for your own website or app — sign-in and a cart today; checkout, forms and more next.
+						Widgets are ready-made pieces for your own website or app — sign-in, a cart, checkout and order history today; forms and more next.
 						Add this tag once to every page (in <code>&lt;head&gt;</code> or before <code>&lt;/body&gt;</code>), then put each
 						widget where it should appear. They take your colours, don’t touch your site’s styles, and your own code can use
 						them through <code>window.Mint</code>.
@@ -463,7 +462,7 @@ export default function WidgetsPage() {
 							theme={draft.theme}
 							slug={project?.publicSlug || ''}
 							currency={shop?.shop?.currency || shop?.guess?.currency}
-							needsShop={type.name === 'cart' && !!shop && !shop.shop}
+							needsShop={!!shop && (type.name === 'cart' ? !shop.shop : ['checkout', 'thanks', 'orders'].includes(type.name) ? !shop.shop?.order : false)}
 							onChange={v => setDraft(d => (d ? { ...d, widgets: { ...d.widgets, [type.name]: v } } : d))}
 						/>
 					))
@@ -503,7 +502,7 @@ export default function WidgetsPage() {
 									color='fg.muted'
 									lineHeight='1.5'>
 									{c.text}
-									{c.title === 'Checkout & payments' && providers.length > 0 && ` For your organization: ${providers.join(', ')}.`}
+									{c.title === 'More ways to pay' && providers.length > 0 && ` For your organization: ${providers.join(', ')}.`}
 								</Text>
 							</Box>
 						))}

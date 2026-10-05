@@ -175,12 +175,20 @@ export type WidgetsPatch = { widgets?: Record<string, Partial<WidgetSettings>>; 
 export type ShopMapping = {
 	product: {
 		model: string;
-		fields: { name: string; price: string; compareAtPrice?: string; image?: string; stock?: string; status?: string; variants?: string };
+		fields: { name: string; price: string; compareAtPrice?: string; image?: string; stock?: string; status?: string; variants?: string; sku?: string };
 		activeValues?: (string | boolean)[];
 		variant?: { name: string; price?: string; priceChange?: string; stock?: string };
 	};
 	cart: { model: string; fields: { product: string; quantity: string; variant?: string; label?: string } } | null;
+	/** Where checkout writes orders (W-06). */
+	order?: ShopOrderMapping | null;
 	currency: string;
+};
+export type ShopOrderMapping = {
+	model: string;
+	fields: { items: string; status: string; email?: string; name?: string; phone?: string; address?: string; note?: string; shippingCost?: string; total?: string; paymentReference?: string };
+	item: { name: string; quantity: string; unitPrice: string; variant?: string; sku?: string; product?: string };
+	statuses: { pending: string; paid: string; cancelled?: string };
 };
 export type ShopModelField = { key: string; label: string; kind: string; ref?: string; options?: { value: string; label: string }[]; fields?: { key: string; label: string; kind: string }[] };
 export type ShopModel = { name: string; title: string; route: string; publicApi: { enabled: boolean; ownerOnly: boolean; auth: string }; fields: ShopModelField[] };
@@ -214,6 +222,39 @@ export type MailSettings = {
 export type MailSettingsInput = Omit<MailSettings, 'passwordSet' | 'verifiedAt' | 'lastError' | 'lastErrorAt' | 'updatedAt'> & { password: string };
 export type MailLogEntry = { _id: string; kind: string; to: string; subject: string; status: 'sent' | 'failed'; error: string; project: string | null; createdAt: string };
 export type MailView = { settings: MailSettings | null; messages: MailLogEntry[]; ports: number[] };
+
+/* A project's payments (backend routes-tenant/payments.router.ts, docs/widgets W-06/W-07). Keys are never sent back. */
+export type SitePaymentSettings = {
+	stripe: { enabled: boolean; mode: 'test' | 'live'; publishableKey: string; secretKeySet: boolean; webhookSecretSet: boolean; webhookUrl: string };
+	successUrl: string;
+	cancelUrl: string;
+	/** The providers the organization's country offers. */
+	offered: string[];
+	providers: Record<string, { name: string; ready: boolean }>;
+	siteOrigin: string;
+};
+export type SitePaymentSettingsInput = {
+	stripe?: { enabled: boolean; mode: 'test' | 'live'; publishableKey: string; secretKey?: string; webhookSecret?: string };
+	successUrl?: string;
+	cancelUrl?: string;
+};
+export type SitePayment = {
+	_id: string;
+	ref: string;
+	order: string;
+	orderModel: string;
+	orderCode: string;
+	provider: string;
+	mode: 'test' | 'live';
+	amount: number;
+	currency: string;
+	status: 'created' | 'pending' | 'paid' | 'failed' | 'cancelled' | 'expired' | 'refunded';
+	email: string;
+	error: string;
+	paidAt: string | null;
+	createdAt: string;
+	events: { type: string; at: string; note?: string }[];
+};
 
 /** A published template a new project can start from (backend routes-tenant/templates.router.ts). */
 export type TemplateQuestion = {
@@ -595,6 +636,23 @@ export const tenantApi = mainApi.injectEndpoints({
 			invalidatesTags: ['tenant-widgets'],
 		}),
 
+		/* ------------------------------------- site payments (docs/widgets W-06) */
+		getSitePaymentSettings: builder.query<SitePaymentSettings, void>({
+			query: () => 'payments/settings',
+			providesTags: ['tenant-payments'],
+		}),
+		saveSitePaymentSettings: builder.mutation<SitePaymentSettings, SitePaymentSettingsInput>({
+			query: body => ({ url: 'payments/settings', method: 'PUT', body }),
+			invalidatesTags: ['tenant-payments'],
+		}),
+		checkSitePaymentKeys: builder.mutation<{ ok: boolean; mode: string }, void>({
+			query: () => ({ url: 'payments/settings/check', method: 'POST' }),
+		}),
+		getSitePayments: builder.query<{ doc: SitePayment[] }, void>({
+			query: () => 'payments',
+			providesTags: ['tenant-payments'],
+		}),
+
 		/* ------------------------ the organization's email (docs/messaging M-02) */
 		getOrgMail: builder.query<MailView, void>({
 			query: () => 'org/mail',
@@ -674,6 +732,10 @@ export const {
 	useSaveWidgetsMutation,
 	useGetWidgetsShopQuery,
 	useGetOrgMailQuery,
+	useGetSitePaymentSettingsQuery,
+	useSaveSitePaymentSettingsMutation,
+	useCheckSitePaymentKeysMutation,
+	useGetSitePaymentsQuery,
 	useSaveOrgMailMutation,
 	useTestOrgMailMutation,
 	useRemoveOrgMailMutation,

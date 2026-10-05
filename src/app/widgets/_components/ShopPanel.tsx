@@ -7,7 +7,7 @@ import { Dropdown, Panel } from '@/components/library/cl';
 import GuideLink from '@/components/library/tenant/GuideLink';
 import { toaster } from '@/components/ui/toaster';
 import { useGetWidgetsShopQuery, useSaveWidgetsShopMutation } from '@/components/library/store/services/tenantApi';
-import type { ShopMapping, ShopModel, ShopModelField, ShopView } from '@/components/library/store/services/tenantApi';
+import type { ShopMapping, ShopModel, ShopModelField, ShopOrderMapping, ShopView } from '@/components/library/store/services/tenantApi';
 
 /**
  * Site setup → Widgets → Shop (docs/widgets W-05): which of the project's
@@ -44,6 +44,27 @@ const PRODUCT_FIELDS: { key: keyof ShopMapping['product']['fields']; label: stri
 	{ key: 'stock', label: 'Stock', kinds: KINDS.stock, help: 'None: never runs out.' },
 	{ key: 'status', label: 'Status', kinds: KINDS.status, help: 'None: every product is for sale.' },
 	{ key: 'variants', label: 'Variants', kinds: KINDS.variants, help: 'A list of sizes or colours, each with its own price and stock.' },
+	{ key: 'sku', label: 'SKU', kinds: ['text'], help: 'Copied onto each order item.' },
+];
+
+/** The order's own fields checkout fills in (W-06) — the items list and status are picked above them. */
+const ORDER_FIELDS: { key: keyof ShopOrderMapping['fields']; label: string; kinds: string[]; help: string }[] = [
+	{ key: 'email', label: 'Email', kinds: ['email', 'text'], help: 'For the receipt.' },
+	{ key: 'name', label: 'Name', kinds: ['text'], help: '' },
+	{ key: 'phone', label: 'Phone', kinds: ['text'], help: '' },
+	{ key: 'address', label: 'Delivery address', kinds: ['section', 'text', 'textarea'], help: 'A group of fields (line1, city, postcode…) or one text box.' },
+	{ key: 'note', label: 'Buyer’s note', kinds: ['text', 'textarea'], help: '' },
+	{ key: 'total', label: 'Total', kinds: ['number'], help: 'A formula total fills itself in.' },
+	{ key: 'shippingCost', label: 'Delivery cost', kinds: ['number'], help: '' },
+	{ key: 'paymentReference', label: 'Payment reference', kinds: ['text'], help: 'The provider’s id for the payment.' },
+];
+const ITEM_FIELDS: { key: keyof ShopOrderMapping['item']; label: string; kinds: string[]; required?: boolean }[] = [
+	{ key: 'name', label: 'Product name', kinds: ['text', 'select'], required: true },
+	{ key: 'quantity', label: 'Quantity', kinds: ['number'], required: true },
+	{ key: 'unitPrice', label: 'Unit price', kinds: ['number'], required: true },
+	{ key: 'variant', label: 'Variant', kinds: ['text', 'select'] },
+	{ key: 'sku', label: 'SKU', kinds: ['text'] },
+	{ key: 'product', label: 'Product link', kinds: ['reference'] },
 ];
 
 const empty = (currency = ''): ShopMapping => ({ product: { model: '', fields: { name: '', price: '' } }, cart: null, currency });
@@ -95,6 +116,11 @@ const ShopPanel: FC = () => {
 		() => models.filter(m => m.name !== draft?.product.model && m.fields.some(f => f.kind === 'reference' && f.ref === draft?.product.model)),
 		[models, draft?.product.model]
 	);
+	const orderModels = models.filter(m => m.name !== draft?.product.model && m.fields.some(f => f.kind === 'sectionlist'));
+	const orderModel = models.find(m => m.name === draft?.order?.model);
+	const orderItemsField = orderModel?.fields.find(f => f.key === draft?.order?.fields.items);
+	const orderStatus = orderModel?.fields.find(f => f.key === draft?.order?.fields.status);
+	const setOrder = (patch: Partial<ShopOrderMapping>) => setDraft(d => (d && d.order ? { ...d, order: { ...d.order, ...patch } } : d));
 	const dirty = !!draft && !!data && JSON.stringify(draft) !== JSON.stringify(data.shop);
 
 	const setProduct = (patch: Partial<ShopMapping['product']>) => setDraft(d => (d ? { ...d, product: { ...d.product, ...patch } } : d));
@@ -412,6 +438,162 @@ const ShopPanel: FC = () => {
 									</>
 								)}
 							</Grid>
+						</Box>
+					)}
+
+					{product && (
+						<Box id='shop-orders'>
+							<Flex
+								align='center'
+								justify='space-between'
+								mb={2}>
+								<Text
+									fontSize='13px'
+									fontWeight='600'>
+									Orders — where checkout writes them
+								</Text>
+								<GuideLink section='shop-orders' />
+							</Flex>
+							<Grid
+								templateColumns={{ base: '1fr', md: 'repeat(3, minmax(0, 1fr))' }}
+								gap={4}>
+								<Box>
+									<Text {...label}>Orders model</Text>
+									<Dropdown
+										size='sm'
+										value={draft.order?.model || NONE}
+										onChange={v => {
+											if (v === NONE) return setDraft({ ...draft, order: null });
+											const m = models.find(x => x.name === v);
+											const items = m?.fields.find(f => f.kind === 'sectionlist');
+											const status = m?.fields.find(f => f.kind === 'select' && /status/i.test(f.key));
+											setDraft({ ...draft, order: { model: v, fields: { items: items?.key || '', status: status?.key || '' }, item: { name: '', quantity: '', unitPrice: '' }, statuses: { pending: '', paid: '' } } });
+										}}
+										items={[{ value: NONE, label: '— No checkout yet —' }, ...orderModels.map(m => ({ value: m.name, label: m.title }))]}
+									/>
+									<Text {...help}>Needs a list of items and a status. Without it the cart works, checkout doesn’t.</Text>
+								</Box>
+								{orderModel && draft.order && (
+									<>
+										<Box>
+											<Text {...label}>Items list *</Text>
+											<FieldPick
+												fields={orderModel.fields}
+												kinds={['sectionlist']}
+												value={draft.order.fields.items}
+												required
+												onChange={v => setOrder({ fields: { ...draft.order!.fields, items: v || '' }, item: { name: '', quantity: '', unitPrice: '' } })}
+											/>
+										</Box>
+										<Box>
+											<Text {...label}>Status *</Text>
+											<FieldPick
+												fields={orderModel.fields}
+												kinds={['select', 'text']}
+												value={draft.order.fields.status}
+												required
+												onChange={v => setOrder({ fields: { ...draft.order!.fields, status: v || '' }, statuses: { pending: '', paid: '' } })}
+											/>
+										</Box>
+									</>
+								)}
+							</Grid>
+							{orderModel && draft.order && (
+								<Flex
+									direction='column'
+									gap={4}
+									mt={4}>
+									<Grid
+										templateColumns={{ base: '1fr', md: 'repeat(3, minmax(0, 1fr))' }}
+										gap={4}>
+										{(['pending', 'paid', 'cancelled'] as const).map(k => (
+											<Box key={k}>
+												<Text {...label}>
+													{k === 'pending' ? 'Waiting for payment *' : k === 'paid' ? 'Paid *' : 'Cancelled'}
+												</Text>
+												{orderStatus?.kind === 'select' ? (
+													<Dropdown
+														size='sm'
+														value={draft.order!.statuses[k] || (k === 'cancelled' ? NONE : '')}
+														placeholder='Pick a status'
+														onChange={v => setOrder({ statuses: { ...draft.order!.statuses, [k]: v === NONE ? undefined : v } as ShopOrderMapping['statuses'] })}
+														items={[...(k === 'cancelled' ? [{ value: NONE, label: '— None —' }] : []), ...(orderStatus.options || [])]}
+													/>
+												) : (
+													<Input
+														size='sm'
+														value={draft.order!.statuses[k] || ''}
+														onChange={e => setOrder({ statuses: { ...draft.order!.statuses, [k]: e.target.value } as ShopOrderMapping['statuses'] })}
+													/>
+												)}
+												<Text {...help}>
+													{k === 'pending' ? 'New orders start here.' : k === 'paid' ? 'Set only when the payment provider confirms.' : 'If the payment page can’t be opened.'}
+												</Text>
+											</Box>
+										))}
+									</Grid>
+									<Box>
+										<Text
+											fontSize='13px'
+											fontWeight='600'
+											mb={2}>
+											Each item
+										</Text>
+										<Grid
+											templateColumns={{ base: '1fr', md: 'repeat(3, minmax(0, 1fr))' }}
+											gap={4}>
+											{ITEM_FIELDS.map(f => (
+												<Box key={f.key}>
+													<Text {...label}>
+														{f.label}
+														{f.required ? ' *' : ''}
+													</Text>
+													<FieldPick
+														fields={orderItemsField?.fields || []}
+														kinds={f.kinds}
+														value={draft.order!.item[f.key]}
+														required={f.required}
+														onChange={v => {
+															const item: any = { ...draft.order!.item, [f.key]: v };
+															if (!v) delete item[f.key];
+															setOrder({ item });
+														}}
+													/>
+												</Box>
+											))}
+										</Grid>
+									</Box>
+									<Box>
+										<Text
+											fontSize='13px'
+											fontWeight='600'
+											mb={2}>
+											The buyer and the money
+										</Text>
+										<Grid
+											templateColumns={{ base: '1fr', md: 'repeat(4, minmax(0, 1fr))' }}
+											gap={4}>
+											{ORDER_FIELDS.map(f => (
+												<Box key={f.key}>
+													<Text {...label}>{f.label}</Text>
+													<FieldPick
+														fields={orderModel.fields}
+														kinds={f.kinds}
+														value={draft.order!.fields[f.key]}
+														onChange={v => {
+															const fields: any = { ...draft.order!.fields, [f.key]: v };
+															if (!v) delete fields[f.key];
+															setOrder({ fields });
+														}}
+													/>
+													{f.help && <Text {...help}>{f.help}</Text>}
+												</Box>
+											))}
+										</Grid>
+										<Text {...help}>Saving makes the status and payment reference read-only on your public API — only checkout sets them.</Text>
+									</Box>
+								</Flex>
+							)}
 						</Box>
 					)}
 
