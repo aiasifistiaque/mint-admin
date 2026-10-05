@@ -50,7 +50,7 @@ const OpenPreview: FC = () => {
 				color='fg.muted'
 				textAlign='center'>
 				{error ||
-					'You’re signing in to a throwaway copy of the template. Everything in it is deleted after 24 hours, and nothing reaches a real customer.'}
+					'You’re signing in to a throwaway copy of the template. Everything in it is deleted after 6 hours, and nothing reaches a real customer.'}
 			</Text>
 		</LoginContainer>
 	);

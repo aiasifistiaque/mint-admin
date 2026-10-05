@@ -406,8 +406,10 @@ const TemplatesDocs = () => {
 						<P>
 							<strong>Preview</strong> answers the questions as a tenant would, builds the saved draft (or the published
 							version) into a project in a private sandbox organization, and opens it in a new tab with a link that works
-							once, for five minutes. Nobody else sees it. Previews are deleted after 24 hours; open one again or delete it
-							early from the Preview dialog.
+							once, for five minutes. Nobody else sees it. Previews are deleted after 6 hours, and each
+							template keeps only its newest — a new preview replaces the last. Open one again or delete it early from the
+							Preview dialog. Every model takes one of the database’s collections, so a preview is refused when the database
+							is nearly full; delete old previews to make room.
 						</P>
 						<P>
 							A big template (a dozen models and their sample data) takes a few minutes to build on the server. The dialog

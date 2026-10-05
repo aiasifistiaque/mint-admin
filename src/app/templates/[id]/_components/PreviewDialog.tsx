@@ -16,7 +16,7 @@ import { Label, errorMessage } from '../../_components/ui';
 
 /**
  * Preview: the template built into a throwaway project in the sandbox
- * organization (deleted after 24 hours), opened in the tenant panel with a
+ * organization (deleted after 6 hours), opened in the tenant panel with a
  * single-use link. The questions are answered here, as a tenant would.
  * A big template keeps building on the server after the request answers
  * (202 `building`): the list below polls until it's ready or failed.
@@ -61,7 +61,7 @@ const PreviewDialog: FC<{ open: boolean; onClose: () => void; doc: any; dirty: b
 			}
 			go(res.url);
 			const n = res.result?.models?.length || 0;
-			toaster.create({ type: 'success', title: 'Preview built', description: `${n} model${n === 1 ? '' : 's'} — opened in a new tab. It’s deleted in 24 hours.` });
+			toaster.create({ type: 'success', title: 'Preview built', description: `${n} model${n === 1 ? '' : 's'} — opened in a new tab. It’s deleted in 6 hours.` });
 		} catch (e) {
 			toaster.create({ type: 'error', title: 'The preview wasn’t built', description: errorMessage(e, 'Try again') });
 		}
@@ -86,8 +86,8 @@ const PreviewDialog: FC<{ open: boolean; onClose: () => void; doc: any; dirty: b
 					color='fg.muted'
 					lineHeight='1.6'>
 					Builds the template into a throwaway project, exactly as a tenant would get it, and opens it in the tenant panel
-					in a new tab. Nobody else sees it, and it’s deleted after 24 hours. The link works once; open it again from the
-					list below.
+					in a new tab. Nobody else sees it, and it’s deleted after 6 hours. A new preview replaces this template’s last one.
+					The link works once; open it again from the list below.
 				</Text>
 				{dirty && (
 					<Text
