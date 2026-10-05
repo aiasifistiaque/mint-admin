@@ -61,7 +61,7 @@ export const linkOf = (field: any, doc: any): { route: string; record: any } | n
 
 /** Anything that would show a secret — never listed on a card. */
 const SECRET = /pass(word)?|token|secret|api_?key|apikey|private|otp|salt|hash/i;
-const SKIP = new Set(['_id', '__v', 'id', 'createdAt', 'updatedAt', 'isDeleted', 'deletedAt', 'preferences']);
+const SKIP = new Set(['_id', '__v', '_model', 'id', 'createdAt', 'updatedAt', 'isDeleted', 'deletedAt', 'preferences']);
 const IMAGE_KEYS = ['image', 'avatar', 'photo', 'logo', 'thumbnail', 'picture', 'icon'];
 
 const humanize = (key: string) =>

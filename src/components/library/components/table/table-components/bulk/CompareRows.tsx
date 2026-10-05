@@ -12,7 +12,8 @@ import { BulkDialog, BulkProps, CancelButton, comparable, nameOf, renderField, u
 import { projectHref } from '../../../../config/lib/constants/panel';
 
 const MAX = 4;
-const SKIP = ['_id', '__v', 'password'];
+// `_model`: which model a project's record belongs to (one collection per project) — the same on every row.
+const SKIP = ['_id', '__v', '_model', 'password'];
 
 /**
  * 2–4 ticked records side by side: one column each, a row per field, rendered

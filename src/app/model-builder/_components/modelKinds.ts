@@ -130,7 +130,7 @@ export const RESERVED_KEYS = [
 	'_id', 'id', '__v', 'code', 'createdAt', 'updatedAt',
 	'collection', 'db', 'emit', 'errors', 'get', 'init', 'isModified', 'isNew', 'listeners', 'modelName',
 	'on', 'once', 'populated', 'prototype', 'remove', 'removeListener', 'save', 'schema', 'set',
-	'toObject', 'toJSON', 'validate', 'isSelected', 'model', 'baseModel',
+	'toObject', 'toJSON', 'validate', 'isSelected', 'model', 'baseModel', '_model',
 ];
 const SENSITIVE = /pass(word)?|token|secret|api_?key|apikey|private|otp|salt|hash/i;
 
