@@ -2,7 +2,7 @@
 
 import { FC, FormEvent, ReactNode, useEffect, useState } from 'react';
 import { Box, Button, Center, Field, Flex, Grid, Input, SegmentGroup, Skeleton, Text, Textarea } from '@chakra-ui/react';
-import { Archive, ArchiveRestore, Boxes, Globe, LayoutGrid, MoreHorizontal, Pencil, PlugZap, Plus, Trash2 } from 'lucide-react';
+import { Archive, ArchiveRestore, Boxes, Globe, LayoutGrid, LayoutTemplate, MoreHorizontal, Pencil, PlugZap, Plus, Trash2, Wrench } from 'lucide-react';
 import {
 	Dialog,
 	DialogBody,
@@ -13,10 +13,11 @@ import {
 	PromptDialog,
 	useCreateProjectMutation,
 	useDeleteProjectMutation,
+	useGetNewProjectTemplatesQuery,
 	useGetProjectsQuery,
 	useUpdateProjectMutation,
 } from '..';
-import type { MediaScope, ProjectType, TenantProject } from '../store/services/tenantApi';
+import type { MediaScope, ProjectTemplateCard, ProjectType, TenantProject } from '../store/services/tenantApi';
 import { styles } from '../config';
 import { Panel } from '../cl';
 import { openProject, useWorkspace } from './useWorkspace';
@@ -43,6 +44,129 @@ const domainList = (text: string) =>
 		.map(d => d.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, ''))
 		.filter(Boolean);
 
+/** "5 models · 4 pages · sample data" — what a template card builds. */
+const insideLine = (t: ProjectTemplateCard) =>
+	[
+		t.inside.models.length && `${t.inside.models.length} model${t.inside.models.length === 1 ? '' : 's'}`,
+		t.inside.pages.length && `${t.inside.pages.length} page${t.inside.pages.length === 1 ? '' : 's'}`,
+		t.inside.sampleRecords && 'sample data',
+	]
+		.filter(Boolean)
+		.join(' · ');
+
+/** One choice in New project's "Start from": a template, or setting it up yourself. */
+const StartCard: FC<{ on: boolean; onClick: () => void; icon: ReactNode; title: string; body: string; foot?: string }> = ({ on, onClick, icon, title, body, foot }) => (
+	<Flex
+		as='button'
+		// @ts-ignore — Flex as button
+		type='button'
+		aria-pressed={on}
+		onClick={onClick}
+		direction='column'
+		align='flex-start'
+		gap={1}
+		p={3}
+		minW={0}
+		textAlign='left'
+		borderRadius='lg'
+		borderWidth={on ? '2px' : '1px'}
+		borderColor={on ? 'accent.solid' : 'border'}
+		m={on ? 0 : '1px'}
+		bg={on ? 'bg.subtle' : 'bg.panel'}
+		cursor='pointer'
+		_hover={{ bg: 'bg.muted' }}>
+		<Flex
+			align='center'
+			gap={2}
+			color={on ? 'fg' : 'fg.muted'}
+			minW={0}>
+			{icon}
+			<Text
+				fontSize='13.5px'
+				fontWeight='600'
+				color='fg'
+				truncate>
+				{title}
+			</Text>
+		</Flex>
+		<Text
+			fontSize='12px'
+			color='fg.muted'
+			lineClamp={2}>
+			{body}
+		</Text>
+		{foot && (
+			<Text
+				fontSize='11.5px'
+				color='fg.subtle'>
+				{foot}
+			</Text>
+		)}
+	</Flex>
+);
+
+/**
+ * New project's template gallery (docs/templates T-14): the published
+ * templates of the chosen kind, and setting it up yourself. Nothing is built
+ * here — the new project's Get started asks the template's questions and
+ * builds it. `value` is a template key, 'own', or '' (choose on Get started).
+ */
+const StartFrom: FC<{ type: ProjectType; value: string; onChange: (v: string, t?: ProjectTemplateCard) => void }> = ({ type, value, onChange }) => {
+	const { data, isFetching, isError } = useGetNewProjectTemplatesQuery(type);
+	const templates = data?.doc || [];
+	// Nothing published for this kind (or an older server without the route): Get started takes it from here.
+	if (isError || (!isFetching && !templates.length)) return null;
+	const kind = type === 'api' ? 'API' : type;
+	return (
+		<Box>
+			<Flex
+				align='baseline'
+				justify='space-between'
+				gap={2}>
+				<Text {...labelCss}>Start from</Text>
+				<GuideLink section='templates' />
+			</Flex>
+			<Text
+				{...helperCss}
+				mb={1.5}>
+				A ready-made {kind}, built whole after a few questions — or set it up yourself. Pick now, or choose on the next page.
+			</Text>
+			{isFetching && !templates.length ? (
+				<Skeleton
+					h='120px'
+					borderRadius='lg'
+				/>
+			) : (
+				<Grid
+					templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)' }}
+					gap={2}
+					maxH='300px'
+					overflowY='auto'
+					p='1px'>
+					{templates.map(t => (
+						<StartCard
+							key={t.key}
+							on={value === t.key}
+							onClick={() => (value === t.key ? onChange('') : onChange(t.key, t))}
+							icon={<LayoutTemplate size={16} />}
+							title={t.name}
+							body={t.summary}
+							foot={insideLine(t)}
+						/>
+					))}
+					<StartCard
+						on={value === 'own'}
+						onClick={() => onChange(value === 'own' ? '' : 'own')}
+						icon={<Wrench size={16} />}
+						title='Set it up yourself'
+						body={type === 'website' ? 'Your brand, a home page and going live, step by step.' : 'Build your models step by step, or with your AI.'}
+					/>
+				</Grid>
+			)}
+		</Box>
+	);
+};
+
 /**
  * A project's name, kind, media library (WO-23) and (for a website) domains:
  * a new project, or — with `project` — editing one (its kind can't change).
@@ -53,6 +177,9 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 	const [description, setDescription] = useState('');
 	const [domains, setDomains] = useState('');
 	const [mediaScope, setMediaScope] = useState<MediaScope>('project');
+	/** New project only: a template key, 'own', or '' — where Get started opens (StartFrom). */
+	const [start, setStart] = useState('');
+	const [startName, setStartName] = useState('');
 	const [create, created] = useCreateProjectMutation();
 	const [update, updated] = useUpdateProjectMutation();
 	const { isLoading, error } = project ? updated : created;
@@ -64,6 +191,8 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 		setDescription(project?.description || '');
 		setDomains((project?.domains || []).join(', '));
 		setMediaScope(project?.mediaScope || 'project');
+		setStart('');
+		setStartName('');
 	}, [open, project?._id]);
 
 	const close = () => {
@@ -74,9 +203,10 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 
 	const submit = async (e?: FormEvent) => {
 		e?.preventDefault();
-		if (!name.trim()) return;
+		const projectName = name.trim() || (!project ? startName : '');
+		if (!projectName) return;
 		const body = {
-			name: name.trim(),
+			name: projectName,
 			description: description.trim(),
 			mediaScope,
 			...(type === 'website' && { domains: domainList(domains) }),
@@ -89,8 +219,8 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 		const res = await create({ ...body, type });
 		if ('data' in res && res.data) {
 			close();
-			// A new project starts with its Get started page (WO-35).
-			openProject(res.data.publicSlug, '/get-started');
+			// A new project starts with its Get started page (WO-35) — on the template picked here, if one was.
+			openProject(res.data.publicSlug, `/get-started${start === 'own' ? '?start=own' : start ? `?template=${encodeURIComponent(start)}` : ''}`);
 		}
 	};
 
@@ -98,7 +228,7 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 		<Dialog
 			isOpen={open}
 			onClose={close}
-			size='md'
+			size={project ? 'md' : 'lg'}
 			forceModal>
 			<DialogHeader
 				divider
@@ -114,14 +244,15 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 					<Flex
 						direction='column'
 						gap={4}>
-						<Field.Root required>
+						{/* Left empty with a template picked, the project takes the template's name. */}
+						<Field.Root required={!(!project && startName)}>
 							<Field.Label {...labelCss}>Name</Field.Label>
 							<Input
 								size='sm'
 								value={name}
 								autoFocus
 								maxLength={80}
-								placeholder='e.g. Customer portal'
+								placeholder={startName || 'e.g. Customer portal'}
 								onChange={e => setName(e.target.value)}
 							/>
 						</Field.Root>
@@ -141,7 +272,12 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 												// @ts-ignore — Flex as button
 												type='button'
 												aria-pressed={on}
-												onClick={() => setType(t.value)}
+												onClick={() => {
+													if (t.value === type) return;
+													setType(t.value);
+													setStart('');
+													setStartName('');
+												}}
 												direction='column'
 												align='flex-start'
 												gap={1.5}
@@ -176,6 +312,16 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 									})}
 								</Grid>
 							</Box>
+						)}
+						{!project && open && (
+							<StartFrom
+								type={type}
+								value={start}
+								onChange={(v, t) => {
+									setStart(v);
+									setStartName(t?.name || '');
+								}}
+							/>
 						)}
 						{type === 'website' && (
 							<Field.Root>
@@ -242,7 +388,7 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 					{...(styles.MODAL_BUTTON as any)}
 					type='submit'
 					form='new-project'
-					disabled={!name.trim()}
+					disabled={!name.trim() && !(!project && startName)}
 					loading={isLoading}>
 					{project ? 'Save' : 'Create project'}
 				</Button>

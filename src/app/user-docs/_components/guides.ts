@@ -89,6 +89,22 @@ export const USER_GUIDES: Guide[] = [
 		],
 	},
 	{
+		href: '/user-docs/templates',
+		title: 'Templates',
+		name: 'Starting from a template',
+		description: 'A ready-made app, API or website built into a new project: choosing one, its questions, the build, and what you get.',
+		icon: LayoutTemplate,
+		group: 'Organization & projects',
+		topics: [
+			{ id: 'templates', title: 'What a template is' },
+			{ id: 'start-from', title: 'Choosing one' },
+			{ id: 'template-questions', title: 'The questions' },
+			{ id: 'template-build', title: 'While it builds' },
+			{ id: 'after-template', title: 'After it’s built' },
+			{ id: 'template-list', title: 'The templates' },
+		],
+	},
+	{
 		href: '/user-docs/models',
 		title: 'Models',
 		name: 'Models',

@@ -919,6 +919,17 @@ const TemplateStart: FC<{ name: string; kind: string; fallback: ReactNode; own?:
 	const [started, setStarted] = useState(false);
 	const [dismissed, setDismissed] = useState(false);
 
+	// New project's choice (ProjectsBoard): ?template=<key> opens that template's questions, ?start=own skips the gallery. Read once, then dropped from the address.
+	useEffect(() => {
+		if (!data) return;
+		const q = new URLSearchParams(window.location.search);
+		const key = q.get('template');
+		const chosen = key ? data.doc.find(t => t.key === key) : null;
+		if (chosen) setPicked(chosen);
+		else if (q.get('start') === 'own') setOwn(true);
+		if (key || q.get('start')) window.history.replaceState(null, '', window.location.pathname);
+	}, [data]);
+
 	if (isLoading || checking)
 		return (
 			<Layout
@@ -954,7 +965,7 @@ const TemplateStart: FC<{ name: string; kind: string; fallback: ReactNode; own?:
 			<Panel
 				title='Start from a template'
 				subtitle='Pages, models and settings made for you — all of it changes afterwards.'
-				actions={<GuideLink section='projects' />}>
+				actions={<GuideLink section='templates' />}>
 				<Grid
 					templateColumns={{ base: '1fr', md: '1fr 1fr' }}
 					gap={3}>

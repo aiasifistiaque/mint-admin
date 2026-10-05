@@ -1,4 +1,5 @@
 import mainApi, { routeTags } from './mainApi';
+import { BACKEND } from '../../config/lib/constants/panel';
 
 /**
  * The tenant panel's own calls (backend routes-tenant; docs:
@@ -553,6 +554,10 @@ export const tenantApi = mainApi.injectEndpoints({
 		getTemplateApplying: builder.query<TemplateApplying, void>({
 			query: () => 'templates/applying',
 		}),
+		/** New project's gallery, before there's a project: the organization-level route, so the full address (a bare path would go to the current project). */
+		getNewProjectTemplates: builder.query<{ doc: ProjectTemplateCard[] }, ProjectType>({
+			query: type => `${BACKEND}/templates?type=${type}`,
+		}),
 
 		/* ---------------------------- webhooks and the API overview (T-09) */
 		getWebhooks: builder.query<{ doc: Webhook[]; models: { route: string; title: string }[]; events: WebhookEvent[] }, void>({
@@ -599,6 +604,7 @@ export const {
 	useGetWidgetsQuery,
 	useSaveWidgetsMutation,
 	useGetProjectTemplatesQuery,
+	useGetNewProjectTemplatesQuery,
 	useApplyProjectTemplateMutation,
 	useGetTemplateApplyingQuery,
 	useSwitchOrganizationMutation,

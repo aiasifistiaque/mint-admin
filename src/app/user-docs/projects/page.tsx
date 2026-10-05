@@ -148,7 +148,8 @@ const Projects = () => (
 				Every template — app, API or website — works the same way. It asks a few questions first (your business name, say)
 				and can add sample records to try it with. Then it builds the whole thing in the background, usually within a minute:
 				models, pages, sidebar, dashboard, roles and sample records. You can leave the page while it works. Everything it
-				makes is ordinary and changes like anything you built yourself. A template only goes into a new project, once.
+				makes is ordinary and changes like anything you built yourself. A template only goes into a new project, once. You
+				can pick one in New project already. More in <A href='/user-docs/templates'>Starting from a template</A>.
 			</P>
 			<P>
 				Every step can be skipped. Come back any time from the dashboard (<em>Get started</em>) or at{' '}
