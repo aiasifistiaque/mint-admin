@@ -220,8 +220,16 @@ const WebsiteOverview: FC = () => {
 					{can('build') && (
 						<Button
 							asChild
-							size='xs'>
+							size='xs'
+							variant='outline'>
 							<NextLink href={projectHref('/site-setup')}>Site setup</NextLink>
+						</Button>
+					)}
+					{can('build') && (
+						<Button
+							asChild
+							size='xs'>
+							<NextLink href={projectHref('/site-builder')}>Edit site</NextLink>
 						</Button>
 					)}
 				</Flex>

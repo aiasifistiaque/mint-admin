@@ -63,6 +63,8 @@ type LayoutProps = FlexPropsType & {
 	isLoading?: boolean;
 	/** The site footer under the page. Table pages turn it off: they page and scroll on their own. */
 	showFooter?: boolean;
+	/** The page fills the window under the navbar with no padding (and no footer) — full-screen tools. */
+	fullBleed?: boolean;
 };
 
 const Layout: FC<LayoutProps> = ({
@@ -71,9 +73,11 @@ const Layout: FC<LayoutProps> = ({
 	path = '/dashboard',
 	hideColorMode = false,
 	isLoading,
-	showFooter = true,
+	showFooter: footer = true,
+	fullBleed = false,
 	...props
 }) => {
+	const showFooter = footer && !fullBleed;
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
@@ -120,7 +124,11 @@ const Layout: FC<LayoutProps> = ({
 						// the bottom of the window rather than below the fold.
 						{...(showFooter && { minH: '100vh' })}
 						{...props}>
-						<MainBody grow={showFooter}>{!isLoading && children}</MainBody>
+						<MainBody
+							grow={showFooter}
+							bare={fullBleed}>
+							{!isLoading && children}
+						</MainBody>
 						{showFooter && <Footer />}
 					</Flex>
 				</Body>

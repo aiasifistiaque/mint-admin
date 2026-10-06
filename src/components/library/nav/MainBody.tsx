@@ -7,9 +7,20 @@ const PX = { base: padding.BASE, md: padding.MD, lg: padding.LG };
 /**
  * `grow`: fill the space above a footer instead of a full screen of its own —
  * with a footer under it, the fixed height pushed the footer below the fold
- * even on a page with nothing on it.
+ * even on a page with nothing on it. `bare`: no padding or gap, exactly the
+ * window under the navbar — full-screen tools like the site builder.
  */
-const MainBody = ({ children, grow = false }: { children: ReactNode; grow?: boolean }) => (
+const MainBody = ({ children, grow = false, bare = false }: { children: ReactNode; grow?: boolean; bare?: boolean }) =>
+	bare ? (
+		<Flex
+			flexDir='column'
+			overflow='clip'
+			// The navbar is sizes.NAV_HEIGHT = 14 = 3.5rem tall.
+			h='calc(100dvh - 3.5rem)'
+			w='full'>
+			{children}
+		</Flex>
+	) : (
 	<Flex
 		pt={{ base: 2, md: 1 }}
 		flexDir='column'
@@ -25,6 +36,6 @@ const MainBody = ({ children, grow = false }: { children: ReactNode; grow?: bool
 		w='full'>
 		{children}
 	</Flex>
-);
+	);
 
 export default MainBody;
