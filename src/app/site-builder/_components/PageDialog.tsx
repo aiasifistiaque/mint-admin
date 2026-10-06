@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Box, Button, Dialog, Flex, Input, Portal, Switch, Text, Textarea } from '@chakra-ui/react';
 import { radius, ModalFooter, DiscardButton, UploadModal } from '@/components/library';
 import { Dropdown } from '@/components/library/cl';
@@ -44,6 +44,7 @@ const PageDialog: FC<Props> = ({ open, page, layouts, saving, onClose, onSave })
 	const [layout, setLayout] = useState('default');
 	const [seo, setSeo] = useState<SbSeo>(EMPTY_SEO);
 	const [tried, setTried] = useState(false);
+	const nameRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
 		if (!open) return;
@@ -72,6 +73,7 @@ const PageDialog: FC<Props> = ({ open, page, layouts, saving, onClose, onSave })
 			placement='top'
 			size='md'
 			open={open}
+			initialFocusEl={() => nameRef.current}
 			onOpenChange={e => !e.open && !saving && onClose()}>
 			<Portal>
 				<Dialog.Backdrop />
@@ -105,8 +107,8 @@ const PageDialog: FC<Props> = ({ open, page, layouts, saving, onClose, onSave })
 									title='Name'
 									help='Shown in the panel, and in the menu unless you give it a menu label.'>
 									<Input
+										ref={nameRef}
 										size='sm'
-										autoFocus
 										value={name}
 										maxLength={80}
 										placeholder='e.g. About us'
