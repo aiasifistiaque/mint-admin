@@ -68,11 +68,13 @@ const RichText: FC<{ value: string; onChange: (html: string) => void; readOnly: 
 	return (
 		<Box
 			css={{
-				'.ql-toolbar': { borderRadius: '6px 6px 0 0', borderColor: 'var(--chakra-colors-border)', padding: '4px' },
-				'.ql-container': { borderRadius: '0 0 6px 6px', borderColor: 'var(--chakra-colors-border)', fontSize: '13px', fontFamily: 'inherit' },
-				'.ql-editor': { minHeight: '110px', maxHeight: '320px', overflowY: 'auto' },
-				'.ql-snow .ql-stroke': { stroke: 'currentColor' },
-				'.ql-snow .ql-picker': { color: 'inherit' },
+				'& .ql-toolbar': { borderRadius: '6px 6px 0 0', borderColor: 'var(--chakra-colors-border)', padding: '4px' },
+				'& .ql-container': { borderRadius: '0 0 6px 6px', borderColor: 'var(--chakra-colors-border)', fontSize: '13px', fontFamily: 'inherit' },
+				'& .ql-editor': { minHeight: '110px', maxHeight: '320px', overflowY: 'auto' },
+				'& .ql-editor code': { bg: 'bg.muted', color: 'fg', borderRadius: '4px', padding: '1px 4px', fontSize: '12px' },
+				'& .ql-snow .ql-stroke': { stroke: 'currentColor' },
+				'& .ql-snow .ql-fill': { fill: 'currentColor' },
+				'& .ql-snow .ql-picker': { color: 'inherit' },
 			}}>
 			<Quill
 				key={mount}

@@ -98,13 +98,14 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 	const [dialog, setDialog] = useState<null | { kind: 'add' } | { kind: 'settings' }>(null);
 	const [publishOpen, setPublishOpen] = useState(false);
 	const [deleting, setDeleting] = useState<SbPageSummary | null>(null);
+	const [takingOff, setTakingOff] = useState<SbPageSummary | null>(null);
 
 	const [createPage, creating] = useSiteBuilderCreatePageMutation();
 	const [savePage] = useSiteBuilderSavePageMutation();
 	const [deletePage, deletingState] = useSiteBuilderDeletePageMutation();
 	const [duplicatePage] = useSiteBuilderDuplicatePageMutation();
 	const [setHome] = useSiteBuilderSetHomeMutation();
-	const [unpublish] = useSiteBuilderUnpublishPageMutation();
+	const [unpublish, unpublishState] = useSiteBuilderUnpublishPageMutation();
 	const [savingSettings, setSavingSettings] = useState(false);
 
 	// No page in the address (or one that's gone): the home page. Not while the list is
@@ -209,8 +210,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 					break;
 				}
 				case 'unpublish':
-					await unpublish(p.id).unwrap();
-					toaster.create({ type: 'success', title: `${p.name} is off the site`, description: 'Visitors get “Page not found” there now.' });
+					setTakingOff(p);
 					break;
 				case 'republish':
 					if (p.id === pageId) await draft.send({ status: 'draft' });
@@ -447,6 +447,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 						) : (
 							<Outline
 								tree={tree}
+								loading={draft.pageId !== pageId}
 								header={header}
 								footer={footer}
 								blocks={blocks}
@@ -578,6 +579,26 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 						}
 					} catch (e: any) {
 						toaster.create({ type: 'error', title: errorOf(e, 'Not deleted — try again.') });
+					}
+				}}
+			/>
+			<PromptDialog
+				open={!!takingOff}
+				tone='warning'
+				title={`Take “${takingOff?.name}” off the site?`}
+				description='It goes off the live site now, without publishing — visitors get “Page not found” there. Your draft is kept; put it back on the site any time and it returns with the next publish.'
+				subject={takingOff?.path}
+				confirmLabel='Take it off'
+				loading={unpublishState.isLoading}
+				onClose={() => setTakingOff(null)}
+				onConfirm={async () => {
+					const p = takingOff!;
+					try {
+						await unpublish(p.id).unwrap();
+						setTakingOff(null);
+						toaster.create({ type: 'success', title: `${p.name} is off the site`, description: 'Visitors get “Page not found” there now.' });
+					} catch (e: any) {
+						toaster.create({ type: 'error', title: errorOf(e, 'Still on the site — try again.') });
 					}
 				}}
 			/>

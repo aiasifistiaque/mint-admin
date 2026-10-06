@@ -43,24 +43,39 @@ const Canvas: FC<Props> = ({ tree, layout, design, links, theme, device, selecte
 	handlers.current = { onSelect, onHover };
 
 	const send = (msg: PanelMessage) => frame.current?.contentWindow?.postMessage(msg, SITES_ORIGIN);
+	// The frame said 'ready' before the design had loaded: start it once the design arrives.
+	const waiting = useRef(false);
+
+	const init = () => {
+		const l = latest.current;
+		if (!l.design) {
+			waiting.current = true;
+			return;
+		}
+		waiting.current = false;
+		send({ mint: 1, type: 'init', design: l.design, layout: l.layout, page: { tree: l.tree }, links: l.links, theme: l.theme });
+		if (l.selectedId) send({ mint: 1, type: 'select', id: l.selectedId });
+		setReady(true);
+		setFailed(false);
+	};
+	const initRef = useRef(init);
+	initRef.current = init;
 
 	useEffect(() => {
 		const onMessage = (e: MessageEvent) => {
 			if (e.origin !== SITES_ORIGIN || e.source !== frame.current?.contentWindow || !isCanvasMessage(e.data)) return;
 			const m = e.data;
-			if (m.type === 'ready') {
-				const l = latest.current;
-				if (!l.design) return;
-				send({ mint: 1, type: 'init', design: l.design, layout: l.layout, page: { tree: l.tree }, links: l.links, theme: l.theme });
-				if (l.selectedId) send({ mint: 1, type: 'select', id: l.selectedId });
-				setReady(true);
-				setFailed(false);
-			} else if (m.type === 'click') handlers.current.onSelect(m.id, m.shift);
+			if (m.type === 'ready') initRef.current();
+			else if (m.type === 'click') handlers.current.onSelect(m.id, m.shift);
 			else if (m.type === 'hover') handlers.current.onHover(m.id);
 		};
 		window.addEventListener('message', onMessage);
 		return () => window.removeEventListener('message', onMessage);
 	}, []);
+
+	useEffect(() => {
+		if (design && waiting.current) init();
+	}, [design]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	// No 'ready' within a while: the renderer isn't reachable (or doesn't allow this panel).
 	useEffect(() => {

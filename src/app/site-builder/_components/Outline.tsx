@@ -17,6 +17,8 @@ import SiteGuide from './SiteGuide';
 
 type Props = {
 	tree: SbNode[];
+	/** The page's draft hasn't arrived yet — don't call it empty. */
+	loading?: boolean;
 	header: SbNode[];
 	footer: SbNode[];
 	blocks: Map<string, SbBlockDef>;
@@ -176,7 +178,7 @@ const Group: FC<{ title: string; note?: string; children: React.ReactNode }> = (
 	</Box>
 );
 
-const Outline: FC<Props> = ({ tree, header, footer, blocks, selectedId, hoveredId, readOnly, onSelect, onHover, onRename, onToggleHidden, onToggleLocked }) => {
+const Outline: FC<Props> = ({ tree, loading, header, footer, blocks, selectedId, hoveredId, readOnly, onSelect, onHover, onRename, onToggleHidden, onToggleLocked }) => {
 	const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
 	const label = useCallback((n: SbNode) => n.name || blocks.get(n.type)?.label || n.type, [blocks]);
 	const onToggle = useCallback(
@@ -264,7 +266,7 @@ const Outline: FC<Props> = ({ tree, header, footer, blocks, selectedId, hoveredI
 							px={3}
 							fontSize='12px'
 							color='fg.muted'>
-							This page is empty.
+							{loading ? 'Loading…' : 'This page is empty.'}
 						</Text>
 					)}
 				</Group>
