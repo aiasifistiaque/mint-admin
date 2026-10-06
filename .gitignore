@@ -45,4 +45,6 @@ next-env.d.ts
 /.next-tenantscratch/
 /.next-adminscratch/
 /.next-tenant5021/
+/.next-tenantsb/
+/.next-sbcheck/
 /.next-build/
