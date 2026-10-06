@@ -23,6 +23,7 @@ import { Panel } from '../cl';
 import { openProject, useWorkspace } from './useWorkspace';
 import GuideLink from './GuideLink';
 import Workspaces from './Workspaces';
+import FirstSteps from './FirstSteps';
 import { Menu } from '@chakra-ui/react';
 import CustomMenuItem, { MenuItemStyle } from '../menu/CustomMenuItem';
 import { MenuContainer } from '../menu';
@@ -171,7 +172,7 @@ const StartFrom: FC<{ type: ProjectType; value: string; onChange: (v: string, t?
  * A project's name, kind, media library (WO-23) and (for a website) domains:
  * a new project, or — with `project` — editing one (its kind can't change).
  */
-const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantProject }> = ({ open, onClose, project }) => {
+const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantProject; initialType?: ProjectType }> = ({ open, onClose, project, initialType }) => {
 	const [name, setName] = useState('');
 	const [type, setType] = useState<ProjectType>('app');
 	const [description, setDescription] = useState('');
@@ -187,7 +188,7 @@ const ProjectDialog: FC<{ open: boolean; onClose: () => void; project?: TenantPr
 	useEffect(() => {
 		if (!open) return;
 		setName(project?.name || '');
-		setType(project?.type || 'app');
+		setType(project?.type || initialType || 'app');
 		setDescription(project?.description || '');
 		setDomains((project?.domains || []).join(', '));
 		setMediaScope(project?.mediaScope || 'project');
@@ -549,15 +550,28 @@ const ProjectsBoard: FC<{ welcome?: boolean }> = ({ welcome }) => {
 	const [showArchived, setShowArchived] = useState(false);
 	const { data, isLoading } = useGetProjectsQuery({ archived: showArchived });
 	const [creating, setCreating] = useState(false);
+	const [createType, setCreateType] = useState<ProjectType>('app');
 	const projects = data?.doc || [];
 	const canCreate = can('create-projects');
+	// Home, before the organization's first project: the first steps take the page (FirstSteps).
+	const firstRun = welcome && !isLoading && !showArchived && !projects.length && canCreate;
+	const create = (type: ProjectType = 'app') => {
+		setCreateType(type);
+		setCreating(true);
+	};
 
 	return (
 		<Flex
 			direction='column'
 			gap={4}
 			pt={2}>
-			{welcome && organization && (
+			{welcome && !isLoading && (
+				<FirstSteps
+					projects={projects}
+					onCreate={create}
+				/>
+			)}
+			{welcome && organization && !firstRun && (
 				<Box>
 					<Text
 						fontSize='20px'
@@ -571,97 +585,100 @@ const ProjectsBoard: FC<{ welcome?: boolean }> = ({ welcome }) => {
 					</Text>
 				</Box>
 			)}
-			<Panel
-				title='Projects'
-				subtitle='Apps, websites and APIs in this organization'
-				actions={
-					<Flex
-						align='center'
-						gap={2}>
-						<GuideLink section='projects' />
-						<Button
-							size='xs'
-							variant='ghost'
-							color='fg.muted'
-							onClick={() => setShowArchived(a => !a)}>
-							{showArchived ? 'Hide archived' : 'Show archived'}
-						</Button>
-						{canCreate && (
+			{!firstRun && (
+				<Panel
+					title='Projects'
+					subtitle='Apps, websites and APIs in this organization'
+					actions={
+						<Flex
+							align='center'
+							gap={2}>
+							<GuideLink section='projects' />
 							<Button
 								size='xs'
-								onClick={() => setCreating(true)}>
-								<Plus size={14} />
-								New project
+								variant='ghost'
+								color='fg.muted'
+								onClick={() => setShowArchived(a => !a)}>
+								{showArchived ? 'Hide archived' : 'Show archived'}
 							</Button>
-						)}
-					</Flex>
-				}>
-				{isLoading ? (
-					<Grid
-						templateColumns='repeat(auto-fill, minmax(240px, 1fr))'
-						gap={3}>
-						{[0, 1, 2].map(i => (
-							<Skeleton
-								key={i}
-								h='150px'
-								borderRadius='lg'
-							/>
-						))}
-					</Grid>
-				) : projects.length ? (
-					<Grid
-						templateColumns='repeat(auto-fill, minmax(240px, 1fr))'
-						gap={3}>
-						{projects.map(p => (
-							<ProjectCard
-								key={p._id}
-								project={p}
-								current={p._id === project?._id}
-								canManage={can('manage-projects')}
-								isOwner={role?.system === 'owner'}
-							/>
-						))}
-					</Grid>
-				) : (
-					<Flex
-						direction='column'
-						align='center'
-						textAlign='center'
-						gap={2}
-						py={10}>
-						<Center
-							boxSize='44px'
-							borderRadius='full'
-							bg='bg.muted'
-							color='fg.muted'>
-							<Boxes size={20} />
-						</Center>
-						<Text
-							fontSize='14px'
-							fontWeight='600'>
-							No projects yet
-						</Text>
-						<Text
-							fontSize='13px'
-							color='fg.muted'
-							maxW='360px'>
-							A project is an app, a website or an API: its own models, pages, sidebar and dashboard.
-						</Text>
-						{canCreate && (
-							<Button
-								mt={2}
-								size='sm'
-								onClick={() => setCreating(true)}>
-								<Plus size={15} />
-								Create your first project
-							</Button>
-						)}
-					</Flex>
-				)}
-			</Panel>
+							{canCreate && (
+								<Button
+									size='xs'
+									onClick={() => create()}>
+									<Plus size={14} />
+									New project
+								</Button>
+							)}
+						</Flex>
+					}>
+					{isLoading ? (
+						<Grid
+							templateColumns='repeat(auto-fill, minmax(240px, 1fr))'
+							gap={3}>
+							{[0, 1, 2].map(i => (
+								<Skeleton
+									key={i}
+									h='150px'
+									borderRadius='lg'
+								/>
+							))}
+						</Grid>
+					) : projects.length ? (
+						<Grid
+							templateColumns='repeat(auto-fill, minmax(240px, 1fr))'
+							gap={3}>
+							{projects.map(p => (
+								<ProjectCard
+									key={p._id}
+									project={p}
+									current={p._id === project?._id}
+									canManage={can('manage-projects')}
+									isOwner={role?.system === 'owner'}
+								/>
+							))}
+						</Grid>
+					) : (
+						<Flex
+							direction='column'
+							align='center'
+							textAlign='center'
+							gap={2}
+							py={10}>
+							<Center
+								boxSize='44px'
+								borderRadius='full'
+								bg='bg.muted'
+								color='fg.muted'>
+								<Boxes size={20} />
+							</Center>
+							<Text
+								fontSize='14px'
+								fontWeight='600'>
+								No projects yet
+							</Text>
+							<Text
+								fontSize='13px'
+								color='fg.muted'
+								maxW='360px'>
+								A project is an app, a website or an API: its own models, pages, sidebar and dashboard.
+							</Text>
+							{canCreate && (
+								<Button
+									mt={2}
+									size='sm'
+									onClick={() => create()}>
+									<Plus size={15} />
+									Create your first project
+								</Button>
+							)}
+						</Flex>
+					)}
+				</Panel>
+			)}
 			<Workspaces />
 			<ProjectDialog
 				open={creating}
+				initialType={createType}
 				onClose={() => setCreating(false)}
 			/>
 		</Flex>

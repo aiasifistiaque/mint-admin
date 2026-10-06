@@ -2,134 +2,82 @@
 
 import { FC, ReactNode } from 'react';
 import NextLink from 'next/link';
-import { Badge, Box, Button, Flex, Grid, Link, Text } from '@chakra-ui/react';
-import {
-	ArrowRight,
-	Boxes,
-	Building2,
-	Check,
-	FolderKanban,
-	Globe,
-	History,
-	Images,
-	KeyRound,
-	LayoutDashboard,
-	LayoutTemplate,
-	Plug,
-	ShieldCheck,
-	UserRound,
-	Users,
-	Webhook,
-} from 'lucide-react';
+import { Box, Button, Flex, Grid, Link, Text } from '@chakra-ui/react';
+import { ArrowRight, Globe, LayoutGrid, PlugZap, Users } from 'lucide-react';
 import { useAuth } from '@/components/library';
-import Footer from '@/components/library/nav/Footer';
-import { API_ORIGIN, HOME } from '@/components/library/config/lib/constants/panel';
-import { CodeBlock } from '../docs/_components/prose';
+import { DOCS_URL, HOME } from '@/components/library/config/lib/constants/panel';
+import { AUTH_MONO, BRAND_GRADIENT, INK_BAND, SITE_STYLE, Wordmark, brandButton } from '@/components/library/ui/AuthFrame';
 
 /**
- * The tenant panel's landing page (/): what MINT is, and the way in — sign up
- * or sign in, or straight to the dashboard (HOME) when already signed in.
- * Public, so no admin layout. One page for now; every section links to the
- * user guide (/user-docs) that covers it.
+ * The tenant panel's public landing page (/). The marketing website
+ * (mintapp.shop) tells the whole story, so this is just the basics: what you
+ * can build, how to start, and the way in — sign up or log in, or straight to
+ * the dashboard (HOME) when already signed in. Drawn like the website and the
+ * sign-in pages (AuthFrame's palette and type).
  */
+
+const WEBSITE_URL = (process.env.NEXT_PUBLIC_WEBSITE_URL || 'https://mintapp.shop').replace(/\/+$/, '');
 
 const MAX_W = '1120px';
 const PX = { base: 4, md: 8 };
 
-const NAV = [
-	{ href: '#features', label: 'Features' },
-	{ href: '#how', label: 'How it works' },
-	{ href: '#teams', label: 'Teams' },
-	{ href: '#developers', label: 'Developers' },
-	{ href: '/user-docs', label: 'Guides' },
-];
+/** The website's tones (mint-webpage lib/tones.ts): text in light and dark, and the dot. */
+const TONES = {
+	emerald: { fg: '#059669', dark: '#34d399', dot: '#10b981' },
+	sky: { fg: '#0284c7', dark: '#38bdf8', dot: '#0ea5e9' },
+	violet: { fg: '#7c3aed', dark: '#a78bfa', dot: '#8b5cf6' },
+	amber: { fg: '#d97706', dark: '#fbbf24', dot: '#f59e0b' },
+};
+type Tone = keyof typeof TONES;
 
-const FEATURES = [
+const BUILD: { icon: ReactNode; tone: Tone; title: string; text: string; examples: string }[] = [
 	{
-		icon: Boxes,
-		title: 'Models',
-		body: 'Describe what you keep track of — customers, orders, bookings. Each gets a table, a form, filters and a page per record.',
-		href: '/user-docs/models',
+		icon: <LayoutGrid size={20} />,
+		tone: 'emerald',
+		title: 'An app for your team',
+		text: 'Keep track of what your business runs on, with tables, forms and a dashboard made for it.',
+		examples: 'Customers, orders, bookings, stock',
 	},
 	{
-		icon: LayoutTemplate,
-		title: 'Pages',
-		body: 'Choose the columns, lay out the forms and detail pages, add filters, bulk actions, import and export.',
-		href: '/user-docs/pages',
+		icon: <Globe size={20} />,
+		tone: 'sky',
+		title: 'A website',
+		text: 'Write your pages and their content here, and show them on your own site.',
+		examples: 'A company site, a blog, a shop',
 	},
 	{
-		icon: LayoutDashboard,
-		title: 'Dashboard',
-		body: 'Numbers, charts and recent records from your models on the home page — arranged how you like.',
-		href: '/user-docs/dashboard',
+		icon: <PlugZap size={20} />,
+		tone: 'violet',
+		title: 'A backend for your app',
+		text: 'Your data behind a ready API, with sign-in for your users.',
+		examples: 'A mobile app, a web app',
 	},
 	{
-		icon: Images,
-		title: 'Media',
-		body: 'A drive for images and files, kept per project or shared across your organization.',
-		href: '/user-docs/media',
-	},
-	{
-		icon: Webhook,
-		title: 'Public API',
-		body: 'Open any model to your own website or mobile app — list, read, create — with no server to run.',
-		href: '/user-docs/public-api',
-	},
-	{
-		icon: UserRound,
-		title: 'Customer sign-in',
-		body: 'Drop a sign-in widget on your site. Your customers get accounts, and see only their own records.',
-		href: '/user-docs/customers',
-	},
-	{
-		icon: Globe,
-		title: 'Websites',
-		body: 'Start a website project with pages, SEO and content blocks ready — and analytics for its visitors.',
-		href: '/user-docs/websites',
-	},
-	{
-		icon: Plug,
-		title: 'Connect your AI',
-		body: 'Let Claude, ChatGPT and others plan and build models in your project from a conversation.',
-		href: '/user-docs/connect-ai',
+		icon: <Users size={20} />,
+		tone: 'amber',
+		title: 'A place for your team',
+		text: 'Invite people and choose what each of them can see and do.',
+		examples: 'Owners, staff, partners',
 	},
 ];
 
-const STEPS = [
-	{ title: 'Create a project', body: 'An app for your data, or a website. Each project is a workspace of its own.' },
-	{ title: 'Build your models', body: 'Add fields step by step, or ask your AI. The pages appear as soon as you save.' },
-	{ title: 'Bring in your team', body: 'Invite people by email, pick their role and the projects they work in.' },
-	{ title: 'Go live', body: 'Open models to your site or app, with sign-in for your customers.' },
+const STEPS: { title: string; text: string }[] = [
+	{ title: 'Sign up', text: 'Create your account and name your business. It takes a minute.' },
+	{ title: 'Start a project', text: 'Choose an app, a website or an API. Start from a template, or from scratch.' },
+	{ title: 'Describe your data', text: 'Add what you keep track of, like customers or orders. MINT makes the screens for you.' },
+	{ title: 'Use it with your team', text: 'Add your records, invite your team, and open it to your site when you’re ready.' },
 ];
-
-const USE_CASES = ['CRM', 'Bookings', 'Inventory', 'Orders', 'Invoices', 'Support desk', 'Company website', 'Mobile app back end'];
-
-const TEAM_POINTS = [
-	{ icon: Building2, text: 'An organization for your company, with as many projects as you need.' },
-	{ icon: Users, text: 'Roles with plain permissions — view, add, edit, delete — plus building and managing.' },
-	{ icon: FolderKanban, text: 'Give each person every project, or only the ones they work on.' },
-	{ icon: Check, text: 'Belong to several organizations and switch between them in a click.' },
-];
-
-const SECURITY_POINTS = [
-	{ icon: ShieldCheck, text: 'Two-step sign-in with email codes or passkeys.' },
-	{ icon: KeyRound, text: 'See every signed-in device and sign any of them out.' },
-	{ icon: History, text: 'Every change to a record is kept, with who made it and when.' },
-];
-
-/* ------------------------------------------------------------------ page */
 
 const Landing = () => {
 	const { isLoading, isLoggedIn } = useAuth();
 	const signedIn = !isLoading && !!isLoggedIn;
 
 	return (
-		<Box
-			minH='100vh'
+		<Flex
+			direction='column'
+			minH='100dvh'
 			bg='bg'
-			color='fg'
-			display='flex'
-			flexDirection='column'>
+			css={SITE_STYLE}>
 			<Header
 				ready={!isLoading}
 				signedIn={signedIn}
@@ -138,14 +86,12 @@ const Landing = () => {
 				as='main'
 				flex={1}>
 				<Hero signedIn={signedIn} />
-				<Features />
-				<HowItWorks />
-				<Teams />
-				<Developers />
-				<FinalCta signedIn={signedIn} />
+				<WhatYouBuild />
+				<HowToStart />
+				<FinalBand signedIn={signedIn} />
 			</Box>
-			<Footer />
-		</Box>
+			<SiteFooter />
+		</Flex>
 	);
 };
 
@@ -155,88 +101,106 @@ const Container: FC<{ children: ReactNode }> = ({ children }) => (
 	<Box
 		maxW={MAX_W}
 		mx='auto'
-		px={PX}>
+		px={PX}
+		w='full'>
 		{children}
 	</Box>
 );
 
-const Section: FC<{ id?: string; eyebrow: string; title: string; lead?: string; muted?: boolean; children: ReactNode }> = ({
-	id,
-	eyebrow,
-	title,
-	lead,
-	muted,
-	children,
-}) => (
+/** A small label above a heading, with a coloured dot (the website's Eyebrow). */
+const Eyebrow: FC<{ children: ReactNode; tone?: Tone }> = ({ children, tone = 'emerald' }) => (
+	<Flex
+		as='p'
+		align='center'
+		gap={2}
+		mb={4}
+		fontFamily={AUTH_MONO}
+		fontSize='11.5px'
+		letterSpacing='0.16em'
+		textTransform='uppercase'
+		css={{ color: `${TONES[tone].fg} !important`, _dark: { color: `${TONES[tone].dark} !important` } }}>
+		<Box
+			as='span'
+			boxSize='6px'
+			borderRadius='full'
+			bg={TONES[tone].dot}
+		/>
+		{children}
+	</Flex>
+);
+
+/** A section heading in the website's light capitals. */
+const Heading: FC<{ children: ReactNode; size?: 'lg' | 'xl' }> = ({ children, size = 'lg' }) => (
+	<Text
+		as={size === 'xl' ? 'h1' : 'h2'}
+		fontSize={size === 'xl' ? { base: '40px', md: '64px' } : { base: '30px', md: '42px' }}
+		fontWeight={200}
+		lineHeight='1.04'
+		letterSpacing='-0.012em'
+		textTransform='uppercase'
+		css={{ color: 'var(--chakra-colors-fg) !important' }}>
+		{children}
+	</Text>
+);
+
+/** Words in the brand gradient, inside a heading. */
+const Accent: FC<{ children: ReactNode }> = ({ children }) => (
 	<Box
-		as='section'
-		id={id}
-		scrollMarginTop='56px'
-		py={{ base: 14, md: 20 }}
-		bg={muted ? 'bg.subtle' : 'bg'}
-		borderTopWidth='1px'
-		borderColor='border.muted'>
-		<Container>
-			<Box
-				maxW='640px'
-				mb={{ base: 8, md: 10 }}>
-				<Text
-					fontSize='13px'
-					fontWeight='600'
-					color='fg.muted'
-					mb={2}>
-					{eyebrow}
-				</Text>
-				<Text
-					as='h2'
-					fontSize={{ base: '2xl', md: '3xl' }}
-					fontWeight='600'
-					letterSpacing='-0.02em'
-					lineHeight='1.2'>
-					{title}
-				</Text>
-				{lead && (
-					<Text
-						mt={3}
-						fontSize='md'
-						color='fg.muted'
-						lineHeight='1.7'>
-						{lead}
-					</Text>
-				)}
-			</Box>
-			{children}
-		</Container>
+		as='span'
+		css={{
+			fontSize: 'inherit !important',
+			background: BRAND_GRADIENT,
+			WebkitBackgroundClip: 'text',
+			backgroundClip: 'text',
+			color: 'transparent !important',
+		}}>
+		{children}
 	</Box>
 );
 
-const AuthButtons: FC<{ signedIn: boolean; size?: 'sm' | 'md' | 'lg' }> = ({ signedIn, size = 'md' }) =>
+/** Small spaced capitals — the website's header and footer links. */
+const CAPS = { fontSize: '11.5px', letterSpacing: '0.16em', textTransform: 'uppercase', fontWeight: 300 } as const;
+
+/** The way in: sign up and log in, or on to the dashboard. */
+const AuthButtons: FC<{ signedIn: boolean; light?: boolean }> = ({ signedIn, light }) =>
 	signedIn ? (
 		<Button
 			asChild
-			size={size}>
+			css={{ ...brandButton, w: 'auto', px: 7 }}>
 			<NextLink href={HOME}>
-				Go to your dashboard
-				<ArrowRight size={16} />
+				Open your dashboard
+				<ArrowRight size={15} />
 			</NextLink>
 		</Button>
 	) : (
-		<>
+		<Flex
+			gap={3}
+			wrap='wrap'>
 			<Button
 				asChild
-				size={size}>
+				css={{ ...brandButton, w: 'auto', px: 7 }}>
 				<NextLink href='/auth/register'>
-					Create your account
-					<ArrowRight size={16} />
+					Sign up free
+					<ArrowRight size={15} />
 				</NextLink>
 			</Button>
 			<Button
 				asChild
-				size={size}
-				variant='outline'>
-				<NextLink href='/user-docs/getting-started'>Read the guides</NextLink>
+				h='48px'
+				px={7}
+				borderRadius='full'
+				variant='outline'
+				css={{
+					...CAPS,
+					fontSize: '12px',
+					fontWeight: 400,
+					...(light
+						? { color: '#faf8f1', borderColor: 'rgb(255 255 255 / 0.25)', bg: 'transparent', _hover: { bg: 'rgb(255 255 255 / 0.08)' } }
+						: { borderColor: 'border.emphasized', bg: 'bg.panel' }),
+				}}>
+				<NextLink href='/auth/login'>Log in</NextLink>
 			</Button>
-		</>
+		</Flex>
 	);
 
 /* ---------------------------------------------------------------- header */
@@ -249,595 +213,375 @@ const Header: FC<{ ready: boolean; signedIn: boolean }> = ({ ready, signedIn }) 
 		zIndex={10}
 		bg='bg'
 		borderBottomWidth='1px'
-		borderColor='border.muted'>
-		<Flex
-			maxW={MAX_W}
-			mx='auto'
-			px={PX}
-			h='56px'
-			align='center'
-			gap={6}>
-			<Link
-				asChild
-				fontWeight='700'
-				fontSize='16px'
-				letterSpacing='-0.01em'
-				color='fg'
-				_hover={{ textDecoration: 'none' }}>
-				<NextLink href='/'>MINT</NextLink>
-			</Link>
+		borderColor='border'>
+		<Container>
 			<Flex
-				as='nav'
-				gap={1}
-				flex={1}
-				display={{ base: 'none', md: 'flex' }}>
-				{NAV.map(n => (
-					<Link
-						key={n.href}
-						asChild
-						px={2.5}
-						py={1.5}
-						borderRadius='md'
-						fontSize='13px'
-						color='fg.muted'
-						_hover={{ color: 'fg', bg: 'bg.muted', textDecoration: 'none' }}>
-						<NextLink href={n.href}>{n.label}</NextLink>
-					</Link>
-				))}
-			</Flex>
-			<Flex
-				gap={2}
-				ml='auto'
+				h='64px'
 				align='center'
-				// Hidden until the stored session is read, so the buttons don't swap after a flash.
-				visibility={ready ? 'visible' : 'hidden'}>
-				{signedIn ? (
-					<Button
-						asChild
-						size='sm'>
-						<NextLink href={HOME}>
-							<LayoutDashboard size={14} />
-							Dashboard
-						</NextLink>
-					</Button>
-				) : (
-					<>
-						<Button
-							asChild
-							size='sm'
-							variant='ghost'>
-							<NextLink href='/auth/login'>Sign in</NextLink>
-						</Button>
-						<Button
-							asChild
-							size='sm'>
-							<NextLink href='/auth/register'>Sign up</NextLink>
-						</Button>
-					</>
-				)}
+				gap={4}>
+				<Link
+					asChild
+					_hover={{ textDecoration: 'none' }}>
+					<NextLink
+						href='/'
+						aria-label='MINT home'>
+						<Wordmark />
+					</NextLink>
+				</Link>
+				<Flex
+					ml='auto'
+					align='center'
+					gap={{ base: 2, md: 5 }}>
+					<Link
+						href={DOCS_URL}
+						target='_blank'
+						rel='noreferrer'
+						display={{ base: 'none', sm: 'inline' }}
+						color='fg.muted'
+						_hover={{ color: 'fg', textDecoration: 'none' }}
+						css={CAPS}>
+						Guides
+					</Link>
+					{ready &&
+						(signedIn ? (
+							<Button
+								asChild
+								h='36px'
+								px={4}
+								borderRadius='full'
+								css={{ ...CAPS, fontSize: '11px', fontWeight: 400, background: '#0d0d0d', color: 'white', _dark: { background: '#faf8f1', color: '#0d0d0d' } }}>
+								<NextLink href={HOME}>Dashboard</NextLink>
+							</Button>
+						) : (
+							<>
+								<Link
+									asChild
+									color='fg.muted'
+									_hover={{ color: 'fg', textDecoration: 'none' }}
+									css={CAPS}>
+									<NextLink href='/auth/login'>Log in</NextLink>
+								</Link>
+								<Button
+									asChild
+									h='36px'
+									px={4}
+									borderRadius='full'
+									css={{ ...CAPS, fontSize: '11px', fontWeight: 400, background: BRAND_GRADIENT, color: 'white', border: 0, _hover: { filter: 'brightness(1.1)' } }}>
+									<NextLink href='/auth/register'>Sign up</NextLink>
+								</Button>
+							</>
+						))}
+				</Flex>
 			</Flex>
-		</Flex>
+		</Container>
 	</Box>
 );
 
-/* ------------------------------------------------------------------ hero */
+/* ---------------------------------------------------------------- hero */
 
 const Hero: FC<{ signedIn: boolean }> = ({ signedIn }) => (
 	<Box
-		pt={{ base: 12, md: 20 }}
-		pb={{ base: 14, md: 20 }}>
+		as='section'
+		position='relative'
+		overflow='hidden'
+		css={{ backgroundImage: 'var(--auth-mesh)' }}>
 		<Container>
-			<Grid
-				templateColumns={{ base: '1fr', lg: '1fr 1.1fr' }}
-				gap={{ base: 10, lg: 12 }}
-				alignItems='center'>
-				<Box>
-					<Badge
-						variant='outline'
-						size='lg'
-						borderRadius='full'
-						px={3}
-						mb={5}>
-						Apps and websites, without the build
-					</Badge>
-					<Text
-						as='h1'
-						fontSize={{ base: '3xl', md: '5xl' }}
-						fontWeight='650'
-						letterSpacing='-0.03em'
-						lineHeight='1.08'
-						mb={5}>
-						Describe your business. Get the app that runs it.
-					</Text>
-					<Text
-						fontSize={{ base: 'md', md: 'lg' }}
-						color='fg.muted'
-						lineHeight='1.7'
-						mb={8}
-						maxW='520px'>
-						MINT turns the things you keep track of into a ready panel — tables, forms, dashboards — for your whole team. Then
-						open it to your own website or app, with sign-in for your customers. Nothing to code, nothing to deploy.
-					</Text>
-					<Flex
-						gap={3}
-						wrap='wrap'>
-						<AuthButtons
-							signedIn={signedIn}
-							size='lg'
-						/>
-					</Flex>
+			<Box
+				py={{ base: 16, md: 28 }}
+				maxW='820px'>
+				<Eyebrow>Backend + admin panel</Eyebrow>
+				<Heading size='xl'>
+					Build the app <Accent>your business runs on.</Accent>
+				</Heading>
+				<Text
+					mt={6}
+					maxW='600px'
+					fontSize={{ base: '16px', md: '18px' }}
+					lineHeight='1.7'
+					css={{ color: 'var(--chakra-colors-fg-muted) !important', fontSize: 'inherit' }}>
+					Tell MINT what you keep track of, and get a ready app for your team: tables, forms and a dashboard. No code needed.
+				</Text>
+				<Box mt={9}>
+					<AuthButtons signedIn={signedIn} />
 				</Box>
-				<PanelPreview />
+			</Box>
+		</Container>
+	</Box>
+);
+
+/* ---------------------------------------------------------------- what you can build */
+
+const WhatYouBuild = () => (
+	<Box
+		as='section'
+		id='build'
+		py={{ base: 16, md: 24 }}
+		borderTopWidth='1px'
+		borderColor='border'>
+		<Container>
+			<Eyebrow tone='sky'>What you can build</Eyebrow>
+			<Heading>One place for your business.</Heading>
+			<Grid
+				mt={{ base: 10, md: 14 }}
+				templateColumns={{ base: '1fr', sm: 'repeat(2, minmax(0, 1fr))', lg: 'repeat(4, minmax(0, 1fr))' }}
+				gap={4}>
+				{BUILD.map(b => (
+					<Flex
+						key={b.title}
+						direction='column'
+						gap={3}
+						p={6}
+						bg='bg.panel'
+						borderWidth='1px'
+						borderColor='border'
+						borderRadius='2xl'
+						css={{ boxShadow: 'var(--auth-shadow)' }}>
+						<Flex
+							boxSize='44px'
+							align='center'
+							justify='center'
+							borderRadius='xl'
+							borderWidth='1px'
+							borderColor='border'
+							bg='bg.subtle'
+							css={{ color: TONES[b.tone].fg, _dark: { color: TONES[b.tone].dark } }}>
+							{b.icon}
+						</Flex>
+						<Text
+							as='h3'
+							mt={2}
+							fontSize='15px'
+							fontWeight={400}
+							css={{ color: 'var(--chakra-colors-fg) !important' }}>
+							{b.title}
+						</Text>
+						<Text
+							fontSize='14.5px'
+							lineHeight='1.65'
+							css={{ color: 'var(--chakra-colors-fg-muted) !important' }}>
+							{b.text}
+						</Text>
+						<Text
+							mt='auto'
+							pt={2}
+							fontFamily={AUTH_MONO}
+							fontSize='11px'
+							letterSpacing='0.06em'
+							css={{ color: 'var(--chakra-colors-fg-subtle) !important' }}>
+							{b.examples}
+						</Text>
+					</Flex>
+				))}
 			</Grid>
 		</Container>
 	</Box>
 );
 
-/** A drawing of the panel — a bookings table — made of the theme's own tokens. */
-const ROWS = [
-	{ guest: 'Amira Khan', date: 'Oct 4', guests: 2, status: 'Confirmed', tone: 'green' },
-	{ guest: 'Leo Martins', date: 'Oct 5', guests: 4, status: 'Pending', tone: 'orange' },
-	{ guest: 'Sara Ito', date: 'Oct 5', guests: 1, status: 'Confirmed', tone: 'green' },
-	{ guest: 'Noah Berg', date: 'Oct 7', guests: 3, status: 'Cancelled', tone: 'red' },
-	{ guest: 'Priya Das', date: 'Oct 8', guests: 2, status: 'Pending', tone: 'orange' },
-];
+/* ---------------------------------------------------------------- how to start */
 
-const SIDEBAR = [
-	{ icon: LayoutDashboard, label: 'Home' },
-	{ icon: Boxes, label: 'Bookings', active: true },
-	{ icon: Users, label: 'Guests' },
-	{ icon: Building2, label: 'Rooms' },
-];
+const STEP_TONES: Tone[] = ['emerald', 'sky', 'violet', 'amber'];
 
-const PanelPreview = () => (
-	<Box
-		aria-hidden
-		borderWidth='1px'
-		borderColor='border'
-		borderRadius='xl'
-		bg='bg.panel'
-		shadow='lg'
-		overflow='hidden'
-		fontSize='12px'>
-		<Flex
-			h='32px'
-			align='center'
-			gap={1.5}
-			px={3}
-			bg='bg.subtle'
-			borderBottomWidth='1px'
-			borderColor='border.muted'>
-			{[0, 1, 2].map(i => (
-				<Box
-					key={i}
-					boxSize='9px'
-					borderRadius='full'
-					bg='bg.emphasized'
-				/>
-			))}
-		</Flex>
-		<Flex minH='280px'>
-			<Box
-				w='150px'
-				flexShrink={0}
-				display={{ base: 'none', sm: 'block' }}
-				p={3}
-				bg='bg.subtle'
-				borderRightWidth='1px'
-				borderColor='border.muted'>
-				<Text
-					fontWeight='600'
-					mb={3}
-					px={2}>
-					Seaside Inn
-				</Text>
-				{SIDEBAR.map(({ icon: Icon, label, active }) => (
-					<Flex
-						key={label}
-						align='center'
-						gap={2}
-						px={2}
-						py={1.5}
-						borderRadius='md'
-						bg={active ? 'bg.muted' : undefined}
-						color={active ? 'fg' : 'fg.muted'}
-						fontWeight={active ? '500' : '400'}>
-						<Icon size={13} />
-						{label}
-					</Flex>
-				))}
-			</Box>
-			<Box
-				flex={1}
-				minW={0}
-				p={4}>
-				<Flex
-					align='center'
-					justify='space-between'
-					mb={3}>
-					<Text
-						fontSize='14px'
-						fontWeight='600'>
-						Bookings
-					</Text>
-					<Box
-						px={2.5}
-						py={1}
-						borderRadius='md'
-						bg='bg.inverted'
-						color='fg.inverted'
-						fontWeight='500'>
-						Add booking
-					</Box>
-				</Flex>
-				<Flex
-					gap={1.5}
-					mb={3}>
-					{['Status', 'Date', 'Room'].map(f => (
-						<Box
-							key={f}
-							px={2}
-							py={0.5}
-							borderWidth='1px'
-							borderColor='border'
-							borderStyle='dashed'
-							borderRadius='full'
-							color='fg.muted'>
-							{f}
-						</Box>
-					))}
-				</Flex>
-				<Box
-					borderWidth='1px'
-					borderColor='border.muted'
-					borderRadius='md'
-					overflow='hidden'>
-					<Grid
-						templateColumns='1.5fr 0.9fr 0.8fr 1.1fr'
-						gap={2}
-						px={3}
-						py={2}
-						bg='bg.subtle'
-						color='fg.muted'
-						fontWeight='500'>
-						<Text>Guest</Text>
-						<Text>Date</Text>
-						<Text>Guests</Text>
-						<Text>Status</Text>
-					</Grid>
-					{ROWS.map(r => (
-						<Grid
-							key={r.guest}
-							templateColumns='1.5fr 0.9fr 0.8fr 1.1fr'
-							gap={2}
-							alignItems='center'
-							px={3}
-							py={2}
-							borderTopWidth='1px'
-							borderColor='border.muted'>
-							<Text
-								truncate
-								fontWeight='500'>
-								{r.guest}
-							</Text>
-							<Text color='fg.muted'>{r.date}</Text>
-							<Text color='fg.muted'>{r.guests}</Text>
-							<Box>
-								<Badge
-									size='sm'
-									colorPalette={r.tone}>
-									{r.status}
-								</Badge>
-							</Box>
-						</Grid>
-					))}
-				</Box>
-			</Box>
-		</Flex>
-	</Box>
-);
-
-/* -------------------------------------------------------------- sections */
-
-const Features = () => (
-	<Section
-		id='features'
-		eyebrow='Features'
-		title='Everything a business panel needs, already built'
-		lead='Start from your data, not from code. Each part below has a guide that walks through it.'>
-		<Grid
-			templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }}
-			gap={4}>
-			{FEATURES.map(({ icon: Icon, title, body, href }) => (
-				<Link
-					key={title}
-					asChild
-					display='flex'
-					flexDirection='column'
-					alignItems='flex-start'
-					gap={2}
-					p={5}
-					borderWidth='1px'
-					borderColor='border.muted'
-					borderRadius='xl'
-					bg='bg'
-					color='fg'
-					transition='border-color .15s ease'
-					_hover={{ textDecoration: 'none', borderColor: 'border.emphasized' }}>
-					<NextLink href={href}>
-						<Flex
-							boxSize='34px'
-							align='center'
-							justify='center'
-							borderRadius='lg'
-							bg='bg.muted'
-							mb={1}>
-							<Icon size={17} />
-						</Flex>
-						<Text
-							fontSize='15px'
-							fontWeight='600'>
-							{title}
-						</Text>
-						<Text
-							fontSize='13.5px'
-							color='fg.muted'
-							lineHeight='1.6'>
-							{body}
-						</Text>
-					</NextLink>
-				</Link>
-			))}
-		</Grid>
-	</Section>
-);
-
-const HowItWorks = () => (
-	<Section
-		id='how'
-		muted
-		eyebrow='How it works'
-		title='From sign-up to live in an afternoon'>
-		<Grid
-			templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }}
-			gap={6}
-			mb={12}>
-			{STEPS.map((step, i) => (
-				<Box key={step.title}>
-					<Flex
-						boxSize='28px'
-						align='center'
-						justify='center'
-						borderRadius='full'
-						bg='bg.inverted'
-						color='fg.inverted'
-						fontSize='13px'
-						fontWeight='600'
-						mb={3}>
-						{i + 1}
-					</Flex>
-					<Text
-						fontSize='15px'
-						fontWeight='600'
-						mb={1}>
-						{step.title}
-					</Text>
-					<Text
-						fontSize='14px'
-						color='fg.muted'
-						lineHeight='1.6'>
-						{step.body}
-					</Text>
-				</Box>
-			))}
-		</Grid>
-		<Text
-			fontSize='13px'
-			fontWeight='600'
-			color='fg.muted'
-			mb={3}>
-			What people build
-		</Text>
-		<Flex
-			gap={2}
-			wrap='wrap'>
-			{USE_CASES.map(u => (
-				<Box
-					key={u}
-					px={3}
-					py={1.5}
-					borderWidth='1px'
-					borderColor='border'
-					borderRadius='full'
-					bg='bg'
-					fontSize='13px'>
-					{u}
-				</Box>
-			))}
-		</Flex>
-	</Section>
-);
-
-const PointList: FC<{ title: string; points: { icon: any; text: string }[]; href: string; link: string }> = ({
-	title,
-	points,
-	href,
-	link,
-}) => (
-	<Box
-		p={{ base: 5, md: 7 }}
-		borderWidth='1px'
-		borderColor='border.muted'
-		borderRadius='xl'>
-		<Text
-			fontSize='16px'
-			fontWeight='600'
-			mb={5}>
-			{title}
-		</Text>
-		<Flex
-			direction='column'
-			gap={4}
-			mb={6}>
-			{points.map(({ icon: Icon, text }) => (
-				<Flex
-					key={text}
-					gap={3}
-					align='flex-start'>
-					<Flex
-						boxSize='28px'
-						flexShrink={0}
-						align='center'
-						justify='center'
-						borderRadius='md'
-						bg='bg.muted'>
-						<Icon size={15} />
-					</Flex>
-					<Text
-						fontSize='14px'
-						lineHeight='1.6'
-						pt='3px'>
-						{text}
-					</Text>
-				</Flex>
-			))}
-		</Flex>
-		<Link
-			asChild
-			fontSize='13px'
-			fontWeight='500'
-			color='fg.muted'
-			_hover={{ color: 'fg' }}>
-			<NextLink href={href}>
-				{link}
-				<ArrowRight size={13} />
-			</NextLink>
-		</Link>
-	</Box>
-);
-
-const Teams = () => (
-	<Section
-		id='teams'
-		eyebrow='Teams'
-		title='Your whole team, each with the right access'
-		lead='Invite people by email. Their role decides what they can do; their projects decide where.'>
-		<Grid
-			templateColumns={{ base: '1fr', md: '1fr 1fr' }}
-			gap={4}>
-			<PointList
-				title='Organizations, roles and projects'
-				points={TEAM_POINTS}
-				href='/user-docs/organization'
-				link='Your organization'
-			/>
-			<PointList
-				title='Safe by default'
-				points={SECURITY_POINTS}
-				href='/user-docs/account'
-				link='Your account and sign-in'
-			/>
-		</Grid>
-	</Section>
-);
-
-const Developers = () => (
-	<Section
-		id='developers'
-		muted
-		eyebrow='Developers'
-		title='Your data, on your own site or app'
-		lead='Switch on the public API for a model and read it from anywhere — a website, a mobile app, a script. Customers can sign in with a drop-in widget and keep their own records.'>
-		<Grid
-			templateColumns={{ base: '1fr', lg: '1.2fr 1fr' }}
-			gap={6}
-			alignItems='start'>
-			<Box minW={0}>
-				<CodeBlock
-					label='List products'
-					code={`const res = await fetch('${API_ORIGIN}/public/api/acme-store/products?limit=12');
-const { doc, total } = await res.json();`}
-				/>
-			</Box>
-			<Flex
-				direction='column'
-				gap={3}>
-				{[
-					'Pick which models are public and what each allows: list, read, create.',
-					'Open to everyone, to signed-in customers, or to each customer’s own records.',
-					'Websites count visits from their own domains in analytics.',
-				].map(t => (
-					<Flex
-						key={t}
-						gap={2.5}
-						align='flex-start'>
-						<Box
-							pt='3px'
-							color='fg.muted'>
-							<Check size={15} />
-						</Box>
-						<Text
-							fontSize='14px'
-							lineHeight='1.6'>
-							{t}
-						</Text>
-					</Flex>
-				))}
-				<Link
-					asChild
-					mt={2}
-					fontSize='13px'
-					fontWeight='500'
-					color='fg.muted'
-					_hover={{ color: 'fg' }}>
-					<NextLink href='/user-docs/public-api'>
-						The public API guide
-						<ArrowRight size={13} />
-					</NextLink>
-				</Link>
-			</Flex>
-		</Grid>
-	</Section>
-);
-
-const FinalCta: FC<{ signedIn: boolean }> = ({ signedIn }) => (
+const HowToStart = () => (
 	<Box
 		as='section'
+		id='how'
 		py={{ base: 16, md: 24 }}
+		bg='bg.subtle'
 		borderTopWidth='1px'
-		borderColor='border.muted'>
+		borderColor='border'>
 		<Container>
-			<Flex
-				direction='column'
-				align='center'
-				textAlign='center'>
+			<Eyebrow tone='violet'>How to start</Eyebrow>
+			<Heading>Your first app in four steps.</Heading>
+			<Grid
+				as='ol'
+				mt={{ base: 10, md: 14 }}
+				listStyleType='none'
+				templateColumns={{ base: '1fr', sm: 'repeat(2, minmax(0, 1fr))', lg: 'repeat(4, minmax(0, 1fr))' }}
+				gap={4}>
+				{STEPS.map((s, i) => {
+					const t = TONES[STEP_TONES[i]];
+					return (
+						<Flex
+							as='li'
+							key={s.title}
+							direction='column'
+							gap={3}
+							p={6}
+							bg='bg.panel'
+							borderWidth='1px'
+							borderColor='border'
+							borderRadius='2xl'>
+							<Flex
+								align='center'
+								justify='space-between'>
+								<Text
+									fontFamily={AUTH_MONO}
+									fontSize='13px'
+									css={{ color: `${t.fg} !important`, _dark: { color: `${t.dark} !important` } }}>
+									0{i + 1}
+								</Text>
+								<Box
+									h='2px'
+									w='40px'
+									borderRadius='full'
+									bg={t.dot}
+								/>
+							</Flex>
+							<Text
+								as='h3'
+								mt={2}
+								fontSize='17px'
+								fontWeight={400}
+								css={{ color: 'var(--chakra-colors-fg) !important' }}>
+								{s.title}
+							</Text>
+							<Text
+								fontSize='14.5px'
+								lineHeight='1.65'
+								css={{ color: 'var(--chakra-colors-fg-muted) !important' }}>
+								{s.text}
+							</Text>
+						</Flex>
+					);
+				})}
+			</Grid>
+			<Text
+				mt={8}
+				fontSize='14.5px'
+				css={{ color: 'var(--chakra-colors-fg-muted) !important' }}>
+				Every step has a short guide.{' '}
+				<Link
+					href={`${DOCS_URL}/getting-started`}
+					target='_blank'
+					rel='noreferrer'
+					color='fg'
+					textDecoration='underline'
+					textUnderlineOffset='4px'
+					textDecorationColor='border.emphasized'
+					_hover={{ textDecorationColor: '#10b981' }}>
+					Read the getting started guide
+				</Link>
+			</Text>
+		</Container>
+	</Box>
+);
+
+/* ---------------------------------------------------------------- the last band */
+
+const FinalBand: FC<{ signedIn: boolean }> = ({ signedIn }) => (
+	<Box
+		as='section'
+		position='relative'
+		overflow='hidden'
+		py={{ base: 16, md: 24 }}
+		css={{ ...INK_BAND, '& p, & span, & h2': { color: '#faf8f1 !important' } }}>
+		<Box
+			aria-hidden
+			position='absolute'
+			inset={0}
+			pointerEvents='none'
+			css={{ backgroundImage: 'radial-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1px)', backgroundSize: '24px 24px' }}
+		/>
+		<Container>
+			<Box
+				position='relative'
+				maxW='720px'>
 				<Text
 					as='h2'
-					fontSize={{ base: '2xl', md: '4xl' }}
-					fontWeight='650'
-					letterSpacing='-0.02em'
-					lineHeight='1.15'
-					mb={3}
-					maxW='640px'>
-					{signedIn ? 'Pick up where you left off' : 'Start with one project'}
+					fontSize={{ base: '30px', md: '44px' }}
+					fontWeight={200}
+					lineHeight='1.04'
+					letterSpacing='-0.012em'
+					textTransform='uppercase'>
+					{signedIn ? 'Welcome back.' : 'Ready when you are.'}
 				</Text>
 				<Text
-					fontSize='md'
-					color='fg.muted'
-					mb={8}
-					maxW='520px'>
-					{signedIn
-						? 'Your projects and your team are waiting in the dashboard.'
-						: 'Sign up, name your organization, and build your first model in minutes.'}
+					mt={5}
+					fontSize='16px'
+					lineHeight='1.7'
+					css={{ opacity: 0.75 }}>
+					{signedIn ? (
+						'Pick up where you left off.'
+					) : (
+						<>
+							Sign up free and build your first app today. Want the full tour first?{' '}
+							<Link
+								href={WEBSITE_URL}
+								target='_blank'
+								rel='noreferrer'
+								textDecoration='underline'
+								textUnderlineOffset='4px'
+								css={{ color: '#faf8f1 !important', textDecorationColor: 'rgb(255 255 255 / 0.35)' }}>
+								It’s on our website
+							</Link>
+							.
+						</>
+					)}
 				</Text>
-				<Flex
-					gap={3}
-					wrap='wrap'
-					justify='center'>
+				<Box mt={9}>
 					<AuthButtons
 						signedIn={signedIn}
-						size='lg'
+						light
 					/>
+				</Box>
+			</Box>
+		</Container>
+	</Box>
+);
+
+/* ---------------------------------------------------------------- footer */
+
+const FOOTER_LINKS = [
+	{ href: WEBSITE_URL, label: 'mintapp.shop', external: true },
+	{ href: DOCS_URL, label: 'Guides', external: true },
+	{ href: '/terms', label: 'Terms' },
+	{ href: '/privacy-policy', label: 'Privacy' },
+	{ href: '/system-status', label: 'Status' },
+];
+
+const SiteFooter = () => (
+	<Box
+		as='footer'
+		borderTopWidth='1px'
+		borderColor='border'
+		bg='bg.panel'>
+		<Container>
+			<Flex
+				py={8}
+				gap={4}
+				direction={{ base: 'column', md: 'row' }}
+				align={{ base: 'flex-start', md: 'center' }}
+				justify='space-between'>
+				<Text
+					css={{ ...CAPS, fontSize: '10.5px', color: 'var(--chakra-colors-fg-subtle) !important' }}>
+					© {new Date().getFullYear()} MINT
+				</Text>
+				<Flex
+					gap={{ base: 4, md: 6 }}
+					wrap='wrap'>
+					{FOOTER_LINKS.map(l =>
+						l.external ? (
+							<Link
+								key={l.label}
+								href={l.href}
+								target='_blank'
+								rel='noreferrer'
+								color='fg.muted'
+								_hover={{ color: 'fg', textDecoration: 'none' }}
+								css={{ ...CAPS, fontSize: '10.5px' }}>
+								{l.label}
+							</Link>
+						) : (
+							<Link
+								key={l.label}
+								asChild
+								color='fg.muted'
+								_hover={{ color: 'fg', textDecoration: 'none' }}
+								css={{ ...CAPS, fontSize: '10.5px' }}>
+								<NextLink href={l.href}>{l.label}</NextLink>
+							</Link>
+						)
+					)}
 				</Flex>
 			</Flex>
 		</Container>

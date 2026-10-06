@@ -11,6 +11,7 @@ import ProjectsBoard from '@/components/library/tenant/ProjectsBoard';
 import WebsiteOverview from '@/components/library/tenant/WebsiteOverview';
 import ApiOverview from '@/components/library/tenant/ApiOverview';
 import { useWorkspace } from '@/components/library/tenant';
+import FirstSteps from '@/components/library/tenant/FirstSteps';
 
 /**
  * The dashboard: the widgets saved in the dashboard builder (/dashboard-builder),
@@ -41,6 +42,7 @@ function Dashboard() {
 			<Layout
 				title='Dashboard'
 				path='dashboard'>
+				<Firsts />
 				{project.type === 'website' ? <WebsiteOverview /> : <ApiOverview />}
 				{data?.saved && widgets.length ? (
 					<Flex
@@ -56,6 +58,7 @@ function Dashboard() {
 		<Layout
 			title='Dashboard'
 			path='dashboard'>
+			{IS_TENANT_PANEL && <Firsts />}
 			{isLoading ? (
 				<Grid
 					pt={3}
@@ -78,6 +81,16 @@ function Dashboard() {
 		</Layout>
 	);
 }
+
+/** The organization's first steps, while any are left (FirstSteps renders nothing after). */
+const Firsts = () => (
+	<Flex
+		direction='column'
+		mb={4}
+		css={{ '&:empty': { display: 'none' } }}>
+		<FirstSteps />
+	</Flex>
+);
 
 /** A tenant project with no dashboard yet: where to make one. */
 const EmptyProjectDashboard = () => (

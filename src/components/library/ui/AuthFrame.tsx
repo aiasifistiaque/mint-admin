@@ -225,7 +225,7 @@ export const MintMark: FC<{ size?: number }> = ({ size = 28 }) => {
 };
 
 /** The mark and the name in wide capitals. */
-const Wordmark: FC<{ light?: boolean }> = ({ light }) => (
+export const Wordmark: FC<{ light?: boolean }> = ({ light }) => (
 	<Flex
 		align='center'
 		gap={2.5}>
@@ -395,6 +395,22 @@ const BrandBand: FC = () => (
 		</Text>
 	</Flex>
 );
+
+/**
+ * The website's palette and type for a whole page of its own — the tenant
+ * panel's public landing page (app/_landing) uses it too.
+ */
+export const SITE_STYLE: SystemStyleObject = { ...TOKENS, ...TYPE };
+
+/** The deep-ink band's background (the website's `mesh-ink`), for other pages' dark sections. */
+export const INK_BAND: SystemStyleObject = {
+	background:
+		'radial-gradient(45% 60% at 10% 0%, rgb(16 185 129 / 0.28), transparent 70%), radial-gradient(40% 60% at 95% 10%, rgb(168 85 247 / 0.3), transparent 70%), radial-gradient(50% 60% at 60% 110%, rgb(6 182 212 / 0.22), transparent 70%), #0d0d0d',
+	_dark: {
+		background:
+			'radial-gradient(45% 60% at 10% 0%, rgb(16 185 129 / 0.22), transparent 70%), radial-gradient(40% 60% at 95% 10%, rgb(168 85 247 / 0.24), transparent 70%), radial-gradient(50% 60% at 60% 110%, rgb(6 182 212 / 0.16), transparent 70%), #060508',
+	},
+};
 
 /**
  * The page: the brand band (laptop up) and, beside it, the page's own card
