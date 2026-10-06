@@ -11,6 +11,7 @@ import { pagePath, projectHref } from '../config/lib/constants/panel';
 import GuideLink from './GuideLink';
 import type { TenantProject } from '../store/services/tenantApi';
 import { useWorkspace } from './useWorkspace';
+import { openSiteBuilder } from './siteBuilder';
 
 /**
  * A website project's home (WO-34): how the site is doing (the last 30 days
@@ -229,7 +230,15 @@ const WebsiteOverview: FC = () => {
 						<Button
 							asChild
 							size='xs'>
-							<NextLink href={projectHref('/site-builder')}>Edit site</NextLink>
+							<NextLink
+								href={projectHref('/site-builder')}
+								onClick={e => {
+									// The builder opens in its own tab, signed in; a blocked tab falls back to the launcher page.
+									if (project && openSiteBuilder(project.publicSlug)) e.preventDefault();
+								}}>
+								Edit site
+								<ExternalLink size={12} />
+							</NextLink>
 						</Button>
 					)}
 				</Flex>

@@ -1,25 +1,31 @@
 'use client';
 
-import { Center, Spinner } from '@chakra-ui/react';
+import { useState } from 'react';
+import { Box, Button, Center, Flex, Spinner, Text } from '@chakra-ui/react';
+import { ExternalLink, LayoutTemplate } from 'lucide-react';
 import { Layout } from '@/components/library';
 import { EmptyState } from '@/components/library/cl';
-import { useWorkspace } from '@/components/library/tenant';
-import { useSiteBuilderManifestQuery } from '@/components/library/store/services/siteBuilderApi';
-import SiteBuilder from './_components/SiteBuilder';
+import { BUILDER_URL, GuideLink, openSiteBuilder, useWorkspace } from '@/components/library/tenant';
 
 /**
- * The site builder (tenant panel, website projects; backend docs/site-builder
- * SB-05): /<project>/site-builder. The panel deploys before the backend, so a
- * backend without the builder (its manifest 404s) gets a plain message here.
+ * The site builder (backend docs/site-builder) lives on its own address — the
+ * mint-builder app, builder.mintapp.shop — with its own full-screen editor.
+ * This page (/<project>/site-builder, the sidebar's link) opens it in a new
+ * tab, signed in as you: the panel hands the builder your session over
+ * postMessage (components/library/tenant/siteBuilder.ts), never in the address.
  */
 export default function SiteBuilderPage() {
 	const { project, can, isLoading } = useWorkspace();
+	const [state, setState] = useState<'idle' | 'opened' | 'blocked'>('idle');
 	const isWebsite = project?.type === 'website';
-	const manifest = useSiteBuilderManifestQuery(undefined, { skip: !isWebsite });
-	const status = (manifest.error as any)?.status;
+
+	const open = () => {
+		if (!project) return;
+		setState(openSiteBuilder(project.publicSlug) ? 'opened' : 'blocked');
+	};
 
 	let body: React.ReactNode;
-	if (isLoading || (isWebsite && manifest.isLoading))
+	if (isLoading)
 		body = (
 			<Center h='full'>
 				<Spinner size='sm' />
@@ -32,28 +38,87 @@ export default function SiteBuilderPage() {
 				description='Start a website project to build a site visually.'
 			/>
 		);
-	else if (status === 404)
+	else
 		body = (
-			<EmptyState
-				title='The site builder needs the latest backend'
-				description='This panel is newer than the server it talks to. It will work once the backend is updated.'
-			/>
+			<Center
+				h='full'
+				px={4}
+				py={10}>
+				<Box
+					w='full'
+					maxW='520px'
+					p={{ base: 6, md: 10 }}
+					borderWidth='1px'
+					borderRadius='2xl'
+					bg='bg.panel'>
+					<Flex
+						align='center'
+						justify='space-between'
+						mb={5}>
+						<Center
+							w='44px'
+							h='44px'
+							borderRadius='xl'
+							bg='bg.muted'>
+							<LayoutTemplate size={20} />
+						</Center>
+						<GuideLink section='start' />
+					</Flex>
+					<Text
+						fontSize='xs'
+						fontWeight='600'
+						letterSpacing='0.12em'
+						textTransform='uppercase'
+						color='fg.muted'
+						mb={2}>
+						{project?.name}
+					</Text>
+					<Text
+						as='h1'
+						fontSize='2xl'
+						fontWeight='600'
+						mb={3}>
+						Site builder
+					</Text>
+					<Text
+						color='fg.muted'
+						fontSize='sm'
+						lineHeight='1.6'
+						mb={6}>
+						The builder opens full screen in its own tab, already signed in as you. Edit pages on the real site, then publish when you’re ready.
+						{!can('build') && ' Your role can look but not change the site.'}
+					</Text>
+					<Button
+						size='md'
+						w='full'
+						onClick={open}>
+						Open the site builder <ExternalLink size={14} />
+					</Button>
+					{state === 'opened' && (
+						<Text
+							mt={3}
+							fontSize='sm'
+							color='fg.muted'>
+							Opened in a new tab. Closed it? Open it again here.
+						</Text>
+					)}
+					{state === 'blocked' && (
+						<Text
+							mt={3}
+							fontSize='sm'
+							color='red.fg'>
+							Your browser blocked the new tab. Allow pop-ups for this site, then try again.
+						</Text>
+					)}
+					<Text
+						mt={6}
+						fontSize='xs'
+						color='fg.subtle'>
+						{BUILDER_URL.replace(/^https?:\/\//, '')}
+					</Text>
+				</Box>
+			</Center>
 		);
-	else if (status === 403)
-		body = (
-			<EmptyState
-				title='Your role can’t open the site builder'
-				description='Ask someone who builds the project.'
-			/>
-		);
-	else if (manifest.error)
-		body = (
-			<EmptyState
-				title='The site builder didn’t load'
-				description='Check your connection and reload the page.'
-			/>
-		);
-	else body = <SiteBuilder readOnly={!can('build')} />;
 
 	return (
 		<Layout
