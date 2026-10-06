@@ -23,6 +23,14 @@ export type CanvasDesign = {
 	/** the draft's saved sections, for section-ref blocks */
 	sections?: Record<string, { name: string; tree: SbNode[] }>;
 };
+export type MenuItem = { label: string; path: string };
+/** What blocks show from the site itself: name, logo, contact, the menu, this page's place (SB-08). */
+export type CanvasContext = {
+	site?: { name: string; tagline?: string; logo?: string; contact?: Record<string, string>; social?: Record<string, string> };
+	menu?: MenuItem[];
+	path?: string;
+	crumbs?: MenuItem[];
+};
 export type CanvasLayout = { header: SbNode[]; footer: SbNode[] } | null;
 export type Rect = { x: number; y: number; w: number; h: number };
 /** Where a dragged block would land: inside `parentId` (null = the page itself), in `slot`, at `index`. */
@@ -42,7 +50,9 @@ export type PanelMessage =
 			theme: 'light' | 'dark';
 			/** a role that can't change the site: no dragging or typing on the canvas */
 			readOnly?: boolean;
+			context?: CanvasContext;
 	  }
+	| { mint: 1; type: 'context'; context: CanvasContext }
 	| { mint: 1; type: 'tree'; tree: SbNode[]; layout?: CanvasLayout }
 	| { mint: 1; type: 'design'; design: CanvasDesign }
 	| { mint: 1; type: 'theme'; theme: 'light' | 'dark' }

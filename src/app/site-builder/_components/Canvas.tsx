@@ -3,7 +3,7 @@
 import { forwardRef, memo, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import { Box, Flex, Spinner, Text } from '@chakra-ui/react';
 import type { SbNode } from '@/components/library/store/services/siteBuilderApi';
-import { SITES_ORIGIN, SITES_URL, isCanvasMessage, type CanvasDesign, type CanvasLayout, type CanvasMessage, type DragItem, type DropTarget, type PanelMessage } from './protocol';
+import { SITES_ORIGIN, SITES_URL, isCanvasMessage, type CanvasContext, type CanvasDesign, type CanvasLayout, type CanvasMessage, type DragItem, type DropTarget, type PanelMessage } from './protocol';
 
 /**
  * The canvas (docs/site-builder D9): the renderer's /__mint/edit page in a
@@ -23,6 +23,8 @@ type Props = {
 	layout: CanvasLayout;
 	design: CanvasDesign | null;
 	links: Record<string, string>;
+	/** the site's name, logo, contact, menu and this page's breadcrumbs, for blocks that show them */
+	context: CanvasContext;
 	theme: 'light' | 'dark';
 	device: Device;
 	selectedId: string | null;
@@ -50,7 +52,7 @@ export type CanvasHandle = {
 };
 
 const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(
-	{ tree, layout, design, links, theme, device, selectedId, hoveredId, readOnly, openId, dragging, onSelect, onHover, onDropTarget, onMove, onText, onKey, onWidth },
+	{ tree, layout, design, links, context, theme, device, selectedId, hoveredId, readOnly, openId, dragging, onSelect, onHover, onDropTarget, onMove, onText, onKey, onWidth },
 	ref
 ) {
 	const frame = useRef<HTMLIFrameElement>(null);
@@ -60,8 +62,8 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(
 	const [areaW, setAreaW] = useState(0);
 	const [areaH, setAreaH] = useState(0);
 	// The latest props, for the 'ready' handler (it may come before or after they change).
-	const latest = useRef({ tree, layout, design, links, theme, selectedId });
-	latest.current = { tree, layout, design, links, theme, selectedId };
+	const latest = useRef({ tree, layout, design, links, context, theme, selectedId });
+	latest.current = { tree, layout, design, links, context, theme, selectedId };
 	const handlers = useRef({ onSelect, onHover, onDropTarget, onMove, onText, onKey });
 	handlers.current = { onSelect, onHover, onDropTarget, onMove, onText, onKey };
 	const readOnlyRef = useRef(readOnly);
@@ -78,7 +80,7 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(
 			return;
 		}
 		waiting.current = false;
-		send({ mint: 1, type: 'init', design: l.design, layout: l.layout, page: { tree: l.tree }, links: l.links, theme: l.theme, readOnly: readOnlyRef.current });
+		send({ mint: 1, type: 'init', design: l.design, layout: l.layout, page: { tree: l.tree }, links: l.links, theme: l.theme, readOnly: readOnlyRef.current, context: l.context });
 		if (l.selectedId) send({ mint: 1, type: 'select', id: l.selectedId });
 		setReady(true);
 		setFailed(false);
@@ -120,6 +122,9 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(
 	useEffect(() => {
 		if (ready && design) send({ mint: 1, type: 'design', design });
 	}, [design, ready]);
+	useEffect(() => {
+		if (ready) send({ mint: 1, type: 'context', context });
+	}, [context, ready]); // eslint-disable-line react-hooks/exhaustive-deps
 	useEffect(() => {
 		if (ready) send({ mint: 1, type: 'theme', theme });
 	}, [theme, ready]);

@@ -199,6 +199,19 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 		[d]
 	);
 	const links = useMemo(() => Object.fromEntries((pages || []).map(p => [p.id, p.path])), [pages]);
+	// What the header, menu, logo, socials, map and breadcrumbs blocks show (SB-08) — as /render sends it, from the drafts.
+	const pagePath = part ? undefined : current?.path;
+	const canvasContext = useMemo(() => {
+		const list = pages || [];
+		const menu = list
+			.filter(p => p.showInMenu && p.kind !== 'template')
+			.sort((a, b) => (b.priority || 0) - (a.priority || 0) || a.name.localeCompare(b.name))
+			.map(p => ({ label: p.menuLabel || p.name, path: p.path }));
+		const byPath = new Map(list.map(p => [p.path, p.name]));
+		const parts = (pagePath || '').split('/').filter(Boolean);
+		const crumbs = pagePath ? ['/', ...parts.map((_, i) => `/${parts.slice(0, i + 1).join('/')}`)].filter(x => byPath.has(x)).map(x => ({ label: byPath.get(x)!, path: x })) : [];
+		return { site: pagesData?.site, menu, path: pagePath, crumbs };
+	}, [pages, pagesData?.site, pagePath]);
 
 	const pageTree = draft.pageId === pageId ? draft.tree : EMPTY_TREE;
 	const tree = useMemo(() => (part ? partTree(d, part) : pageTree), [part, d, pageTree]);
@@ -954,6 +967,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 						layout={layout}
 						design={canvasDesign}
 						links={links}
+						context={canvasContext}
 						theme={theme}
 						device={device}
 						selectedId={selectedId}

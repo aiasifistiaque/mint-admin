@@ -40,7 +40,9 @@ const PRESET_GROUPS: Record<string, string> = {
 	contact: 'Contact',
 	blog: 'Blog',
 	products: 'Products',
+	gallery: 'Gallery',
 	footer: 'Footers',
+	pages: 'Whole pages',
 };
 
 type Props = {
@@ -213,14 +215,19 @@ const AddPanel: FC<Props> = ({ manifest, sections, readOnly, onAdd, onDragStart 
 						))}
 					</>
 				)}
-				<Text
+				<Flex
+					align='center'
+					justify='space-between'
 					px={3}
 					mb={2}
-					mt={presets.length ? 2 : 0}
-					fontSize='12.5px'
-					fontWeight='600'>
-					Blocks
-				</Text>
+					mt={presets.length ? 2 : 0}>
+					<Text
+						fontSize='12.5px'
+						fontWeight='600'>
+						Blocks
+					</Text>
+					<SiteGuide section='blocks' />
+				</Flex>
 				{blocks.map(g => (
 					<Group
 						key={g.key}

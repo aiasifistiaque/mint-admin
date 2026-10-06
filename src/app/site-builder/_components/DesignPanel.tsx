@@ -229,7 +229,7 @@ const DesignPanel: FC<Props> = ({ manifest, data, readOnly, set }) => {
 			overflowY='auto'>
 			<Section
 				title='Theme'
-				guide='design'
+				guide='themes'
 				action={
 					changes > 0 && !readOnly ? (
 						<Button

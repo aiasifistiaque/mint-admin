@@ -86,6 +86,9 @@ export type SbFont = { family: string; category: 'sans' | 'serif' | 'display' | 
 
 export type SbSeo = { title: string; description: string; image: string; noIndex: boolean; canonical: string; keywords: string[] };
 
+/** Website settings the builder's blocks show (GET /pages, SB-08). */
+export type SbSiteInfo = { name: string; tagline: string; logo: string; contact: Record<string, string>; social: Record<string, string> };
+
 export type SbPageSummary = {
 	id: string;
 	name: string;
@@ -153,7 +156,7 @@ export const siteBuilderApi = mainApi.injectEndpoints({
 			query: () => 'site-builder/manifest',
 			keepUnusedDataFor: 3600,
 		}),
-		siteBuilderPages: builder.query<{ pages: SbPageSummary[]; url: string | null }, void>({
+		siteBuilderPages: builder.query<{ pages: SbPageSummary[]; url: string | null; site?: SbSiteInfo }, void>({
 			query: () => 'site-builder/pages',
 			providesTags: () => routeTags(PAGES),
 		}),
