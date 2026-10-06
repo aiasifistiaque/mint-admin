@@ -92,7 +92,7 @@ export type Place = { parentId: string | null; index: number };
 /**
  * Where blocks of `types` go when added by a click or pasted: into the
  * selection when it holds blocks, else just after it — climbing out until
- * they're allowed. Sections and overlays go at the top level.
+ * they're allowed. Sections, headers and overlays go at the top level.
  */
 export function placeFor(tree: SbNode[], selectedId: string | null, types: string[], blocks: Blocks): Place | { problem: string } {
 	if (types.some(t => isOverlay(blocks, t))) return { parentId: null, index: tree.length };
@@ -101,8 +101,8 @@ export function placeFor(tree: SbNode[], selectedId: string | null, types: strin
 		const why = problemFor(blocks, null, types);
 		return why ? { problem: why } : { parentId: null, index: tree.length };
 	}
-	// Whole sections sit side by side on the page, not inside one another.
-	if (types.every(t => t === 'section')) {
+	// Whole sections (and headers) sit side by side on the page, not inside one another.
+	if (types.every(t => t === 'section' || t === 'header')) {
 		while (loc.parent) loc = locate(tree, loc.parent.id)!;
 		return { parentId: null, index: loc.index + 1 };
 	}
