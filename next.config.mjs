@@ -17,6 +17,8 @@ const DOCS_URL = (process.env.NEXT_PUBLIC_DOCS_URL || 'https://docs.mintapp.shop
 const nextConfig = {
 	reactStrictMode: false,
 	env: { NEXT_PUBLIC_APP_PAGES: APP_PAGES.join(',') },
+	// No image optimizer (billed per image on Vercel): plain <img> / Chakra Image only.
+	images: { unoptimized: true },
 	async redirects() {
 		return [
 			{ source: '/user-docs', destination: DOCS_URL, permanent: false },
