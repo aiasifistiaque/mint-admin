@@ -1,7 +1,8 @@
 'use client';
 
 import { FC, FormEvent, ReactNode, useEffect, useRef, useState } from 'react';
-import { Box, Button, Center, Flex, Heading, Input, Link, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Input, Link, Text } from '@chakra-ui/react';
+import AuthFrame, { AuthCard, AuthTitle, Eyebrow, brandButton } from '@/components/library/ui/AuthFrame';
 import { ArrowLeft, ExternalLink, KeyRound, LifeBuoy, Mail, ShieldCheck } from 'lucide-react';
 import {
 	TwoFactorChallenge,
@@ -162,57 +163,35 @@ const TwoFactorStep: FC<{ challenge: TwoFactorChallenge; onToken: (token: string
 	const others = available.filter(o => o.method !== view);
 
 	return (
-		<Center
-			w='100vw'
-			minH='100vh'
-			flex={1}
-			px={4}
-			bg='sidebar.light'
-			_dark={{ bg: 'container.dark' }}>
-			<Flex
+		<AuthFrame>
+			<AuthCard
 				as='form'
+				// @ts-ignore — Flex as form
 				onSubmit={submitCode as any}
-				direction='column'
-				gap={5}
-				w={{ base: 'full', md: '420px' }}
-				p={{ base: 5, md: 8 }}
-				bg='bg.panel'
-				_dark={{ bg: 'sidebar.dark' }}
-				borderWidth={1}
-				borderColor='border'
-				borderRadius='24px'
-				boxShadow='lg'>
+				gap={5}>
 				<Flex
 					direction='column'
-					align='center'
-					textAlign='center'
 					gap={3}>
-					<Center
-						w='44px'
-						h='44px'
-						borderRadius='full'
-						bg='bg.muted'
-						color='fg'>
-						<ShieldCheck
-							size={22}
-							strokeWidth={1.75}
-						/>
-					</Center>
-					<Box>
-						<Text
-							fontSize='12px'
-							fontWeight='600'
-							letterSpacing='0.06em'
-							textTransform='uppercase'
-							color='fg.muted'>
-							Two-step verification
-						</Text>
-						<Heading
-							size='lg'
-							mt={1}>
-							{titles[view]}
-						</Heading>
-					</Box>
+					<Flex
+						align='center'
+						justify='space-between'>
+						<Eyebrow>Two-step verification</Eyebrow>
+						<Center
+							w='36px'
+							h='36px'
+							borderRadius='full'
+							borderWidth='1px'
+							borderColor='border'
+							bg='bg.subtle'
+							color='#059669'
+							_dark={{ color: '#34d399' }}>
+							<ShieldCheck
+								size={18}
+								strokeWidth={1.5}
+							/>
+						</Center>
+					</Flex>
+					<AuthTitle>{titles[view]}</AuthTitle>
 				</Flex>
 
 				{view === 'passkey' && (
@@ -227,7 +206,7 @@ const TwoFactorStep: FC<{ challenge: TwoFactorChallenge; onToken: (token: string
 						</Text>
 						<Button
 							type='button'
-							size='lg'
+							css={brandButton}
 							autoFocus
 							loading={passkeyBusy}
 							loadingText='Waiting for your passkey'
@@ -260,13 +239,13 @@ const TwoFactorStep: FC<{ challenge: TwoFactorChallenge; onToken: (token: string
 							h='56px'
 							textAlign='center'
 							fontSize='24px'
-							fontWeight='600'
+							fontWeight='300'
 							letterSpacing='0.4em'
 							fontVariantNumeric='tabular-nums'
 						/>
 						<Button
 							type='submit'
-							size='lg'
+							css={brandButton}
 							disabled={code.length !== 6}
 							loading={verifying.isLoading}>
 							Verify
@@ -311,7 +290,7 @@ const TwoFactorStep: FC<{ challenge: TwoFactorChallenge; onToken: (token: string
 						/>
 						<Button
 							type='submit'
-							size='lg'
+							css={brandButton}
 							disabled={code.replace(/[^a-z0-9]/gi, '').length < 8}
 							loading={verifying.isLoading}>
 							Verify
@@ -348,7 +327,7 @@ const TwoFactorStep: FC<{ challenge: TwoFactorChallenge; onToken: (token: string
 								<Box minW={0}>
 									<Text
 										fontSize='14px'
-										fontWeight='600'>
+										fontWeight='400'>
 										{o.label}
 									</Text>
 									<Text
@@ -438,8 +417,8 @@ const TwoFactorStep: FC<{ challenge: TwoFactorChallenge; onToken: (token: string
 						<DocLink anchor='signing-in' />
 					</Flex>
 				</Flex>
-			</Flex>
-		</Center>
+			</AuthCard>
+		</AuthFrame>
 	);
 };
 

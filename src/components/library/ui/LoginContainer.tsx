@@ -1,7 +1,8 @@
 import { FC, FormEvent, ReactNode } from 'react';
-import { Box, Button, Center, CenterProps, Flex, Heading, Image, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
+import AuthFrame, { AUTH_MONO, AuthCard, AuthTitle, brandButton } from './AuthFrame';
 
-type LoginContainerProps = Omit<CenterProps, 'title'> & {
+type LoginContainerProps = {
 	children: ReactNode;
 	handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
 	isLoading: boolean;
@@ -13,13 +14,64 @@ type LoginContainerProps = Omit<CenterProps, 'title'> & {
 	hideSubmit?: boolean;
 	/** Under the button, past a divider: "Back to sign in" and the like. */
 	footer?: ReactNode;
+	/** A logo of its own above the title (the MINT mark is on the page already). */
 	logoSrc?: string;
+	/** A flow in steps (sign-up): the steps' names, and which one this is (from 1). */
+	steps?: string[];
+	step?: number;
 };
 
+/** The website's tones, one per step (mint-webpage lib/tones.ts). */
+const STEP_TONES = [
+	{ fg: '#059669', dark: '#34d399', bar: '#10b981' },
+	{ fg: '#0284c7', dark: '#38bdf8', bar: '#0ea5e9' },
+	{ fg: '#7c3aed', dark: '#a78bfa', bar: '#8b5cf6' },
+	{ fg: '#d97706', dark: '#fbbf24', bar: '#f59e0b' },
+];
+
+/** Where the reader is in a flow: each step numbered and named, done and current ones lit in their colour. */
+const Steps: FC<{ steps: string[]; step: number }> = ({ steps, step }) => (
+	<Flex
+		as='ol'
+		gap={2}
+		listStyleType='none'
+		aria-label={`Step ${step} of ${steps.length}`}>
+		{steps.map((name, i) => {
+			const tone = STEP_TONES[i % STEP_TONES.length];
+			const on = i + 1 <= step;
+			return (
+				<Flex
+					as='li'
+					key={name}
+					flex={1}
+					direction='column'
+					gap={2}
+					aria-current={i + 1 === step ? 'step' : undefined}>
+					<Box
+						h='2px'
+						borderRadius='full'
+						bg={on ? tone.bar : 'border'}
+						transition='background .3s'
+					/>
+					<Text
+						as='span'
+						fontFamily={AUTH_MONO}
+						fontSize='10.5px'
+						letterSpacing='0.14em'
+						textTransform='uppercase'
+						css={{ color: on ? `${tone.fg} !important` : 'var(--chakra-colors-fg-subtle) !important', _dark: on ? { color: `${tone.dark} !important` } : {} }}>
+						0{i + 1} · {name}
+					</Text>
+				</Flex>
+			);
+		})}
+	</Flex>
+);
+
 /**
- * The signed-out pages' card (sign in, forgot / reset password, invitations):
- * logo, title, the fields, one full-width button. A card on a tinted page from
- * tablet up; on a phone the card melts into the page so the fields get the width.
+ * The signed-out pages' card (sign in, sign up and its questions, forgot /
+ * reset password, invitations): the title, the fields, one full-width brand
+ * button, and a footer — on the website-styled AuthFrame.
  */
 const LoginContainer: FC<LoginContainerProps> = ({
 	children,
@@ -31,61 +83,41 @@ const LoginContainer: FC<LoginContainerProps> = ({
 	hideSubmit,
 	footer,
 	logoSrc,
-	...props
+	steps,
+	step = 1,
 }) => (
-	<Center
-		w='full'
-		minH='100dvh'
-		flex={1}
-		px={4}
-		py={{ base: 10, md: 16 }}
-		bg={{ base: 'bg.panel', md: 'sidebar.light' }}
-		_dark={{ bg: { base: 'sidebar.dark', md: 'container.dark' } }}
-		{...props}>
-		<Flex
+	<AuthFrame>
+		<AuthCard
 			as='form'
 			// @ts-ignore — Flex as form
-			onSubmit={handleSubmit}
-			direction='column'
-			gap={6}
-			w='full'
-			maxW='420px'
-			p={{ base: 2, md: 8 }}
-			bg={{ base: 'transparent', md: 'bg.panel' }}
-			_dark={{ bg: { base: 'transparent', md: 'sidebar.dark' } }}
-			borderWidth={{ base: 0, md: 1 }}
-			borderColor='border'
-			borderRadius='24px'
-			boxShadow={{ base: 'none', md: 'lg' }}>
+			onSubmit={handleSubmit}>
+			{steps && steps.length > 1 && (
+				<Steps
+					steps={steps}
+					step={step}
+				/>
+			)}
 			<Flex
 				direction='column'
-				align='center'
-				textAlign='center'
-				gap={4}>
-				<Image
-					boxSize='48px'
-					objectFit='contain'
-					src={logoSrc || '/logo.png'}
-					alt=''
-				/>
-				<Box>
-					<Heading
-						as='h1'
-						fontSize={{ base: '22px', md: '24px' }}
-						fontWeight='600'
-						letterSpacing='-0.01em'
-						lineHeight='1.25'>
-						{title}
-					</Heading>
-					{subtitle && (
-						<Text
-							mt={1.5}
-							fontSize='14px'
-							color='fg.muted'>
-							{subtitle}
-						</Text>
-					)}
-				</Box>
+				gap={3}>
+				{logoSrc && (
+					<Image
+						boxSize='44px'
+						objectFit='contain'
+						src={logoSrc}
+						alt=''
+						mb={1}
+					/>
+				)}
+				<AuthTitle>{title}</AuthTitle>
+				{subtitle && (
+					<Text
+						fontSize='15px'
+						lineHeight='1.6'
+						css={{ color: 'var(--chakra-colors-fg-muted) !important' }}>
+						{subtitle}
+					</Text>
+				)}
 			</Flex>
 
 			<Flex
@@ -97,10 +129,8 @@ const LoginContainer: FC<LoginContainerProps> = ({
 			{!hideSubmit && (
 				<Button
 					type='submit'
-					size='lg'
-					w='full'
-					borderRadius='lg'
-					loading={isLoading}>
+					loading={isLoading}
+					css={brandButton}>
 					{submitLabel}
 				</Button>
 			)}
@@ -109,15 +139,26 @@ const LoginContainer: FC<LoginContainerProps> = ({
 				<Box
 					pt={5}
 					borderTopWidth={1}
-					borderColor='border.muted'
-					fontSize='13px'
-					color='fg.muted'
-					textAlign='center'>
+					borderColor='border'
+					fontSize='14px'
+					textAlign='center'
+					css={{
+						color: 'var(--chakra-colors-fg-muted)',
+						'& span, & p': { color: 'inherit', fontSize: 'inherit' },
+						'& a': {
+							color: 'var(--chakra-colors-fg)',
+							fontWeight: 400,
+							textDecoration: 'underline',
+							textDecorationColor: 'var(--chakra-colors-border-emphasized)',
+							textUnderlineOffset: '4px',
+						},
+						'& a:hover': { textDecorationColor: '#10b981' },
+					}}>
 					{footer}
 				</Box>
 			)}
-		</Flex>
-	</Center>
+		</AuthCard>
+	</AuthFrame>
 );
 
 export default LoginContainer;

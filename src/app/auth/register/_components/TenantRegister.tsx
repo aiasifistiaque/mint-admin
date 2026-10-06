@@ -41,15 +41,16 @@ const Chips: FC<{ items: Chip[]; value: string[]; onChange: (v: string[]) => voi
 					type='button'
 					aria-pressed={on}
 					onClick={() => onChange(multiple ? (on ? value.filter(v => v !== c.value) : [...value, c.value]) : on ? [] : [c.value])}
-					px={2.5}
-					h='28px'
+					px={3}
+					h='32px'
 					borderRadius='full'
 					borderWidth='1px'
-					borderColor={on ? 'accent.solid' : 'border'}
+					borderColor={on ? 'accent.solid' : 'border.emphasized'}
 					bg={on ? 'accent.solid' : 'bg.panel'}
 					color={on ? 'accent.contrast' : 'fg'}
-					fontSize='12.5px'
-					fontWeight='500'
+					fontSize='13px'
+					fontWeight='400'
+					transition='background .15s, border-color .15s'
 					cursor='pointer'
 					_hover={on ? undefined : { bg: 'bg.muted' }}>
 					{c.label}
@@ -59,21 +60,14 @@ const Chips: FC<{ items: Chip[]; value: string[]; onChange: (v: string[]) => voi
 	</Flex>
 );
 
+/** A question's label: the frame's quiet spaced capitals, like the inputs' own labels. */
 const Label: FC<{ children: string; optional?: boolean }> = ({ children, optional }) => (
 	<Text
-		fontSize='13px'
-		fontWeight='600'
-		mb={1.5}>
+		as='label'
+		display='block'
+		mb={2}>
 		{children}
-		{optional && (
-			<Text
-				as='span'
-				fontWeight='400'
-				color='fg.muted'>
-				{' '}
-				· optional
-			</Text>
-		)}
+		{optional && ' · optional'}
 	</Text>
 );
 
@@ -129,6 +123,8 @@ const TenantRegister: FC = () => {
 			title={step === 1 ? 'Create your account' : 'Tell us about your business'}
 			subtitle={step === 1 ? 'Start building apps and websites — free.' : 'It helps us set things up for you. Skip anything you like.'}
 			submitLabel={step === 1 ? 'Continue' : 'Create account'}
+			steps={['Your account', 'Your business']}
+			step={step}
 			isLoading={isLoading}
 			handleSubmit={submit}
 			footer={
@@ -201,9 +197,9 @@ const TenantRegister: FC = () => {
 					/>
 					<Box>
 						<Text
-							fontSize='13px'
-							fontWeight='600'
-							mb={1.5}>
+							as='label'
+							display='block'
+							mb={2}>
 							Country{' '}
 							<Text
 								as='span'
@@ -216,9 +212,9 @@ const TenantRegister: FC = () => {
 							onChange={code => setAccount(a => ({ ...a, country: code }))}
 						/>
 						<Text
-							fontSize='12px'
+							fontSize='12.5px'
 							color='fg.muted'
-							mt={1}>
+							mt={1.5}>
 							Where your organization is based — it decides the payment options your sites can offer.
 						</Text>
 					</Box>
@@ -248,9 +244,8 @@ const TenantRegister: FC = () => {
 						direction={{ base: 'column', sm: 'row' }}>
 						<Field.Root flex={1}>
 							<Field.Label
-								fontSize='13px'
-								fontWeight='600'>
-								Your role · <Text as='span' fontWeight='400' color='fg.muted'>optional</Text>
+								mb={0.5}>
+								Your role · optional
 							</Field.Label>
 							<Input
 								size='md'
@@ -262,9 +257,8 @@ const TenantRegister: FC = () => {
 					</Flex>
 					<Field.Root>
 						<Field.Label
-							fontSize='13px'
-							fontWeight='600'>
-							Website · <Text as='span' fontWeight='400' color='fg.muted'>optional</Text>
+							mb={0.5}>
+							Website · optional
 						</Field.Label>
 						<Input
 							size='md'
