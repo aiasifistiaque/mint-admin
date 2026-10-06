@@ -186,12 +186,12 @@ const PageDialog: FC<Props> = ({ open, page, layouts, saving, onClose, onSave })
 								</Flex>
 								<Field
 									title='Header and footer'
-									help='“None” suits landing pages that stand on their own.'>
+									help='“None” suits pages that stand on their own. Add another layout under Pages → Header and footer.'>
 									<Dropdown
 										size='sm'
 										value={layout}
 										onChange={setLayout}
-										items={[...layouts.map(l => ({ value: l, label: l === 'default' ? 'The site’s header and footer' : l })), { value: 'none', label: 'None' }]}
+										items={[...layouts.map(l => ({ value: l, label: l === 'default' ? 'The site’s header and footer' : `The “${l}” layout` })), { value: 'none', label: 'None' }]}
 									/>
 								</Field>
 

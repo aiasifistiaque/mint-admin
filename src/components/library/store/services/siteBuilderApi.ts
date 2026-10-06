@@ -62,12 +62,27 @@ export type SbManifest = {
 	version: string;
 	blocks: SbBlockDef[];
 	presets: { key: string; label: string; category: string; thumbnail: string; tree: SbNode[] }[];
-	themes: { key: string; label: string; description: string; preview: { bg: string; fg: string; primary: string; font: string } }[];
-	style: Record<string, { group: string; kind: string; values?: (string | number)[]; min?: number; max?: number }>;
+	themes: SbTheme[];
+	tokens: Record<string, any>;
+	fonts: { google: SbFont[]; system: string[] };
+	style: Record<string, { group: string; kind: string; values?: (string | number)[]; min?: number; max?: number; also?: string[]; units?: Record<string, number> }>;
 	icons: string[];
 	embeds: string[];
 	limits: { maxNodes: number; maxDepth: number; maxBytes: number };
 };
+
+export type SbColorPair = { light: string; dark: string };
+export type SbTokens = {
+	colors: Record<string, SbColorPair>;
+	fonts: Record<'heading' | 'body' | 'mono', { family: string; weights: number[] }>;
+	radius: Record<string, string>;
+	shadow: Record<string, string>;
+	space: Record<string, string>;
+	container: number;
+	button: { radius: string; weight: number; uppercase: boolean };
+};
+export type SbTheme = { key: string; label: string; description: string; tokens: SbTokens; preview: { bg: string; fg: string; primary: string; font: string } };
+export type SbFont = { family: string; category: 'sans' | 'serif' | 'display' | 'mono' | 'hand'; weights: number[] };
 
 export type SbSeo = { title: string; description: string; image: string; noIndex: boolean; canonical: string; keywords: string[] };
 
@@ -106,7 +121,10 @@ export type SbDesignDraft = {
 	rev: number;
 };
 
-export type SbDesign = { draft: SbDesignDraft; published: { version: number; publishedAt: string; theme: string } | null; changed: boolean };
+/** Where each saved section is used (page drafts and layouts). */
+export type SbSectionUsage = Record<string, { pages: { id: string; name: string }[]; layouts: string[] }>;
+
+export type SbDesign = { draft: SbDesignDraft; published: { version: number; publishedAt: string; theme: string } | null; changed: boolean; usage?: SbSectionUsage };
 
 export type SbChanges = {
 	pages: Record<'added' | 'changed' | 'removed' | 'unpublished', { id: string; name: string; path: string }[]>;

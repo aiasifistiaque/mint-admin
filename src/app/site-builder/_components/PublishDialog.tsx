@@ -160,7 +160,7 @@ const PublishDialog: FC<Props> = ({ open, onClose, beforeOpen, onProblem }) => {
 											))}
 											{data.design && (
 												<Line icon={<Palette size={14} />}>
-													<Text>The design: theme, header and footer</Text>
+													<Text>The design: theme, header, footer and saved sections</Text>
 												</Line>
 											)}
 										</Box>

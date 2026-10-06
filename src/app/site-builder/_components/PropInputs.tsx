@@ -24,6 +24,10 @@ export type InputContext = {
 	nodes: { id: string; label: string }[];
 	/** pop-ups, drawers and popovers on this page, for open / close / toggle */
 	overlays: { id: string; label: string }[];
+	/** the design's saved sections, for a saved-section block */
+	sections: { id: string; name: string }[];
+	/** colour token → the colour it is now (the theme with the design's changes) */
+	colors: Record<string, string>;
 };
 
 const label = { fontSize: '12px', fontWeight: '600', mb: 1 } as const;
@@ -104,7 +108,7 @@ const RichText: FC<{ value: string; onChange: (html: string) => void; readOnly: 
 
 /* ---------------------------------------------------------------- media */
 
-const MediaPick: FC<{ value: string; kind: 'image' | 'video'; onChange: (v: string) => void; readOnly: boolean }> = ({ value, kind, onChange, readOnly }) => (
+export const MediaPick: FC<{ value: string; kind: 'image' | 'video'; onChange: (v: string) => void; readOnly: boolean }> = ({ value, kind, onChange, readOnly }) => (
 	<Flex
 		gap={2}
 		align='center'>
@@ -338,10 +342,9 @@ const IconPicker: FC<{ value: string; icons: string[]; onChange: (v: string) => 
 
 /* ------------------------------------------------------------- colours */
 
-const ColorPick: FC<{ value: string; manifest: SbManifest; theme: string; onChange: (v: string | null) => void; readOnly: boolean }> = ({ value, manifest, theme, onChange, readOnly }) => {
-	const tokens: Record<string, { light: string }> = (manifest.themes.find(t => t.key === theme) as any)?.tokens?.colors || {};
-	const names = (manifest.style.color?.values || []) as string[];
-	const swatch = (n: string) => (n === 'transparent' ? 'transparent' : n === 'white' ? '#fff' : n === 'black' ? '#000' : tokens[n]?.light || '#ccc');
+/** Theme colour swatches (never a raw hex — a theme switch must still restyle it). Click the chosen one again to clear it. */
+export const ColorPick: FC<{ value: string; names: string[]; colors: Record<string, string>; onChange: (v: string | null) => void; readOnly: boolean }> = ({ value, names, colors, onChange, readOnly }) => {
+	const swatch = (n: string) => (n === 'transparent' ? 'transparent' : n === 'white' ? '#fff' : n === 'black' ? '#000' : colors[n] || '#ccc');
 	return (
 		<Flex
 			gap={1}
@@ -523,8 +526,8 @@ export const PropInput: FC<InputProps> = memo(function PropInput({ def, value, c
 			input = (
 				<ColorPick
 					value={v}
-					manifest={ctx.manifest}
-					theme={theme}
+					names={(ctx.manifest.style.color?.values || []) as string[]}
+					colors={ctx.colors}
 					readOnly={readOnly}
 					onChange={onChange}
 				/>
@@ -583,6 +586,24 @@ export const PropInput: FC<InputProps> = memo(function PropInput({ def, value, c
 					onChange={onChange}
 					items={ctx.pages.map(p => ({ value: p.id, label: `${p.name} — ${p.path}` }))}
 				/>
+			);
+			break;
+		case 'section':
+			input = ctx.sections.length ? (
+				<Dropdown
+					size='xs'
+					value={v ?? ''}
+					disabled={readOnly}
+					placeholder='Choose a saved section'
+					onChange={onChange}
+					items={ctx.sections.map(x => ({ value: x.id, label: x.name }))}
+				/>
+			) : (
+				<Text
+					fontSize='12px'
+					color='fg.muted'>
+					No saved sections yet — select a block and choose “Save as section”.
+				</Text>
 			);
 			break;
 		case 'icon':

@@ -72,7 +72,9 @@ export function nodeFromBlock(def: SbBlockDef): SbNode {
 
 export type AddItem =
 	| { kind: 'block'; key: string; label: string; types: string[] }
-	| { kind: 'preset'; key: string; label: string; types: string[] };
+	| { kind: 'preset'; key: string; label: string; types: string[] }
+	/** a saved section (SB-07): a section-ref block pointing at it */
+	| { kind: 'saved'; key: string; label: string; types: string[] };
 
 /** The blocks an Add-panel item inserts, with fresh ids. */
 export function nodesFor(item: AddItem, manifest: SbManifest, blocks: Blocks): SbNode[] {
@@ -80,6 +82,7 @@ export function nodesFor(item: AddItem, manifest: SbManifest, blocks: Blocks): S
 		const def = blocks.get(item.key);
 		return def ? [nodeFromBlock(def)] : [];
 	}
+	if (item.kind === 'saved') return [{ id: newId(), type: 'section-ref', name: item.label.slice(0, 80), props: { section: item.key } }];
 	const preset = manifest.presets.find(p => p.key === item.key);
 	return preset ? rekey(preset.tree) : [];
 }

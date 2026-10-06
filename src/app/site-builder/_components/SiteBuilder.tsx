@@ -2,7 +2,7 @@
 
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Badge, Box, Button, Flex, IconButton, Link, Text } from '@chakra-ui/react';
-import { ExternalLink, Maximize2, Monitor, Moon, Redo2, Smartphone, Sun, Tablet, Undo2 } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Maximize2, Monitor, Moon, Redo2, Smartphone, Sun, Tablet, Undo2 } from 'lucide-react';
 import { PromptDialog } from '@/components/library';
 import { Dropdown } from '@/components/library/cl';
 import { toaster } from '@/components/ui/toaster';
@@ -24,7 +24,11 @@ import {
 } from '@/components/library/store/services/siteBuilderApi';
 import AddPanel from './AddPanel';
 import Canvas, { type CanvasHandle, type Device } from './Canvas';
+import DesignPanel from './DesignPanel';
+import { resolvedColors, resolvedSpace } from './designTokens';
 import { clipboard, flatIds, insertOps, isOverlay, nodeFromBlock, nodesFor, placeFor, placeProblem, rekey, type AddItem } from './edit';
+import LayoutsPanel from './LayoutsPanel';
+import type { Bp } from './StylePanel';
 import Inspector, { type Command } from './Inspector';
 import Outline from './Outline';
 import PageDialog from './PageDialog';
@@ -32,7 +36,8 @@ import PagesPanel, { type PageAction } from './PagesPanel';
 import PublishDialog from './PublishDialog';
 import SiteGuide from './SiteGuide';
 import type { CanvasMessage, DropTarget } from './protocol';
-import { findNode, locate, pathTo } from './tree';
+import { findNode, locate, newId, pathTo, type Op } from './tree';
+import { parsePart, partKey, partTree, useDesign, type Part } from './useDesign';
 import { useDraft, type SaveStatus } from './useDraft';
 
 /**
@@ -42,11 +47,23 @@ import { useDraft, type SaveStatus } from './useDraft';
  * saves itself, and goes live with Publish. SB-06: the Add tab (click or drag
  * blocks and sections onto the page), moving blocks on the canvas and in the
  * outline, typing on the canvas, copy / paste / duplicate / wrap, shortcuts,
- * and overlays (pop-ups, drawers, popovers).
+ * and overlays (pop-ups, drawers, popovers). SB-07: styles per screen size,
+ * the Design tab (theme and its tokens), and editing the design's own trees —
+ * the layouts' headers and footers and the saved sections — on the canvas
+ * like a page ("parts", useDesign). Undo follows what you're editing: the
+ * design's history in a part or the Design tab, the page's otherwise.
  */
 
-type Tab = 'pages' | 'outline' | 'add';
-const TAB_LABEL: Record<Tab, string> = { pages: 'Pages', outline: 'Outline', add: 'Add' };
+type Tab = 'pages' | 'outline' | 'add' | 'design';
+const TAB_LABEL: Record<Tab, string> = { pages: 'Pages', outline: 'Outline', add: 'Add', design: 'Design' };
+const TABS: Tab[] = ['pages', 'outline', 'add', 'design'];
+
+/** The worst of two save states, for the one status line. */
+const RANK: SaveStatus[] = ['saved', 'unsaved', 'saving', 'error', 'conflict'];
+const worst = (a: SaveStatus, b: SaveStatus) => (RANK.indexOf(a) >= RANK.indexOf(b) ? a : b);
+
+const BP_OF: Record<Exclude<Device, 'fit'>, Bp> = { mobile: 'base', tablet: 'md', desktop: 'lg' };
+const DEVICE_OF: Record<Bp, Device> = { base: 'mobile', md: 'tablet', lg: 'desktop' };
 
 type Key = Pick<Extract<CanvasMessage, { type: 'key' }>, 'key' | 'meta' | 'ctrl' | 'shift' | 'alt'>;
 
@@ -64,6 +81,7 @@ const STATUS_TEXT: Record<SaveStatus, string> = {
 };
 
 const errorOf = (e: any, fallback: string) => e?.data?.message || fallback;
+const EMPTY_TREE: SbNode[] = [];
 
 const DEVICES: { key: Device; label: string; icon: React.ReactNode }[] = [
 	{ key: 'mobile', label: 'Phone (390 px)', icon: <Smartphone size={14} /> },
@@ -78,7 +96,7 @@ const Rail: FC<{ tab: Tab; onTab: (t: Tab) => void }> = ({ tab, onTab }) => (
 		px={2}
 		pt={2}
 		gap={1}>
-		{(['pages', 'outline', 'add'] as const).map(t => (
+		{TABS.map(t => (
 			<Button
 				key={t}
 				size='xs'
@@ -97,7 +115,7 @@ const Rail: FC<{ tab: Tab; onTab: (t: Tab) => void }> = ({ tab, onTab }) => (
 const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 	const { data: manifest } = useSiteBuilderManifestQuery();
 	const { data: pagesData, isFetching: pagesFetching } = useSiteBuilderPagesQuery();
-	const { data: design } = useSiteBuilderDesignQuery();
+	const { data: designData } = useSiteBuilderDesignQuery();
 	const pages = pagesData?.pages;
 
 	const [pageId, setPageId] = useState<string | null>(() =>
@@ -105,6 +123,9 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 	);
 	const pageQ = useSiteBuilderPageQuery(pageId as string, { skip: !pageId, refetchOnMountOrArgChange: true });
 	const draft = useDraft({ readOnly });
+	const design = useDesign({ readOnly });
+	const [part, setPart] = useState<Part | null>(() => (typeof window === 'undefined' ? null : parsePart(new URLSearchParams(window.location.search).get('part'))));
+	const [canvasWidth, setCanvasWidth] = useState(1280);
 
 	const [selectedId, setSelectedId] = useState<string | null>(null);
 	const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -131,13 +152,29 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 		if (!pageId || !pages.some(p => p.id === pageId)) setPageId((pages.find(p => p.isHome) || pages[0]).id);
 	}, [pages, pageId, pagesFetching]);
 
-	// The page's address in the tab, so a reload opens it again.
+	// The page (and the header, footer or section being edited) in the address, so a reload opens it again.
 	useEffect(() => {
 		if (!pageId) return;
 		const url = new URL(window.location.href);
 		url.searchParams.set('page', pageId);
+		if (part) url.searchParams.set('part', partKey(part));
+		else url.searchParams.delete('part');
 		window.history.replaceState(window.history.state, '', url.toString());
-	}, [pageId]);
+	}, [pageId, part]);
+
+	// The design arrives → it becomes the design draft; a newer one (a restore) replaces it if nothing is waiting to save.
+	const { load: loadDesign } = design;
+	useEffect(() => {
+		if (!designData) return;
+		if (!design.loaded || (designData.draft.rev > design.rev && design.status === 'saved')) loadDesign(designData);
+	}, [designData, design.loaded, design.rev, design.status, loadDesign]);
+
+	// The part being edited was deleted (or never existed): back to the page.
+	useEffect(() => {
+		if (!part || !design.data) return;
+		const gone = part.kind === 'section' ? !design.data.sections?.[part.id] : !design.data.layouts?.[part.layout];
+		if (gone) setPart(null);
+	}, [part, design.data]);
 
 	// A page's data arrives → it becomes the draft (once per page).
 	const loaded = pageQ.data;
@@ -148,25 +185,58 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 
 	const current = pages?.find(p => p.id === pageId) || null;
 	const blocks = useMemo(() => new Map((manifest?.blocks || []).map(b => [b.type, b])), [manifest]);
-	const layoutKey = current?.layout || 'default';
+	const d = design.data;
+	const pageLayoutKey = current?.layout || 'default';
+	const layoutKey = pageLayoutKey !== 'none' && d && !d.layouts[pageLayoutKey] ? 'default' : pageLayoutKey;
+	// A header, footer or saved section is drawn on its own; a page with its layout's.
 	const layout = useMemo(() => {
-		if (!design || layoutKey === 'none') return null;
-		const l = design.draft.layouts[layoutKey] || design.draft.layouts.default;
+		if (part || !d || layoutKey === 'none') return null;
+		const l = d.layouts[layoutKey];
 		return l ? { header: l.header || [], footer: l.footer || [] } : null;
-	}, [design, layoutKey]);
+	}, [part, d, layoutKey]);
 	const canvasDesign = useMemo(
-		() => (design ? { theme: design.draft.theme, tokens: design.draft.tokens || {}, colorScheme: design.draft.colorScheme || 'light' } : null),
-		[design]
+		() => (d ? { theme: d.theme, tokens: d.tokens || {}, colorScheme: d.colorScheme || 'light', sections: d.sections || {} } : null),
+		[d]
 	);
 	const links = useMemo(() => Object.fromEntries((pages || []).map(p => [p.id, p.path])), [pages]);
 
-	const tree = draft.pageId === pageId ? draft.tree : [];
-	const header = layout?.header || [];
-	const footer = layout?.footer || [];
+	const pageTree = draft.pageId === pageId ? draft.tree : EMPTY_TREE;
+	const tree = useMemo(() => (part ? partTree(d, part) : pageTree), [part, d, pageTree]);
+	const header = layout?.header || EMPTY_TREE;
+	const footer = layout?.footer || EMPTY_TREE;
 	const label = useCallback((n: SbNode) => n.name || blocks.get(n.type)?.label || n.type, [blocks]);
 	const pageNode = findNode(tree, selectedId);
+	const inHeader = !pageNode && !!findNode(header, selectedId);
 	const selected = pageNode || findNode(header, selectedId) || findNode(footer, selectedId);
-	const crumbs = selectedId ? pathTo(pageNode ? tree : findNode(header, selectedId) ? header : footer, selectedId) : [];
+	const shared: Part | null = useMemo(() => (!pageNode && selected ? { kind: inHeader ? 'header' : 'footer', layout: layoutKey } : null), [pageNode, selected, inHeader, layoutKey]);
+	const crumbs = selectedId ? pathTo(pageNode ? tree : inHeader ? header : footer, selectedId) : [];
+
+	// Styles are edited for the screen size the canvas shows (Fit: the window's width).
+	const bp: Bp = device === 'fit' ? (canvasWidth >= 1024 ? 'lg' : canvasWidth >= 768 ? 'md' : 'base') : BP_OF[device];
+	const colors = useMemo(() => resolvedColors(manifest, d, theme), [manifest, d, theme]);
+	const space = useMemo(() => resolvedSpace(manifest, d), [manifest, d]);
+	const sectionList = useMemo(
+		() => Object.entries(d?.sections || {}).map(([id, s]) => ({ id, name: s.name })).sort((a, b) => a.name.localeCompare(b.name)),
+		[d]
+	);
+	// Where saved sections are used: the server's count, plus this page's unsaved draft.
+	const usage = useMemo(() => {
+		const out = structuredClone(design.usage || {});
+		if (!current || part) return out;
+		const refs = new Set<string>();
+		const walk = (list: SbNode[]) =>
+			list.forEach(n => {
+				if (n.type === 'section-ref' && n.props?.section) refs.add(n.props.section);
+				walk(n.children || []);
+				Object.values(n.slots || {}).forEach(walk);
+			});
+		walk(pageTree);
+		for (const id of refs) {
+			out[id] ||= { pages: [], layouts: [] };
+			if (!out[id].pages.some(p => p.id === current.id)) out[id].pages.push({ id: current.id, name: current.name });
+		}
+		return out;
+	}, [design.usage, pageTree, current, part]);
 
 	const ctx = useMemo(() => {
 		const nodes: { id: string; label: string }[] = [];
@@ -178,8 +248,8 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 			});
 		walk(tree, 0);
 		const overlays = tree.filter(n => isOverlay(blocks, n.type)).map(n => ({ id: n.id, label: label(n) }));
-		return { manifest: manifest!, pages: pages || [], nodes, overlays };
-	}, [tree, manifest, pages, label, blocks]);
+		return { manifest: manifest!, pages: pages || [], nodes, overlays, sections: part?.kind === 'section' ? [] : sectionList, colors };
+	}, [tree, manifest, pages, label, blocks, sectionList, colors, part]);
 
 	// A pop-up, drawer or popover shows on the canvas while it — or something in it — is selected.
 	const openId = useMemo(() => {
@@ -200,11 +270,19 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 				}
 				setPageId(id);
 			}
+			setPart(null);
 			setSelectedId(select);
 			setTab('outline');
 		},
 		[pageId, draft]
 	);
+
+	/** Opens a header, footer or saved section on the canvas (the page stays loaded underneath). */
+	const editPart = useCallback((p: Part, select: string | null = null) => {
+		setPart(p);
+		setSelectedId(select);
+		setTab('outline');
+	}, []);
 
 	const reloadPage = useCallback(async () => {
 		const r = await pageQ.refetch();
@@ -270,21 +348,25 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 
 	/* ------------------------------------------------------ editing nodes */
 
-	const { apply } = draft;
+	const { apply: applyPage } = draft;
+	const { applyPart } = design;
+	/** Ops on whatever is being edited: the page, or a header, footer or saved section. */
+	const apply = useCallback((ops: Op[], key?: string) => (part ? applyPart(part, ops, key) : applyPage(ops, key)), [part, applyPart, applyPage]);
+	const history = part || tab === 'design' ? design : draft;
 	const onRename = useCallback((id: string, name: string) => apply([{ op: 'update', id, name: name || null }]), [apply]);
 	const onToggleHidden = useCallback(
 		(id: string) => {
-			const n = findNode(draft.tree, id);
+			const n = findNode(tree, id);
 			if (n) apply([{ op: 'update', id, hidden: n.hidden && Object.values(n.hidden).some(Boolean) ? null : { base: true } }]);
 		},
-		[apply, draft.tree]
+		[apply, tree]
 	);
 	const onToggleLocked = useCallback(
 		(id: string) => {
-			const n = findNode(draft.tree, id);
+			const n = findNode(tree, id);
 			if (n) apply([{ op: 'update', id, locked: !n.locked }]);
 		},
-		[apply, draft.tree]
+		[apply, tree]
 	);
 	const onSelect = useCallback((id: string) => setSelectedId(id), []);
 	const onCanvasSelect = useCallback((id: string) => {
@@ -402,8 +484,8 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 			const mod = k.meta || k.ctrl;
 			const key = k.key.toLowerCase();
 			if (mod && (key === 'z' || key === 'y')) {
-				if (k.shift || key === 'y') draft.redo();
-				else draft.undo();
+				if (k.shift || key === 'y') history.redo();
+				else history.undo();
 				return true;
 			}
 			const cmd: Command | null = mod
@@ -432,7 +514,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 			}
 			return false;
 		},
-		[draft, runCommand]
+		[history, runCommand]
 	);
 
 	useEffect(() => {
@@ -464,6 +546,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 		[onApply]
 	);
 	const onCanvasKey = useCallback((k: Key) => void onShortcut(k), [onShortcut]);
+	const onBp = useCallback((b: Bp) => setDevice(DEVICE_OF[b]), []);
 
 	/* -------------------------------------- dragging from the Add panel */
 
@@ -522,12 +605,73 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 		[readOnly, manifest, blocks, insertAt]
 	);
 
+	/* --------------------------------------------- saved sections (SB-07) */
+
+	/** The selection becomes a saved section, and a section-ref takes its place. */
+	const onSaveSection = useCallback(
+		(name: string) => {
+			const t = treeRef.current;
+			const loc = selectedRef.current ? locate(t, selectedRef.current) : null;
+			if (!loc || !d) return;
+			if (loc.node.locked) return fail(`${label(loc.node)} is locked — unlock it in the outline first.`);
+			const id = newId();
+			const err = design.set({ sections: { ...d.sections, [id]: { name, tree: rekey([loc.node]) } } }, `sections:add:${id}`);
+			if (err) return fail(err);
+			const slot = loc.parent && loc.parent.children !== loc.list ? Object.entries(loc.parent.slots || {}).find(([, l]) => l === loc.list)?.[0] : undefined;
+			const ref: SbNode = { id: newId(), type: 'section-ref', name: name.slice(0, 80), props: { section: id } };
+			if (!onApply([{ op: 'insert', parentId: loc.parent?.id ?? null, index: loc.index, node: ref, ...(slot && { slot }) }, { op: 'remove', id: loc.node.id }])) {
+				setSelectedId(ref.id);
+				toaster.create({ type: 'success', title: `Saved “${name}”`, description: 'Add it to any page from the Add tab.' });
+			}
+		},
+		[d, design, label, onApply]
+	);
+
+	/** A section-ref becomes a copy of the section's blocks, to change on this page only. */
+	const onDetach = useCallback(() => {
+		const t = treeRef.current;
+		const loc = selectedRef.current ? locate(t, selectedRef.current) : null;
+		const saved = loc?.node.type === 'section-ref' ? d?.sections?.[loc.node.props?.section] : null;
+		if (!loc || !saved) return;
+		const copies = rekey(saved.tree);
+		const slot = loc.parent && loc.parent.children !== loc.list ? Object.entries(loc.parent.slots || {}).find(([, l]) => l === loc.list)?.[0] : undefined;
+		const ops: Op[] = [
+			...copies.map((node, i) => ({ op: 'insert' as const, parentId: loc.parent?.id ?? null, index: loc.index + i, node, ...(slot && { slot }) })),
+			{ op: 'remove', id: loc.node.id },
+		];
+		if (!onApply(ops) && copies[0]) setSelectedId(copies[0].id);
+	}, [d, onApply]);
+
 	const onProblem = useCallback(
 		(p: SbProblem) => {
-			if (p.page) openPage(p.page, p.nodeId || null);
+			if (p.page) return openPage(p.page, p.nodeId || null);
+			const layoutHit = p.path.match(/^layouts\.([a-z0-9-]+)\.(header|footer)/);
+			if (layoutHit) return editPart({ kind: layoutHit[2] as 'header' | 'footer', layout: layoutHit[1] }, p.nodeId || null);
+			const sectionHit = p.path.match(/^sections\.([A-Za-z0-9_-]+)/);
+			if (sectionHit) return editPart({ kind: 'section', id: sectionHit[1] }, p.nodeId || null);
+			if (p.part === 'design') setTab('design');
 		},
-		[openPage]
+		[openPage, editPart]
 	);
+
+	const flushAll = useCallback(async () => {
+		await draft.flush();
+		await design.flush();
+	}, [draft, design]);
+
+	const status = worst(draft.status, design.status);
+	const saveError = design.error && design.status === 'error' ? design.error : draft.error;
+	const partLabel = (p: Part) =>
+		p.kind === 'section' ? `Saved section “${d?.sections?.[p.id]?.name || ''}”` : `${p.kind === 'header' ? 'Header' : 'Footer'}${p.layout === 'default' ? '' : ` · ${p.layout} layout`}`;
+	const partNote = (p: Part) => {
+		if (p.kind === 'section') {
+			const u = usage[p.id];
+			const n = u ? u.pages.length + u.layouts.length : 0;
+			return n ? `Used in ${n} place${n === 1 ? '' : 's'} — changes show everywhere it’s used` : 'Not used anywhere yet — add it from the Add tab';
+		}
+		const n = (pages || []).filter(x => (x.layout || 'default') === p.layout).length;
+		return `On ${n} page${n === 1 ? '' : 's'} — changes show on all of them`;
+	};
 
 	const liveHref = pagesData?.url && current?.publishedAt ? `${pagesData.url}${current.path === '/' ? '' : current.path}` : null;
 
@@ -548,9 +692,23 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 				<Box w='220px'>
 					<Dropdown
 						size='xs'
-						value={pageId || ''}
-						onChange={id => openPage(id)}
-						items={(pages || []).map(p => ({ value: p.id, label: `${p.name}  ${p.path}` }))}
+						value={part ? `part:${partKey(part)}` : pageId || ''}
+						onChange={v => {
+							const p = v.startsWith('part:') ? parsePart(v.slice(5)) : null;
+							if (p) editPart(p);
+							else openPage(v);
+						}}
+						items={[
+							...(pages || []).map(p => ({ value: p.id, label: `${p.name}  ${p.path}`, group: 'Pages' })),
+							...Object.keys(d?.layouts || {}).flatMap(l =>
+								(['header', 'footer'] as const).map(kind => ({
+									value: `part:${kind}:${l}`,
+									label: partLabel({ kind, layout: l }),
+									group: 'Header and footer',
+								}))
+							),
+							...sectionList.map(s => ({ value: `part:section:${s.id}`, label: s.name, group: 'Saved sections' })),
+						]}
 						placeholder='Page'
 					/>
 				</Box>
@@ -585,8 +743,8 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 						variant='ghost'
 						aria-label='Undo'
 						title='Undo (⌘Z)'
-						disabled={!draft.canUndo || readOnly}
-						onClick={draft.undo}>
+						disabled={!history.canUndo || readOnly}
+						onClick={history.undo}>
 						<Undo2 size={14} />
 					</IconButton>
 					<IconButton
@@ -594,21 +752,21 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 						variant='ghost'
 						aria-label='Redo'
 						title='Redo (⇧⌘Z)'
-						disabled={!draft.canRedo || readOnly}
-						onClick={draft.redo}>
+						disabled={!history.canRedo || readOnly}
+						onClick={history.redo}>
 						<Redo2 size={14} />
 					</IconButton>
 				</Flex>
 				<Text
 					fontSize='12px'
-					color={draft.status === 'error' || draft.status === 'conflict' ? 'red.fg' : 'fg.muted'}
-					title={draft.error?.problems.map(p => p.message).join('\n') || draft.error?.message}
+					color={status === 'error' || status === 'conflict' ? 'red.fg' : 'fg.muted'}
+					title={saveError?.problems.map(p => p.message).join('\n') || saveError?.message}
 					truncate>
-					{readOnly ? 'View only — your role can’t change the site' : STATUS_TEXT[draft.status]}
-					{draft.status === 'error' && draft.error ? ` — ${draft.error.problems[0]?.message || draft.error.message}` : ''}
+					{readOnly ? 'View only — your role can’t change the site' : STATUS_TEXT[status]}
+					{status === 'error' && saveError ? ` — ${saveError.problems[0]?.message || saveError.message}` : ''}
 				</Text>
 				<Box flex={1} />
-				{current && (
+				{current && !part && (
 					<Box display={{ base: 'none', xl: 'block' }}>
 						{current.status === 'draft' ? (
 							<Badge
@@ -665,9 +823,19 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 					<Box
 						flex={1}
 						minH={0}>
-						{tab === 'add' ? (
+						{tab === 'design' ? (
+							manifest && d ? (
+								<DesignPanel
+									manifest={manifest}
+									data={d}
+									readOnly={readOnly}
+									set={design.set}
+								/>
+							) : null
+						) : tab === 'add' ? (
 							<AddPanel
 								manifest={manifest}
+								sections={part?.kind === 'section' ? [] : sectionList}
 								readOnly={readOnly}
 								onAdd={onAdd}
 								onDragStart={onDragStart}
@@ -675,16 +843,28 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 						) : tab === 'pages' ? (
 							<PagesPanel
 								pages={pages}
-								currentId={pageId}
+								currentId={part ? null : pageId}
 								readOnly={readOnly}
 								onOpen={id => openPage(id)}
 								onAdd={() => setDialog({ kind: 'add' })}
-								onAction={onAction}
-							/>
+								onAction={onAction}>
+								{d && (
+									<LayoutsPanel
+										data={d}
+										pages={pages || []}
+										usage={usage}
+										editing={part ? partKey(part) : null}
+										readOnly={readOnly}
+										set={design.set}
+										onEdit={p => editPart(p)}
+									/>
+								)}
+							</PagesPanel>
 						) : (
 							<Outline
 								tree={tree}
-								loading={draft.pageId !== pageId}
+								loading={part ? !design.loaded : draft.pageId !== pageId}
+								title={part ? (part.kind === 'section' ? 'Saved section' : part.kind === 'header' ? 'Header' : 'Footer') : undefined}
 								header={header}
 								footer={footer}
 								blocks={blocks}
@@ -718,6 +898,32 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 						color='fg.muted'
 						bg='bg.panel'
 						overflow='hidden'>
+						{part && (
+							<Flex
+								align='center'
+								gap={1.5}
+								mr={2}
+								flexShrink={0}>
+								<Box
+									as='button'
+									display='inline-flex'
+									alignItems='center'
+									gap={1}
+									title={current ? `Back to ${current.name}` : 'Back to the page'}
+									_hover={{ color: 'fg' }}
+									onClick={() => current && openPage(current.id)}>
+									<ArrowLeft size={12} /> {current?.name || 'Page'}
+								</Box>
+								<Text>/</Text>
+								<Badge
+									size='xs'
+									colorPalette='purple'
+									title={partNote(part)}>
+									{partLabel(part)}
+								</Badge>
+								{!crumbs.length && <Text truncate>{partNote(part)}</Text>}
+							</Flex>
+						)}
 						{crumbs.length ? (
 							crumbs.map((n, i) => (
 								<Flex
@@ -737,7 +943,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 								</Flex>
 							))
 						) : (
-							<Text>{current ? `${current.name} — click a block to change it` : ''}</Text>
+							!part && <Text>{current ? `${current.name} — click a block to change it` : ''}</Text>
 						)}
 						<Box flex={1} />
 						<SiteGuide section='canvas' />
@@ -761,6 +967,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 						onMove={onCanvasMove}
 						onText={onCanvasText}
 						onKey={onCanvasKey}
+						onWidth={setCanvasWidth}
 					/>
 				</Flex>
 
@@ -775,12 +982,20 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 						<Inspector
 							node={selected}
 							def={selected ? blocks.get(selected.type) || null : null}
-							shared={!!selected && !pageNode}
+							shared={shared}
 							ctx={ctx}
-							theme={design?.draft.theme || 'studio'}
+							theme={d?.theme || 'studio'}
+							bp={bp}
+							onBp={onBp}
+							space={space}
+							usage={usage}
+							inSection={part?.kind === 'section'}
 							readOnly={readOnly}
 							apply={onApply}
 							onCommand={runCommand}
+							onEditPart={editPart}
+							onSaveSection={onSaveSection}
+							onDetach={onDetach}
 						/>
 					)}
 				</Box>
@@ -807,7 +1022,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 			<PageDialog
 				open={!!dialog}
 				page={dialog?.kind === 'settings' ? draft.page : null}
-				layouts={Object.keys(design?.draft.layouts || { default: 1 })}
+				layouts={Object.keys(d?.layouts || { default: 1 })}
 				saving={savingSettings || creating.isLoading}
 				onClose={() => setDialog(null)}
 				onSave={onSaveDialog}
@@ -815,7 +1030,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 			<PublishDialog
 				open={publishOpen}
 				onClose={() => setPublishOpen(false)}
-				beforeOpen={draft.flush}
+				beforeOpen={flushAll}
 				onProblem={onProblem}
 			/>
 			<PromptDialog
@@ -875,6 +1090,16 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 				cancelLabel='Keep mine'
 				onClose={() => draft.resolve('mine')}
 				onConfirm={() => draft.resolve('theirs')}
+			/>
+			<PromptDialog
+				open={!!design.conflict}
+				tone='warning'
+				title='Someone else changed the design'
+				description='While you were editing, the theme, header, footer or saved sections were saved from another tab or by someone else. Load their version (your unsaved design changes here are dropped), or keep yours and save it over theirs.'
+				confirmLabel='Load their version'
+				cancelLabel='Keep mine'
+				onClose={() => design.resolve('mine')}
+				onConfirm={() => design.resolve('theirs')}
 			/>
 		</Flex>
 	);

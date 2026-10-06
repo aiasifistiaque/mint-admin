@@ -10,6 +10,7 @@ import SiteGuide from './SiteGuide';
  * The site's pages (docs/site-builder SB-05): open one, add one, and each
  * page's settings, home, duplicate, take off the site, delete. The chip says
  * where it stands: a draft never published, live, live with changes, or off.
+ * Below them (SB-07): the header and footer, and the saved sections.
  */
 
 export type PageAction = 'settings' | 'home' | 'duplicate' | 'unpublish' | 'republish' | 'delete';
@@ -21,6 +22,8 @@ type Props = {
 	onOpen: (id: string) => void;
 	onAdd: () => void;
 	onAction: (page: SbPageSummary, action: PageAction) => void;
+	/** under the list: the header and footer, saved sections (SB-07) */
+	children?: ReactNode;
 };
 
 export const StatusChip: FC<{ page: Pick<SbPageSummary, 'status' | 'changed'> }> = ({ page }) => {
@@ -46,7 +49,7 @@ const Item: FC<{ value: string; onClick: () => void; children: ReactNode; danger
 	</Menu.Item>
 );
 
-const PagesPanel: FC<Props> = ({ pages, currentId, readOnly, onOpen, onAdd, onAction }) => (
+const PagesPanel: FC<Props> = ({ pages, currentId, readOnly, onOpen, onAdd, onAction, children }) => (
 	<Flex
 		direction='column'
 		h='full'
@@ -185,6 +188,7 @@ const PagesPanel: FC<Props> = ({ pages, currentId, readOnly, onOpen, onAdd, onAc
 					</Flex>
 				))
 			)}
+			{children}
 		</Box>
 	</Flex>
 );

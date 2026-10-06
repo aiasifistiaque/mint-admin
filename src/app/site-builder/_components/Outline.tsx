@@ -13,7 +13,8 @@ import SiteGuide from './SiteGuide';
  * block's name, expand/collapse, select, rename (double click), hide, lock.
  * Rows only take primitive props and are memoized, so typing in the inspector
  * re-renders just the row whose name changed. The header and footer belong to
- * the design and every page shares them — they're edited from Design (SB-07).
+ * the design and every page shares them — they're edited on their own (SB-07):
+ * then the tree is the header, footer or saved section, titled `title`.
  * SB-06: drag a row to move its block (above, below or into another row);
  * pop-ups, drawers and popovers are listed under Overlays.
  */
@@ -25,6 +26,8 @@ type Props = {
 	tree: SbNode[];
 	/** The page's draft hasn't arrived yet — don't call it empty. */
 	loading?: boolean;
+	/** what the tree is, when it isn't a page: 'Header', 'Footer', 'Saved section' */
+	title?: string;
 	header: SbNode[];
 	footer: SbNode[];
 	blocks: Map<string, SbBlockDef>;
@@ -231,7 +234,7 @@ const Group: FC<{ title: string; note?: string; children: React.ReactNode }> = (
 	</Box>
 );
 
-const Outline: FC<Props> = ({ tree, loading, header, footer, blocks, selectedId, hoveredId, readOnly, onSelect, onHover, onRename, onToggleHidden, onToggleLocked, onMove }) => {
+const Outline: FC<Props> = ({ tree, loading, title, header, footer, blocks, selectedId, hoveredId, readOnly, onSelect, onHover, onRename, onToggleHidden, onToggleLocked, onMove }) => {
 	const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
 	const label = useCallback((n: SbNode) => n.name || blocks.get(n.type)?.label || n.type, [blocks]);
 	const onToggle = useCallback(
@@ -375,7 +378,7 @@ const Outline: FC<Props> = ({ tree, loading, header, footer, blocks, selectedId,
 						{rows(groups.header, true)}
 					</Group>
 				)}
-				<Group title='Page'>
+				<Group title={title || 'Page'}>
 					{groups.page.length ? (
 						rows(groups.page, false)
 					) : (
@@ -383,7 +386,7 @@ const Outline: FC<Props> = ({ tree, loading, header, footer, blocks, selectedId,
 							px={3}
 							fontSize='12px'
 							color='fg.muted'>
-							{loading ? 'Loading…' : 'This page is empty.'}
+							{loading ? 'Loading…' : title ? 'Nothing here yet — add blocks from the Add tab.' : 'This page is empty.'}
 						</Text>
 					)}
 				</Group>

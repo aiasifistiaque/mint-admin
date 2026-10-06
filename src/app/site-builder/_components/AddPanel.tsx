@@ -2,6 +2,7 @@
 
 import { FC, memo, useMemo, useState } from 'react';
 import { Box, Flex, Image, Input, Text } from '@chakra-ui/react';
+import { Puzzle } from 'lucide-react';
 import type { SbManifest } from '@/components/library/store/services/siteBuilderApi';
 import type { AddItem } from './edit';
 import { SITES_URL } from './protocol';
@@ -9,7 +10,7 @@ import SiteGuide from './SiteGuide';
 
 /**
  * The Add tab (docs/site-builder SB-06): every block and every preset section
- * from the manifest, grouped, with a search. Click one to add it next to the
+ * from the manifest, grouped, with a search — and the saved sections (SB-07). Click one to add it next to the
  * selection (or into it); drag one onto the page to drop it where the line shows.
  */
 
@@ -44,6 +45,8 @@ const PRESET_GROUPS: Record<string, string> = {
 
 type Props = {
 	manifest: SbManifest | undefined;
+	/** the design's saved sections (none while a saved section is being edited — it can't hold another) */
+	sections: { id: string; name: string }[];
 	readOnly: boolean;
 	onAdd: (item: AddItem) => void;
 	onDragStart: (e: React.PointerEvent, item: AddItem) => void;
@@ -65,13 +68,13 @@ const Group: FC<{ title: string; children: React.ReactNode }> = ({ title, childr
 	</Box>
 );
 
-const AddPanel: FC<Props> = ({ manifest, readOnly, onAdd, onDragStart }) => {
+const AddPanel: FC<Props> = ({ manifest, sections, readOnly, onAdd, onDragStart }) => {
 	const [q, setQ] = useState('');
 	const query = q.trim().toLowerCase();
 
 	const blocks = useMemo(() => {
 		const list = (manifest?.blocks || []).filter(
-			b => !query || b.label.toLowerCase().includes(query) || b.description.toLowerCase().includes(query) || b.type.includes(query)
+			b => b.type !== 'section-ref' && (!query || b.label.toLowerCase().includes(query) || b.description.toLowerCase().includes(query) || b.type.includes(query))
 		);
 		return BLOCK_GROUPS.map(g => ({ ...g, items: list.filter(b => b.category === g.key) })).filter(g => g.items.length);
 	}, [manifest, query]);
@@ -83,6 +86,8 @@ const AddPanel: FC<Props> = ({ manifest, readOnly, onAdd, onDragStart }) => {
 		const cats = [...new Set(list.map(p => p.category))].sort((a, b) => rank(a) - rank(b));
 		return cats.map(c => ({ key: c, label: PRESET_GROUPS[c] || c, items: list.filter(p => p.category === c) }));
 	}, [manifest, query]);
+
+	const saved = useMemo(() => sections.filter(s => !query || s.name.toLowerCase().includes(query)), [sections, query]);
 
 	const itemProps = (item: AddItem) => ({
 		as: 'button' as const,
@@ -121,6 +126,43 @@ const AddPanel: FC<Props> = ({ manifest, readOnly, onAdd, onDragStart }) => {
 				flex={1}
 				overflowY='auto'
 				py={3}>
+				{saved.length > 0 && (
+					<>
+						<Flex
+							align='center'
+							justify='space-between'
+							px={3}
+							mb={2}>
+							<Text
+								fontSize='12.5px'
+								fontWeight='600'>
+								Saved sections
+							</Text>
+							<SiteGuide section='sections' />
+						</Flex>
+						<Box mb={4}>
+							{saved.map(s => (
+								<Flex
+									key={s.id}
+									{...itemProps({ kind: 'saved', key: s.id, label: s.name, types: ['section-ref'] })}
+									align='center'
+									gap={2}
+									w='calc(100% - 16px)'
+									mx={2}
+									mb={1}
+									px={2}
+									py={2}
+									textAlign='left'
+									borderWidth='1px'
+									borderRadius='md'
+									fontSize='12.5px'>
+									<Puzzle size={14} />
+									{s.name}
+								</Flex>
+							))}
+						</Box>
+					</>
+				)}
 				{presets.length > 0 && (
 					<>
 						<Flex
@@ -217,7 +259,7 @@ const AddPanel: FC<Props> = ({ manifest, readOnly, onAdd, onDragStart }) => {
 						</Box>
 					</Group>
 				))}
-				{!blocks.length && !presets.length && (
+				{!blocks.length && !presets.length && !saved.length && (
 					<Text
 						px={3}
 						fontSize='12.5px'

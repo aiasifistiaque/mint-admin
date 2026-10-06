@@ -38,6 +38,8 @@ type Props = {
 	onMove: (id: string, target: DropTarget) => void;
 	onText: (id: string, prop: string, value: string) => void;
 	onKey: (key: Extract<CanvasMessage, { type: 'key' }>) => void;
+	/** the page's width in CSS px (the device's, or the window's when fitting) — which screen size styles apply to */
+	onWidth?: (px: number) => void;
 };
 
 export type CanvasHandle = {
@@ -48,7 +50,7 @@ export type CanvasHandle = {
 };
 
 const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(
-	{ tree, layout, design, links, theme, device, selectedId, hoveredId, readOnly, openId, dragging, onSelect, onHover, onDropTarget, onMove, onText, onKey },
+	{ tree, layout, design, links, theme, device, selectedId, hoveredId, readOnly, openId, dragging, onSelect, onHover, onDropTarget, onMove, onText, onKey, onWidth },
 	ref
 ) {
 	const frame = useRef<HTMLIFrameElement>(null);
@@ -164,6 +166,9 @@ const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(
 	const width = device === 'fit' ? avail : DEVICE_WIDTH[device];
 	const scale = width > avail ? avail / width : 1;
 	const height = Math.max(400, (areaH - pad * 2) / scale);
+	useEffect(() => {
+		if (areaW) onWidth?.(width);
+	}, [width, areaW, onWidth]);
 
 	return (
 		<Box
