@@ -1,16 +1,18 @@
 'use client';
 
-import { FC, memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import { Box, Flex, Spinner, Text } from '@chakra-ui/react';
 import type { SbNode } from '@/components/library/store/services/siteBuilderApi';
-import { SITES_ORIGIN, SITES_URL, isCanvasMessage, type CanvasDesign, type CanvasLayout, type PanelMessage } from './protocol';
+import { SITES_ORIGIN, SITES_URL, isCanvasMessage, type CanvasDesign, type CanvasLayout, type CanvasMessage, type DragItem, type DropTarget, type PanelMessage } from './protocol';
 
 /**
  * The canvas (docs/site-builder D9): the renderer's /__mint/edit page in a
  * frame, so what you edit is drawn by the same blocks and theme as the live
  * site. The panel owns the draft and sends it; the canvas reports clicks and
  * hovers. A device narrower than the frame shows at its own width; a wider
- * one is scaled down to fit.
+ * one is scaled down to fit. SB-06: drags from the Add panel go through the
+ * handle (`toCanvas` / `drag` / `dragEnd`); the canvas answers with drop
+ * targets, moves, typed text and shortcuts.
  */
 
 export type Device = 'mobile' | 'tablet' | 'desktop' | 'fit';
@@ -25,11 +27,30 @@ type Props = {
 	device: Device;
 	selectedId: string | null;
 	hoveredId: string | null;
+	readOnly: boolean;
+	/** the overlay to show (a pop-up, drawer or popover — or the one holding the selection) */
+	openId: string | null;
+	/** a drag from the Add panel is under way: a cover keeps the pointer's events in the panel */
+	dragging: boolean;
 	onSelect: (id: string, shift: boolean) => void;
 	onHover: (id: string | null) => void;
+	onDropTarget: (target: DropTarget | null, reason?: string) => void;
+	onMove: (id: string, target: DropTarget) => void;
+	onText: (id: string, prop: string, value: string) => void;
+	onKey: (key: Extract<CanvasMessage, { type: 'key' }>) => void;
 };
 
-const Canvas: FC<Props> = ({ tree, layout, design, links, theme, device, selectedId, hoveredId, onSelect, onHover }) => {
+export type CanvasHandle = {
+	/** The point in the canvas's own viewport, or null when (clientX, clientY) is outside it. */
+	toCanvas: (clientX: number, clientY: number) => { x: number; y: number } | null;
+	drag: (x: number, y: number, item: DragItem) => void;
+	dragEnd: () => void;
+};
+
+const Canvas = forwardRef<CanvasHandle, Props>(function Canvas(
+	{ tree, layout, design, links, theme, device, selectedId, hoveredId, readOnly, openId, dragging, onSelect, onHover, onDropTarget, onMove, onText, onKey },
+	ref
+) {
 	const frame = useRef<HTMLIFrameElement>(null);
 	const area = useRef<HTMLDivElement>(null);
 	const [ready, setReady] = useState(false);
@@ -39,8 +60,10 @@ const Canvas: FC<Props> = ({ tree, layout, design, links, theme, device, selecte
 	// The latest props, for the 'ready' handler (it may come before or after they change).
 	const latest = useRef({ tree, layout, design, links, theme, selectedId });
 	latest.current = { tree, layout, design, links, theme, selectedId };
-	const handlers = useRef({ onSelect, onHover });
-	handlers.current = { onSelect, onHover };
+	const handlers = useRef({ onSelect, onHover, onDropTarget, onMove, onText, onKey });
+	handlers.current = { onSelect, onHover, onDropTarget, onMove, onText, onKey };
+	const readOnlyRef = useRef(readOnly);
+	readOnlyRef.current = readOnly;
 
 	const send = (msg: PanelMessage) => frame.current?.contentWindow?.postMessage(msg, SITES_ORIGIN);
 	// The frame said 'ready' before the design had loaded: start it once the design arrives.
@@ -53,7 +76,7 @@ const Canvas: FC<Props> = ({ tree, layout, design, links, theme, device, selecte
 			return;
 		}
 		waiting.current = false;
-		send({ mint: 1, type: 'init', design: l.design, layout: l.layout, page: { tree: l.tree }, links: l.links, theme: l.theme });
+		send({ mint: 1, type: 'init', design: l.design, layout: l.layout, page: { tree: l.tree }, links: l.links, theme: l.theme, readOnly: readOnlyRef.current });
 		if (l.selectedId) send({ mint: 1, type: 'select', id: l.selectedId });
 		setReady(true);
 		setFailed(false);
@@ -68,6 +91,10 @@ const Canvas: FC<Props> = ({ tree, layout, design, links, theme, device, selecte
 			if (m.type === 'ready') initRef.current();
 			else if (m.type === 'click') handlers.current.onSelect(m.id, m.shift);
 			else if (m.type === 'hover') handlers.current.onHover(m.id);
+			else if (m.type === 'dropTarget') handlers.current.onDropTarget(m.target, m.reason);
+			else if (m.type === 'move') handlers.current.onMove(m.id, { parentId: m.parentId, index: m.index, ...(m.slot && { slot: m.slot }) });
+			else if (m.type === 'text') handlers.current.onText(m.id, m.prop, m.value);
+			else if (m.type === 'key') handlers.current.onKey(m);
 		};
 		window.addEventListener('message', onMessage);
 		return () => window.removeEventListener('message', onMessage);
@@ -100,6 +127,26 @@ const Canvas: FC<Props> = ({ tree, layout, design, links, theme, device, selecte
 	useEffect(() => {
 		if (ready) send({ mint: 1, type: 'hover', id: hoveredId });
 	}, [hoveredId, ready]);
+	useEffect(() => {
+		if (ready) send({ mint: 1, type: 'open', id: openId });
+	}, [openId, ready]);
+
+	useImperativeHandle(
+		ref,
+		() => ({
+			toCanvas: (clientX, clientY) => {
+				const f = frame.current;
+				if (!f) return null;
+				const r = f.getBoundingClientRect();
+				if (clientX < r.left || clientX > r.right || clientY < r.top || clientY > r.bottom) return null;
+				const scale = r.width / (f.offsetWidth || r.width);
+				return { x: (clientX - r.left) / scale, y: (clientY - r.top) / scale };
+			},
+			drag: (x, y, item) => send({ mint: 1, type: 'drag', x, y, item }),
+			dragEnd: () => send({ mint: 1, type: 'dragend' }),
+		}),
+		[]
+	);
 
 	useLayoutEffect(() => {
 		const el = area.current;
@@ -146,6 +193,14 @@ const Canvas: FC<Props> = ({ tree, layout, design, links, theme, device, selecte
 					style={{ width: '100%', height: '100%', border: 0, display: 'block' }}
 				/>
 			</Box>
+			{dragging && (
+				<Box
+					position='absolute'
+					inset={0}
+					zIndex={2}
+					cursor='copy'
+				/>
+			)}
 			{!ready && (
 				<Flex
 					position='absolute'
@@ -174,6 +229,6 @@ const Canvas: FC<Props> = ({ tree, layout, design, links, theme, device, selecte
 			)}
 		</Box>
 	);
-};
+});
 
 export default memo(Canvas);

@@ -53,7 +53,7 @@ export type SbBlockDef = {
 	slots?: Record<string, { label?: string; allow?: string[] }>;
 	canBeChildOf?: string[];
 	style: 'all' | string[];
-	defaults: { props: Record<string, any> };
+	defaults: { props: Record<string, any>; style?: SbNode['style']; children?: SbNode[] };
 	client?: boolean;
 	actions?: boolean;
 };

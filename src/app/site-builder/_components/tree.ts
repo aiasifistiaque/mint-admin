@@ -42,6 +42,9 @@ const find = (nodes: SbNode[], id: string, parent: SbNode | null = null): Found 
 	return null;
 };
 
+/** A node with its parent, the list it's in and its index there. */
+export const locate = (nodes: SbNode[], id: string) => find(nodes, id);
+
 export const findNode = (nodes: SbNode[] | undefined, id: string | null): SbNode | null => (id && nodes ? find(nodes, id)?.node || null : null);
 
 /** The node's ancestors, outermost first, then the node — for the breadcrumb. */
@@ -172,14 +175,28 @@ export type OutlineRow = {
 	locked: boolean;
 	/** a named slot this row sits in ('media'…), when not the default one */
 	slot?: string;
+	/** where it sits: its parent (null = the top level) and its index there */
+	parentId: string | null;
+	index: number;
+	/** its top-level ancestor (itself at the top level) */
+	root: string;
 };
 
 /** The tree as rows for the outline, skipping the children of collapsed nodes. */
-export const outlineRows = (nodes: SbNode[], collapsed: Set<string>, label: (n: SbNode) => string, depth = 0, slot?: string): OutlineRow[] => {
+export const outlineRows = (
+	nodes: SbNode[],
+	collapsed: Set<string>,
+	label: (n: SbNode) => string,
+	depth = 0,
+	slot?: string,
+	parentId: string | null = null,
+	root?: string
+): OutlineRow[] => {
 	const rows: OutlineRow[] = [];
-	for (const n of nodes || []) {
-		if (!n || typeof n !== 'object') continue;
+	(nodes || []).forEach((n, index) => {
+		if (!n || typeof n !== 'object') return;
 		const lists = childLists(n);
+		const top = root || n.id;
 		rows.push({
 			id: n.id,
 			type: n.type,
@@ -189,10 +206,13 @@ export const outlineRows = (nodes: SbNode[], collapsed: Set<string>, label: (n: 
 			hidden: !!(n.hidden && Object.values(n.hidden).some(Boolean)),
 			locked: !!n.locked,
 			...(slot && { slot }),
+			parentId,
+			index,
+			root: top,
 		});
-		if (collapsed.has(n.id)) continue;
-		if (n.children) rows.push(...outlineRows(n.children, collapsed, label, depth + 1));
-		for (const [name, list] of Object.entries(n.slots || {})) rows.push(...outlineRows(list, collapsed, label, depth + 1, name));
-	}
+		if (collapsed.has(n.id)) return;
+		if (n.children) rows.push(...outlineRows(n.children, collapsed, label, depth + 1, undefined, n.id, top));
+		for (const [name, list] of Object.entries(n.slots || {})) rows.push(...outlineRows(list, collapsed, label, depth + 1, name, n.id, top));
+	});
 	return rows;
 };

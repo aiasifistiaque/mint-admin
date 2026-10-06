@@ -1,10 +1,11 @@
 'use client';
 
-import { FC, memo, useCallback, useMemo, useState } from 'react';
+import { FC, memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Box, Flex, IconButton, Input, Text } from '@chakra-ui/react';
 import { ChevronDown, ChevronRight, Eye, EyeOff, Lock, LockOpen } from 'lucide-react';
 import type { SbBlockDef, SbNode } from '@/components/library/store/services/siteBuilderApi';
-import { allIds, outlineRows, type OutlineRow } from './tree';
+import { isOverlay, problemFor } from './edit';
+import { allIds, locate, outlineRows, type OutlineRow } from './tree';
 import SiteGuide from './SiteGuide';
 
 /**
@@ -13,7 +14,12 @@ import SiteGuide from './SiteGuide';
  * Rows only take primitive props and are memoized, so typing in the inspector
  * re-renders just the row whose name changed. The header and footer belong to
  * the design and every page shares them — they're edited from Design (SB-07).
+ * SB-06: drag a row to move its block (above, below or into another row);
+ * pop-ups, drawers and popovers are listed under Overlays.
  */
+
+type Where = 'before' | 'after' | 'inside';
+type Drag = { id: string; overId: string | null; where: Where; problem: string | null };
 
 type Props = {
 	tree: SbNode[];
@@ -30,6 +36,7 @@ type Props = {
 	onRename: (id: string, name: string) => void;
 	onToggleHidden: (id: string) => void;
 	onToggleLocked: (id: string) => void;
+	onMove: (id: string, target: { parentId: string | null; index: number }) => void;
 };
 
 type RowProps = OutlineRow & {
@@ -44,7 +51,19 @@ type RowProps = OutlineRow & {
 	onRename: (id: string, name: string) => void;
 	onToggleHidden: (id: string) => void;
 	onToggleLocked: (id: string) => void;
+	/** drag and drop: off for the shared header / footer, read-only roles and locked blocks */
+	draggable: boolean;
+	holds: boolean;
+	dropAt?: Where;
+	dropBad?: boolean;
+	onDragStartRow: (id: string) => void;
+	onDragOverRow: (id: string, where: Where) => void;
+	onDropRow: () => void;
+	onDragEndRow: () => void;
 };
+
+const DROP_BLUE = 'var(--chakra-colors-blue-solid)';
+const DROP_RED = 'var(--chakra-colors-red-solid)';
 
 const Row: FC<RowProps> = memo(function Row(p) {
 	const [editing, setEditing] = useState(false);
@@ -74,6 +93,40 @@ const Row: FC<RowProps> = memo(function Row(p) {
 			}}
 			onMouseEnter={() => p.onHover(p.id)}
 			onMouseLeave={() => p.onHover(null)}
+			draggable={p.draggable && !editing}
+			onDragStart={e => {
+				e.dataTransfer.effectAllowed = 'move';
+				e.dataTransfer.setData('text/plain', p.id);
+				p.onDragStartRow(p.id);
+			}}
+			onDragOver={e => {
+				if (p.shared) return;
+				e.preventDefault();
+				const r = e.currentTarget.getBoundingClientRect();
+				const f = (e.clientY - r.top) / r.height;
+				p.onDragOverRow(p.id, p.holds ? (f < 0.28 ? 'before' : f > 0.72 ? 'after' : 'inside') : f < 0.5 ? 'before' : 'after');
+			}}
+			onDrop={e => {
+				e.preventDefault();
+				p.onDropRow();
+			}}
+			onDragEnd={p.onDragEndRow}
+			position='relative'
+			outline={p.dropAt === 'inside' ? `2px solid ${p.dropBad ? DROP_RED : DROP_BLUE}` : undefined}
+			outlineOffset='-2px'
+			_before={
+				p.dropAt === 'before' || p.dropAt === 'after'
+					? {
+							content: '""',
+							position: 'absolute',
+							left: `${6 + p.depth * 14}px`,
+							right: 0,
+							height: '2px',
+							bg: p.dropBad ? DROP_RED : DROP_BLUE,
+							...(p.dropAt === 'before' ? { top: '-1px' } : { bottom: '-1px' }),
+						}
+					: undefined
+			}
 			className='sb-row'>
 			<Box
 				as='button'
@@ -178,7 +231,7 @@ const Group: FC<{ title: string; note?: string; children: React.ReactNode }> = (
 	</Box>
 );
 
-const Outline: FC<Props> = ({ tree, loading, header, footer, blocks, selectedId, hoveredId, readOnly, onSelect, onHover, onRename, onToggleHidden, onToggleLocked }) => {
+const Outline: FC<Props> = ({ tree, loading, header, footer, blocks, selectedId, hoveredId, readOnly, onSelect, onHover, onRename, onToggleHidden, onToggleLocked, onMove }) => {
 	const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
 	const label = useCallback((n: SbNode) => n.name || blocks.get(n.type)?.label || n.type, [blocks]);
 	const onToggle = useCallback(
@@ -196,8 +249,64 @@ const Outline: FC<Props> = ({ tree, loading, header, footer, blocks, selectedId,
 	const [openShared, setOpenShared] = useState<Set<string>>(() => new Set());
 	const groups = useMemo(() => {
 		const shared = (nodes: SbNode[]) => outlineRows(nodes, new Set([...allIds(nodes)].filter(id => !openShared.has(id))), label);
-		return { header: shared(header), page: outlineRows(tree, collapsed, label), footer: shared(footer) };
-	}, [tree, header, footer, collapsed, openShared, label]);
+		const page = outlineRows(tree, collapsed, label);
+		const overlayRoots = new Set(tree.filter(n => isOverlay(blocks, n.type)).map(n => n.id));
+		return {
+			header: shared(header),
+			page: page.filter(r => !overlayRoots.has(r.root)),
+			overlays: page.filter(r => overlayRoots.has(r.root)),
+			footer: shared(footer),
+		};
+	}, [tree, header, footer, collapsed, openShared, label, blocks]);
+
+	/* ---------------------------------------------------- drag and drop */
+
+	const [drag, setDrag] = useState<Drag | null>(null);
+	const dragRef = useRef(drag);
+	dragRef.current = drag;
+	const treeRef = useRef(tree);
+	treeRef.current = tree;
+	const rowsById = useMemo(() => new Map([...groups.page, ...groups.overlays].map(r => [r.id, r])), [groups]);
+	const rowsRef = useRef(rowsById);
+	rowsRef.current = rowsById;
+
+	/** Where a drop on `overId` puts the dragged block, and whether it may go there. */
+	const targetOf = useCallback(
+		(id: string, overId: string, where: Where) => {
+			const t = treeRef.current;
+			const over = rowsRef.current.get(overId);
+			const moving = locate(t, id)?.node;
+			if (!over || !moving) return null;
+			const parentId = where === 'inside' ? overId : over.parentId;
+			const index = where === 'inside' ? (locate(t, overId)?.node.children || []).length : over.index + (where === 'after' ? 1 : 0);
+			let problem: string | null = null;
+			for (let p: string | null = parentId; p; p = locate(t, p)?.parent?.id ?? null)
+				if (p === id) {
+					problem = 'A block can’t go inside itself.';
+					break;
+				}
+			problem ??= problemFor(blocks, parentId ? locate(t, parentId)?.node.type ?? null : null, [moving.type]);
+			return { target: { parentId, index }, problem };
+		},
+		[blocks]
+	);
+	const onDragStartRow = useCallback((id: string) => setDrag({ id, overId: null, where: 'before', problem: null }), []);
+	const onDragOverRow = useCallback(
+		(overId: string, where: Where) => {
+			const d = dragRef.current;
+			if (!d || (d.overId === overId && d.where === where)) return;
+			setDrag({ ...d, overId, where, problem: overId === d.id ? null : targetOf(d.id, overId, where)?.problem ?? null });
+		},
+		[targetOf]
+	);
+	const onDropRow = useCallback(() => {
+		const d = dragRef.current;
+		setDrag(null);
+		if (!d?.overId || d.overId === d.id) return;
+		const t = targetOf(d.id, d.overId, d.where);
+		if (t && !t.problem) onMove(d.id, t.target);
+	}, [targetOf, onMove]);
+	const onDragEndRow = useCallback(() => setDrag(null), []);
 	const toggleShared = useCallback(
 		(id: string) =>
 			setOpenShared(s => {
@@ -225,6 +334,14 @@ const Outline: FC<Props> = ({ tree, loading, header, footer, blocks, selectedId,
 				onRename={onRename}
 				onToggleHidden={onToggleHidden}
 				onToggleLocked={onToggleLocked}
+				draggable={!shared && !readOnly && !r.locked}
+				holds={!shared && !!blocks.get(r.type)?.slots?.children}
+				dropAt={drag && drag.overId === r.id && drag.id !== r.id ? drag.where : undefined}
+				dropBad={!!(drag && drag.overId === r.id && drag.problem)}
+				onDragStartRow={onDragStartRow}
+				onDragOverRow={onDragOverRow}
+				onDropRow={onDropRow}
+				onDragEndRow={onDragEndRow}
 			/>
 		));
 
@@ -270,6 +387,25 @@ const Outline: FC<Props> = ({ tree, loading, header, footer, blocks, selectedId,
 						</Text>
 					)}
 				</Group>
+				{groups.overlays.length > 0 && (
+					<Group
+						title='Overlays'
+						note='open from a button'>
+						{rows(groups.overlays, false)}
+					</Group>
+				)}
+				{drag?.problem && drag.overId && (
+					<Text
+						mx={3}
+						my={1}
+						p={2}
+						fontSize='11.5px'
+						color='red.fg'
+						bg='red.subtle'
+						borderRadius='md'>
+						{drag.problem}
+					</Text>
+				)}
 				{footer.length > 0 && (
 					<Group
 						title='Footer'

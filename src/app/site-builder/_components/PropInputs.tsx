@@ -22,6 +22,8 @@ export type InputContext = {
 	pages: SbPageSummary[];
 	/** blocks on this page, for "scroll to" */
 	nodes: { id: string; label: string }[];
+	/** pop-ups, drawers and popovers on this page, for open / close / toggle */
+	overlays: { id: string; label: string }[];
 };
 
 const label = { fontSize: '12px', fontWeight: '600', mb: 1 } as const;
@@ -625,17 +627,20 @@ export const PropInput: FC<InputProps> = memo(function PropInput({ def, value, c
 
 /* --------------------------------------------------------------- action */
 
-type ActionKind = 'none' | 'page' | 'link' | 'scroll' | 'widget';
+type ActionKind = 'none' | 'page' | 'link' | 'scroll' | 'open' | 'close' | 'toggle' | 'widget';
+const KINDS: ActionKind[] = ['page', 'link', 'scroll', 'open', 'close', 'toggle', 'widget'];
 
-/** What a button, link, icon or image does when clicked (D12). Overlays (open/close) arrive with SB-06. */
+/** What a button, link, icon or image does when clicked (D12) — including opening and closing a pop-up, drawer or popover (SB-06). */
 export const ActionEditor: FC<{ node: SbNode; ctx: InputContext; readOnly: boolean; onChange: (action: any) => void }> = ({ node, ctx, readOnly, onChange }) => {
 	const a: any = node.action || null;
-	const kind: ActionKind = !a ? 'none' : ['page', 'link', 'scroll', 'widget'].includes(a.type) ? a.type : 'none';
+	const kind: ActionKind = !a ? 'none' : KINDS.includes(a.type) ? a.type : 'none';
 	const set = (k: ActionKind) => {
 		if (k === 'none') return onChange(null);
 		if (k === 'page') return onChange({ type: 'page', pageId: ctx.pages[0]?.id || '' });
 		if (k === 'link') return onChange({ type: 'link', href: '' });
 		if (k === 'scroll') return onChange({ type: 'scroll', target: ctx.nodes.find(n => n.id !== node.id)?.id || '' });
+		if (k === 'open' || k === 'close' || k === 'toggle')
+			return onChange({ type: k, target: (a?.target && ctx.overlays.some(o => o.id === a.target) ? a.target : ctx.overlays[0]?.id) || '' });
 		return onChange({ type: 'widget', widget: 'cart', op: 'open' });
 	};
 	return (
@@ -653,10 +658,34 @@ export const ActionEditor: FC<{ node: SbNode; ctx: InputContext; readOnly: boole
 						{ value: 'page', label: 'Go to a page' },
 						{ value: 'link', label: 'Open a link' },
 						{ value: 'scroll', label: 'Scroll to a block' },
+						{ value: 'open', label: 'Open a pop-up or drawer' },
+						{ value: 'close', label: 'Close a pop-up or drawer' },
+						{ value: 'toggle', label: 'Open or close (toggle)' },
 						{ value: 'widget', label: 'Open a widget' },
 					]}
 				/>
 			</Field>
+			{(kind === 'open' || kind === 'close' || kind === 'toggle') &&
+				(ctx.overlays.length ? (
+					<Field
+						title='Which one'
+						help='Pop-ups, drawers and popovers on this page — add one from Add → Pop-ups and drawers.'>
+						<Dropdown
+							size='xs'
+							value={a.target}
+							disabled={readOnly}
+							onChange={target => onChange({ ...a, target })}
+							items={ctx.overlays.map(o => ({ value: o.id, label: o.label }))}
+						/>
+					</Field>
+				) : (
+					<Text
+						fontSize='12px'
+						color='fg.muted'
+						lineHeight='1.5'>
+						This page has no pop-up, drawer or popover yet. Add one from Add → Pop-ups and drawers, then pick it here.
+					</Text>
+				))}
 			{kind === 'page' && (
 				<Field title='Page'>
 					<Dropdown

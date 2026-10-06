@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Badge, Box, Button, Flex, IconButton, Link, Text } from '@chakra-ui/react';
 import { ExternalLink, Maximize2, Monitor, Moon, Redo2, Smartphone, Sun, Tablet, Undo2 } from 'lucide-react';
 import { PromptDialog } from '@/components/library';
@@ -22,22 +22,38 @@ import {
 	type SbPageSummary,
 	type SbProblem,
 } from '@/components/library/store/services/siteBuilderApi';
-import Canvas, { type Device } from './Canvas';
-import Inspector from './Inspector';
+import AddPanel from './AddPanel';
+import Canvas, { type CanvasHandle, type Device } from './Canvas';
+import { clipboard, flatIds, insertOps, isOverlay, nodeFromBlock, nodesFor, placeFor, placeProblem, rekey, type AddItem } from './edit';
+import Inspector, { type Command } from './Inspector';
 import Outline from './Outline';
 import PageDialog from './PageDialog';
 import PagesPanel, { type PageAction } from './PagesPanel';
 import PublishDialog from './PublishDialog';
 import SiteGuide from './SiteGuide';
-import { findNode, pathTo } from './tree';
+import type { CanvasMessage, DropTarget } from './protocol';
+import { findNode, locate, pathTo } from './tree';
 import { useDraft, type SaveStatus } from './useDraft';
 
 /**
  * The site builder's editor (docs/site-builder SB-05): pages and the outline
  * on the left, the page drawn by the real renderer in the middle, the selected
  * block's settings on the right. The open page's draft lives here (useDraft),
- * saves itself, and goes live with Publish.
+ * saves itself, and goes live with Publish. SB-06: the Add tab (click or drag
+ * blocks and sections onto the page), moving blocks on the canvas and in the
+ * outline, typing on the canvas, copy / paste / duplicate / wrap, shortcuts,
+ * and overlays (pop-ups, drawers, popovers).
  */
+
+type Tab = 'pages' | 'outline' | 'add';
+const TAB_LABEL: Record<Tab, string> = { pages: 'Pages', outline: 'Outline', add: 'Add' };
+
+type Key = Pick<Extract<CanvasMessage, { type: 'key' }>, 'key' | 'meta' | 'ctrl' | 'shift' | 'alt'>;
+
+/** Typing in a field, or a dialog / menu is open: the editor's shortcuts stay out of the way. */
+const typingOrDialog = (t: EventTarget | null) =>
+	(t instanceof HTMLElement && !!t.closest('input, textarea, select, [contenteditable="true"], .ql-editor, [role="menu"]')) ||
+	!!document.querySelector('[data-scope="dialog"][data-state="open"]');
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
 	saved: 'Saved',
@@ -56,13 +72,13 @@ const DEVICES: { key: Device; label: string; icon: React.ReactNode }[] = [
 	{ key: 'fit', label: 'Fit the window', icon: <Maximize2 size={14} /> },
 ];
 
-const Rail: FC<{ tab: 'pages' | 'outline'; onTab: (t: 'pages' | 'outline') => void }> = ({ tab, onTab }) => (
+const Rail: FC<{ tab: Tab; onTab: (t: Tab) => void }> = ({ tab, onTab }) => (
 	<Flex
 		borderBottomWidth='1px'
 		px={2}
 		pt={2}
 		gap={1}>
-		{(['pages', 'outline'] as const).map(t => (
+		{(['pages', 'outline', 'add'] as const).map(t => (
 			<Button
 				key={t}
 				size='xs'
@@ -72,7 +88,7 @@ const Rail: FC<{ tab: 'pages' | 'outline'; onTab: (t: 'pages' | 'outline') => vo
 				borderColor={tab === t ? 'fg' : 'transparent'}
 				fontWeight={tab === t ? '600' : '400'}
 				onClick={() => onTab(t)}>
-				{t === 'pages' ? 'Pages' : 'Outline'}
+				{TAB_LABEL[t]}
 			</Button>
 		))}
 	</Flex>
@@ -94,7 +110,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 	const [hoveredId, setHoveredId] = useState<string | null>(null);
 	const [device, setDevice] = useState<Device>('desktop');
 	const [theme, setTheme] = useState<'light' | 'dark'>('light');
-	const [tab, setTab] = useState<'pages' | 'outline'>('outline');
+	const [tab, setTab] = useState<Tab>('outline');
 	const [dialog, setDialog] = useState<null | { kind: 'add' } | { kind: 'settings' }>(null);
 	const [publishOpen, setPublishOpen] = useState(false);
 	const [deleting, setDeleting] = useState<SbPageSummary | null>(null);
@@ -161,8 +177,15 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 				Object.values(n.slots || {}).forEach(s => walk(s, depth + 1));
 			});
 		walk(tree, 0);
-		return { manifest: manifest!, pages: pages || [], nodes };
-	}, [tree, manifest, pages, label]);
+		const overlays = tree.filter(n => isOverlay(blocks, n.type)).map(n => ({ id: n.id, label: label(n) }));
+		return { manifest: manifest!, pages: pages || [], nodes, overlays };
+	}, [tree, manifest, pages, label, blocks]);
+
+	// A pop-up, drawer or popover shows on the canvas while it — or something in it — is selected.
+	const openId = useMemo(() => {
+		const root = selectedId ? pathTo(tree, selectedId)[0] : null;
+		return root && isOverlay(blocks, root.type) ? root.id : null;
+	}, [tree, selectedId, blocks]);
 
 	/* ---------------------------------------------------- page switching */
 
@@ -266,7 +289,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 	const onSelect = useCallback((id: string) => setSelectedId(id), []);
 	const onCanvasSelect = useCallback((id: string) => {
 		setSelectedId(id);
-		setTab('outline');
+		setTab(t => (t === 'pages' ? 'outline' : t));
 	}, []);
 	const onHover = useCallback((id: string | null) => setHoveredId(id), []);
 	const onApply = useCallback(
@@ -278,19 +301,226 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 		[apply]
 	);
 
-	// ⌘Z / ⇧⌘Z (Ctrl on Windows), except while typing in a field.
+	/* ------------------------------------- adding, copying, moving (SB-06) */
+
+	const treeRef = useRef(tree);
+	treeRef.current = tree;
+	const selectedRef = useRef(selectedId);
+	selectedRef.current = selectedId;
+	const fail = (title: string) => toaster.create({ type: 'error', title });
+
+	/** Inserts `nodes` at `place` as one undo step and selects the first. */
+	const insertAt = useCallback(
+		(nodes: SbNode[], place: { parentId: string | null; index: number }) => {
+			if (!nodes.length) return;
+			if (!onApply(insertOps(nodes, place))) {
+				setSelectedId(nodes[0].id);
+				setTab(t => (t === 'pages' ? 'outline' : t));
+			}
+		},
+		[onApply]
+	);
+
+	const insertNodes = useCallback(
+		(nodes: SbNode[]) => {
+			const place = placeFor(treeRef.current, selectedRef.current, nodes.map(n => n.type), blocks);
+			if ('problem' in place) return fail(place.problem);
+			insertAt(nodes, place);
+		},
+		[blocks, insertAt]
+	);
+
+	const suppressClick = useRef(false);
+	const onAdd = useCallback(
+		(item: AddItem) => {
+			if (suppressClick.current || !manifest || readOnly) return;
+			insertNodes(nodesFor(item, manifest, blocks));
+		},
+		[manifest, blocks, insertNodes, readOnly]
+	);
+
+	const runCommand = useCallback(
+		(cmd: Command) => {
+			if (readOnly) return;
+			const t = treeRef.current;
+			const id = selectedRef.current;
+			if (cmd === 'paste') {
+				const copied = clipboard.read();
+				if (!copied) return fail('Nothing copied yet — select a block and press ⌘C.');
+				return insertNodes(rekey(copied));
+			}
+			const loc = id ? locate(t, id) : null;
+			if (!loc) return;
+			const n = loc.node;
+			const parentId = loc.parent?.id ?? null;
+			switch (cmd) {
+				case 'copy':
+					clipboard.write([n]);
+					toaster.create({ type: 'info', title: `Copied ${label(n)}`, description: 'Paste it on any page with ⌘V.', duration: 2000 });
+					return;
+				case 'cut':
+				case 'delete': {
+					if (n.locked) return fail(`${label(n)} is locked — unlock it in the outline first.`);
+					if (cmd === 'cut') clipboard.write([n]);
+					if (onApply([{ op: 'remove', id: n.id }])) return;
+					const next = loc.list[loc.index + 1] || loc.list[loc.index - 1];
+					setSelectedId(next?.id ?? parentId);
+					return;
+				}
+				case 'duplicate': {
+					const [copy] = rekey([n]);
+					return insertAt([copy], { parentId, index: loc.index + 1 });
+				}
+				case 'up':
+				case 'down': {
+					if (n.locked) return fail(`${label(n)} is locked — unlock it in the outline first.`);
+					if (cmd === 'up' ? loc.index === 0 : loc.index >= loc.list.length - 1) return;
+					onApply([{ op: 'move', id: n.id, parentId, index: cmd === 'up' ? loc.index - 1 : loc.index + 2 }]);
+					return;
+				}
+				case 'parent':
+					setSelectedId(parentId);
+					return;
+				case 'wrap-stack':
+				case 'wrap-section': {
+					const def = blocks.get(cmd === 'wrap-stack' ? 'stack' : 'section');
+					if (!def) return;
+					const why = placeProblem(blocks, loc.parent?.type ?? null, def.type) || placeProblem(blocks, def.type, n.type);
+					if (why) return fail(why);
+					const wrapper = { ...nodeFromBlock(def), children: undefined };
+					if (!onApply([{ op: 'wrap', ids: [n.id], node: wrapper }])) setSelectedId(wrapper.id);
+					return;
+				}
+			}
+		},
+		[readOnly, blocks, label, onApply, insertAt, insertNodes]
+	);
+
+	/** Shortcuts, from the panel or the canvas. Returns true when it handled the key. */
+	const onShortcut = useCallback(
+		(k: Key): boolean => {
+			const mod = k.meta || k.ctrl;
+			const key = k.key.toLowerCase();
+			if (mod && (key === 'z' || key === 'y')) {
+				if (k.shift || key === 'y') draft.redo();
+				else draft.undo();
+				return true;
+			}
+			const cmd: Command | null = mod
+				? ({ c: 'copy', x: 'cut', v: 'paste', d: 'duplicate' } as Record<string, Command>)[key] || null
+				: key === 'delete' || key === 'backspace'
+					? 'delete'
+					: key === 'escape'
+						? 'parent'
+						: k.alt && key === 'arrowup'
+							? 'up'
+							: k.alt && key === 'arrowdown'
+								? 'down'
+								: null;
+			if (cmd) {
+				if (cmd !== 'paste' && !selectedRef.current) return false;
+				runCommand(cmd);
+				return true;
+			}
+			if (key === 'arrowup' || key === 'arrowdown') {
+				const ids = flatIds(treeRef.current);
+				if (!ids.length) return false;
+				const i = selectedRef.current ? ids.indexOf(selectedRef.current) : -1;
+				const next = key === 'arrowup' ? (i <= 0 ? 0 : i - 1) : Math.min(ids.length - 1, i + 1);
+				setSelectedId(ids[next]);
+				return true;
+			}
+			return false;
+		},
+		[draft, runCommand]
+	);
+
 	useEffect(() => {
 		const onKey = (e: KeyboardEvent) => {
-			if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== 'z') return;
-			const t = e.target as HTMLElement;
-			if (t.closest('input, textarea, [contenteditable="true"], .ql-editor')) return;
-			e.preventDefault();
-			if (e.shiftKey) draft.redo();
-			else draft.undo();
+			if (typingOrDialog(e.target)) return;
+			if (onShortcut({ key: e.key, meta: e.metaKey, ctrl: e.ctrlKey, shift: e.shiftKey, alt: e.altKey })) e.preventDefault();
 		};
 		window.addEventListener('keydown', onKey);
 		return () => window.removeEventListener('keydown', onKey);
-	}, [draft]);
+	}, [onShortcut]);
+
+	/* ------------------------------------------------- canvas callbacks */
+
+	const canvasRef = useRef<CanvasHandle>(null);
+	const dropRef = useRef<{ target: DropTarget | null; reason?: string } | null>(null);
+	const onDropTarget = useCallback((target: DropTarget | null, reason?: string) => {
+		dropRef.current = { target, reason };
+	}, []);
+	const onCanvasMove = useCallback(
+		(id: string, target: DropTarget) => {
+			if (!onApply([{ op: 'move', id, parentId: target.parentId, index: target.index, ...(target.slot && { slot: target.slot }) }])) setSelectedId(id);
+		},
+		[onApply]
+	);
+	const onCanvasText = useCallback(
+		(id: string, prop: string, value: string) => {
+			onApply([{ op: 'update', id, props: { [prop]: value } }]);
+		},
+		[onApply]
+	);
+	const onCanvasKey = useCallback((k: Key) => void onShortcut(k), [onShortcut]);
+
+	/* -------------------------------------- dragging from the Add panel */
+
+	const ghost = useRef<HTMLDivElement>(null);
+	const [dragging, setDragging] = useState(false);
+	const onDragStart = useCallback(
+		(e: React.PointerEvent, item: AddItem) => {
+			if (readOnly || !manifest) return;
+			const el = e.currentTarget as HTMLElement;
+			const start = { x: e.clientX, y: e.clientY };
+			let active = false;
+			try {
+				el.setPointerCapture(e.pointerId);
+			} catch {}
+			const move = (ev: PointerEvent) => {
+				if (!active) {
+					if (Math.hypot(ev.clientX - start.x, ev.clientY - start.y) < 5) return;
+					active = true;
+					dropRef.current = null;
+					setDragging(true);
+				}
+				const g = ghost.current;
+				if (g) {
+					g.textContent = item.label;
+					g.style.display = 'block';
+					g.style.transform = `translate(${ev.clientX + 14}px, ${ev.clientY + 14}px)`;
+				}
+				const at = canvasRef.current?.toCanvas(ev.clientX, ev.clientY);
+				if (at) canvasRef.current!.drag(at.x, at.y, { types: item.types, label: item.label });
+				else {
+					canvasRef.current?.dragEnd();
+					dropRef.current = null;
+				}
+			};
+			const end = (ev: PointerEvent) => {
+				el.removeEventListener('pointermove', move);
+				el.removeEventListener('pointerup', end);
+				el.removeEventListener('pointercancel', end);
+				if (!active) return;
+				suppressClick.current = true;
+				setTimeout(() => (suppressClick.current = false), 0);
+				setDragging(false);
+				if (ghost.current) ghost.current.style.display = 'none';
+				canvasRef.current?.dragEnd();
+				const over = ev.type === 'pointerup' && canvasRef.current?.toCanvas(ev.clientX, ev.clientY);
+				const drop = dropRef.current;
+				dropRef.current = null;
+				if (!over) return;
+				if (!drop?.target) return drop?.reason ? fail(drop.reason) : undefined;
+				insertAt(nodesFor(item, manifest, blocks), drop.target);
+			};
+			el.addEventListener('pointermove', move);
+			el.addEventListener('pointerup', end);
+			el.addEventListener('pointercancel', end);
+		},
+		[readOnly, manifest, blocks, insertAt]
+	);
 
 	const onProblem = useCallback(
 		(p: SbProblem) => {
@@ -435,7 +665,14 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 					<Box
 						flex={1}
 						minH={0}>
-						{tab === 'pages' ? (
+						{tab === 'add' ? (
+							<AddPanel
+								manifest={manifest}
+								readOnly={readOnly}
+								onAdd={onAdd}
+								onDragStart={onDragStart}
+							/>
+						) : tab === 'pages' ? (
 							<PagesPanel
 								pages={pages}
 								currentId={pageId}
@@ -459,6 +696,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 								onRename={onRename}
 								onToggleHidden={onToggleHidden}
 								onToggleLocked={onToggleLocked}
+								onMove={onCanvasMove}
 							/>
 						)}
 					</Box>
@@ -505,6 +743,7 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 						<SiteGuide section='canvas' />
 					</Flex>
 					<Canvas
+						ref={canvasRef}
 						tree={tree}
 						layout={layout}
 						design={canvasDesign}
@@ -513,8 +752,15 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 						device={device}
 						selectedId={selectedId}
 						hoveredId={hoveredId}
+						readOnly={readOnly}
+						openId={openId}
+						dragging={dragging}
 						onSelect={onCanvasSelect}
 						onHover={onHover}
+						onDropTarget={onDropTarget}
+						onMove={onCanvasMove}
+						onText={onCanvasText}
+						onKey={onCanvasKey}
 					/>
 				</Flex>
 
@@ -534,12 +780,30 @@ const SiteBuilder: FC<{ readOnly: boolean }> = ({ readOnly }) => {
 							theme={design?.draft.theme || 'studio'}
 							readOnly={readOnly}
 							apply={onApply}
-							onRemoved={() => setSelectedId(null)}
+							onCommand={runCommand}
 						/>
 					)}
 				</Box>
 			</Flex>
 
+			{/* the label that follows the pointer while dragging from the Add tab */}
+			<Box
+				ref={ghost}
+				position='fixed'
+				top={0}
+				left={0}
+				zIndex={2000}
+				display='none'
+				pointerEvents='none'
+				px={2}
+				py={1}
+				fontSize='12px'
+				fontWeight='500'
+				bg='bg.inverted'
+				color='fg.inverted'
+				borderRadius='md'
+				boxShadow='md'
+			/>
 			<PageDialog
 				open={!!dialog}
 				page={dialog?.kind === 'settings' ? draft.page : null}
