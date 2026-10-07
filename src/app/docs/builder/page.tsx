@@ -564,7 +564,7 @@ const BuilderDocs = () => {
 								['Title / Subtitle', 'The page heading and the line under it.'],
 								[
 									'Add button',
-									'Shows the create button. Button text is its label. Opens: a modal with the form, or a page (Page address, default /<route>/create).',
+									'Shows the create button. Button text is its label. Opens: a pop-up over the table, or its own page — the built-in add page at /<route>/create (in a project /<project>/<route>/create, CreateRecordPage) unless Page address names another.',
 								],
 								['Export button', 'Download the table as CSV or PDF.'],
 								['Search', 'The search box above the table. It searches the fields marked Searchable in Settings.'],
@@ -885,39 +885,25 @@ const BuilderDocs = () => {
 							scrollMarginTop='80px'
 						/>
 						<P>
-							<strong>New model</strong> opens a step-by-step wizard. <strong>Nothing is created until the last
-							step.</strong> Each step after the first works on a preview the server generates from your fields.
+							<strong>New model</strong> opens a three-step wizard. <strong>Nothing is created until the last
+							step.</strong> Step 2 works on a preview the server generates from your fields.
 						</P>
 						<List
 							ordered
 							items={[
 								<>
-									<strong>Model</strong>: title, name (checked as you type), optional route, display field, record
-									code and fields.
+									<strong>What it stores</strong>: title, description and fields, with the form drawn beside them.
+									<em> More options</em> holds the name (checked as you type), optional route, display field, record
+									code and record access. <em>Build with AI</em> sits on top.
 								</>,
 								<>
-									<strong>Settings</strong>: what the API validates, lets be edited, sorts, searches and returns,
-									generated from the fields.
+									<strong>Check the pages</strong>: the generated table page, form, record page, filters and settings
+									as cards (the route builder&apos;s colours), with <em>Preview</em>. Each card opens its part in tabs
+									— the same editors as the route builder.
 								</>,
 								<>
-									<strong>Config</strong>: the table page’s header, add and export buttons, row menu and bulk
-									actions.
-								</>,
-								<>
-									<strong>Form</strong>: the create/edit form sections.
-								</>,
-								<>
-									<strong>Table</strong>: the columns and their order.
-								</>,
-								<>
-									<strong>View</strong>: the detail page sections, fields of linked records and related lists.
-								</>,
-								<>
-									<strong>Filters</strong>: the filter chips.
-								</>,
-								<>
-									<strong>Sidebar &amp; create</strong>: whether to add the page to the sidebar and under which
-									category, a summary, and <em>Create model</em>.
+									<strong>Finish</strong>: the sidebar category, a summary in sentences, and <em>Create</em>. The
+									done screen links to the new add page, the table, the model and its route.
 								</>,
 							]}
 						/>
