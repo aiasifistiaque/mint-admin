@@ -6,11 +6,14 @@ import 'swiper/css';
 import { GeistSans } from 'geist/font/sans';
 import Script from 'next/script';
 import { THEME_BOOT_SCRIPT } from '@/theme/themeBoot';
+import { IS_TENANT_PANEL } from '@/components/library/config/lib/constants/panel';
 
-export const metadata: Metadata = {
-	title: 'ADMIN | MINT | TC',
-	description: 'MINT',
-};
+// The tenant panel (same app, NEXT_PUBLIC_PANEL=tenant) is MINT to its users:
+// pages set their part ('Sign in' → 'Sign in · MINT'), and panel pages set the
+// tab's title from Layout with the project's name (panel.ts tabTitle).
+export const metadata: Metadata = IS_TENANT_PANEL
+	? { title: { default: 'MINT', template: '%s · MINT' }, description: 'Your MINT workspace — projects, data, websites and APIs.' }
+	: { title: { default: 'ADMIN | MINT | TC', template: '%s | ADMIN | MINT | TC' }, description: 'MINT' };
 
 export const viewport = {
 	width: 'device-width',
