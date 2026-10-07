@@ -898,8 +898,9 @@ const BuilderDocs = () => {
 								</>,
 								<>
 									<strong>Check the pages</strong>: the generated table page, form, record page, filters and settings
-									as cards (the route builder&apos;s colours), with <em>Preview</em>. Each card opens its part in tabs
-									— the same editors as the route builder.
+									(the route builder&apos;s colours), with <em>Preview</em> — walked one part at a time: Overview,
+									Table page, Form, Record page, Filters, Fields &amp; rules. <em>Next</em> moves to the next part
+									(later tabs stay locked until reached); Finish opens only once every part was seen.
 								</>,
 								<>
 									<strong>Finish</strong>: the sidebar category, a summary in sentences, and <em>Create</em>. The
