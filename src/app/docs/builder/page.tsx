@@ -388,13 +388,20 @@ const BuilderDocs = () => {
 						title='Settings'
 						lead='The fields of the record, in the order of the settings file. This tab changes backend behaviour.'>
 						<P>
-							Each row is one field: its key, title and data type, then switches. Only fields that exist on the
-							model can be added (&ldquo;Add a field of this model…&rdquo;). Removing a field means the API stops
-							validating, editing and returning it.
+							Each row is one field (the tab is called <em>Fields &amp; rules</em>): an icon for its input, its
+							title with the key under it, <em>Asked as</em> (the form input), and its rules — <em>Required</em>{' '}
+							and <em>Can be changed later</em> (edit) as switches, any other rule that&apos;s on as a coloured
+							chip. <strong>More</strong> groups the rest: Rules (each switch with what it does — unique is
+							&ldquo;No duplicates&rdquo;, exclude &ldquo;Hidden everywhere&rdquo;, trim &ldquo;Trim spaces&rdquo;),
+							How it looks (label, table cell, shown by default), Limits/Length (min/max, text and number inputs
+							only), the record picker&apos;s options, and a folded <em>Advanced</em> with the data type (&ldquo;Stored
+							as&rdquo;, in plain words), populate path/fields and the schema JSON. A search box narrows the list.
+							Only fields that exist on the model can be added (&ldquo;Add one of the model&apos;s other
+							fields…&rdquo;). Removing a field means the API stops validating, editing and returning it.
 						</P>
 						<P>
 							<strong>System fields</strong> are generated and read-only, marked with a lock and a{' '}
-							<em>system</em> badge: <C>createdAt</C> on every route, and on an access-restricted model{' '}
+							<em>automatic</em> badge: <C>createdAt</C> on every route, and on an access-restricted model{' '}
 							<C>addedBy</C>, <C>privacy</C> and <C>access</C> (the owner and access list link to Admin). They
 							always show exactly as generated, can&apos;t be edited, moved or removed, and the server puts them
 							back that way whenever settings are saved or published.
