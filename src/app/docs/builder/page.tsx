@@ -816,6 +816,15 @@ const BuilderDocs = () => {
 							Routes already pointing here are offered as quick picks.
 						</P>
 						<P>
+							<em>Linked by</em> also lists links <em>through another route</em> — one step further: a
+							client&apos;s documents, when <C>Document.project</C> points at a project and{' '}
+							<C>Project.client</C> at the client. The line under the choice spells out the path (This record →
+							Projects (by their client) → Documents (by their project)). Either step can go either way round.
+							The tab lists every record reached that way, and only when the reader can view both routes;
+							the route in between keeps its record access. When a route can only be reached that way it is
+							picked for you.
+						</P>
+						<P>
 							Each tab has a name, an optional description, the columns to show (in the order clicked), rows
 							per page (5–100), and <em>Table</em> or <em>Cards</em>. Cards use the first image column as the
 							picture, the next column as the heading and the rest as details. Images always show as images,
@@ -832,7 +841,9 @@ const BuilderDocs = () => {
 							everyone who can see the tab, but works only for someone with create permission on that route;
 							for anyone else it is disabled and says why on hover. Switch it off to hide it. Tabs linked the
 							other way (this record&apos;s field lists them) have no add button, because adding one would
-							also have to edit this record.
+							also have to edit this record. Tabs through another route show the button muted: a new
+							document would need one of the client&apos;s projects picked, so it is added from that
+							project&apos;s page.
 						</P>
 					</Section>
 
