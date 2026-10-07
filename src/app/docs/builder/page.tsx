@@ -400,6 +400,15 @@ const BuilderDocs = () => {
 							fields…&rdquo;). Removing a field means the API stops validating, editing and returning it.
 						</P>
 						<P>
+							<em>Locked when</em> (under More) is conditional read-only — <C>lockWhen</C> on the settings
+							field: conditions on the stored record (all must hold) under which an editable field keeps its
+							value, e.g. <C>status</C> is one of <C>void, paid</C>. Checked against the record before the
+							change, so setting it to paid succeeds and later changes are refused (400, naming the field and
+							why) on edit and bulk edit; a merge keeps the locked value; the public API leaves it as it is,
+							like a read-only field. The edit form shows a locked field read-only with the reason. Conditions
+							on a field later removed from the model are dropped.
+						</P>
+						<P>
 							<strong>System fields</strong> are generated and read-only, marked with a lock and a{' '}
 							<em>automatic</em> badge: <C>createdAt</C> on every route, and on an access-restricted model{' '}
 							<C>addedBy</C>, <C>privacy</C> and <C>access</C> (the owner and access list link to Admin). They
