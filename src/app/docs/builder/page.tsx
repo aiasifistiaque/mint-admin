@@ -314,7 +314,7 @@ const BuilderDocs = () => {
 							rows={[
 								['Route', 'The page title and its address. Click a row to open the editor.'],
 								['Model', 'The database model behind it.'],
-								['Kind', 'Generic page, API only or Custom (see above). “Locked settings” marks an access-control route.'],
+								['Type', 'Table page (generic), API only or Custom page (see above). “Locked settings” marks an access-control route.'],
 								[
 									'Settings / Config',
 									<>
@@ -348,8 +348,13 @@ const BuilderDocs = () => {
 							ordered
 							items={[
 								<>
-									<strong>Edit</strong> in any tab. Changes are kept in the page. <em>Undo changes</em> drops
-									them.
+									<strong>Edit</strong> in any tab. The tabs are coloured by part — Table page teal, Form orange,
+									Record page pink, Filters purple, Fields &amp; rules (settings) blue, Versions cyan — and each
+									opens with a banner saying what it changes. Changes are kept in the page; while any are unsaved a
+									bar at the bottom offers <em>Undo all</em>, <em>Preview</em>, <em>Save draft</em> and{' '}
+									<em>Publish</em>. <strong>Preview</strong> (header, bar, banners, Overview cards) draws the table
+									page, the form and a record page from the working copy, saved or not, filled in with the
+									route&apos;s five latest records.
 								</>,
 								<>
 									<strong>Save draft</strong> stores them on the server, for settings and config together. A
