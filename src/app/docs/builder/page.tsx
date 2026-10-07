@@ -825,6 +825,15 @@ const BuilderDocs = () => {
 							picked for you.
 						</P>
 						<P>
+							<em>Show only</em> sets conditions the tab&apos;s records must all meet — a field, a test and a
+							value: <C>status</C> is <C>due</C>, <C>amount</C> is at least 100, <C>dueOn</C> is before a
+							date, a field is (not) empty, a text contains a word, a choice is one of several. Two tabs on
+							the same route can then sit side by side: <em>All bills</em> and <em>Due bills</em>. The tests
+							offered follow the field (dates get before/after, choices a list of their values, yes/no
+							fields Yes or No). Its &ldquo;is&rdquo; conditions are filled in when adding from that tab.
+							Conditions only work on fields the tab may show.
+						</P>
+						<P>
 							Each tab has a name, an optional description, the columns to show (in the order clicked), rows
 							per page (5–100), and <em>Table</em> or <em>Cards</em>. Cards use the first image column as the
 							picture, the next column as the heading and the rest as details. Images always show as images,
