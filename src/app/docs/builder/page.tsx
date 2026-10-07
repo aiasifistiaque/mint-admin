@@ -956,7 +956,7 @@ const BuilderDocs = () => {
 							scrollMarginTop='80px'
 						/>
 						<P>
-							<strong>Give every record a code</strong> adds a <C>code</C> field filled in when a record is
+							<strong>Give every record a number (code)</strong> (Settings → Record numbers) adds a <C>code</C> field filled in when a record is
 							created. It is made of the <strong>prefix</strong>, a dash and a zero-padded number
 							(<strong>digits</strong>), counting from <strong>start at</strong>, e.g. <C>INV-0001</C>. Codes come
 							from an atomic counter, so two records created at the same moment never share one. A copied record
@@ -966,7 +966,7 @@ const BuilderDocs = () => {
 							items={[
 								'Turning codes on for a model that already has records gives those records codes, oldest first.',
 								'A new prefix or length applies to records created afterwards; existing codes don’t change.',
-								'Switching codes on fills the prefix in from the title (Invoices → INV). Clear it for plain numbers (0001); First code shows what the next record gets.',
+								'Switching codes on fills the prefix in from the title (Invoices → INV). Clear it for plain numbers (0001); Next record gets shows what the next record gets.',
 								'The code can be the display field, and is searchable, sortable and shown in the table.',
 							]}
 						/>
@@ -977,10 +977,13 @@ const BuilderDocs = () => {
 							scrollMarginTop='80px'
 						/>
 						<P>
-							Each field has a label, a key (its name in the database and API, filled in from the label until you
-							edit it), a kind and whether it&apos;s required. The chevron opens the rest: shown in the table,
-							unique, index, searchable, min/max, allowed values, a default and help text. A field&apos;s allowed
-							values and default also show as badges on its row.
+							Each field has a name (label), a type (kind) and whether it&apos;s required. <strong>Add a field</strong>{' '}
+							asks for the type first, as cards with a line on each. The key — shown as the <strong>API name</strong>{' '}
+							in small grey letters under the name, filled in from it until you edit it — is the field&apos;s name
+							in the database and API. <strong>More</strong> opens the rest, grouped: In the form (default, help
+							text), Limits / Length (min/max), allowed values, Table and search (column, searchable, unique, index)
+							and the API name. A field&apos;s allowed values and default also show as badges on its row. On a
+							model&apos;s page, <strong>Form preview</strong> beside the list draws the form as you edit.
 						</P>
 						<List
 							items={[
@@ -1106,8 +1109,8 @@ const BuilderDocs = () => {
 							scrollMarginTop='80px'
 						/>
 						<P>
-							<strong>Restrict access to each record</strong> (the <em>Access</em> panel, when creating a model or
-							later) is just an on/off switch: it lets every record decide who can see it, in the record&apos;s own
+							<strong>Let each record choose who can see it</strong> (the <em>Who sees each record</em> panel, when
+							creating a model or later under Settings) is just an on/off switch: it lets every record decide who can see it, in the record&apos;s own
 							form. This comes on top of the page permission, never
 							instead of it: without <C>view-&lt;route&gt;</C> an admin sees no records at all. Each record gets
 							three fields:
@@ -1172,9 +1175,12 @@ const BuilderDocs = () => {
 							]}
 						/>
 
-						<H3>Disabling and deleting</H3>
+						<H3>Turning off and deleting</H3>
 						<P>
-							<strong>Disable</strong> takes the route and page away but keeps the model registered, so records of
+							A model&apos;s page has four tabs — Fields (with the form preview), Settings (basics, record numbers,
+							who sees each record), Connections (links in and out) and Advanced (the fixed names, turn off,
+							delete); edits wait for <strong>Save changes</strong> (header, the bottom bar while unsaved, or
+							⌘S). <strong>Turn off</strong> takes the route and page away but keeps the model registered, so records of
 							other models still show what they link to. <strong>Delete</strong> removes the model, route,
 							route-builder copies, permission and sidebar entry. Its records stay unless you tick &ldquo;Also
 							delete its records&rdquo; and type the model name. While records remain, the name stays taken.
