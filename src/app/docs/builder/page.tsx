@@ -406,7 +406,19 @@ const BuilderDocs = () => {
 							change, so setting it to paid succeeds and later changes are refused (400, naming the field and
 							why) on edit and bulk edit; a merge keeps the locked value; the public API leaves it as it is,
 							like a read-only field. The edit form shows a locked field read-only with the reason. Conditions
-							on a field later removed from the model are dropped.
+							on a field later removed from the model are dropped. With two or more conditions a <em>Match</em>{' '}
+							switch picks <em>All of these</em> (default) or <em>Any of these</em> (<C>lockMatch: &apos;any&apos;</C>;
+							tabs and rollups use <C>match</C>); <em>is one of</em> on a choice field ticks several values.
+						</P>
+						<P>
+							<strong>Add a field from linked records</strong> adds a settings field with <C>rollup</C>:{' '}
+							<C>{'{ from, via, op, value, where, match }'}</C> — the route the records live in, their field
+							pointing here, count / sum / avg / min / max, the field it reads, and conditions. Its key must be
+							new (not stored by the model); it&apos;s never stored, edited or required. The server fills it in
+							on every read of the route — list, one record, its page — with one aggregate per field for the
+							page (<C>rollups.function.ts</C>), counting only what the reader may view (permission on the
+							source route, its record access, archived rows left out). It can go in the table, view and form
+							(shown, not asked); it can&apos;t be sorted, searched or filtered.
 						</P>
 						<P>
 							<strong>System fields</strong> are generated and read-only, marked with a lock and a{' '}
