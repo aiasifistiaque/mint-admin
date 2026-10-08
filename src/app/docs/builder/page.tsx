@@ -411,6 +411,14 @@ const BuilderDocs = () => {
 							tabs and rollups use <C>match</C>); <em>is one of</em> on a choice field ticks several values.
 						</P>
 						<P>
+							<em>Filled in from a linked record</em> sets <C>{"schema.fillFrom: { from, formula }"}</C> — a picker
+							field of the same record and a field of its linked record, or a formula over the linked
+							record&apos;s number fields (formula engine). The form fills it when the picked record changes
+							(<C>LinkedFiller</C>; never on loading a saved record) and it stays editable; on create the server
+							fills it when empty (<C>linkedFill.function</C>, before validation, only from a record the caller
+							may read).
+						</P>
+						<P>
 							<em>Colours</em> (How it looks, for fields with options, an enum, or a yes/no) set{' '}
 							<C>schema.colorTags</C> and <C>schema.optionColors</C> ({'{ value: palette }'}, picked ones only).
 							Table and view fields carry <C>colorTags</C>/<C>options</C>/<C>optionColors</C>; the table row and
