@@ -815,6 +815,13 @@ const BuilderDocs = () => {
 							same picker is used by <em>Locked when</em>, record-page tab conditions and fields from linked
 							records (<C>RecordPicker</C>).
 						</P>
+						<P>
+							<em>Pickers that depend on other fields</em> (Form tab, <C>PickerFiltersPanel</C>) lists the
+							form&apos;s record pickers with their <C>schema.optionFilters</C> — the same setting as a
+							field&apos;s <em>Which records are offered</em> (<C>OptionFiltersEditor</C>, shared). When the
+							linked model has a picker to what another form picker picks (Project.client → clients, and the
+							form has Client), it suggests <C>{"{ field: 'client', from: 'client' }"}</C>.
+						</P>
 						<H3>Sections that show only when needed</H3>
 						<Box
 							id='form-sections'
