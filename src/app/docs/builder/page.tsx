@@ -925,6 +925,20 @@ const BuilderDocs = () => {
 							document would need one of the client&apos;s projects picked, so it is added from that
 							project&apos;s page.
 						</P>
+						<H3>Shown only when needed, and Copy details</H3>
+						<Box
+							id='view-visibility'
+							scrollMarginTop='80px'
+						/>
+						<P>
+							A view section can carry <C>showIf</C> (a rule, as <C>formRules</C>) and <C>hideEmpty</C>; the
+							config&apos;s <C>viewRules</C> ({'{ field: rule }'}) hide single fields. <C>/get/view/:id</C>{' '}
+							applies them to the loaded record (rollup fields worked out first; field rules chain like the
+							form&apos;s) and drops sections left empty, so the record page and quick view both follow them.
+							Display only. <C>copy: true</C> on a section adds <em>Copy details</em> (its fields as{' '}
+							<C>Title: value</C> lines, empty ones left out; <C>CopyDetails.tsx</C>), switched on per section in
+							the layout editor.
+						</P>
 					</Section>
 
 					<Section
