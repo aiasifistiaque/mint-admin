@@ -579,6 +579,21 @@ const BuilderDocs = () => {
 							(<em>Can be changed later</em>, <em>Locked when</em>). Over MCP, <C>update_page</C> takes{' '}
 							<C>guidelines</C> (false removes them).
 						</P>
+						<H3>Around a value</H3>
+						<Box
+							id='value-display'
+							scrollMarginTop='80px'
+						/>
+						<P>
+							<em>Advanced: around a value</em> (bottom of the Settings and Table tabs, same data) sets{' '}
+							<C>{"schema.affix: { before?, after? }"}</C> — each <C>{'{ text }'}</C> or <C>{'{ field }'}</C>{' '}
+							(another field of the record: &ldquo;BDT 1,200&rdquo; from <C>currency</C>) — and{' '}
+							<C>schema.subtitle</C>, a field key shown small under the table cell (email under name).{' '}
+							<C>/get/config</C> passes <C>affix</C>/<C>subtitle</C> on table fields and <C>affix</C> on view
+							fields; the panel draws them in <C>CustomTd</C> and <C>ViewRow</C>/<C>ModalViewItem</C>{' '}
+							(<C>functions/affix.tsx</C>). Display only — search, sort, filters and exports use the stored value.
+							A linked field used as the other value shows its name when the row has it populated.
+						</P>
 						<Note>
 							Access-control routes (<C>admins</C>, <C>adminroles</C>, <C>permissions</C>, <C>roles</C>,{' '}
 							<C>builder</C>) show their settings read-only. Fields that look like secrets (password, token,
