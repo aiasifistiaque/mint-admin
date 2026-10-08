@@ -809,6 +809,25 @@ const BuilderDocs = () => {
 							the settings (<C>renderIf</C>, like the access picker&apos;s) shows as <em>from settings</em>{' '}
 							until replaced here.
 						</P>
+						<P>
+							A linked-record field (a picker) can be tested with is, is not, is one of and is none of: the
+							value is picked by name from a search of the linked route, and its id is what&apos;s stored. The
+							same picker is used by <em>Locked when</em>, record-page tab conditions and fields from linked
+							records (<C>RecordPicker</C>).
+						</P>
+						<H3>Sections that show only when needed</H3>
+						<Box
+							id='form-sections'
+							scrollMarginTop='80px'
+						/>
+						<P>
+							A form section can carry <C>showIf</C> (a rule, same shape as <C>formRules</C>), set in{' '}
+							<em>Sections that show only when needed</em> under the conditional fields. <C>rulesOf</C> gives
+							it to every field in the section (ANDed with the field&apos;s own rule), so the server drops a
+							hidden section&apos;s values and doesn&apos;t require its fields, and the form hides the section
+							— heading and all — once all its fields are hidden. A section&apos;s conditions must test fields
+							outside it; one on its own fields is refused on save.
+						</P>
 					</Section>
 
 					<Section
