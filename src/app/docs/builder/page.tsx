@@ -411,6 +411,13 @@ const BuilderDocs = () => {
 							tabs and rollups use <C>match</C>); <em>is one of</em> on a choice field ticks several values.
 						</P>
 						<P>
+							<em>Colours</em> (How it looks, for fields with options, an enum, or a yes/no) set{' '}
+							<C>schema.colorTags</C> and <C>schema.optionColors</C> ({'{ value: palette }'}, picked ones only).
+							Table and view fields carry <C>colorTags</C>/<C>options</C>/<C>optionColors</C>; the table row and
+							ViewRow/ModalViewItem draw <C>OptionTags</C> (<C>functions/optionColors.tsx</C>). Defaults come
+							from the value&apos;s meaning, else a rotation.
+						</P>
+						<P>
 							<strong>Add a field from linked records</strong> adds a settings field with <C>rollup</C>:{' '}
 							<C>{'{ from, via, op, value, where, match }'}</C> — the route the records live in, their field
 							pointing here, count / sum / avg / min / max, the field it reads, and conditions. Its key must be
