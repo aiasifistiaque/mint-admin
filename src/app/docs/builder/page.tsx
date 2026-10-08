@@ -405,7 +405,7 @@ const BuilderDocs = () => {
 							value, e.g. <C>status</C> is one of <C>void, paid</C>. Checked against the record before the
 							change, so setting it to paid succeeds and later changes are refused (400, naming the field and
 							why) on edit and bulk edit; a merge keeps the locked value; the public API leaves it as it is,
-							like a read-only field. The edit form shows a locked field read-only with the reason. Conditions
+							like a read-only field. The edit form shows a locked field muted with the reason (a linked record by its name; a section list without its add, edit and delete buttons). Conditions
 							on a field later removed from the model are dropped. With two or more conditions a <em>Match</em>{' '}
 							switch picks <em>All of these</em> (default) or <em>Any of these</em> (<C>lockMatch: &apos;any&apos;</C>;
 							tabs and rollups use <C>match</C>); <em>is one of</em> on a choice field ticks several values.
@@ -563,6 +563,22 @@ const BuilderDocs = () => {
 								['All presentation options', 'The field’s full schema as JSON, for options without a control of their own.'],
 							]}
 						/>
+						<H3>User guidelines</H3>
+						<Box
+							id='guidelines'
+							scrollMarginTop='80px'
+						/>
+						<P>
+							<strong>User guidelines</strong>, under the fields, are rules in plain words for the people using
+							the page — &ldquo;A void invoice can&apos;t be reversed&rdquo;. Stored in the config as{' '}
+							<C>{"route.guidelines: { title?, items: [{ title, text? }] }"}</C>, so they publish with the page
+							and <C>/get/route</C> hands them to the panel; a route without a table header can&apos;t have
+							them. The table&apos;s ⋯ menu gets <em>View user guidelines</em> (or <em>View</em> + the title
+							given), which also moves Export there; the add and edit forms get a link above the fields. They
+							open as a dialog, or a bottom sheet on a phone. Words only — enforcement is the field rules
+							(<em>Can be changed later</em>, <em>Locked when</em>). Over MCP, <C>update_page</C> takes{' '}
+							<C>guidelines</C> (false removes them).
+						</P>
 						<Note>
 							Access-control routes (<C>admins</C>, <C>adminroles</C>, <C>permissions</C>, <C>roles</C>,{' '}
 							<C>builder</C>) show their settings read-only. Fields that look like secrets (password, token,
