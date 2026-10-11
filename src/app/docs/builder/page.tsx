@@ -1126,6 +1126,14 @@ const BuilderDocs = () => {
 								['Archive, merge', 'No rules run. Merging records that rules changed others with is best avoided.'],
 							]}
 						/>
+						<H3>Your AI (MCP)</H3>
+						<P>
+							Over <NextLink href='#mcp'>MCP</NextLink>, <C>get_model</C> lists a page&apos;s rules (and returns them as
+							data) and <C>update_page {'{ route, linkedRelationships }'}</C> replaces them — checked like a publish here, so
+							a rule on a field that doesn&apos;t fit is refused with the problem. <C>describe_platform</C> tells the AI
+							when to plan one. Rules aren&apos;t part of a feature plan or the new-model wizard: the models have to exist
+							first, so they&apos;re added after the build, in the tab or with <C>update_page</C>.
+						</P>
 						<H3>Checks when publishing</H3>
 						<P>
 							Every field a rule names must exist; the picker must lead to a page; the fields it sets must be
@@ -1609,7 +1617,7 @@ const BuilderDocs = () => {
 								['list_sidebar_categories', 'See where new pages can go.'],
 								['plan_feature', 'Check a plan exactly as the build will. Writes nothing.'],
 								['build_feature', 'Build a confirmed plan: models, fields, tabs, pages, sidebar. All or nothing.'],
-								['update_page', 'Change a page’s columns, form, detail sections or add button afterwards.'],
+								['update_page', 'Change a page’s columns, form, detail sections, add button or Linked Relationships (`linkedRelationships`: the rules, false removes them) afterwards.'],
 							]}
 						/>
 						<P>
