@@ -1022,6 +1022,10 @@ const BuilderDocs = () => {
 									'Allow anyway (asSystem)',
 									'Run even when the person can’t edit the picked page. Without it they must be allowed to.',
 								],
+								[
+									'Also for website and API saves (fromApi)',
+									'Off by default: a record saved through the public API (a website, an app) starts no rules — a site could otherwise send any invoice’s id. On: the rule runs for those saves too, as the system.',
+								],
 							]}
 						/>
 						<H3>What happens on a save</H3>
@@ -1054,6 +1058,30 @@ const BuilderDocs = () => {
 							rule set — a date someone changed by hand since stays — and a second payment that also marked the
 							invoice paid keeps it paid.
 						</P>
+						<H3>Where rules run</H3>
+						<Box
+							id='linked-where'
+							scrollMarginTop='80px'
+						/>
+						<Terms
+							head={['Save', 'What the rules do']}
+							rows={[
+								['Add, edit, delete (form, row menu)', 'As above.'],
+								['Copy (row menu) and Duplicate (bulk)', 'A copy is a new record: its rules run, each copy on its own.'],
+								[
+									'Bulk edit, Change status',
+									'Every selected record is checked first; one that can’t go ahead refuses the whole change, naming it.',
+								],
+								['Bulk delete', 'What each record did is taken back. Undo puts the records back and runs their rules again.'],
+								[
+									'Bulk upload',
+									'Every row is checked, the dry run lists the rows a rule refuses (column “Linked records”), and nothing is imported unless all pass.',
+								],
+								['Public API (websites, apps)', 'Only rules with “Also for website and API saves”.'],
+								['Tenant projects', 'The same, inside the project: a rule can never reach another project’s records.'],
+								['Archive, merge', 'No rules run. Merging records that rules changed others with is best avoided.'],
+							]}
+						/>
 						<H3>Checks when publishing</H3>
 						<P>
 							Every field a rule names must exist; the picker must lead to a page; the fields it sets must be
