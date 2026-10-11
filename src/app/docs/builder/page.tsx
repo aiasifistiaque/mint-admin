@@ -988,7 +988,7 @@ const BuilderDocs = () => {
 							items={[
 								<>
 									Open the page in the builder (Routes → the page) and its green <strong>Linked Relationships</strong>{' '}
-									tab. <strong>This page changes…</strong> lists its rules, each as its sentence;{' '}
+									tab — or, for a new model, the last part of the wizard&apos;s pages step. <strong>This page changes…</strong> lists its rules, each as its sentence;{' '}
 									<strong>Changed by…</strong> lists rules on other pages that change this page&apos;s records.
 								</>,
 								<>
@@ -999,7 +999,10 @@ const BuilderDocs = () => {
 								<>
 									For each change pick a field of the linked page — only fields that can be edited there are
 									offered — and how: <em>Set to</em>, <em>Copy from this record</em>, <em>Add</em>,{' '}
-									<em>Work out</em> (a formula) or <em>Empty it</em>. The sentence on top follows every choice.
+									<em>Take off</em>, <em>Work out</em> (a formula) or <em>Empty it</em>. Add and Take off can have
+									a <em>Never below</em> number and the message shown when a save would go under it. A condition
+									can compare with <em>a value</em> or with <em>this record&apos;s</em> field. The sentence on top
+									follows every choice.
 								</>,
 								<>
 									Choose what happens when it stops holding, and the options. <strong>Save rule</strong>, then{' '}
@@ -1031,7 +1034,16 @@ const BuilderDocs = () => {
 									<>
 										Each field of the picked record: to a value (<C>value</C>), to this record&apos;s field (
 										<C>from</C>), to a formula over both (<C>formula</C>, e.g. <C>target.paidAmount + this.amount</C>
-										), add a number (<C>inc</C>, taken off again on undo) or empty it (<C>clear</C>).
+										), add a number (<C>inc</C>, taken off again on undo), take one off (<C>dec</C>, given back on
+										undo) or empty it (<C>clear</C>). Add and take off take <C>min</C> — the field never goes
+										below it, the save is refused instead — and <C>message</C> for that refusal.
+									</>,
+								],
+								[
+									'Compare with this record',
+									<>
+										A condition&apos;s value can be <C>{"{ ref: 'this.amount' }"}</C>: <em>Balance is less than this
+										Transfer&apos;s Amount</em>, or <em>the To account is this Transfer&apos;s From account</em>.
 									</>,
 								],
 								[
@@ -1082,6 +1094,37 @@ const BuilderDocs = () => {
 							only the difference (20 → 35 adds 15). Taking back only touches fields that still hold what the
 							rule set — a date someone changed by hand since stays — and a second payment that also marked the
 							invoice paid keeps it paid.
+						</P>
+						<H3>Example: a transfer between two accounts</H3>
+						<Box
+							id='linked-transfer'
+							scrollMarginTop='80px'
+						/>
+						<P>
+							A Transfers page picks a <em>From account</em> and a <em>To account</em> and has an{' '}
+							<em>Amount</em>. Two rules move the money:
+						</P>
+						<List
+							items={[
+								<>
+									<strong>Take from the sending account</strong> — update the record picked in From account:{' '}
+									<em>Balance</em>, <em>Take off</em> this record&apos;s Amount, <em>Never below</em> 0, message{' '}
+									<em>Not enough money in the sending account.</em>
+								</>,
+								<>
+									<strong>Give to the receiving account</strong> — update the record picked in To account:{' '}
+									<em>Balance</em>, <em>Add</em> this record&apos;s Amount.
+								</>,
+							]}
+						/>
+						<P>
+							A transfer bigger than the sending balance is refused — the message shows under Amount and
+							nothing moves. Editing 30 → 60 needs only the 30 more; deleting a transfer gives it back. The
+							floor is checked again in the database write itself, so two transfers at once can&apos;t both
+							spend the same balance. Use the floor rather than a condition like <em>Balance is less than this
+							Transfer&apos;s Amount</em>: the balance a condition sees already has this transfer&apos;s earlier
+							amount taken off. A refuse rule with <em>To account is this Transfer&apos;s From account</em>{' '}
+							stops a transfer to the same account.
 						</P>
 						<H3>In the form</H3>
 						<Box
@@ -1217,7 +1260,9 @@ const BuilderDocs = () => {
 								<>
 									<strong>Check the pages</strong>: the generated table page, form, record page, filters and settings
 									(the route builder&apos;s colours), with <em>Preview</em> — walked one part at a time: Overview,
-									Table page, Form, Record page, Filters, Fields &amp; rules. <em>Next</em> moves to the next part
+									Table page, Form, Record page, Filters, Fields &amp; rules, Linked Relationships (optional — rules
+									that change the records this one picks; see <NextLink href='#linked-relationships'>Linked Relationships</NextLink>
+									). <em>Next</em> moves to the next part
 									(later tabs stay locked until reached); Finish opens only once every part was seen.
 								</>,
 								<>
