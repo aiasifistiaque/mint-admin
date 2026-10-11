@@ -47,7 +47,9 @@
     ".next-tenantsb/types/**/*.ts",
     ".next-tenantsb/dev/types/**/*.ts",
     ".next-sbcheck/types/**/*.ts",
-    ".next-sbcheck/dev/types/**/*.ts"
+    ".next-sbcheck/dev/types/**/*.ts",
+    ".next-admin5021/types/**/*.ts",
+    ".next-admin5021/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
