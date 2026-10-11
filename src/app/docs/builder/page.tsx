@@ -978,11 +978,36 @@ const BuilderDocs = () => {
 							publishing and versions like everything else here. The plan and every step taken are in{' '}
 							<C>backend/docs/linked-relationships</C>.
 						</P>
-						<Note>
-							The engine is live; the builder&apos;s <strong>Linked Relationships</strong> tab is being built
-							(LU-04). Until it lands, rules are saved with <C>PUT /builder/draft</C> (kind <C>config</C>) and
-							published as usual — see the example below.
-						</Note>
+						<H3>Making a rule</H3>
+						<Box
+							id='linked-tab'
+							scrollMarginTop='80px'
+						/>
+						<List
+							ordered
+							items={[
+								<>
+									Open the page in the builder (Routes → the page) and its green <strong>Linked Relationships</strong>{' '}
+									tab. <strong>This page changes…</strong> lists its rules, each as its sentence;{' '}
+									<strong>Changed by…</strong> lists rules on other pages that change this page&apos;s records.
+								</>,
+								<>
+									<strong>Add a rule</strong>. Give it a name, then fill in the sentence from the top: when (added,
+									edited, deleted), if (conditions on this record), the field that picks the record to change, only
+									if (conditions on that record), then <em>Change the …</em> or <em>Refuse the save</em>.
+								</>,
+								<>
+									For each change pick a field of the linked page — only fields that can be edited there are
+									offered — and how: <em>Set to</em>, <em>Copy from this record</em>, <em>Add</em>,{' '}
+									<em>Work out</em> (a formula) or <em>Empty it</em>. The sentence on top follows every choice.
+								</>,
+								<>
+									Choose what happens when it stops holding, and the options. <strong>Save rule</strong>, then{' '}
+									<strong>Save draft</strong> / <strong>Publish</strong> as for any other part of the page.
+									Incomplete rules are marked and hold the save back.
+								</>,
+							]}
+						/>
 						<H3>Parts of a rule</H3>
 						<Box
 							id='linked-rule'
