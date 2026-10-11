@@ -1058,6 +1058,25 @@ const BuilderDocs = () => {
 							rule set — a date someone changed by hand since stays — and a second payment that also marked the
 							invoice paid keeps it paid.
 						</P>
+						<H3>In the form</H3>
+						<Box
+							id='linked-form'
+							scrollMarginTop='80px'
+						/>
+						<P>
+							The add and edit forms follow the rules as they&apos;re filled in. A field a rule copies or asks
+							for gets its asterisk while the rule holds — tick <em>Mark as paid</em> and Payment date becomes
+							required. Under the fields a line says what saving will also change:{' '}
+							<em>Will also update Invoice A: Status → paid, Payment date → 20 Oct 2026 — Mark invoice paid</em>,
+							or <em>Will put back…</em> when an edit takes a change back, or why the save would be refused. It
+							is asked of <C>POST /&lt;route&gt;/linked/preview</C> (nothing is written) a moment after a
+							field a rule reads changes. After the save the message adds <em>Also updated Invoice A (Status,
+							Payment date)</em>, and the changed pages&apos; lists refresh.
+						</P>
+						<P>
+							<C>/get/schema</C> and <C>/get/config</C> carry this on each field: <C>requiredIf</C> (
+							<C>{'[{ when, match, rule }]'}</C>) and <C>linkedReads</C> + <C>linkedRoute</C>.
+						</P>
 						<H3>Where rules run</H3>
 						<Box
 							id='linked-where'
