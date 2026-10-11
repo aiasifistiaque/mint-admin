@@ -27,6 +27,7 @@ const SECTIONS = [
 	{ id: 'filters', title: 'Filters' },
 	{ id: 'form', title: 'Form' },
 	{ id: 'view', title: 'View' },
+	{ id: 'linked-relationships', title: 'Linked Relationships' },
 	{ id: 'source', title: 'Source & versions' },
 	{ id: 'models', title: 'Model builder' },
 	{ id: 'features', title: 'Feature builder' },
@@ -961,6 +962,116 @@ const BuilderDocs = () => {
 							<C>Title: value</C> lines, empty ones left out; <C>CopyDetails.tsx</C>), switched on per section in
 							the layout editor.
 						</P>
+					</Section>
+
+					<Section
+						id='linked-relationships'
+						title='Linked Relationships'
+						lead='Saving one record changes the records it picks — a payment marks its invoice paid.'>
+						<P>
+							A <strong>linked relationship</strong> is a rule on a page that reads as a sentence:{' '}
+							<em>
+								When a Payment is saved, if Mark as paid is ticked, update the Invoice picked in Invoice: set
+								Status to Paid, and set Payment date to this payment&apos;s Payment date.
+							</em>{' '}
+							Rules are part of the page&apos;s config (<C>linkedRelationships</C>), so they have drafts,
+							publishing and versions like everything else here. The plan and every step taken are in{' '}
+							<C>backend/docs/linked-relationships</C>.
+						</P>
+						<Note>
+							The engine is live; the builder&apos;s <strong>Linked Relationships</strong> tab is being built
+							(LU-04). Until it lands, rules are saved with <C>PUT /builder/draft</C> (kind <C>config</C>) and
+							published as usual — see the example below.
+						</Note>
+						<H3>Parts of a rule</H3>
+						<Box
+							id='linked-rule'
+							scrollMarginTop='80px'
+						/>
+						<Terms
+							head={['Part', 'What it does']}
+							rows={[
+								['When (on)', 'Created, updated, deleted. Default: created and updated.'],
+								[
+									'If (when, match)',
+									'Conditions on this record, the same as field locks and record tabs: is, is not, is one of, more/less than, contains, empty, not empty. All must hold, or any.',
+								],
+								[
+									'Update (target.via)',
+									'The field of this record that picks the record(s) to change — Invoice. A field that picks several updates each one.',
+								],
+								['Only if it (target.when)', 'Conditions on the picked record — only an invoice that isn’t cancelled.'],
+								[
+									'Set (set)',
+									<>
+										Each field of the picked record: to a value (<C>value</C>), to this record&apos;s field (
+										<C>from</C>), to a formula over both (<C>formula</C>, e.g. <C>target.paidAmount + this.amount</C>
+										), add a number (<C>inc</C>, taken off again on undo) or empty it (<C>clear</C>).
+									</>,
+								],
+								[
+									'Instead: refuse (block)',
+									'Refuse the save with a message while the conditions hold — “This invoice is cancelled — it can’t take payments.”',
+								],
+								[
+									'Taking back (undo)',
+									'When the rule stops holding — the record is deleted, unticked, or picks another record: revert (default), keep, or refuse.',
+								],
+								['Also required (require)', 'Fields of this record that must be filled in while the rule holds.'],
+								[
+									'Allow anyway (asSystem)',
+									'Run even when the person can’t edit the picked page. Without it they must be allowed to.',
+								],
+							]}
+						/>
+						<H3>What happens on a save</H3>
+						<List
+							ordered
+							items={[
+								<>
+									<strong>Checked first, nothing written.</strong> The rules that apply are picked; a field the
+									rule copies (Payment date) is required while it holds. Each picked record is loaded — in this
+									project, one the person may edit — its new values are checked against its own page (editable
+									fields, the update rules, field locks, the model). Any problem refuses the save with a message
+									that names the record and the field.
+								</>,
+								<>
+									<strong>Saved, then the linked records.</strong> Each change is logged, the picked record&apos;s
+									history says <em>(by rule “Mark invoice paid” from Payment PAY-0012)</em>, and its own rules
+									run in turn — at most 3 steps deep. If a write fails, everything is put back, the record
+									included.
+								</>,
+								<>
+									<strong>The answer says what else changed</strong>: the save&apos;s response carries{' '}
+									<C>linked</C> — each record, the rule and its changes.
+								</>,
+							]}
+						/>
+						<P>
+							An update only re-runs a rule when a field it reads changed: editing a payment&apos;s note
+							leaves the invoice alone, changing its date updates the invoice&apos;s date. An <C>inc</C> adds
+							only the difference (20 → 35 adds 15). Taking back only touches fields that still hold what the
+							rule set — a date someone changed by hand since stays — and a second payment that also marked the
+							invoice paid keeps it paid.
+						</P>
+						<H3>Checks when publishing</H3>
+						<P>
+							Every field a rule names must exist; the picker must lead to a page; the fields it sets must be
+							editable there (turn on <em>Can be changed later</em>), not hidden or secret, not a formula or a
+							rollup; adding needs a number field; access-control pages can&apos;t be targets; and a chain of
+							rules may not lead back to the same page.
+						</P>
+						<H3>Example</H3>
+						<P>
+							<C>
+								{`linkedRelationships: [{ id: 'mark-paid', name: 'Mark invoice paid', when: [{ field: 'markPaid', op: 'is', value: true }], target: { via: 'invoice' }, set: [{ field: 'status', value: 'paid' }, { field: 'paymentDate', from: 'paymentDate' }] }]`}
+							</C>
+						</P>
+						<Note>
+							Totals that must always be right — amount paid, balance — are better as a rollup or formula: they
+							are worked out when read and can&apos;t drift. Use a linked relationship for changes that happen
+							once: a status, a date, stock taken off.
+						</Note>
 					</Section>
 
 					<Section
