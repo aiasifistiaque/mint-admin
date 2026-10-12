@@ -663,6 +663,10 @@ const BuilderDocs = () => {
 								['Duplicate / Delete', 'Copies the record / deletes it after confirming.'],
 								['Link with id / Link', <>Goes to <C>&lt;href&gt;/&lt;id&gt;</C>, or to a fixed address.</>],
 								['Quick edit a field', 'Edits one field in place: as text, a number, or a pick from another route.'],
+								[
+									'Set a field',
+									'Sets one field to a value you pick here — “Mark as void”: Status → Void — after a confirmation (“Mark as void? Status becomes Void.”, or your own). Not offered on rows that already have that value; the save goes through the field’s locks, permissions and Linked Relationships like any edit.',
+								],
 								['Call the API', 'PUTs a fixed JSON body to the record, optionally after a confirmation prompt.'],
 								['Quick view (fields)', 'A modal showing just the fields listed.'],
 								['Add a linked record', 'Opens another page’s create form with fields filled in from this row — see below.'],
@@ -683,6 +687,12 @@ const BuilderDocs = () => {
 							unlocked ones can be changed. A field the form doesn&apos;t show is still sent. The form is the
 							page&apos;s own create form, with its rules, required fields and linked-relationship preview,
 							and saving refreshes this table too.
+						</P>
+						<P>
+							Another — Bills, ⋯ → <em>Mark as void</em>: <em>Set a field</em>, Field <em>Status</em>, New
+							value <em>Void</em>, Show only when <em>Status is one of Unpaid, Due</em>. Config:{' '}
+							<C>{`{ type: 'set-field', title: 'Mark as void', key: 'status', value: 'void', showIf: [{ field: 'status', op: 'in', value: ['unpaid', 'due'] }] }`}</C>
+							.
 						</P>
 						<P>
 							Example — Bills, ⋯ → <em>Add payment</em>: Page <em>Payments</em>; Filled in <em>Bill ← This
