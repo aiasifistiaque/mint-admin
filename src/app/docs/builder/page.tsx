@@ -1121,7 +1121,8 @@ const BuilderDocs = () => {
 							A transfer bigger than the sending balance is refused — the message shows under Amount and
 							nothing moves. Editing 30 → 60 needs only the 30 more; deleting a transfer gives it back. The
 							floor is checked again in the database write itself, so two transfers at once can&apos;t both
-							spend the same balance. Use the floor rather than a condition like <em>Balance is less than this
+							spend the same balance. The floor covers Balance for every rule on the page, so deleting a transfer whose money was
+							already spent is refused too, instead of leaving the receiving account below 0. Use the floor rather than a condition like <em>Balance is less than this
 							Transfer&apos;s Amount</em>: the balance a condition sees already has this transfer&apos;s earlier
 							amount taken off. A refuse rule with <em>To account is this Transfer&apos;s From account</em>{' '}
 							stops a transfer to the same account.
