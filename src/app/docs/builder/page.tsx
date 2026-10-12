@@ -647,6 +647,10 @@ const BuilderDocs = () => {
 							themselves under Preferences.
 						</P>
 						<H3>Row menu</H3>
+						<Box
+							id='row-menu'
+							scrollMarginTop='80px'
+						/>
 						<P>The ⋯ menu on every row, in order. Drag to reorder.</P>
 						<Terms
 							head={['Item', 'What it does']}
@@ -661,8 +665,33 @@ const BuilderDocs = () => {
 								['Quick edit a field', 'Edits one field in place: as text, a number, or a pick from another route.'],
 								['Call the API', 'PUTs a fixed JSON body to the record, optionally after a confirmation prompt.'],
 								['Quick view (fields)', 'A modal showing just the fields listed.'],
+								['Add a linked record', 'Opens another page’s create form with fields filled in from this row — see below.'],
 							]}
 						/>
+						<P>
+							<strong>Show only when</strong> (on every item): the item shows only on rows that match the
+							conditions — <em>Status is not Paid</em>. Rows that don&apos;t match simply don&apos;t offer it.
+							It doesn&apos;t stop a save: to refuse a payment on a paid or void bill whatever way it&apos;s
+							added, also add a <em>Refuse the save</em> rule on the Payments page (
+							<NextLink href='#linked-relationships'>Linked Relationships</NextLink>).
+						</P>
+						<P>
+							<strong>Add a linked record</strong>: pick the <em>Page</em> the new record goes to, then what
+							is <em>Filled in</em> — each of its fields from <em>This bill</em> (the row itself), one of the
+							row&apos;s fields, or a fixed value. Picking the page fills in its link back to this one for you.
+							The lock makes a field read-only in the form (it shows the value and where it came from);
+							unlocked ones can be changed. A field the form doesn&apos;t show is still sent. The form is the
+							page&apos;s own create form, with its rules, required fields and linked-relationship preview,
+							and saving refreshes this table too.
+						</P>
+						<P>
+							Example — Bills, ⋯ → <em>Add payment</em>: Page <em>Payments</em>; Filled in <em>Bill ← This
+							bill</em> (locked), <em>Amount ← Bill&apos;s Due amount</em>; Show only when <em>Status is not
+							Paid</em>. In the config:{' '}
+							<C>
+								{`{ type: 'add-related', title: 'Add payment', route: 'payments', presets: [{ field: 'bill', from: '_id', lock: true }, { field: 'amount', from: 'dueAmount' }], showIf: [{ field: 'status', op: 'not', value: 'paid' }] }`}
+							</C>
+						</P>
 						<P>
 							Items the builder can&apos;t describe as data (custom components written in code) are shown
 							read-only and kept exactly as they are on publish.
