@@ -26,7 +26,7 @@ const SECTIONS = [
 	{ id: 'conditions', title: 'Show only when' },
 	{ id: 'page', title: 'Paper and look' },
 	{ id: 'download', title: 'Downloading' },
-	{ id: 'ai', title: 'Build with AI' },
+	{ id: 'ai', title: 'Build with your AI' },
 	{ id: 'gallery', title: 'The gallery' },
 	{ id: 'access', title: 'Who can do what' },
 	{ id: 'faq', title: 'Troubleshooting' },
@@ -224,7 +224,7 @@ const PdfTemplatesDocs = () => {
 						<List
 							ordered
 							items={[
-								'Pick a starting point: a design from the gallery, Blank, or Build with AI.',
+								'Pick a starting point: a design from the gallery, Blank, or Build with your AI.',
 								'Pick the page it prints (Bills, Invoices, Payments…) and give it a name.',
 								'For a design from the gallery, match what it shows to your fields (next section).',
 								'It opens in the designer. The first template of a page becomes its default.',
@@ -273,7 +273,7 @@ const PdfTemplatesDocs = () => {
 								'The page shows one of the page’s records (pick it above the page) or sample data. Show fields switches to which field goes where.',
 								'Real PDF shows the actual file from the server, with your unsaved changes — page breaks and page numbers are only exact there.',
 								'Undo / redo (⌘Z, ⇧⌘Z), Delete removes the selected block, ⌘S saves. Nothing changes for anyone until you save.',
-								'Change with AI rewrites the template from a sentence (“make the totals bigger”) — check it and save.',
+								'Change with your AI hands your own AI (Claude, ChatGPT…) the template to change from a sentence (“make the totals bigger”) — then load its changes.',
 							]}
 						/>
 					</Section>
@@ -385,11 +385,16 @@ const PdfTemplatesDocs = () => {
 
 					<Section
 						id='ai'
-						title='Build with AI'>
+						title='Build with your AI'>
 						<P>
-							Describe the document and pick its page; AI lays it out using that page’s real fields and opens it in the designer.
-							In the designer, <b>Change with AI</b> edits the open template from a sentence. Fields AI used that the page
-							doesn’t have are listed when it finishes — they print blank. Needs the server’s AI key (ANTHROPIC_API_KEY).
+							Your own AI — Claude, ChatGPT, Cursor or any MCP client, on your own subscription — builds templates through the
+							builder MCP’s PDF tools (connect it once on Connect your AI). <b>Build with your AI</b> writes the prompt to paste:
+							pick the page, say what it should look like, copy. Your AI reads the format and the page’s fields, shows its plan and
+							saves the template; every save is checked like the designer’s. <b>Show what it made</b> refreshes the list.
+						</P>
+						<P>
+							In the designer, <b>Change with your AI</b> does the same for the open template (its id is in the prompt). Save your
+							own edits first — your AI changes the saved copy — then <b>Load its changes</b>.
 						</P>
 					</Section>
 
