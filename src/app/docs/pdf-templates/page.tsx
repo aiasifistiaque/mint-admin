@@ -470,10 +470,17 @@ const PdfTemplatesDocs = () => {
 					<Section
 						id='download'
 						title='Downloading'>
+						<P>
+							A template is a <b>Draft</b> or <b>Published</b> (the badge beside its name). New ones — blank, from the gallery, or a copy — start
+							as drafts: you can design, preview and print a Real PDF in the designer, but the page doesn’t offer it. Press <b>Publish</b> in the
+							designer to put it on the page’s Download PDF; <b>Unpublish</b> takes it back to a draft. Only published templates show anywhere a page
+							downloads, the page’s default is the default among them, and a row menu’s Download PDF links one published template (a draft’s
+							item is hidden until it’s published again).
+						</P>
 						<List
 							items={[
-								'A record’s page: Download PDF beside Edit (a menu when the page has several templates).',
-								<>A row’s menu: page builder → Table → Row menu → <b>Download PDF</b> (a template, or the page’s default), with Show only when like any item.</>,
+								'A record’s page: Download PDF beside Edit (a menu when the page has several published templates).',
+								<>A row’s menu: page builder → Table → Row menu → <b>Download PDF</b> (one published template, or the page’s default), with Show only when like any item.</>,
 								'Several records at once: tick them, Print / PDF — each template is an option, one file with a page set per record.',
 							]}
 						/>
