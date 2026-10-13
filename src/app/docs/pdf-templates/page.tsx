@@ -21,6 +21,8 @@ const SECTIONS = [
 	{ id: 'texts', title: 'Saved texts' },
 	{ id: 'designer', title: 'The designer' },
 	{ id: 'blocks', title: 'Blocks' },
+	{ id: 'layout', title: 'Rows and filling space' },
+	{ id: 'moving', title: 'Moving, copy and paste' },
 	{ id: 'tokens', title: 'Fields in text' },
 	{ id: 'filters', title: 'Formats' },
 	{ id: 'lists', title: 'Lists from other pages' },
@@ -291,8 +293,8 @@ const PdfTemplatesDocs = () => {
 						<List
 							items={[
 								'It fills the window: the sidebar folds away behind the menu button. One toolbar on top — undo / redo, what the page shows (a record or Sample data), Fields, zoom, Business details, Your AI, Preview, Real PDF and Save.',
-								'Left: “Add” — blocks, ready-made pieces (Logo and business, Signature line, Computer generated “…no signature is required”, Terms & conditions, Bank details, PAID stamp, Thank-you line) and your saved texts; a click puts it after the selected block. “Layers” — the blocks as a tree; drag to move them, into columns and boxes too.',
-								'Middle: the page. Click a block to select it; its bar on the page moves it up or down, duplicates or deletes it, and ↖ selects the block around it (the whole signature, not just its words). Empty business details show as “+ Add phone”, “+ Upload logo” — click one to fill it in.',
+								'Left: “Add” — blocks, ready-made pieces (Logo and business, Signature line, Computer generated “…no signature is required”, Terms & conditions, Bank details, PAID stamp, Thank-you line) and your saved texts; a click puts it after the selected block. “Layers” — the blocks as a tree; drag to move them, into columns and boxes too. Tiles can also be dragged straight onto the page.',
+								'Middle: the page. Click a block to select it; its bar on the page moves it up or down (left or right in a row), duplicates, copies or deletes it, and ↖ selects the block around it (the whole signature, not just its words). Drag blocks on the page to move them. Empty business details show as “+ Add phone”, “+ Upload logo” — click one to fill it in.',
 								'Right: the selected block’s settings — or, with nothing selected, the document: its name, page, paper, look and lists.',
 								'Sample data fills every field, like Preview; your business details and saved texts show as they are. Fields switches to which field goes where.',
 								'Undo / redo (⌘Z, ⇧⌘Z), Delete removes the selected block, Esc unselects, ⌘S saves. Nothing changes for anyone until you save.',
@@ -310,15 +312,58 @@ const PdfTemplatesDocs = () => {
 								['Label + value rows', 'Invoice no. / Date / Due, and the totals: rows can be bold, big, a filled band, or have a line above. “Hide rows with no value” drops empty ones.'],
 								['Table', 'One row per line item, payment… Columns have a heading, a value ({{item.…}}), a width share and alignment. Splits across pages, repeating its heading.'],
 								['Columns', 'Blocks side by side; widths are shares (2 and 1 = two thirds and one third).'],
-								['Box', 'A shaded or framed group, with padding and round corners.'],
+								['Box', 'A shaded or framed group, with padding and round corners. Its blocks sit one under another (a stack) or side by side (a row) — see Rows and filling space.'],
+								['Row', 'A box with nothing drawn and its blocks side by side, each as wide as it needs — a logo and a title on one line, a signature on the right.'],
 								['Image', 'A logo, a signature, a photo field — an address or a field.'],
-								['Line, Space, Page break', 'A rule, blank room, and “start a new page here”.'],
+								['Line, Space, Page break', 'A rule, blank room (which can fill the free space), and “start a new page here”.'],
 							]}
 						/>
 						<P>
 							The <b>header</b> and <b>footer</b> repeat on every page — put “Page {'{{page}}'} of {'{{pages}}'}” in the footer.
 							The <b>body</b> flows over as many pages as it needs.
 						</P>
+					</Section>
+
+					<Section
+						id='layout'
+						title='Rows and filling space'
+						lead='Boxes work like flexbox: a stack or a row, and blocks that take the room left.'>
+						<P>
+							Select a box and set <b>Layout → Blocks</b> to <b>Row</b> (or add a <b>Row</b> from Add). In a row every block is as wide
+							as its content — text its longest line, an image its size — unless you change its <b>Width in the row</b>: <b>Fill the
+							free space</b> or a <b>Fixed width</b> in pt. Label + value rows, tables, lines and columns have no width of their own, so
+							they share the free width.
+						</P>
+						<Terms
+							head={['Setting', 'What it does']}
+							rows={[
+								['Gap', 'The room between the blocks (pt).'],
+								['Align', 'Top, middle or bottom of the row — or Stretch, so boxes in it are all as tall as the tallest.'],
+								['Spread', 'Where the blocks go when nothing fills: from the left, centred, to the right, or space between them.'],
+								['Min height', 'The box is at least this tall; a block set to fill takes the height the others leave.'],
+							]}
+						/>
+						<P>
+							A <b>Space</b> set to <b>Fill the free space</b> takes the room left: in a row it pushes what follows to the right (logo ·
+							space · INVOICE); in a box with a min height it pushes what follows down; in the body it takes the room left on the page,
+							so what follows — a signature, the terms — sits at the bottom of the page. <b>Push to the bottom</b> in Add is exactly
+							that. The header and footer have no spare room, so a Space there keeps its own size. In the designer a filling Space is
+							hatched.
+						</P>
+					</Section>
+
+					<Section
+						id='moving'
+						title='Moving, copy and paste'
+						lead='Drag blocks on the page; copy one and paste it inside a box.'>
+						<List
+							items={[
+								'Drag a block on the page: a line shows where it lands — above or below another block, left or right of one in a row, or inside a box or a column (an empty one lights up). The Add panel’s tiles drag onto the page too.',
+								'Near a box’s edge the drop goes beside the box; further in, it goes inside.',
+								'⌘C copies the selected block, ⌘X cuts it, ⌘V pastes: inside the selected box (at its end) or columns block (its first empty column), otherwise after the selected block. The block bar has Copy and, on a box with something copied, Paste inside.',
+								'What you copy is on your clipboard, so it pastes into another template too.',
+							]}
+						/>
 					</Section>
 
 					<Section
