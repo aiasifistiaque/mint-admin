@@ -287,14 +287,15 @@ const PdfTemplatesDocs = () => {
 					<Section
 						id='designer'
 						title='The designer'
-						lead='Blocks on the left, the page in the middle, the selected block on the right.'>
+						lead='A full-page tool: what to add on the left, the page in the middle, the selected block on the right.'>
 						<List
 							items={[
-								'Click a block on the page or in the list to change it. Drag blocks in the list to move them — into columns and boxes too.',
-								'The page shows one of the page’s records (pick it above the page) or sample data. Show fields switches to which field goes where.',
-								'Real PDF shows the actual file from the server, with your unsaved changes — page breaks and page numbers are only exact there.',
-								'Undo / redo (⌘Z, ⇧⌘Z), Delete removes the selected block, ⌘S saves. Nothing changes for anyone until you save.',
-								'Change with your AI hands your own AI (Claude, ChatGPT…) the template to change from a sentence (“make the totals bigger”) — then load its changes.',
+								'It fills the window: the sidebar folds away behind the menu button. One toolbar on top — undo / redo, what the page shows (a record or Sample data), Fields, zoom, Business details, Your AI, Preview, Real PDF and Save.',
+								'Left: “Add” — blocks, ready-made pieces (Logo and business, Signature line, Computer generated “…no signature is required”, Terms & conditions, Bank details, PAID stamp, Thank-you line) and your saved texts; a click puts it after the selected block. “Layers” — the blocks as a tree; drag to move them, into columns and boxes too.',
+								'Middle: the page. Click a block to select it; its bar on the page moves it up or down, duplicates or deletes it, and ↖ selects the block around it (the whole signature, not just its words). Empty business details show as “+ Add phone”, “+ Upload logo” — click one to fill it in.',
+								'Right: the selected block’s settings — or, with nothing selected, the document: its name, page, paper, look and lists.',
+								'Sample data fills every field, like Preview; your business details and saved texts show as they are. Fields switches to which field goes where.',
+								'Undo / redo (⌘Z, ⇧⌘Z), Delete removes the selected block, Esc unselects, ⌘S saves. Nothing changes for anyone until you save.',
 							]}
 						/>
 					</Section>
