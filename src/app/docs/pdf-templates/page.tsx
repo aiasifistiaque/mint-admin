@@ -311,7 +311,7 @@ const PdfTemplatesDocs = () => {
 							rows={[
 								['Text', 'Headings and paragraphs. **bold** inside; a new line is a new line.'],
 								['Label + value rows', 'Invoice no. / Date / Due, and the totals: rows can be bold, big, a filled band, or have a line above. “Hide rows with no value” drops empty ones.'],
-								['Table', 'One row per line item, payment… Columns have a heading, a value ({{item.…}}), a width share and alignment. Splits across pages, repeating its heading.'],
+								['Table', 'One row per line item, payment… Columns have a heading, a value ({{item.…}}), a width share and alignment. Look: heading fill and text colour, lines between rows or a grid, and the lines’ colour. Splits across pages, repeating its heading.'],
 								['Columns', 'Blocks side by side; widths are shares (2 and 1 = two thirds and one third).'],
 								['Box', 'A shaded or framed group, with padding and round corners. Its blocks sit one under another (a stack) or side by side (a row) — see Rows and filling space.'],
 								['Row', 'A box with nothing drawn and its blocks side by side, each as wide as it needs — a logo and a title on one line, a signature on the right.'],
