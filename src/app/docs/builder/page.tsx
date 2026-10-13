@@ -1709,7 +1709,7 @@ const BuilderDocs = () => {
 								['list_sidebar_categories', 'See where new pages can go.'],
 								['plan_feature', 'Check a plan exactly as the build will. Writes nothing.'],
 								['build_feature', 'Build a confirmed plan: models, fields, tabs, pages, sidebar. All or nothing.'],
-								['update_page', 'Change a page’s columns, form, detail sections, add button or Linked Relationships (`linkedRelationships`: the rules, false removes them) afterwards.'],
+								['update_page', 'Change a page’s columns, row menu (`rowMenu`: the ⋯ buttons on each row — Download PDF with a template, Set a field, Add a linked record — each with “show only when”), form, detail sections, add button or Linked Relationships (`linkedRelationships`: the rules, false removes them) afterwards.'],
 							]}
 						/>
 						<P>
