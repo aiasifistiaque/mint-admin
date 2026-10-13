@@ -175,13 +175,9 @@ const CreateModal = (props: CreateModalProps) => {
 					</DialogHeader>
 					<DialogCloseButton top={{ base: 4, md: 5 }} />
 
-					<DialogBody
-						px={{ base: 0, md: 6 }}
-						pt={{ base: 4, md: 5 }}>
+					<DialogBody pt={{ base: 4, md: 5 }}>
 						{pageRoute?.guidelines && (
-							<Flex
-								mb={4}
-								px={{ base: 4, md: 0 }}>
+							<Flex mb={4}>
 								<GuidelinesLink
 									guidelines={pageRoute.guidelines}
 									onOpen={() => setShowGuidelines(true)}
