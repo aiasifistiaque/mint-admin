@@ -400,7 +400,7 @@ const PdfTemplatesDocs = () => {
 						title='Fields in text'
 						lead='Any text can hold fields: “Bill to {{bill.client.name}}”.'>
 						<P>
-							Use the <b>Field</b> button beside a text box: it inserts the field where the cursor is, with a format guessed from it.
+							Use the <b>Field</b> button beside a text box: it inserts the field where the cursor is, with a format guessed from it. Its menu goes in layers — this record, this row, a list, the business, a saved text, the page and date — and a linked record (Client) opens into its own fields; search looks through all of them. In the box a field shows as a chip in words (“Saved text · Invoice terms”); click a chip to change it. Turn on <b>Keys</b> to see and type the raw keys instead.
 							The record is named after its page (<C>bill</C> for Bills; see Page → Record as). Linked records open up:
 							<C>{'{{bill.client.address}}'}</C>.
 						</P>
