@@ -6,6 +6,7 @@ import { Badge, Box, Button, Flex, Grid, IconButton, Spinner, Text } from '@chak
 import {
 	ArrowDown,
 	ArrowLeft,
+	ArrowRight,
 	ArrowUp,
 	Braces,
 	Building2,
@@ -43,12 +44,13 @@ import {
 	FieldTree,
 	PdfTemplate,
 	Slot,
-	blockLabel,
 	cloneBlock,
 	findBlock,
 	flattenFields,
 	insertBlock,
+	labelOf,
 	pageSize,
+	placeOf,
 	moveBlock,
 	newBlock,
 	relocateBlock,
@@ -241,6 +243,9 @@ const DesignerPage = ({ params }: { params: Promise<{ id: string }> }) => {
 	);
 	const ctx = useMemo(() => (t ? { template: t, tree } : null), [t, tree]);
 	const sel = t ? findBlock(t, selected) : null;
+	// Where the selected block sits: a row runs left to right (D19).
+	const place = t && sel ? placeOf(t, sel.slot) : null;
+	const inRow = place?.flow === 'row';
 
 	/** A new block: after the selected one, or at the end of the body. */
 	const addBlock = (b: Block) => {
@@ -333,24 +338,24 @@ const DesignerPage = ({ params }: { params: Promise<{ id: string }> }) => {
 				fontSize='11px'
 				fontWeight='600'
 				px={1}>
-				{blockLabel(sel.block.type)}
+				{labelOf(sel.block)}
 			</Text>
 			{sel.slot.parent && (
 				<BarButton
-					label={`Select the ${blockLabel(findBlock(t!, sel.slot.parent)?.block.type || 'box').toLowerCase()} around it`}
+					label={`Select the ${labelOf(place?.parent).toLowerCase()} around it`}
 					onClick={() => setSelected(sel.slot.parent!)}>
 					<CornerLeftUp size={13} />
 				</BarButton>
 			)}
 			<BarButton
-				label='Move up'
+				label={inRow ? 'Move left' : 'Move up'}
 				onClick={() => edit(x => moveBlock(x, sel.block.id, -1))}>
-				<ArrowUp size={13} />
+				{inRow ? <ArrowLeft size={13} /> : <ArrowUp size={13} />}
 			</BarButton>
 			<BarButton
-				label='Move down'
+				label={inRow ? 'Move right' : 'Move down'}
 				onClick={() => edit(x => moveBlock(x, sel.block.id, 1))}>
-				<ArrowDown size={13} />
+				{inRow ? <ArrowRight size={13} /> : <ArrowDown size={13} />}
 			</BarButton>
 			<BarButton
 				label='Duplicate'
@@ -603,7 +608,7 @@ const DesignerPage = ({ params }: { params: Promise<{ id: string }> }) => {
 							<Box pt={3}>
 								{tab === 'add' ? (
 									<AddPanel
-										where={sel ? `after the selected ${blockLabel(sel.block.type).toLowerCase()}` : 'at the end of the body — select a block to add after it'}
+										where={sel ? `after the selected ${labelOf(sel.block).toLowerCase()}` : 'at the end of the body — select a block to add after it'}
 										onAdd={addBlock}
 										alias={t.alias}
 										texts={settings?.texts || []}
@@ -673,6 +678,7 @@ const DesignerPage = ({ params }: { params: Promise<{ id: string }> }) => {
 									onRemove={() => remove(sel.block.id)}
 									onDuplicate={duplicate}
 									onMove={by => edit(x => moveBlock(x, sel.block.id, by))}
+									place={place!}
 								/>
 							) : (
 								<Box>

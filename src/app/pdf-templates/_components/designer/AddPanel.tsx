@@ -4,7 +4,9 @@ import { FC, ReactNode } from 'react';
 import { Box, Button, Flex, Grid, Text } from '@chakra-ui/react';
 import {
 	BadgeCheck,
+	ArrowDownToLine,
 	Box as BoxIcon,
+	Columns2,
 	Building2,
 	Columns3,
 	FileText,
@@ -23,7 +25,7 @@ import {
 	Table2,
 	Type,
 } from 'lucide-react';
-import { BLOCKS, Block, BlockType, newBlock } from '@/components/library/pdf/types';
+import { BLOCKS, Block, BlockType, newBlock, newRow } from '@/components/library/pdf/types';
 import { SavedText } from '@/components/library/pdf/scope';
 import { DocLink } from '../ui';
 
@@ -75,14 +77,22 @@ export const PIECES: { key: string; label: string; hint: string; icon: any; make
 		label: 'Signature line',
 		hint: 'A line and “Authorised signature”',
 		icon: PenLine,
+		// A row: a space that fills, then the line — so it sits on the right.
 		make: () => ({
-			...newBlock('columns'),
+			...newRow(),
 			mt: 36,
-			columns: [
-				{ width: 1, blocks: [] },
-				{ width: 1, blocks: [{ ...newBlock('divider'), color: '#9ca3af' }, text('Authorised signature', { size: 8.5, color: '#6b7280', align: 'center', mt: 4 })] },
+			blocks: [
+				{ ...newBlock('spacer'), grow: 1 },
+				{ ...newBlock('box'), bg: undefined, radius: undefined, pad: 0, basis: 170, blocks: [{ ...newBlock('divider'), color: '#9ca3af' }, text('Authorised signature', { size: 8.5, color: '#6b7280', align: 'center', mt: 4 })] },
 			],
 		}),
+	},
+	{
+		key: 'push',
+		label: 'Push to the bottom',
+		hint: 'A space that takes the room left — what follows sits at the page bottom',
+		icon: ArrowDownToLine,
+		make: () => ({ ...newBlock('spacer'), grow: 1 }),
 	},
 	{
 		key: 'computer',
@@ -211,6 +221,12 @@ const AddPanel: FC<{
 					onClick={() => onAdd(newBlock(b.type as BlockType, alias))}
 				/>
 			))}
+			<Tile
+				icon={Columns2}
+				label='Row'
+				hint='Blocks side by side, each as wide as it needs'
+				onClick={() => onAdd(newRow())}
+			/>
 		</Grid>
 
 		<Heading>Ready-made</Heading>
