@@ -295,7 +295,7 @@ const PdfTemplatesDocs = () => {
 							items={[
 								'It fills the window: the sidebar folds away behind the menu button. One toolbar on top — undo / redo, what the page shows (a record or Sample data), Fields, zoom, Business details, Your AI, Preview, Real PDF and Save.',
 								'Left, three tabs: “Blocks” — text, rows, table, columns, box, row, image, line, space, page break; “Ready-made” — pieces (Logo & business, Signature, Push to bottom, Computer note “…no signature is required”, Terms, Bank details, PAID stamp, Thank you) and your saved texts; a click puts it after the selected block. “Layers” — the blocks as a tree; drag to move them, into columns and boxes too. Tiles can also be dragged straight onto the page.',
-								'Middle: the page. Click a block to select it; its bar on the page moves it up or down (left or right in a row), duplicates, copies or deletes it, and ↖ selects the block around it (the whole signature, not just its words). Drag blocks on the page to move them. Empty business details show as “+ Add phone”, “+ Upload logo” — click one to fill it in.',
+								'Middle: the page. Click a block to select it; its bar on the page moves it up or down (left or right in a row), duplicates, copies or deletes it, and ↖ selects the block around it (the whole signature, not just its words). Drag blocks on the page to move them. A selected image or logo has a handle on each corner: drag one to make it bigger or smaller — it keeps its shape; hold ⇧ to change the shape too. Empty business details show as “+ Add phone”, “+ Upload logo” — click one to fill it in.',
 								'Right: the selected block’s settings — or, with nothing selected, the document: its name, page, paper, look and lists.',
 								'Sample data fills every field, like Preview; your business details and saved texts show as they are. Fields switches to which field goes where.',
 								'Undo / redo (⌘Z, ⇧⌘Z), Delete removes the selected block, Esc unselects, ⌘S saves. Nothing changes for anyone until you save.',
@@ -339,7 +339,7 @@ const PdfTemplatesDocs = () => {
 							head={['Setting', 'What it does']}
 							rows={[
 								['Gap', 'The room between the blocks (pt).'],
-								['Align', 'Top, middle or bottom of the row — or Stretch, so boxes in it are all as tall as the tallest.'],
+								['Align', 'Top, middle or bottom of the row — or Stretch, so boxes in it are all as tall as the tallest. Each is an icon, like Figma’s; hover one to see what it does.'],
 								['Spread', 'Where the blocks go when nothing fills: from the left, centred, to the right, or space between them.'],
 								['Min height', 'The box is at least this tall; a block set to fill takes the height the others leave.'],
 							]}
