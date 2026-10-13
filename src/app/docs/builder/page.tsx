@@ -670,6 +670,13 @@ const BuilderDocs = () => {
 								['Call the API', 'PUTs a fixed JSON body to the record, optionally after a confirmation prompt.'],
 								['Quick view (fields)', 'A modal showing just the fields listed.'],
 								['Add a linked record', 'Opens another page’s create form with fields filled in from this row — see below.'],
+								[
+									'Download PDF',
+									<>
+										Downloads the record printed with one of the page’s PDF templates (or its default) — an invoice, a receipt. Templates are made under{' '}
+										<NextLink href='/docs/pdf-templates'>PDF templates</NextLink>. Config: <C>{`{ type: 'download-pdf', title: 'Invoice PDF', template: '<id>' }`}</C>.
+									</>,
+								],
 							]}
 						/>
 						<P>

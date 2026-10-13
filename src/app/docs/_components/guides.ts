@@ -1,4 +1,4 @@
-import { Blocks, Building2, Component, Images, LayoutDashboard, LayoutTemplate, LucideIcon, Palette, PanelLeft, ShieldCheck } from 'lucide-react';
+import { Blocks, Building2, Component, FileText, Images, LayoutDashboard, LayoutTemplate, LucideIcon, Palette, PanelLeft, ShieldCheck } from 'lucide-react';
 
 export type Guide = {
 	href: string;
@@ -74,6 +74,19 @@ export const GUIDES: Guide[] = [
 			{ id: 'widgets', title: 'Widgets' },
 			{ id: 'charts', title: 'Charts' },
 			{ id: 'access', title: 'Who sees what' },
+		],
+	},
+	{
+		href: '/docs/pdf-templates',
+		title: 'PDF templates',
+		name: 'PDF templates',
+		description: 'Design the invoices, bills and receipts records download as PDFs — from a starter, from nothing, or with AI.',
+		icon: FileText,
+		group: 'Build your admin',
+		topics: [
+			{ id: 'match', title: 'Matching your fields' },
+			{ id: 'designer', title: 'The designer' },
+			{ id: 'download', title: 'Downloading' },
 		],
 	},
 	{

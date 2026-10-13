@@ -1,0 +1,453 @@
+'use client';
+
+import DocsShell from '../_components/DocsShell';
+import { FC, ReactNode, useEffect } from 'react';
+import { Box, Flex, Grid, Link, Table, Text } from '@chakra-ui/react';
+import GuideNav from '../_components/GuideNav';
+import GuideHeader from '../_components/GuideHeader';
+
+/**
+ * PDF templates, explained for the people who design invoices, bills and
+ * receipts (backend docs/pdf-templates). Linked from the list, the dialogs
+ * and every designer panel (`/docs/pdf-templates#<section>`), in a new tab.
+ * The tenant panel links the same anchors in mint-docs /pdf-templates.
+ */
+
+const SECTIONS = [
+	{ id: 'what', title: 'What it is' },
+	{ id: 'start', title: 'Making a template' },
+	{ id: 'match', title: 'Matching your fields' },
+	{ id: 'business', title: 'Business details' },
+	{ id: 'designer', title: 'The designer' },
+	{ id: 'blocks', title: 'Blocks' },
+	{ id: 'tokens', title: 'Fields in text' },
+	{ id: 'filters', title: 'Formats' },
+	{ id: 'lists', title: 'Lists from other pages' },
+	{ id: 'conditions', title: 'Show only when' },
+	{ id: 'page', title: 'Paper and look' },
+	{ id: 'download', title: 'Downloading' },
+	{ id: 'ai', title: 'Build with AI' },
+	{ id: 'gallery', title: 'The gallery' },
+	{ id: 'access', title: 'Who can do what' },
+	{ id: 'faq', title: 'Troubleshooting' },
+];
+
+const Section: FC<{ id: string; title: string; lead?: ReactNode; children: ReactNode }> = ({ id, title, lead, children }) => (
+	<Box
+		as='section'
+		id={id}
+		scrollMarginTop='80px'
+		pt={8}
+		pb={2}
+		borderTopWidth='1px'
+		borderColor='border.muted'
+		_first={{ borderTopWidth: 0, pt: 0 }}>
+		<Text
+			as='h2'
+			fontSize='lg'
+			fontWeight='600'
+			mb={lead ? 1 : 3}>
+			<Link
+				href={`#${id}`}
+				color='fg'
+				_hover={{ textDecoration: 'none', color: 'fg.muted' }}>
+				{title}
+			</Link>
+		</Text>
+		{lead && (
+			<Text
+				fontSize='sm'
+				color='fg.muted'
+				mb={4}>
+				{lead}
+			</Text>
+		)}
+		<Flex
+			direction='column'
+			gap={3}>
+			{children}
+		</Flex>
+	</Box>
+);
+
+const P: FC<{ children: ReactNode }> = ({ children }) => (
+	<Text
+		fontSize='sm'
+		lineHeight='1.7'>
+		{children}
+	</Text>
+);
+
+const C: FC<{ children: ReactNode }> = ({ children }) => (
+	<Box
+		as='code'
+		fontFamily='mono'
+		fontSize='0.85em'
+		px={1}
+		py={0.5}
+		borderRadius='sm'
+		bg='bg.muted'>
+		{children}
+	</Box>
+);
+
+const List: FC<{ items: ReactNode[]; ordered?: boolean }> = ({ items, ordered }) => (
+	<Box
+		as={ordered ? 'ol' : 'ul'}
+		pl={5}
+		fontSize='sm'
+		lineHeight='1.7'
+		listStyleType={ordered ? 'decimal' : 'disc'}>
+		{items.map((item, i) => (
+			<Box
+				as='li'
+				key={i}
+				mb={1}>
+				{item}
+			</Box>
+		))}
+	</Box>
+);
+
+const Note: FC<{ children: ReactNode; tone?: 'warn' }> = ({ children, tone }) => (
+	<Box
+		px={4}
+		py={3}
+		borderLeftWidth='3px'
+		borderColor={tone === 'warn' ? 'orange.solid' : 'border.emphasized'}
+		bg='bg.subtle'
+		borderRadius='sm'
+		fontSize='sm'
+		lineHeight='1.7'>
+		{children}
+	</Box>
+);
+
+const Terms: FC<{ head?: [string, string]; rows: [ReactNode, ReactNode][] }> = ({ head = ['Option', 'What it does'], rows }) => (
+	<Box
+		borderWidth='1px'
+		borderColor='border'
+		borderRadius='md'
+		overflowX='auto'>
+		<Table.Root
+			size='sm'
+			variant='line'>
+			<Table.Header>
+				<Table.Row bg='bg.subtle'>
+					{head.map(h => (
+						<Table.ColumnHeader
+							key={h}
+							fontSize='11px'
+							fontWeight='500'
+							letterSpacing='0.04em'
+							textTransform='uppercase'
+							color='fg.muted'>
+							{h}
+						</Table.ColumnHeader>
+					))}
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{rows.map(([term, def], i) => (
+					<Table.Row
+						key={i}
+						bg='transparent'>
+						<Table.Cell
+							fontSize='sm'
+							fontWeight='500'
+							verticalAlign='top'
+							w='34%'
+							minW='150px'>
+							{term}
+						</Table.Cell>
+						<Table.Cell
+							fontSize='sm'
+							color='fg.muted'
+							lineHeight='1.6'>
+							{def}
+						</Table.Cell>
+					</Table.Row>
+				))}
+			</Table.Body>
+		</Table.Root>
+	</Box>
+);
+
+
+const PdfTemplatesDocs = () => {
+	// The page renders after the auth check, so the browser's own jump to
+	// `#section` has already happened (to nothing). Do it once content exists.
+	useEffect(() => {
+		const id = decodeURIComponent(window.location.hash.slice(1));
+		if (id) document.getElementById(id)?.scrollIntoView();
+	}, []);
+
+	return (
+		<Flex
+			direction='column'
+			gap={6}
+			pb={16}>
+			<GuideHeader
+				href='/docs/pdf-templates'
+				title='PDF templates'
+				description='Design the invoices, bills and receipts your records download as PDFs.'
+				open={{ href: '/pdf-templates', label: 'Open PDF Templates' }}
+				mb={2}
+			/>
+
+			<Grid
+				templateColumns={{ base: '1fr', lg: '200px minmax(0, 1fr)' }}
+				gap={10}
+				alignItems='start'>
+				<GuideNav sections={SECTIONS} />
+
+				<Box minW={0}>
+					<Section
+						id='what'
+						title='What it is'
+						lead='A designed document for a page’s records — an invoice for a bill, a receipt for a payment.'>
+						<P>
+							A PDF template lays out a page: your logo and details, the record’s number and dates, a table of its line items,
+							the totals. Each piece of data is a field of the record, written as <C>{'{{bill.total | money}}'}</C>. When someone
+							presses <b>Download PDF</b> on a record, the server fills the template with that record and hands back the file.
+						</P>
+						<P>
+							Start from a design in the gallery, build one from nothing, or describe it to AI. A page can have several templates
+							(an invoice and a delivery note); one is its default.
+						</P>
+					</Section>
+
+					<Section
+						id='start'
+						title='Making a template'
+						lead='PDF Templates → New template.'>
+						<List
+							ordered
+							items={[
+								'Pick a starting point: a design from the gallery, Blank, or Build with AI.',
+								'Pick the page it prints (Bills, Invoices, Payments…) and give it a name.',
+								'For a design from the gallery, match what it shows to your fields (next section).',
+								'It opens in the designer. The first template of a page becomes its default.',
+							]}
+						/>
+					</Section>
+
+					<Section
+						id='match'
+						title='Matching your fields'
+						lead='Every design prints things like “Total” or “Customer name”; your page calls them something else.'>
+						<P>
+							Each row is one thing the design shows, with our guess at your field beside it — guessed from the names and the kind
+							of field (a date for “Due date”, a number for “Total”). Change any guess, or leave it blank: a blank one prints
+							nothing until you put a field there in the designer.
+						</P>
+						<P>
+							<b>Line items</b> come from rows inside the record (a list of items on the bill itself) or from another page whose
+							records point at this one (Invoice items whose Invoice is this one). Pick which, then match the columns.
+						</P>
+					</Section>
+
+					<Section
+						id='business'
+						title='Business details'
+						lead='Typed once, used by every template.'>
+						<Terms
+							rows={[
+								['Name, logo, address, phone, email, website, tax number', <>Printed with <C>{'{{business.name}}'}</C>, <C>{'{{business.logo}}'}</C>…</>],
+								['Note', <>Bank details or payment terms — <C>{'{{business.note}}'}</C>.</>],
+								['Currency', 'The symbol money shows, the word amounts in words end with (Taka, Dollars), decimals, and 1,234,567 or 12,34,567 grouping.'],
+								['Date format', '13 Oct 2026, 13/10/2026… used wherever a date is printed.'],
+								['Time zone', 'Leave empty to print dates in each reader’s zone; set one so every copy shows the same day.'],
+							]}
+						/>
+						<P>The logo is an image address (PNG, JPG, WebP or SVG) — copy it from the Media library.</P>
+					</Section>
+
+					<Section
+						id='designer'
+						title='The designer'
+						lead='Blocks on the left, the page in the middle, the selected block on the right.'>
+						<List
+							items={[
+								'Click a block on the page or in the list to change it. Drag blocks in the list to move them — into columns and boxes too.',
+								'The page shows one of the page’s records (pick it above the page) or sample data. Show fields switches to which field goes where.',
+								'Real PDF shows the actual file from the server, with your unsaved changes — page breaks and page numbers are only exact there.',
+								'Undo / redo (⌘Z, ⇧⌘Z), Delete removes the selected block, ⌘S saves. Nothing changes for anyone until you save.',
+								'Change with AI rewrites the template from a sentence (“make the totals bigger”) — check it and save.',
+							]}
+						/>
+					</Section>
+
+					<Section
+						id='blocks'
+						title='Blocks'>
+						<Terms
+							head={['Block', 'Use it for']}
+							rows={[
+								['Text', 'Headings and paragraphs. **bold** inside; a new line is a new line.'],
+								['Label + value rows', 'Invoice no. / Date / Due, and the totals: rows can be bold, big, a filled band, or have a line above. “Hide rows with no value” drops empty ones.'],
+								['Table', 'One row per line item, payment… Columns have a heading, a value ({{item.…}}), a width share and alignment. Splits across pages, repeating its heading.'],
+								['Columns', 'Blocks side by side; widths are shares (2 and 1 = two thirds and one third).'],
+								['Box', 'A shaded or framed group, with padding and round corners.'],
+								['Image', 'A logo, a signature, a photo field — an address or a field.'],
+								['Line, Space, Page break', 'A rule, blank room, and “start a new page here”.'],
+							]}
+						/>
+						<P>
+							The <b>header</b> and <b>footer</b> repeat on every page — put “Page {'{{page}}'} of {'{{pages}}'}” in the footer.
+							The <b>body</b> flows over as many pages as it needs.
+						</P>
+					</Section>
+
+					<Section
+						id='tokens'
+						title='Fields in text'
+						lead='Any text can hold fields: “Bill to {{bill.client.name}}”.'>
+						<P>
+							Use the <b>Field</b> button beside a text box: it inserts the field where the cursor is, with a format guessed from it.
+							The record is named after its page (<C>bill</C> for Bills; see Page → Record as). Linked records open up:
+							<C>{'{{bill.client.address}}'}</C>.
+						</P>
+						<Terms
+							head={['Name', 'What it is']}
+							rows={[
+								[<C key='a'>{'{{bill.…}}'}</C>, 'The record being printed (also {{record.…}}).'],
+								[<C key='b'>{'{{item.…}}'}</C>, 'Inside a table’s columns: the row. {{index}} is its number.'],
+								[<C key='c'>{'{{business.…}}'}</C>, 'Your business details.'],
+								[<C key='d'>{'{{today}}'}</C>, 'Today’s date. {{page}} and {{pages}} in the header and footer.'],
+							]}
+						/>
+					</Section>
+
+					<Section
+						id='filters'
+						title='Formats'
+						lead='After the field, a | and a format: {{bill.total | money}}.'>
+						<Terms
+							head={['Format', 'Prints']}
+							rows={[
+								['money', '৳86,250.00 — with your currency. money:$ for another symbol.'],
+								['number, number:2', '1,234 · 1,234.50'],
+								['date, datetime', 'In your date format; date:\'DD/MM/YYYY\' for another.'],
+								['words', '“Eighty Six Thousand Two Hundred Fifty Taka Only”'],
+								['upper, lower, title', 'UPPER, lower, Title Case'],
+								['default:\'—\'', 'What to print when the field is empty.'],
+								['count, sum:amount, join', 'How many in a list, a list added up, a list joined with commas.'],
+								['plus:, minus:, times:, divide:', 'Arithmetic with a number or another field: {{bill.total | minus:bill.paid | money}}.'],
+							]}
+						/>
+					</Section>
+
+					<Section
+						id='lists'
+						title='Lists from other pages'
+						lead='An invoice’s payments, a client’s orders — records of another page that point at this one.'>
+						<P>
+							In Page → Lists from other pages, add one: pick the page and the field there that points back, give it a short name
+							(<C>payments</C>), an order and a limit. Then show it in a table (One row per → payments) or use it in text:
+							<C>{'{{payments | count}}'}</C>, <C>{'{{payments | sum:amount | money}}'}</C>. It is only filled for people who can
+							read that page.
+						</P>
+					</Section>
+
+					<Section
+						id='conditions'
+						title='Show only when'
+						lead='Print a block only for some records.'>
+						<P>
+							Every block has <b>Show only when</b>: a PAID band when the status is paid, a “Due date” row only when there is one.
+							In the designer such a block is drawn faded when the record on screen doesn’t meet it.
+						</P>
+					</Section>
+
+					<Section
+						id='page'
+						title='Paper and look'>
+						<P>
+							Page → Paper: A4, Letter, Legal or A5, portrait or landscape, and the margins (in points; 72 points = 1 inch).
+							Look: the font (Geist, Geist Mono, Helvetica, Times, Courier), text size and line height, and the colours every block
+							starts from — any block can override them. Bangla and other characters a font doesn’t have are printed in Noto Sans
+							Bengali automatically.
+						</P>
+					</Section>
+
+					<Section
+						id='download'
+						title='Downloading'>
+						<List
+							items={[
+								'A record’s page: Download PDF beside Edit (a menu when the page has several templates).',
+								<>A row’s menu: page builder → Table → Row menu → <b>Download PDF</b> (a template, or the page’s default), with Show only when like any item.</>,
+								'Several records at once: tick them, Print / PDF — each template is an option, one file with a page set per record.',
+							]}
+						/>
+					</Section>
+
+					<Section
+						id='ai'
+						title='Build with AI'>
+						<P>
+							Describe the document and pick its page; AI lays it out using that page’s real fields and opens it in the designer.
+							In the designer, <b>Change with AI</b> edits the open template from a sentence. Fields AI used that the page
+							doesn’t have are listed when it finishes — they print blank. Needs the server’s AI key (ANTHROPIC_API_KEY).
+						</P>
+					</Section>
+
+					<Section
+						id='gallery'
+						title='The gallery'
+						lead='The designs every project starts from — kept by the super admin.'>
+						<P>
+							Until the super admin adds any, the gallery shows the built-in starters (two invoices, a bill, two receipts). On the
+							Gallery tab, <b>Add the built-in starters</b> makes them your own templates to edit. Any of your templates goes in the
+							gallery with Page → <b>In the gallery for every project</b>; give it sample data so its card isn’t blank. Projects
+							copy a gallery template — later changes to yours don’t reach their copies.
+						</P>
+					</Section>
+
+					<Section
+						id='access'
+						title='Who can do what'>
+						<Terms
+							head={['Who', 'Can']}
+							rows={[
+								['Anyone who can read a page', 'Download its records as PDFs, and see its templates.'],
+								['Builders (edit-builder; in a project, build)', 'Make, change and delete templates, set the default, edit the business details.'],
+								['The super admin', 'Decide what’s in the gallery.'],
+							]}
+						/>
+						<P>
+							A template can only print what the reader could open anyway: passwords and hidden fields never print, and a list
+							from a page they can’t read stays empty.
+						</P>
+					</Section>
+
+					<Section
+						id='faq'
+						title='Troubleshooting'>
+						<Terms
+							head={['Problem', 'Fix']}
+							rows={[
+								['A field prints blank', 'Show fields: is the token one of this page’s fields? Fix it with the Field button. Or the record has no value.'],
+								['The logo doesn’t show', 'Use an https address of a PNG, JPG, WebP or SVG under 5 MB.'],
+								['Dates are a day off', 'Set the time zone in Business details.'],
+								['“This page has no PDF template yet”', 'Make one for that page, or pick a template in the row menu item.'],
+								['Real PDF looks different from the page', 'The page is a close drawing; the PDF is exact. Page breaks only exist in the PDF.'],
+							]}
+						/>
+					</Section>
+				</Box>
+			</Grid>
+		</Flex>
+	);
+};
+
+const PdfTemplatesDocsPage = () => (
+	<DocsShell
+		current='/docs/pdf-templates'
+		requireLogin>
+		<PdfTemplatesDocs />
+	</DocsShell>
+);
+
+export default PdfTemplatesDocsPage;
