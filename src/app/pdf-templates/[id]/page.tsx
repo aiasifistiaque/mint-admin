@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, ReactNode, use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { DragEvent, FC, ReactNode, use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import NextLink from 'next/link';
 import { Badge, Box, Button, Flex, Grid, IconButton, Spinner, Text } from '@chakra-ui/react';
 import {
@@ -10,6 +10,8 @@ import {
 	ArrowUp,
 	Braces,
 	Building2,
+	ClipboardCopy,
+	ClipboardPaste,
 	Copy,
 	CornerLeftUp,
 	Eye,
@@ -63,6 +65,7 @@ import Outline from '../_components/designer/Outline';
 import PageSettings from '../_components/designer/PageSettings';
 import Properties from '../_components/designer/Properties';
 import AddPanel from '../_components/designer/AddPanel';
+import { DRAG_TYPE, Drop, clipBlock, clipText, dropAt, pastePlace } from '../_components/designer/dnd';
 import AiDialog from '../_components/AiDialog';
 import RealPdfDialog from '../_components/RealPdfDialog';
 import SettingsDialog from '../_components/SettingsDialog';
@@ -270,10 +273,78 @@ const DesignerPage = ({ params }: { params: Promise<{ id: string }> }) => {
 		setSelected(c.id);
 	};
 	const openBusiness = (focus: string | null = null) => setBusiness({ open: true, focus });
+	const reveal = (bid: string) => requestAnimationFrame(() => document.querySelector(`[data-block="${bid}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }));
+
+	/* ------------------------------------------- drag on the page (D20) */
+	// What is being dragged: a block on the page, or a new one from the Add panel.
+	const dragRef = useRef<{ id?: string; block: Block } | null>(null);
+	const [dragging, setDragging] = useState(false);
+	const [drop, setDrop] = useState<Drop | null>(null);
+	const endDrag = () => {
+		dragRef.current = null;
+		setDragging(false);
+		setDrop(null);
+	};
+	useEffect(() => {
+		window.addEventListener('dragend', endDrag);
+		return () => window.removeEventListener('dragend', endDrag);
+	}, []);
+	const startDrag = (e: DragEvent, what: { id?: string; block: Block }) => {
+		e.dataTransfer.setData(DRAG_TYPE, what.id || 'new');
+		e.dataTransfer.effectAllowed = what.id ? 'move' : 'copy';
+		dragRef.current = what;
+		// After the browser has its drag image: the empty header / footer appear as places to drop.
+		setTimeout(() => setDragging(true), 0);
+	};
+	const onDragBlock = useCallback(
+		(bid: string, e: DragEvent) => {
+			const hit = t && findBlock(t, bid);
+			if (hit) startDrag(e, { id: bid, block: hit.block });
+		},
+		[t]
+	);
+	const onDragOver = (e: DragEvent) => {
+		const d = dragRef.current;
+		if (!d || !t) return;
+		const at = dropAt(t, e.target as Element, e.clientX, e.clientY, d.block);
+		if (!at) {
+			if (drop) setDrop(null);
+			return;
+		}
+		e.preventDefault();
+		e.dataTransfer.dropEffect = d.id ? 'move' : 'copy';
+		if (JSON.stringify(at) !== JSON.stringify(drop)) setDrop(at);
+	};
+	const onDrop = (e: DragEvent) => {
+		const d = dragRef.current;
+		if (!d || !drop) return endDrag();
+		e.preventDefault();
+		const { slot, index } = drop;
+		if (d.id) edit(x => relocateBlock(x, d.id!, slot, index));
+		else edit(x => insertBlock(x, slot, index, d.block));
+		setSelected(d.block.id);
+		endDrag();
+	};
+
+	/* --------------------------------------------- copy / cut / paste (D20) */
+	const [clip, setClip] = useState<Block | null>(null);
+	const copyBlock = (b: Block) => {
+		setClip(b);
+		navigator.clipboard?.writeText(clipText(b)).catch(() => {});
+		toaster.create({ type: 'info', title: 'Copied', description: 'Select a box (or a block) and press ⌘V — it goes inside the box, or after the block.' });
+	};
+	const paste = (b: Block) => {
+		if (!t) return;
+		const c = cloneBlock(b);
+		const { slot, index } = pastePlace(t, selected, c);
+		edit(x => insertBlock(x, slot, index, c));
+		setSelected(c.id);
+		reveal(c.id);
+	};
 
 	// Keys: undo / redo, delete the selected block, save — not while typing.
 	const keyRef = useRef<any>(null);
-	keyRef.current = { undo, redo, selected, sel, remove, doSave: () => doSave() };
+	keyRef.current = { undo, redo, selected, sel, remove, doSave: () => doSave(), copyBlock, paste };
 	useEffect(() => {
 		const onKey = (e: KeyboardEvent) => {
 			const k = keyRef.current;
@@ -294,7 +365,37 @@ const DesignerPage = ({ params }: { params: Promise<{ id: string }> }) => {
 			} else if (e.key === 'Escape') setSelected(null);
 		};
 		window.addEventListener('keydown', onKey);
-		return () => window.removeEventListener('keydown', onKey);
+		// ⌘C / ⌘X / ⌘V on a selected block — not while typing, in a dialog, or with words selected on the page.
+		const busy = () => {
+			const a = document.activeElement as HTMLElement | null;
+			return /^(INPUT|TEXTAREA|SELECT)$/.test(a?.tagName || '') || !!a?.isContentEditable || !!document.querySelector('[role=dialog]');
+		};
+		const onCopy = (cut: boolean) => (e: ClipboardEvent) => {
+			const k = keyRef.current;
+			if (busy() || !k.sel || String(window.getSelection() || '').trim()) return;
+			e.preventDefault();
+			e.clipboardData?.setData('text/plain', clipText(k.sel.block));
+			k.copyBlock(k.sel.block);
+			if (cut) k.remove(k.sel.block.id);
+		};
+		const onPaste = (e: ClipboardEvent) => {
+			if (busy()) return;
+			const b = clipBlock(e.clipboardData?.getData('text/plain'));
+			if (!b) return;
+			e.preventDefault();
+			keyRef.current.paste(b);
+		};
+		const copy = onCopy(false);
+		const cut = onCopy(true);
+		document.addEventListener('copy', copy);
+		document.addEventListener('cut', cut);
+		document.addEventListener('paste', onPaste);
+		return () => {
+			window.removeEventListener('keydown', onKey);
+			document.removeEventListener('copy', copy);
+			document.removeEventListener('cut', cut);
+			document.removeEventListener('paste', onPaste);
+		};
 	}, []);
 
 	const doSave = async () => {
@@ -362,6 +463,18 @@ const DesignerPage = ({ params }: { params: Promise<{ id: string }> }) => {
 				onClick={duplicate}>
 				<Copy size={13} />
 			</BarButton>
+			<BarButton
+				label='Copy (⌘C) — paste it inside a box or another template'
+				onClick={() => copyBlock(sel.block)}>
+				<ClipboardCopy size={13} />
+			</BarButton>
+			{clip && (sel.block.type === 'box' || sel.block.type === 'columns') && (
+				<BarButton
+					label={`Paste inside (⌘V) — the copied ${labelOf(clip).toLowerCase()}`}
+					onClick={() => paste(clip)}>
+					<ClipboardPaste size={13} />
+				</BarButton>
+			)}
 			<BarButton
 				label='Delete (⌫)'
 				onClick={() => remove(sel.block.id)}>
@@ -613,6 +726,7 @@ const DesignerPage = ({ params }: { params: Promise<{ id: string }> }) => {
 										alias={t.alias}
 										texts={settings?.texts || []}
 										onTexts={focus => openBusiness(focus || 'texts.')}
+										onDragNew={(make, e) => startDrag(e, { block: make() })}
 									/>
 								) : (
 									<>
@@ -640,7 +754,9 @@ const DesignerPage = ({ params }: { params: Promise<{ id: string }> }) => {
 							bg='bg.muted'
 							px={{ base: 3, md: 8 }}
 							py={{ base: 4, md: 8 }}
-							onClick={() => setSelected(null)}>
+							onClick={() => setSelected(null)}
+							onDragOver={onDragOver}
+							onDrop={onDrop}>
 							<Box
 								mx='auto'
 								w='fit-content'
@@ -654,15 +770,31 @@ const DesignerPage = ({ params }: { params: Promise<{ id: string }> }) => {
 									onSelect={i => setSelected(i || null)}
 									scale={scale}
 									onFix={path => openBusiness(path)}
-									blockBar={blockBar}
+									blockBar={dragging ? null : blockBar}
+									onDragBlock={onDragBlock}
+									showEmptyParts={dragging}
 								/>
 							</Box>
+							{/* Where a drag lands: a line between blocks, or the empty box it goes into. */}
+							{drop && (
+								<Box
+									position='fixed'
+									pointerEvents='none'
+									zIndex={1400}
+									left={`${drop.line.left}px`}
+									top={`${drop.line.top}px`}
+									w={`${drop.line.width}px`}
+									h={`${drop.line.height}px`}
+									borderRadius='2px'
+									{...(drop.line.box ? { bg: 'rgba(79,70,229,.10)', border: `1.5px dashed ${ACCENT}` } : { bg: ACCENT, boxShadow: `0 0 0 1px #fff` })}
+								/>
+							)}
 							<Text
 								fontSize='11px'
 								color='fg.subtle'
 								textAlign='center'
 								mt={3}>
-								One long page here — Preview and Real PDF show it split into pages, with page numbers.
+								One long page here — Preview and Real PDF show it split into pages, with page numbers. Drag blocks to move them; ⌘C / ⌘V copy and paste (inside a selected box).
 							</Text>
 						</Box>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { CSSProperties, FC, Fragment, MouseEvent, ReactNode, memo } from 'react';
+import { CSSProperties, DragEvent, FC, Fragment, MouseEvent, ReactNode, memo } from 'react';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import { meets } from '../functions/fieldLocks';
@@ -37,6 +37,10 @@ export type PdfPageProps = {
 	onFix?: (path: string) => void;
 	/** The designer: tools drawn on the selected block (move, duplicate, delete). */
 	blockBar?: ReactNode;
+	/** The designer: a block on the page starts being dragged (D20). */
+	onDragBlock?: (id: string, e: DragEvent) => void;
+	/** The designer, while something is dragged: an empty header or footer shows a place to drop. */
+	showEmptyParts?: boolean;
 };
 
 const FAMILY: Record<string, string> = {
@@ -232,6 +236,15 @@ const BlockView: FC<{ b: Block; ctx: Ctx; scope: Scope; flow: Flow }> = ({ b, ct
 		<div
 			data-block={b.id}
 			data-flow={flow}
+			draggable={!!ctx.onDragBlock || undefined}
+			onDragStart={
+				ctx.onDragBlock
+					? e => {
+							e.stopPropagation();
+							ctx.onDragBlock!(b.id, e);
+					  }
+					: undefined
+			}
 			onClick={select}
 			className={editing ? 'pdf-block' : undefined}
 			style={{
@@ -562,6 +575,34 @@ const TableView: FC<{ b: any; ctx: Ctx; scope: Scope }> = ({ b, ctx, scope }) =>
 	);
 };
 
+/**
+ * An empty header or footer while something is dragged: somewhere to drop
+ * it, drawn in the page's margin so nothing on the page moves under the pointer.
+ */
+const EmptyPart: FC<{ part: 'header' | 'footer'; label: string; margin: number; left: number; right: number }> = ({ part, label, margin, left, right }) => (
+	<div
+		data-part={part}
+		style={{
+			position: 'absolute',
+			[part === 'header' ? 'top' : 'bottom']: pt(Math.max(2, (margin - Math.max(14, margin - 8)) / 2)),
+			left: pt(left),
+			right: pt(right),
+			height: pt(Math.max(14, margin - 8)),
+			border: '1px dashed #a5a9b1',
+			borderRadius: 3,
+			display: 'flex',
+			alignItems: 'center',
+			justifyContent: 'center',
+			fontSize: '7pt',
+			color: '#8a8f98',
+			fontFamily: FAMILY.sans,
+			background: 'rgba(255,255,255,.9)',
+			zIndex: 1,
+		}}>
+		{label}
+	</div>
+);
+
 const PdfPage: FC<PdfPageProps> = props => {
 	const { template: t, scope, scale = 1, clip } = props;
 	const [w, h] = pageSize(t);
@@ -585,15 +626,28 @@ const PdfPage: FC<PdfPageProps> = props => {
 				display: 'flex',
 				flexDirection: 'column',
 				textAlign: 'left',
+				position: 'relative',
 			}}>
-			{(t.header || []).length > 0 && (
-				<div style={{ marginBottom: '12pt' }}>
+			{(t.header || []).length > 0 ? (
+				<div
+					data-part='header'
+					style={{ marginBottom: '12pt' }}>
 					<Blocks
 						blocks={t.header}
 						ctx={ctx}
 						scope={pageScope(1)}
 					/>
 				</div>
+			) : (
+				props.showEmptyParts && (
+					<EmptyPart
+						part='header'
+						label='Header — on top of every page'
+						margin={mt}
+						left={ml}
+						right={mr}
+					/>
+				)
 			)}
 			{/* A flex column, so a block set to fill takes the room left on the page (D19). */}
 			<div
@@ -605,14 +659,26 @@ const PdfPage: FC<PdfPageProps> = props => {
 					scope={scope}
 				/>
 			</div>
-			{(t.footer || []).length > 0 && (
-				<div style={{ marginTop: '12pt' }}>
+			{(t.footer || []).length > 0 ? (
+				<div
+					data-part='footer'
+					style={{ marginTop: '12pt' }}>
 					<Blocks
 						blocks={t.footer}
 						ctx={ctx}
 						scope={pageScope(1)}
 					/>
 				</div>
+			) : (
+				props.showEmptyParts && (
+					<EmptyPart
+						part='footer'
+						label='Footer — at the bottom of every page'
+						margin={mb}
+						left={ml}
+						right={mr}
+					/>
+				)
 			)}
 		</div>
 	);
