@@ -23,6 +23,7 @@ const SECTIONS = [
 	{ id: 'blocks', title: 'Blocks' },
 	{ id: 'layout', title: 'Rows and filling space' },
 	{ id: 'moving', title: 'Moving, copy and paste' },
+	{ id: 'free', title: 'Placed freely' },
 	{ id: 'tokens', title: 'Fields in text' },
 	{ id: 'filters', title: 'Formats' },
 	{ id: 'lists', title: 'Lists from other pages' },
@@ -350,6 +351,17 @@ const PdfTemplatesDocs = () => {
 							that. The header and footer have no spare room, so a Space there keeps its own size. In the designer a filling Space is
 							hatched.
 						</P>
+						<P>
+							More for boxes: <b>Top & bottom</b> and <b>Left & right</b> padding (over the all-round padding), <b>Lines on</b> — a
+							border on some sides only (a rule above and below, a bar on the left) — and, for a box sitting straight in the header,
+							body or footer, <b>Full-width background</b>: its colour runs to the page’s edges (the header’s first block up to the
+							top edge, the footer’s last down to the bottom edge) while what’s inside stays within the margins. Set the page’s top
+							and bottom margins to 0 for bands that touch the edges — Invoice — Banner and Quotation — Modern in the gallery do.
+						</P>
+						<P>
+							In a <b>Columns</b> block each column has its own Top / Middle / Bottom and <b>One under another</b> or <b>Side by
+							side</b> for the blocks in it.
+						</P>
 					</Section>
 
 					<Section
@@ -362,6 +374,23 @@ const PdfTemplatesDocs = () => {
 								'Near a box’s edge the drop goes beside the box; further in, it goes inside.',
 								'⌘C copies the selected block, ⌘X cuts it, ⌘V pastes: inside the selected box (at its end) or columns block (its first empty column), otherwise after the selected block. The block bar has Copy and, on a box with something copied, Paste inside.',
 								'What you copy is on your clipboard, so it pastes into another template too.',
+								'Several at once, like Figma: ⇧ or ⌘ click more blocks (on the page or in Layers). Drag any of them and they all move — into a box or a column too. ⌘G puts them in a box, ⇧⌘G in a row side by side; ⌘C / Delete act on all of them.',
+								'In Layers, drop a block on a box or columns row and it goes inside.',
+							]}
+						/>
+					</Section>
+
+					<Section
+						id='free'
+						title='Placed freely'
+						lead='Like Canva: put a stamp, a signature or a watermark exactly where you want it.'>
+						<List
+							items={[
+								'Select a block and press Place freely (under its name on the right) — it leaves the flow and stays where it was on the page. Or switch Add to Place freely and drop a tile anywhere on the page.',
+								'Drag it anywhere. It snaps to the page’s edges, margins and middle, and to other placed blocks — pink lines show what it snapped to; hold ⌥ not to snap. Drag the small handle on its right to change its width; arrow keys nudge it 1pt, ⇧ 10pt.',
+								'On the right: from the left, from the top, width, turn (degrees — a tilted PAID stamp), opacity, which page (first, every or last), and Behind the content for a watermark.',
+								'Back into the flow puts it at the end of the body again.',
+								'Tables, totals and anything that grows with the record belong in the flow: only the flow moves on to the next page when it runs out of room.',
 							]}
 						/>
 					</Section>
@@ -482,10 +511,18 @@ const PdfTemplatesDocs = () => {
 						title='The gallery'
 						lead='The designs every project starts from — kept by the super admin.'>
 						<P>
-							Until the super admin adds any, the gallery shows the built-in starters (two invoices, a bill, two receipts). On the
-							Gallery tab, <b>Add the built-in starters</b> makes them your own templates to edit. Any of your templates goes in the
-							gallery with Page → <b>In the gallery for every project</b>; give it sample data so its card isn’t blank. Projects
-							copy a gallery template — later changes to yours don’t reach their copies.
+							Until the super admin adds any, the gallery shows the built-in starters — invoices (Classic, Modern, Minimal, Banner,
+							Bill), receipts (Receipt, Compact, Money receipt) and quotations (Quotation, Quotation — Modern). On the Gallery tab,
+							<b>Add the built-in starters</b> makes them your own templates to edit; when a new starter ships later, the same place
+							offers <b>Add N new built-in starters</b>. Any of your templates goes in the gallery with Page → <b>In the gallery for
+							every project</b>; give it sample data so its card isn’t blank. Projects copy a gallery template — later changes to
+							yours don’t reach their copies.
+						</P>
+						<P>
+							<b>Categories</b> — Invoices, Receipts and Quotations to start with — are what the gallery is browsed by. The super
+							admin adds, renames, reorders and deletes them with Gallery → <b>Categories</b> (a deleted one’s templates show under
+							Other), and sets a template’s category in its designer (Document → Category). Your own AI can do both over the
+							builder MCP: <C>save_pdf_category</C> and <C>publish_pdf_template</C>.
 						</P>
 					</Section>
 
@@ -497,7 +534,7 @@ const PdfTemplatesDocs = () => {
 							rows={[
 								['Anyone who can read a page', 'Download its records as PDFs, and see its templates.'],
 								['Builders (edit-builder; in a project, build)', 'Make, change and delete templates, set the default, edit the business details.'],
-								['The super admin', 'Decide what’s in the gallery.'],
+								['The super admin', 'Decide what’s in the gallery and its categories.'],
 							]}
 						/>
 						<P>
