@@ -27,6 +27,9 @@ const nextConfig = {
 			// mint-tenant. Until the tenant panel moves there, this build's one-page Public API answers for them.
 			{ source: '/public-api/:sub+', destination: '/public-api', permanent: false },
 			{ source: '/:project/public-api/:sub+', destination: '/:project/public-api', permanent: false },
+			// …and a project's Build → Components (backend docs/cms CMS-03), likewise mint-tenant's: the model
+			// builder here. Never the admin's own /components page or its /docs/components guide.
+			{ source: '/:project((?!docs$)[^/]+)/components/:sub*', destination: '/:project/model-builder', permanent: false },
 		];
 	},
 	// The tenant panel (NEXT_PUBLIC_PANEL=tenant) can run next to the admin in dev
