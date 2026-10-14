@@ -23,6 +23,10 @@ const nextConfig = {
 		return [
 			{ source: '/user-docs', destination: DOCS_URL, permanent: false },
 			{ source: '/user-docs/:path*', destination: `${DOCS_URL}/:path*`, permanent: false },
+			// The backend's tenant sidebar links the API builder's pages (backend docs/api-builder), which live in
+			// mint-tenant. Until the tenant panel moves there, this build's one-page Public API answers for them.
+			{ source: '/public-api/:sub+', destination: '/public-api', permanent: false },
+			{ source: '/:project/public-api/:sub+', destination: '/:project/public-api', permanent: false },
 		];
 	},
 	// The tenant panel (NEXT_PUBLIC_PANEL=tenant) can run next to the admin in dev
