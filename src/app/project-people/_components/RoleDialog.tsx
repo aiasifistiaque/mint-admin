@@ -136,7 +136,12 @@ const RoleDialog: FC<{
 									as='table'
 									w='100%'
 									fontSize='13px'
-									css={{ borderCollapse: 'collapse', '& td, & th': { padding: '8px 12px' } }}>
+									css={{
+										borderCollapse: 'collapse',
+										'& td, & th': { padding: '8px 12px' },
+										// The checkbox cell is one big tap target, so the padding comes off it.
+										'& td[data-check]': { padding: 0 },
+									}}>
 									<thead>
 										<Box
 											as='tr'
@@ -151,7 +156,7 @@ const RoleDialog: FC<{
 												<Box
 													as='th'
 													key={a.key}
-													w='72px'
+													w={{ base: '64px', md: '72px' }}
 													textAlign='center'>
 													<Button
 														size='2xs'
@@ -177,10 +182,15 @@ const RoleDialog: FC<{
 													<Box
 														as='td'
 														key={a.key}
+														data-check=''
 														textAlign='center'>
 														{t.actions.includes(a.key) && (
 															<Checkbox.Root
-																size='sm'
+																size='lg'
+																w='full'
+																minH='48px'
+																justifyContent='center'
+																cursor='pointer'
 																checked={keys.has(`${a.key}-${t.route}`)}
 																onCheckedChange={e => toggle(t.route, a.key, !!e.checked)}>
 																<Checkbox.HiddenInput aria-label={`${a.label} ${t.name}`} />

@@ -1,9 +1,21 @@
 'use client';
-import { FC, FormEvent, KeyboardEvent, useEffect, useId, useState } from 'react';
-import { Button, CloseButton, Dialog, IconButton, Portal, Spinner, Text } from '@chakra-ui/react';
+import { FC, FormEvent, KeyboardEvent, useEffect, useState } from 'react';
+import { Button, IconButton, Spinner, Text } from '@chakra-ui/react';
 import { Plus } from 'lucide-react';
-import { FormMain, ModalFooter, radius, useGetConfigQuery, usePostMutation } from '../..';
-import { useCustomToast } from '../../hooks';
+import {
+	Dialog,
+	DialogBody,
+	DialogCloseButton,
+	DialogFooter,
+	DialogHeader,
+	DiscardButton,
+	FormMain,
+	ModalFormSection,
+	styles,
+	useGetConfigQuery,
+	usePostMutation,
+} from '../..';
+import { useCustomToast, useIsMobile } from '../../hooks';
 import { Tooltip } from '@/components/ui/tooltip';
 
 type Props = {
@@ -31,7 +43,7 @@ const QuickAdd: FC<Props> = ({ model, label, prefill, disabled, onCreated }) => 
 	const [formData, setFormData] = useState<any>({});
 	const [, setChangedData] = useState<any>({});
 	const [callApi, result] = usePostMutation();
-	const formId = `quick-add-${useId()}`;
+	const isMobile = useIsMobile();
 	const name = label || 'record';
 
 	useCustomToast({ successText: `${name} added`, ...result });
@@ -84,91 +96,65 @@ const QuickAdd: FC<Props> = ({ model, label, prefill, disabled, onCreated }) => 
 				</IconButton>
 			</Tooltip>
 
-			<Dialog.Root
-				size='lg'
-				placement='center'
-				scrollBehavior='inside'
-				open={open}
-				onOpenChange={e => {
-					if (!e.open) {
-						setOpen(false);
-						result.reset();
-					}
+			<Dialog
+				isOpen={open}
+				onClose={() => {
+					setOpen(false);
+					result.reset();
 				}}>
-				<Portal>
-					<Dialog.Backdrop />
-					<Dialog.Positioner>
-						<Dialog.Content
-							borderRadius={radius.MODAL}
-							bg='bg.panel'
-							borderWidth='1px'
-							borderColor='border'>
-							<Dialog.Header
-								px={{ base: 4, md: 6 }}
-								pt={{ base: 4, md: 5 }}
-								pb={{ base: 3, md: 4 }}
-								pr={12}>
-								<Dialog.Title fontSize='16px'>New {name.toLowerCase()}</Dialog.Title>
-							</Dialog.Header>
-							<Dialog.CloseTrigger
-								asChild
-								top={3}
-								right={3}>
-								<CloseButton size='sm' />
-							</Dialog.CloseTrigger>
-							<Dialog.Body
-								px={{ base: 4, md: 6 }}
-								pt={0}
-								pb={{ base: 4, md: 5 }}>
-								<form
-									id={formId}
-									onSubmit={submit}
-									onKeyDown={keyDown}>
-									{isFetching || !data ? (
-										isError ? (
-											<Text
-												fontSize='sm'
-												color='red.fg'>
-												Couldn&apos;t load the form for {model}.
-											</Text>
-										) : (
-											<Spinner size='sm' />
-										)
-									) : (
-										<FormMain
-											fields={data?.form || []}
-											formData={formData}
-											setFormData={setFormData}
-											setChangedData={setChangedData}
-											isModal={true}
-										/>
-									)}
-								</form>
-							</Dialog.Body>
-							<ModalFooter>
-								<Button
-									size='sm'
-									px={3}
-									variant='outline'
-									disabled={result.isLoading}
-									onClick={() => setOpen(false)}>
-									Cancel
-								</Button>
-								<Button
-									size='sm'
-									px={3}
-									type='submit'
-									form={formId}
-									disabled={!data?.form}
-									loading={result.isLoading}
-									loadingText='Adding'>
-									Add {name.toLowerCase()}
-								</Button>
-							</ModalFooter>
-						</Dialog.Content>
-					</Dialog.Positioner>
-				</Portal>
-			</Dialog.Root>
+				<form
+					onSubmit={submit}
+					onKeyDown={keyDown}>
+					<DialogHeader
+						divider
+						icon={<Plus size={18} strokeWidth={1.75} />}>
+						New {name.toLowerCase()}
+					</DialogHeader>
+					<DialogCloseButton top={{ base: 4, md: 5 }} />
+					<DialogBody pt={{ base: 4, md: 5 }}>
+						{isFetching || !data ? (
+							isError ? (
+								<Text
+									fontSize='sm'
+									color='red.fg'>
+									Couldn&apos;t load the form for {model}.
+								</Text>
+							) : (
+								<Spinner size='sm' />
+							)
+						) : (
+							<ModalFormSection>
+								<FormMain
+									fields={data?.form || []}
+									formData={formData}
+									setFormData={setFormData}
+									setChangedData={setChangedData}
+									isModal={true}
+								/>
+							</ModalFormSection>
+						)}
+					</DialogBody>
+					<DialogFooter>
+						{!isMobile && (
+							<DiscardButton
+								disabled={result.isLoading}
+								onClick={() => setOpen(false)}>
+								Cancel
+							</DiscardButton>
+						)}
+						<Button
+							{...(styles.MODAL_BUTTON as any)}
+							{...(isMobile && { w: 'full' })}
+							type='submit'
+							disabled={!data?.form}
+							loading={result.isLoading}
+							loadingText='Adding'
+							spinnerPlacement='start'>
+							Add {name.toLowerCase()}
+						</Button>
+					</DialogFooter>
+				</form>
+			</Dialog>
 		</>
 	);
 };

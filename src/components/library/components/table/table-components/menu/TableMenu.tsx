@@ -7,6 +7,7 @@ import {
 	Eye,
 	FilePlus,
 	ListChecks,
+	MessageSquare,
 	MousePointerClick,
 	PanelRightOpen,
 	Pencil,
@@ -30,9 +31,15 @@ import {
 	UpdateDataMenuModal,
 	UpdateStringModal,
 	ViewServerModal,
+	Dialog,
+	DialogBody,
+	DialogCloseButton,
+	DialogHeader,
 	useGetConfigQuery,
 } from '../../../..';
-import { pagePath, projectHref } from '../../../../config/lib/constants/panel';
+import RecordComments from '../../../../tenant/RecordComments';
+import { useGetRecordCommentsQuery } from '../../../../store/services/tenantApi';
+import { IS_TENANT_PANEL, pagePath, projectHref } from '../../../../config/lib/constants/panel';
 import { meets } from '../../../../functions/fieldLocks';
 import AddRelatedDialog from './AddRelatedDialog';
 import { useDownloadPdf } from '../../../../pdf/DownloadPdf';
@@ -148,6 +155,12 @@ const TableMenu: FC<TableMenuProps> = ({
 	// these item components used to need.
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
 	const closeActive = () => setActiveIndex(null);
+
+	// Comments (tenant projects): a row option while the page has them on, or the record has some.
+	// Asked once the menu opens; the thread itself opens in a dialog that can also add to it.
+	const [commentsOpen, setCommentsOpen] = useState(false);
+	const { data: commentData } = useGetRecordCommentsQuery({ route: path, record: id }, { skip: !IS_TENANT_PANEL || !hasOpened || !id });
+	const showComments = IS_TENANT_PANEL && !!commentData && (commentData.settings?.comments !== false || commentData.total > 0);
 	// Route builder → Row menu → "Download PDF" (docs/pdf-templates): straight to a file.
 	const { download: downloadPdf } = useDownloadPdf();
 	// Only published templates download (PT-33): an item for a draft — or, with none named, on a
@@ -467,6 +480,17 @@ const TableMenu: FC<TableMenuProps> = ({
 			) : null;
 		};
 		const safe = entries.filter((e: any) => !isDanger(e.item)).map(render).filter(Boolean);
+		if (showComments)
+			safe.push(
+				<MenuItemStyle
+					key='comments'
+					compact
+					icon={<MessageSquare {...ICON} />}>
+					<MenuItem onClick={() => setCommentsOpen(true)}>
+						Comments{commentData?.total ? ` (${commentData.total})` : ''}
+					</MenuItem>
+				</MenuItemStyle>
+			);
 		const danger = entries.filter((e: any) => isDanger(e.item)).map(render).filter(Boolean);
 		return (
 			<>
@@ -507,6 +531,24 @@ const TableMenu: FC<TableMenuProps> = ({
 				)}
 			</Menu.Root>
 			{renderActiveDialog()}
+			{commentsOpen && (
+				<Dialog
+					isOpen
+					onClose={() => setCommentsOpen(false)}>
+					<DialogHeader
+						divider
+						icon={<MessageSquare size={17} strokeWidth={1.75} />}>
+						Comments
+					</DialogHeader>
+					<DialogCloseButton top={{ base: 4, md: 5 }} />
+					<DialogBody pt={{ base: 4, md: 5 }}>
+						<RecordComments
+							route={path}
+							record={id}
+						/>
+					</DialogBody>
+				</Dialog>
+			)}
 		</>
 	);
 };

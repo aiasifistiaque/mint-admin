@@ -139,17 +139,19 @@ const RoleDialog: FC<{ role: OrgRole | null; open: boolean; onClose: () => void 
 												Every model’s records — and the project’s media, customers and analytics — in the projects each member can open.
 											</Text>
 											<Grid
-												templateColumns={{ base: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }}
+												templateColumns={{ base: '1fr', sm: 'repeat(4, 1fr)' }}
 												gap={2}
 												mt={2}>
 												{items.map(p => (
 													<Checkbox.Root
 														key={p.key}
-														size='sm'
+														size='md'
 														checked={perms.includes(p.key)}
 														onCheckedChange={() => toggle(p.key)}
 														alignItems='flex-start'
-														p={2.5}
+														cursor='pointer'
+														minH='48px'
+														p={3}
 														borderWidth='1px'
 														borderColor={perms.includes(p.key) ? 'border.emphasized' : 'border.muted'}
 														borderRadius='md'>
@@ -176,15 +178,21 @@ const RoleDialog: FC<{ role: OrgRole | null; open: boolean; onClose: () => void 
 											<Text {...sectionCss}>{group}</Text>
 											<Flex
 												direction='column'
-												gap={2.5}
+												gap={2}
 												mt={2}>
 												{items.map(p => (
 													<Checkbox.Root
 														key={p.key}
-														size='sm'
+														size='md'
 														checked={perms.includes(p.key)}
 														onCheckedChange={() => toggle(p.key)}
-														alignItems='flex-start'>
+														alignItems='flex-start'
+														cursor='pointer'
+														minH='48px'
+														p={3}
+														borderWidth='1px'
+														borderColor={perms.includes(p.key) ? 'border.emphasized' : 'border.muted'}
+														borderRadius='md'>
 														<Checkbox.HiddenInput />
 														<Checkbox.Control mt='2px' />
 														<Checkbox.Label>

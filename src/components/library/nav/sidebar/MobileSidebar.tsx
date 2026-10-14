@@ -93,7 +93,7 @@ const MobileSidebar: FC<Props> = ({ onNavigate }) => {
 				px={3}
 				pt={2}
 				pb='calc(24px + env(safe-area-inset-bottom))'>
-				{nav.lead.length ? <Stack gap={0.5}>{nav.lead.map(row)}</Stack> : null}
+				{nav.lead.length ? <Stack gap={0}>{nav.lead.map(row)}</Stack> : null}
 
 				{nav.sections.map(section => (
 					<MobileNavSection
@@ -132,7 +132,7 @@ const MobileNavRow: FC<{ item: NavItem; isLoading: boolean; isSelected: boolean;
 	if (isLoading)
 		return (
 			<Flex
-				h='44px'
+				h='38px'
 				align='center'
 				px={3}>
 				<Skeleton
@@ -170,7 +170,7 @@ const MobileNavSection: FC<{
 }> = ({ section, isOpen, hasActive, isLoading, onToggle, children }) => (
 	<Collapsible.Root
 		open={isOpen}
-		mt={2}>
+		mt={1}>
 		{isLoading ? (
 			<Flex
 				h='44px'
@@ -238,11 +238,11 @@ const MobileNavSection: FC<{
 		<Collapsible.Content>
 			{/* The rail hangs from the centre of the 18px section icon. */}
 			<Stack
-				gap={0.5}
+				gap={0}
 				ml='17px'
 				pl={2}
-				py={1}
-				mb={1}
+				py={0.5}
+				mb={0.5}
 				borderLeftWidth='1px'
 				borderColor='sidebar.rail.light'
 				_dark={{ borderColor: 'sidebar.rail.dark' }}>
@@ -256,11 +256,11 @@ const TAP = { WebkitTapHighlightColor: 'transparent' };
 
 const rowCss = (isSelected: boolean): any => ({
 	align: 'center',
-	minH: '44px',
+	minH: '38px',
 	px: 3,
 	borderRadius: 'md',
 	borderWidth: '1px',
-	fontSize: '15px',
+	fontSize: '14px',
 	fontWeight: isSelected ? '600' : '500',
 	userSelect: 'none',
 	css: TAP,
@@ -280,7 +280,7 @@ const rowCss = (isSelected: boolean): any => ({
 const sectionHeadCss: any = {
 	display: 'flex',
 	w: 'full',
-	minH: '44px',
+	minH: '40px',
 	alignItems: 'center',
 	gap: 2,
 	px: 2,
