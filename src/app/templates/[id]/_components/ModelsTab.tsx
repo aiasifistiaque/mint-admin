@@ -25,7 +25,8 @@ type Item = {
 	/** The rest of the step as it came: a page layout from Claude (table, filters, form, view), tabs… */
 	extra: Record<string, any>;
 };
-export type ModelsWorking = { sidebarCategory: string; items: Item[] };
+/** `components`: the ones the models use (backend docs/cms CMS-03b) — carried as they are; set by capture or MCP set_components. */
+export type ModelsWorking = { sidebarCategory: string; items: Item[]; components: any[] };
 
 const OWN = ['action', 'name', 'route', 'title', 'description', 'displayField', 'code', 'access', 'fields', 'rationale', 'requested'];
 const LAYOUT = ['table', 'filters', 'form', 'view', 'buttonTitle'];
@@ -50,6 +51,7 @@ const itemFromStep = (s: any): Item => ({
 export const modelsFrom = (part: any): ModelsWorking => ({
 	sidebarCategory: part?.sidebarCategory || '',
 	items: (part?.steps || []).filter((s: any) => s?.action !== 'update').map(itemFromStep),
+	components: Array.isArray(part?.components) ? part.components : [],
 });
 
 export const modelsTo = (w: ModelsWorking) => ({
@@ -67,6 +69,7 @@ export const modelsTo = (w: ModelsWorking) => ({
 		fields: toServer(m.fields),
 		...extra,
 	})),
+	components: w.components || [],
 });
 
 const nameOf = (w: ModelWorking) => toModelName(requestedName(w));
