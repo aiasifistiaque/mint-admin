@@ -30,6 +30,8 @@ const nextConfig = {
 			// …and a project's Build → Components (backend docs/cms CMS-03), likewise mint-tenant's: the model
 			// builder here. Never the admin's own /components page or its /docs/components guide.
 			{ source: '/:project((?!docs$)[^/]+)/components/:sub*', destination: '/:project/model-builder', permanent: false },
+			// …and its content manager's home (CMS-07), only in mint-tenant: the project's dashboard here.
+			{ source: '/:project((?!docs$)[^/]+)/content', destination: '/:project/dashboard', permanent: false },
 		];
 	},
 	// The tenant panel (NEXT_PUBLIC_PANEL=tenant) can run next to the admin in dev
