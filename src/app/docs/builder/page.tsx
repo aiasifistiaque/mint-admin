@@ -613,7 +613,7 @@ const BuilderDocs = () => {
 							literally, case-insensitive, from two letters; up to 5 hits per route (the best of its 25 newest
 							matches: exact name, whole-word start, start, word start, anywhere, other field) and 30 in all. A hit
 							is named by the model&apos;s display field (else <C>name</C>/<C>title</C>/<C>code</C>/<C>email</C>,
-							else the id) and opens <C>/view/&lt;route&gt;/&lt;id&gt;</C>. Routes with a replaced list
+							else the id) and carries <C>code</C> (its record number) — the panel shows the number and the page under the name — and opens <C>/view/&lt;route&gt;/&lt;id&gt;</C>. Routes with a replaced list
 							controller don&apos;t take part.
 						</P>
 						<H3>Around a value</H3>
