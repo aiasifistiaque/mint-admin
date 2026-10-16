@@ -595,6 +595,27 @@ const BuilderDocs = () => {
 							(<em>Can be changed later</em>, <em>Locked when</em>). Over MCP, <C>update_page</C> takes{' '}
 							<C>guidelines</C> (false removes them).
 						</P>
+						<H3>Navbar search</H3>
+						<Box
+							id='navbar-search'
+							scrollMarginTop='80px'
+						/>
+						<P>
+							<em>Navbar search</em> (under the fields) puts the route&apos;s records in the search at the top of
+							every page (⌘K), next to the page names. Stored in the config as{' '}
+							<C>{"route.search: { enabled, fields? }"}</C> — off unless <C>enabled</C> is true; <C>fields</C>{' '}
+							narrows it to some of the route&apos;s <em>Searchable</em> settings fields (none, or none still
+							searchable, means all of them). <C>GET /admin/api/search?q=</C> (a project&apos;s{' '}
+							<C>/tenant/api/p/:project/search</C>) asks every route whose published config has it on, through
+							the route&apos;s own list middlewares — read permission, the filter middleware (archived rows out),
+							per-record access and whatever else it injects — so it never returns a record the list
+							wouldn&apos;t (<C>searchRecords</C> in <C>routes-admin/common/router.ts</C>). The query is matched
+							literally, case-insensitive, from two letters; up to 5 hits per route (the best of its 25 newest
+							matches: exact name, whole-word start, start, word start, anywhere, other field) and 30 in all. A hit
+							is named by the model&apos;s display field (else <C>name</C>/<C>title</C>/<C>code</C>/<C>email</C>,
+							else the id) and opens <C>/view/&lt;route&gt;/&lt;id&gt;</C>. Routes with a replaced list
+							controller don&apos;t take part.
+						</P>
 						<H3>Around a value</H3>
 						<Box
 							id='value-display'
