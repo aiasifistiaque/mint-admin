@@ -3,10 +3,10 @@
 import { FC } from 'react';
 import { Box, Center, Flex, Grid, Text } from '@chakra-ui/react';
 import { Globe, LayoutGrid, PlugZap } from 'lucide-react';
-import { Panel } from '../cl';
 import type { OrgRef, ProjectRef } from '../store/services/tenantApi';
 import { useOpenAnyProject, useWorkspace } from './useWorkspace';
 import GuideLink from './GuideLink';
+import CardSection from './CardSection';
 
 /** Each kind's icon, as on the project cards. */
 const KIND: Record<string, { label: string; icon: any }> = {
@@ -39,8 +39,9 @@ const Card: FC<{ org: OrgRef; project: ProjectRef }> = ({ org, project }) => {
 			bg='bg.panel'
 			cursor='pointer'
 			opacity={opening === org._id ? 0.6 : 1}
-			transition='border-color .12s ease'
-			_hover={{ borderColor: 'border.emphasized' }}>
+			boxShadow='0 1px 2px rgb(16 24 40 / 0.04)'
+			transition='border-color .12s ease, box-shadow .12s ease'
+			_hover={{ borderColor: 'border.emphasized', boxShadow: '0 4px 12px rgb(16 24 40 / 0.06)' }}>
 			<Center
 				boxSize='36px'
 				borderRadius='md'
@@ -85,7 +86,7 @@ const OtherOrgProjects: FC = () => {
 	return (
 		<>
 			{others.map(org => (
-				<Panel
+				<CardSection
 					key={org._id}
 					title={org.name}
 					subtitle={org.guest ? 'Projects you were invited to' : `Your projects here, as ${org.role || 'a member'}`}
@@ -101,7 +102,7 @@ const OtherOrgProjects: FC = () => {
 							/>
 						))}
 					</Grid>
-				</Panel>
+				</CardSection>
 			))}
 		</>
 	);
