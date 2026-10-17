@@ -136,6 +136,8 @@ export const ModelEditorView: FC<ModelEditorViewProps> = ({
 
 	// The open tab lives in `?tab=`, so a reload or a shared link lands on it. Switching keeps unsaved edits.
 	const [tab, setTab] = useState<Tab>('fields');
+	// The field open in the list, marked in the form preview beside it.
+	const [openField, setOpenField] = useState<string | null>(null);
 	useEffect(() => {
 		const t = new URLSearchParams(window.location.search).get('tab') as Tab | null;
 		if (t && TABS.includes(t)) setTab(t);
@@ -454,6 +456,8 @@ export const ModelEditorView: FC<ModelEditorViewProps> = ({
 						alignItems='start'>
 						<ModelPanels
 							only={['fields']}
+							openField={openField}
+							onOpenField={setOpenField}
 							working={working}
 							onChange={setWorking}
 							mode='edit'
@@ -497,6 +501,8 @@ export const ModelEditorView: FC<ModelEditorViewProps> = ({
 									code={{ enabled: working.code.enabled, preview: codePreview(working.code) }}
 									access={working.access.enabled}
 									targets={targets}
+									active={openField}
+									onPick={setOpenField}
 								/>
 							</Box>
 							{live && (
