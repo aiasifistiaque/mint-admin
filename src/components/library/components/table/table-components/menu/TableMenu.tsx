@@ -3,6 +3,7 @@ import { Menu } from '@chakra-ui/react';
 import {
 	ArrowUpRight,
 	FileDown,
+	FileText,
 	Copy,
 	Eye,
 	FilePlus,
@@ -43,6 +44,7 @@ import { IS_TENANT_PANEL, pagePath, projectHref } from '../../../../config/lib/c
 import { meets } from '../../../../functions/fieldLocks';
 import AddRelatedDialog from './AddRelatedDialog';
 import { useDownloadPdf } from '../../../../pdf/DownloadPdf';
+import { useDownloadDocx } from '../../../../utils/DownloadDocx';
 import { useGetPdfTemplatesQuery } from '../../../../store/services/pdfTemplatesApi';
 
 type TableMenuProps = {
@@ -106,6 +108,8 @@ const iconFor = (item: any) => {
 			return <FilePlus {...ICON} />;
 		case 'download-pdf':
 			return <FileDown {...ICON} />;
+		case 'download-docx':
+			return <FileText {...ICON} />;
 		case 'delete':
 			return <Trash2 {...ICON} />;
 		case 'link':
@@ -163,6 +167,8 @@ const TableMenu: FC<TableMenuProps> = ({
 	const showComments = IS_TENANT_PANEL && !!commentData && (commentData.settings?.comments !== false || commentData.total > 0);
 	// Route builder → Row menu → "Download PDF" (docs/pdf-templates): straight to a file.
 	const { download: downloadPdf } = useDownloadPdf();
+	// Row menu → "Download DOCX": one rich-text field of the row as a Word file.
+	const { download: downloadDocx } = useDownloadDocx();
 	// Only published templates download (PT-33): an item for a draft — or, with none named, on a
 	// page with no published one — isn't offered. Asked once the menu opens; cached per page.
 	const needsPdf = data?.some((item: any) => item?.type === 'download-pdf');
@@ -204,6 +210,17 @@ const TableMenu: FC<TableMenuProps> = ({
 					<MenuItem
 						key={i}
 						onClick={() => downloadPdf(path, [id], item?.template)}>
+						{item?.title}
+					</MenuItem>
+				);
+			case 'download-docx':
+				// Not offered on a row whose field is empty (when the row carries it).
+				if (!item?.field || (item.field in (doc || {}) && !String(doc[item.field] ?? '').replace(/<[^>]*>/g, '').trim() && !/<img\b/i.test(String(doc[item.field] ?? ''))))
+					return null;
+				return (
+					<MenuItem
+						key={i}
+						onClick={() => downloadDocx(path, id, item.field)}>
 						{item?.title}
 					</MenuItem>
 				);
