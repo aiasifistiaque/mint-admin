@@ -50,6 +50,9 @@ const ALLOWED_FIELD_KEYS = new Set([
 	'linkedReads',
 	'linkedRoute',
 	'formula',
+	// A Date formula: works out a date (`returns: 'date'`), maybe once (`calc: 'once'`) — docs/date-formulas.
+	'returns',
+	'calc',
 	'displayValue',
 	'path',
 	'min',
