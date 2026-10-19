@@ -14,6 +14,9 @@ import ApiReference from './_components/ApiReference';
 import ApiTester, { Trial } from './_components/ApiTester';
 import ReadOnlyFields from './_components/ReadOnlyFields';
 import type { ApiInfo, Endpoint } from './_components/api';
+import { withKey } from './_components/api';
+import ProjectKey from './_components/ProjectKey';
+import { useProjectKey } from '@/components/library/tenant/useProjectKey';
 
 /**
  * The project's public API (tenant panel; backend routes-public): which models
@@ -207,23 +210,25 @@ export default function PublicApiPage() {
 	const models: any[] = data?.doc || data || [];
 	const editable = can('build');
 	const origin = publicBase();
-	const base = project ? `${origin}/public/api/${project.publicSlug}` : '';
+	// The project key names the project on the API (docs/api-builder D14): ?apiKey= on every call.
+	const base = project ? `${origin}/public/api` : '';
+	const apiKey = useProjectKey();
 
 	// What the live API offers — fetched again whenever a model's switches change.
 	const [info, setInfo] = useState<ApiInfo | null>(null);
 	const [infoError, setInfoError] = useState('');
 	const offered = JSON.stringify(models.map(m => [m.route, m.publicApi || null]));
 	useEffect(() => {
-		if (!base) return;
+		if (!base || !apiKey) return;
 		let live = true;
-		fetch(`${base}/`)
+		fetch(withKey(`${base}/`, apiKey))
 			.then(r => (r.ok ? r.json() : Promise.reject(new Error(`The API answered ${r.status}`))))
 			.then(data => live && (setInfo(data), setInfoError('')))
 			.catch(e => live && setInfoError(e?.message || 'Couldn’t reach the API'));
 		return () => {
 			live = false;
 		};
-	}, [base, offered]);
+	}, [base, apiKey, offered]);
 
 	const [trial, setTrial] = useState<Trial | null>(null);
 	const tryIt = (e: Endpoint) => setTrial({ method: e.method, path: e.path, body: e.body, customer: e.customer, nonce: Date.now() });
@@ -280,9 +285,16 @@ export default function PublicApiPage() {
 				)}
 
 				{project && (
+					<ProjectKey
+						canChange={editable}
+						base={base}
+					/>
+				)}
+
+				{project && (
 					<Panel
 						title='Use it'
-						subtitle='From any site or app — no key needed for open models.'
+						subtitle='From any site or app — every call carries the project key.'
 						actions={
 							<Button
 								size='xs'
@@ -301,7 +313,7 @@ export default function PublicApiPage() {
 								<Text {...hCss}>Read a model</Text>
 								<Snippet
 									label='fetch example'
-									code={`const res = await fetch('${base}/${models.find(m => m.publicApi?.enabled)?.route || '<route>'}?limit=20');\nconst { doc, total } = await res.json();`}
+									code={`const res = await fetch('${withKey(`${base}/${models.find(m => m.publicApi?.enabled)?.route || '<route>'}?limit=20`, apiKey)}');\nconst { doc, total } = await res.json();`}
 								/>
 							</Box>
 							<Box>
@@ -312,7 +324,7 @@ export default function PublicApiPage() {
 								</Text>
 								<Snippet
 									label='login widget snippet'
-									code={`<script src="${origin}/public/widget.js" data-project="${project.publicSlug}" async></script>\n<div data-mint-login></div>`}
+									code={`<script src="${origin}/public/widget.js" data-key="${apiKey || '<project key>'}" async></script>\n<div data-mint-login></div>`}
 								/>
 							</Box>
 							{project.type === 'website' && (
@@ -323,7 +335,7 @@ export default function PublicApiPage() {
 									</Text>
 									<Snippet
 										label='analytics snippet'
-										code={`<script src="${origin}/public/track.js" data-project="${project.publicSlug}" defer></script>`}
+										code={`<script src="${origin}/public/track.js" data-key="${apiKey || '<project key>'}" defer></script>`}
 									/>
 								</Box>
 							)}
@@ -332,7 +344,7 @@ export default function PublicApiPage() {
 									<Text {...hCss}>Render a page</Text>
 									<Snippet
 										label='site API example'
-										code={`// settings + menu\nawait fetch('${base}/site').then(r => r.json());\n// a published page, its SEO and its contents\nawait fetch('${base}/pages/by-path?path=/about').then(r => r.json());`}
+										code={`// settings + menu\nawait fetch('${withKey(`${base}/site`, apiKey)}').then(r => r.json());\n// a published page, its SEO and its contents\nawait fetch('${withKey(`${base}/pages/by-path?path=/about`, apiKey)}').then(r => r.json());`}
 									/>
 								</Box>
 							)}

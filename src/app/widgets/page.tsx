@@ -13,6 +13,7 @@ import type { WidgetTheme, WidgetType, WidgetsView } from '@/components/library/
 import ShopPanel from './_components/ShopPanel';
 import WidgetWizard, { shopMissing } from './_components/WidgetWizard';
 import { Code, SHOP_WIDGETS, SnippetHelp, help, isAdded, label } from './_components/parts';
+import { useProjectKey } from '@/components/library/tenant/useProjectKey';
 
 /**
  * The project's site widgets (tenant panel; docs/widgets W-04, W-24). Empty
@@ -213,6 +214,7 @@ const LookPanel: FC<{ theme: WidgetTheme; websiteProject: boolean }> = ({ theme:
 
 export default function WidgetsPage() {
 	const { project, can, isLoading: loadingSelf } = useWorkspace();
+	const apiKey = useProjectKey();
 	const allowed = can('build');
 	const { data, isLoading } = useGetWidgetsQuery(undefined, { skip: !allowed });
 	const { data: shop } = useGetWidgetsShopQuery(undefined, { skip: !allowed });
@@ -347,7 +349,7 @@ export default function WidgetsPage() {
 					shop={shop}
 					auth={auth}
 					authMissing={authMissing}
-					slug={project?.publicSlug || ''}
+					projectKey={apiKey}
 					currency={currency}
 				/>
 			)}

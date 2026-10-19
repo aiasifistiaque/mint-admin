@@ -39,7 +39,8 @@ const ACTIONS = [
 ];
 
 /** Where a project's public API lives; the project's own address goes at the end. */
-const BASE = `${BACKEND.replace(/\/(admin|tenant)\/api\/?$/, '')}/public/api/<project>`;
+// The key names the project (docs/api-builder D14): examples carry ?apiKey=<project key>.
+const BASE = `${BACKEND.replace(/\/(admin|tenant)\/api\/?$/, '')}/public/api`;
 
 /** The template's model as the API reference sees it, for the examples. */
 const asApiModel = (m: TemplateModel, e: EndpointSpec): ApiModel => ({

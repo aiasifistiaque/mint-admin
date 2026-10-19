@@ -144,6 +144,7 @@ const tags: string[] = [
 	'tenant-analytics',
 	'tenant-site',
 	'tenant-webhooks',
+	'tenant-project-key',
 	'tenant-widgets',
 	'tenant-mail',
 	'tenant-mail-accounts',

@@ -5,7 +5,8 @@ import { Badge, Box, Button, Flex, Input, Text, Textarea } from '@chakra-ui/reac
 import { Copy, Send } from 'lucide-react';
 import { Dropdown, Panel } from '@/components/library/cl';
 import GuideLink from '@/components/library/tenant/GuideLink';
-import { Method } from './api';
+import { Method, withKey } from './api';
+import { useProjectKey } from '@/components/library/tenant/useProjectKey';
 
 /**
  * Sends a request to the project's live public API, from this browser, and
@@ -54,7 +55,9 @@ const ApiTester: FC<{ base: string; trial: Trial | null }> = ({ base, trial }) =
 		panel.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	}, [trial?.nonce]);
 
-	const url = `${base}${path.startsWith('/') ? path : `/${path}`}`;
+	// Every call carries the project key (docs/api-builder D14).
+	const apiKey = useProjectKey();
+	const url = withKey(`${base}${path.startsWith('/') ? path : `/${path}`}`, apiKey);
 
 	const send = async (e?: FormEvent) => {
 		e?.preventDefault();

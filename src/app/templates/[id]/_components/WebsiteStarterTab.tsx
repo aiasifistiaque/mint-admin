@@ -11,7 +11,8 @@ import type { TabProps } from './types';
 /**
  * The Starter code tab (website templates): the repository the tenant's site
  * starts from, its framework, a one-click deploy link, and the environment
- * variables it needs — `{{api}}` (the project's public API address) and
+ * variables it needs — `{{api}}` (the project's public API address),
+ * `{{apiKey}}` (its project key, sent on every call — docs/api-builder D14) and
  * `{{slug}}` (its public name) are filled in when the project is made, then
  * shown on the project's dashboard ready to copy.
  */
@@ -26,7 +27,7 @@ const vercelLink = (s: Starter) => {
 	return `https://vercel.com/new/clone?${params.toString()}`;
 };
 
-const EXAMPLE = { api: 'https://api.mint.example/public/api/acme-site', slug: 'acme-site' };
+const EXAMPLE = { api: 'https://api.mint.example/public/api', apiKey: 'mint_pk_0123456789abcdef0123456789abcdef', slug: 'acme-site' };
 
 const WebsiteStarterTab: FC<TabProps<Site>> = ({ doc, value, onChange }) => {
 	const s = value.starter;
@@ -35,7 +36,7 @@ const WebsiteStarterTab: FC<TabProps<Site>> = ({ doc, value, onChange }) => {
 	const issues = [...(doc.validation?.errors || []), ...(doc.validation?.warnings || [])].filter((i: any) => i.part === 'website' && i.path.startsWith('website.starter'));
 	const filled = s.env
 		.filter(e => e.key)
-		.map(e => `${e.key}=${e.value.replace(/\{\{\s*api\s*\}\}/g, EXAMPLE.api).replace(/\{\{\s*slug\s*\}\}/g, EXAMPLE.slug)}`)
+		.map(e => `${e.key}=${e.value.replace(/\{\{\s*apiKey\s*\}\}/g, EXAMPLE.apiKey).replace(/\{\{\s*api\s*\}\}/g, EXAMPLE.api).replace(/\{\{\s*slug\s*\}\}/g, EXAMPLE.slug)}`)
 		.join('\n');
 
 	return (
@@ -44,7 +45,8 @@ const WebsiteStarterTab: FC<TabProps<Site>> = ({ doc, value, onChange }) => {
 			gap={4}>
 			<Intro section='starter-code'>
 				The code the tenant’s site starts from: a repository they copy, the framework it’s written in, a deploy button, and the
-				settings it needs. Use {'{{api}}'} for the project’s public API address and {'{{slug}}'} for its public name — they’re
+				settings it needs. Use {'{{api}}'} for the project’s public API address, {'{{apiKey}}'} for its project key (every call sends{' '}
+				<code>?apiKey=</code>) and {'{{slug}}'} for its public name — they’re
 				filled in when the project is made, and the project’s dashboard shows them ready to copy. Optional: without it, the
 				tenant builds their own site against the site API.
 			</Intro>
@@ -135,6 +137,12 @@ const WebsiteStarterTab: FC<TabProps<Site>> = ({ doc, value, onChange }) => {
 							<Button
 								size='xs'
 								variant='ghost'
+								onClick={() => setEnv(i, { value: `${e.value}{{apiKey}}` })}>
+								{'{{apiKey}}'}
+							</Button>
+							<Button
+								size='xs'
+								variant='ghost'
 								onClick={() => setEnv(i, { value: `${e.value}{{slug}}` })}>
 								{'{{slug}}'}
 							</Button>
@@ -159,8 +167,16 @@ const WebsiteStarterTab: FC<TabProps<Site>> = ({ doc, value, onChange }) => {
 							<Button
 								size='xs'
 								variant='ghost'
-								onClick={() => set({ env: [...s.env, { key: 'NEXT_PUBLIC_MINT_API', value: '{{api}}' }] })}>
-								Add the API address
+								onClick={() =>
+									set({
+										env: [
+											...s.env,
+											{ key: 'NEXT_PUBLIC_MINT_API', value: '{{api}}' },
+											...(s.env.some(e => e.value.includes('{{apiKey}}')) ? [] : [{ key: 'NEXT_PUBLIC_MINT_API_KEY', value: '{{apiKey}}' }]),
+										],
+									})
+								}>
+								Add the API address and key
 							</Button>
 						)}
 					</Flex>

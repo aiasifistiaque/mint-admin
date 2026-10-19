@@ -1139,6 +1139,15 @@ export const tenantApi = mainApi.injectEndpoints({
 			query: () => 'api-overview',
 			providesTags: ['tenant-webhooks', 'builder'],
 		}),
+		// The project key (backend docs/api-builder D14): it names the project on the public API — ?apiKey=.
+		getProjectKey: builder.query<{ apiKey: string }, void>({
+			query: () => 'project-key',
+			providesTags: ['tenant-project-key'],
+		}),
+		regenerateProjectKey: builder.mutation<{ apiKey: string }, void>({
+			query: () => ({ url: 'api-builder/project-key', method: 'POST' }),
+			invalidatesTags: ['tenant-project-key'],
+		}),
 	}),
 });
 
@@ -1249,4 +1258,6 @@ export const {
 	useTestWebhookMutation,
 	useGetWebhookDeliveriesQuery,
 	useGetApiOverviewQuery,
+	useGetProjectKeyQuery,
+	useRegenerateProjectKeyMutation,
 } = tenantApi;

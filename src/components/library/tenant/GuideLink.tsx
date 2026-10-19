@@ -42,6 +42,7 @@ const GUIDE_OF: Record<string, string> = {
 	notifications: 'account',
 	'media-library': 'projects',
 	'public-api': 'public-api',
+	'api-project-key': 'public-api',
 	reference: 'public-api',
 	filters: 'public-api',
 	paging: 'public-api',

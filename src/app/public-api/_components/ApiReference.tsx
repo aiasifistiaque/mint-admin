@@ -6,6 +6,7 @@ import { ChevronDown, ChevronRight, Lock, Play } from 'lucide-react';
 import { CopyValue, Panel } from '@/components/library/cl';
 import GuideLink from '@/components/library/tenant/GuideLink';
 import ExampleRequest from './ExampleRequest';
+import { useProjectKey } from '@/components/library/tenant/useProjectKey';
 import {
 	AUTH_ENDPOINTS,
 	ApiInfo,
@@ -519,6 +520,7 @@ const ListsGuide: FC = () => {
 const ApiReference: FC<{ base: string; info: ApiInfo | null; error?: string; onTry: (e: Endpoint) => void }> = ({ base, info, error, onTry }) => {
 	const models = info?.models || [];
 	const customers = models.some(m => m.auth === 'customer');
+	const apiKey = useProjectKey();
 	return (
 		<Panel
 			title='API reference'
@@ -533,12 +535,17 @@ const ApiReference: FC<{ base: string; info: ApiInfo | null; error?: string; onT
 					<Label>Base address</Label>
 					<CopyValue value={base} />
 				</Box>
+				<Box>
+					<Label>Project key — on every call, ?apiKey=</Label>
+					<CopyValue value={apiKey} />
+				</Box>
 				<Text
 					fontSize='12.5px'
 					color='fg.muted'
 					lineHeight='1.6'>
-					Requests and responses are JSON. An error answers with a status and <code>{'{ "message": "…" }'}</code>: 400 a value
-					isn’t valid, 401 the endpoint needs a signed-in customer, 404 not found (or not public), 429 too many requests — wait a
+					Requests and responses are JSON. Every call carries the project key — <code>?apiKey=</code> or the{' '}
+					<code>X-Api-Key</code> header. An error answers with a status and <code>{'{ "message": "…" }'}</code>: 400 a value
+					isn’t valid, 401 the project key is missing or wrong, or the endpoint needs a signed-in customer, 404 not found (or not public), 429 too many requests — wait a
 					moment. Endpoints marked <em>Customer</em> need <code>Authorization: Bearer &lt;token&gt;</code>, the token from sign-in.
 					{models.some(m => m.ownerOnly) && ' On “own records” models each customer only reaches the records they created.'}
 					{models.some(m => m.fields.some(f => f.readOnly && f.kind !== 'formula')) &&
