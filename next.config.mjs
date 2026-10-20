@@ -47,7 +47,8 @@ const nextConfig = {
 		turbopackScopeHoisting: false,
 	},
 	turbopack: {
-		root: '/Users/asifistiaque/Desktop/proj/e-mint/admin',
+		// This folder, wherever it's built (Vercel builds in /vercel/path0).
+		root: fileURLToPath(new URL('.', import.meta.url)),
 		rules: {
 			'*.svg': {
 				loaders: ['@svgr/webpack'],
