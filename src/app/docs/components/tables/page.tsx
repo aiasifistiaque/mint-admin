@@ -154,6 +154,7 @@ const TABLE_OPTIONS: PropRow[] = [
 	{ name: 'clickable / toPath', type: 'boolean / string', description: 'A click on a row opens toPath/<id>.' },
 	{ name: 'export', type: 'boolean', description: 'The Export button (CSV).' },
 	{ name: 'bulkUpload', type: '{ title }', description: 'Bulk upload from a spreadsheet, under the ⋯ menu.' },
+	{ name: 'multipleEntry', type: 'boolean', description: 'An Add multiple page (/<route>/multiple): fill in several records one after another and save them all, under the ⋯ menu.' },
 	{ name: 'filters', type: 'boolean', description: 'The filter chips (defined per field). On by default.' },
 	{ name: 'search', type: 'boolean', description: 'The search box. On by default.' },
 	{ name: 'preferences / hidePreferences', type: 'string[] / boolean', description: 'Fixed columns, or hide the column picker.' },
