@@ -77,9 +77,11 @@ const Section: FC<{ id: string; title: string; lead?: ReactNode; children: React
 	</Box>
 );
 
-const H3: FC<{ children: ReactNode }> = ({ children }) => (
+const H3: FC<{ id?: string; children: ReactNode }> = ({ id, children }) => (
 	<Text
 		as='h3'
+		id={id}
+		scrollMarginTop='80px'
 		fontSize='sm'
 		fontWeight='600'
 		mt={3}>
@@ -975,6 +977,13 @@ const BuilderDocs = () => {
 							(<em>Linked by</em>): either their field points at this record (an author&apos;s blogs, via 
 							<C>author</C>) or this record&apos;s field lists them (an author&apos;s <C>favoriteBooks</C>).
 							Routes already pointing here are offered as quick picks.
+						</P>
+						<H3 id='view-tab-link'>Adding records that are already there</H3>
+						<P>
+							When their field picks <em>several</em> records (a product&apos;s <C>collections</C>), the tab also
+							has <em>Add existing</em>: the records picked get this one added to that field, keeping the rest;
+							each row&apos;s <em>Remove</em> takes it out again (<C>POST /&lt;route&gt;/bulk/link</C>, edit
+							permission on that route). Both are saved like an edit — History, webhooks, automations.
 						</P>
 						<P>
 							<em>Linked by</em> also lists links <em>through another route</em> — one step further: a
