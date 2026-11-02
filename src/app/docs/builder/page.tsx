@@ -421,6 +421,23 @@ const BuilderDocs = () => {
 							fills it when empty (<C>linkedFill.function</C>, before validation, only from a record the caller
 							may read).
 						</P>
+						<Box
+							id='models-autofill'
+							scrollMarginTop='80px'
+						/>
+						<P>
+							<strong>Autofill</strong> and <strong>Autofill (read-only)</strong> are that same switch made a type of
+							its own (<C>schema.type: &apos;autofill&apos;</C> / <C>&apos;autofillreadonly&apos;</C>, with{' '}
+							<C>schema.fillFrom</C> and <C>schema.fills</C> — text, number, date or boolean, what it copies). They
+							are in the input list under Values, and in the model builder as kinds. Autofill is filled when empty
+							(and, on edit, when its link changes in that save and it wasn&apos;t sent), and a typed value stays.
+							Autofill (read-only) is server-owned: whatever a form or the API sends for it is dropped, it is set
+							from the picked record on every save, emptied with the link, and left as it was when the person can&apos;t
+							read the record; bulk edit and import set it too, and the public API sets it for server keys only.
+							It follows its source: after any save of the picked record, <C>recalculateDependents</C> rewrites the
+							copies (one hop; a deleted source leaves them) and recalculates the formulas that read them. In a
+							list&apos;s rows (<C>dataModel[].fillFrom</C>) each row is filled from the record picked in that row.
+						</P>
 						<P>
 							<em>Colours</em> (How it looks, for fields with options, an enum, or a yes/no) set{' '}
 							<C>schema.colorTags</C> and <C>schema.optionColors</C> ({'{ value: palette }'}, picked ones only).
@@ -1505,7 +1522,7 @@ const BuilderDocs = () => {
 							and image for a section; an invoice line for a list) that you can change, reorder or replace
 							entirely. Save there, then save the model. The row&apos;s &ldquo;5 fields: …&rdquo; button opens it
 							again. A section&apos;s own fields can be text, long text, email, link, colour, number, formula,
-							yes/no, date, options, image or file — not links to records or other sections.
+							yes/no, date, options, image or file — not other sections. The rows of a <em>list</em> can also hold a link to records and Autofill fields (an item&apos;s product, its rate).
 						</P>
 						<P>
 							Formulas reach into them. A formula field inside a list row is calculated from that row&apos;s own
