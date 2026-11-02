@@ -150,9 +150,6 @@ export const exampleOf = (f: ApiField): any => {
 			return 'name@example.com';
 		case 'url':
 			return 'https://example.com';
-		case 'autofill':
-		case 'autofillreadonly':
-			return 'value';
 		case 'number':
 		case 'formula':
 			return 10;

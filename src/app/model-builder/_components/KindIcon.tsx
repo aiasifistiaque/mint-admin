@@ -46,8 +46,6 @@ export const KIND_ICONS: Record<FieldKind, LucideIcon> = {
 	number: Hash,
 	formula: Calculator,
 	dateformula: CalendarClock,
-	autofill: Link2,
-	autofillreadonly: Link2,
 	boolean: ToggleRight,
 	date: Calendar,
 	select: ListChecks,

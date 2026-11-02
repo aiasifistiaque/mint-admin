@@ -413,30 +413,36 @@ const BuilderDocs = () => {
 							switch picks <em>All of these</em> (default) or <em>Any of these</em> (<C>lockMatch: &apos;any&apos;</C>;
 							tabs and rollups use <C>match</C>); <em>is one of</em> on a choice field ticks several values.
 						</P>
-						<P>
-							<em>Filled in from a linked record</em> sets <C>{"schema.fillFrom: { from, formula }"}</C> — a picker
-							field of the same record and a field of its linked record, or a formula over the linked
-							record&apos;s number fields (formula engine). The form fills it when the picked record changes
-							(<C>LinkedFiller</C>; never on loading a saved record) and it stays editable; on create the server
-							fills it when empty (<C>linkedFill.function</C>, before validation, only from a record the caller
-							may read).
-						</P>
 						<Box
 							id='models-autofill'
 							scrollMarginTop='80px'
 						/>
 						<P>
-							<strong>Autofill</strong> and <strong>Autofill (read-only)</strong> are that same switch made a type of
-							its own (<C>schema.type: &apos;autofill&apos;</C> / <C>&apos;autofillreadonly&apos;</C>, with{' '}
-							<C>schema.fillFrom</C> and <C>schema.fills</C> — text, number, date or boolean, what it copies). They
-							are in the input list under Values, and in the model builder as kinds. Autofill is filled when empty
-							(and, on edit, when its link changes in that save and it wasn&apos;t sent), and a typed value stays.
-							Autofill (read-only) is server-owned: whatever a form or the API sends for it is dropped, it is set
+							<strong>Autofill</strong> (Advanced) sets <C>{"schema.fillFrom: { from, formula, readonly?, when?, match? }"}</C> on
+							any plain field — text, number, date, yes/no, options or a link; the field keeps its own kind.{' '}
+							<C>from</C> is a picker field of the same record and <C>formula</C> a field of its linked record, or a
+							formula over the linked record&apos;s number fields (formula engine). The form fills it when the
+							picked record changes (<C>LinkedFiller</C>; never on loading a saved record) and an editable one can be
+							typed over; on create the server fills it when empty (<C>linkedFill.function</C>, before validation, only
+							from a record the caller may read). On edit it is filled when its link changes in that save and it wasn&apos;t
+							sent; a typed value stays.
+						</P>
+						<P>
+							<C>when</C> (+ <C>match</C> all / any) are conditions, the same ops as <em>Locked when</em>: a field of
+							this record (<C>delivery</C> is <C>Home</C>) or <C>@.field</C> for the picked record&apos;s (<C>@.type</C> is
+							Wholesale). While they hold, autofill works; when they don&apos;t, an editable field is left alone. The server
+							checks them on every save, bulk edit, import, public-API write and when the source record changes; the
+							form checks them live.
+						</P>
+						<P>
+							<C>readonly: true</C> makes it server-owned: whatever a form or the API sends for it is dropped, it is set
 							from the picked record on every save, emptied with the link, and left as it was when the person can&apos;t
-							read the record; bulk edit and import set it too, and the public API sets it for server keys only.
-							It follows its source: after any save of the picked record, <C>recalculateDependents</C> rewrites the
+							read the record; Required and Can be changed later are switched off. While its conditions don&apos;t hold it
+							is cleared and stays locked. Bulk edit and import set it too, and the public API sets it for server keys
+							only. It follows its source: after any save of the picked record, <C>recalculateDependents</C> rewrites the
 							copies (one hop; a deleted source leaves them) and recalculates the formulas that read them. In a
-							list&apos;s rows (<C>dataModel[].fillFrom</C>) each row is filled from the record picked in that row.
+							list&apos;s rows (<C>dataModel[].fillFrom</C>) each row is filled from the record picked in that row. Fields
+							saved as the old Autofill types are moved by <C>scripts/migrateAutofill.js</C>.
 						</P>
 						<P>
 							<em>Colours</em> (How it looks, for fields with options, an enum, or a yes/no) set{' '}
@@ -1522,7 +1528,7 @@ const BuilderDocs = () => {
 							and image for a section; an invoice line for a list) that you can change, reorder or replace
 							entirely. Save there, then save the model. The row&apos;s &ldquo;5 fields: …&rdquo; button opens it
 							again. A section&apos;s own fields can be text, long text, email, link, colour, number, formula,
-							yes/no, date, options, image or file — not other sections. The rows of a <em>list</em> can also hold a link to records and Autofill fields (an item&apos;s product, its rate).
+							yes/no, date, options, image or file — not other sections. The rows of a <em>list</em> can also hold a link to records and autofill settings (an item&apos;s product, its rate).
 						</P>
 						<P>
 							Formulas reach into them. A formula field inside a list row is calculated from that row&apos;s own
