@@ -104,6 +104,7 @@ const GUIDE_OF: Record<string, string> = {
 	analytics: 'analytics',
 	'connect-ai': 'connect-ai',
 	start: 'site-builder',
+	'site-theme': 'websites',
 };
 
 const GuideLink: FC<{ section: string; label?: string }> = ({ section, label = 'How this works' }) => (

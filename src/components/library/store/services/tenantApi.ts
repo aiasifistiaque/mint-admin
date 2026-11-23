@@ -615,9 +615,29 @@ export type SiteCheck = {
 	extra: { key: string; label: string; ids: string[] }[];
 	serverSide: { meta?: { ok: boolean | null; note: string }; ga4?: { ok: boolean | null; note: string } };
 };
+/** A site's colours by role (backend WebsiteSettings identity.palette). */
+export type SitePalette = { primary: string; onPrimary: string; secondary: string; accent: string; background: string; surface: string; border: string; text: string; mutedText: string };
+
 export type SiteConfig = {
 	_id: string;
-	identity: { siteName: string; tagline: string; logo: string; favicon: string; footerText: string; primaryColor: string; secondaryColor: string; fontFamily: string };
+	identity: {
+		siteName: string;
+		tagline: string;
+		logo: string;
+		favicon: string;
+		footerText: string;
+		/** Older single fields, kept in step with palette.primary / .secondary and bodyFont by the server. */
+		primaryColor: string;
+		secondaryColor: string;
+		fontFamily: string;
+		/** The whole palette (Site setup → General → Theme). */
+		palette?: SitePalette;
+		/** The ready palette it started from, or '' when changed by hand. */
+		paletteName?: string;
+		/** Google Fonts names. */
+		headingFont?: string;
+		bodyFont?: string;
+	};
 	contact: { email: string; phone: string; whatsapp: string; address: string; mapEmbedUrl: string; hours: string };
 	social: { facebook: string; instagram: string; x: string; linkedin: string; youtube: string; tiktok: string; pinterest: string };
 	seo: {
